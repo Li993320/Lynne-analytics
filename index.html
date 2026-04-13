@@ -2464,7 +2464,7 @@ function showPage(name) {
 function refreshPage(name) {
   if(name === 'dashboard') { updateKPI(); renderRecentTable(); renderTrendChart(); renderExpensePie(); }
   if(name === 'entry') { renderTable(); renderMonthBar(); }
-  if(name === 'analysis') { renderAnalysisCharts(); }
+  if(name === 'analysis') { renderFinancialAnalysis(); }
   if(name === 'ai') { renderAI(); }
   if(name === 'report') { renderReports(); }
   if(name === 'industry') { renderAdIndustryPage(); }
@@ -4594,8 +4594,18 @@ function init() {
   // Set current month as filter default
   const now = new Date();
   document.getElementById('filterMonth').value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
-  // Init categories
-  updateCategories();
+  // Init company selects for financial analysis
+  const finSel = document.getElementById('finCompanySelect');
+  if (finSel) {
+    const ind = document.getElementById('finIndustrySelect') ? document.getElementById('finIndustrySelect').value : 'internet';
+    const map = FIN_INDUSTRY_MAP[ind];
+    if (map) {
+      map.companies.forEach(c => { const opt = document.createElement('option'); opt.value = c.id; opt.textContent = c.name; finSel.appendChild(opt); });
+    }
+  }
+  // Init dashboard
+  refreshPage('industry');
+  document.getElementById('pageTitle').textContent = '渠道分析';
   updateModalCategories();
   // Init dashboard
   refreshPage('industry');
