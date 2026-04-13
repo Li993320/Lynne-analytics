@@ -560,6 +560,20 @@
 
     <!-- ============ PAGE: ANALYSIS ============ -->
     <div id="page-analysis" class="page">
+      <!-- 行业/公司选择 -->
+      <div class="card" style="margin-bottom:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <label style="font-weight:600;color:var(--text)">选择行业：</label>
+        <select id="finIndustrySelect" onchange="renderFinancialAnalysis()" style="padding:6px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);min-width:160px">
+          <option value="internet">互联网/平台</option>
+          <option value="gaming">游戏</option>
+          <option value="finance">金融</option>
+          <option value="retail">消费零售</option>
+          <option value="energy">新能源</option>
+          <option value="education">教育</option>
+        </select>
+        <label style="font-weight:600;color:var(--text)">选择公司：</label>
+        <select id="finCompanySelect" onchange="renderFinancialAnalysis()" style="padding:6px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);min-width:180px"></select>
+      </div>
       <!-- 核心经营指标 -->
       <div class="analysis-header">
         <h3>📊 核心经营指标</h3>
@@ -3347,6 +3361,104 @@ function getUserMetrics() {
   const roe = totalAssets > 0 ? Math.min(40, (net / totalAssets * 100) * 3) : 8;
   const growth = DB.records.length > 3 ? Math.random() * 20 + 5 : 12;
   return { gpm, npm, roe, growth, debtRatio, savingsRate, income, expense, net, totalAssets, totalLiab };
+}
+
+function renderAdIndustryPage() {
+const FIN_INDUSTRY_MAP = {
+  internet: { companies: [
+    { id:'tencent', name:'腾讯控股', revenue:'6,028亿', netProfit:'1,552亿', netMargin:'25.7%', gpm:'52%', roe:'24%', revenueGrowth:'+15%', rdRate:'8.5%', marketCap:'4.2万亿', currency:'港元', revenueStructure:[{name:'增值服务',pct:48},{name:'金融科技',pct:31},{name:'广告',pct:21}] },
+    { id:'alibaba', name:'阿里巴巴', revenue:'9,418亿', netProfit:'1,003亿', netMargin:'10.6%', gpm:'40%', roe:'12%', revenueGrowth:'+8%', rdRate:'6.2%', marketCap:'1.8万亿', currency:'港元', revenueStructure:[{name:'电商零售',pct:65},{name:'云业务',pct:12},{name:'本地生活',pct:11},{name:'其他',pct:12}] },
+    { id:'baidu', name:'百度', revenue:'1,348亿', netProfit:'215亿', netMargin:'15.9%', gpm:'48%', roe:'18%', revenueGrowth:'+6%', rdRate:'18%', marketCap:'3,800亿', currency:'港元', revenueStructure:[{name:'在线营销',pct:68},{name:'AI与云',pct:22},{name:'其他',pct:10}] },
+    { id:'jd', name:'京东', revenue:'1.09万亿', netProfit:'242亿', netMargin:'2.2%', gpm:'14%', roe:'14%', revenueGrowth:'+12%', rdRate:'2.1%', marketCap:'4,500亿', currency:'港元', revenueStructure:[{name:'自营零售',pct:85},{name:'平台服务',pct:12},{name:'物流',pct:3}] },
+    { id:'meituan', name:'美团', revenue:'2,769亿', netProfit:'358亿', netMargin:'12.9%', gpm:'36%', roe:'32%', revenueGrowth:'+22%', rdRate:'6.5%', marketCap:'1.1万亿', currency:'港元', revenueStructure:[{name:'外卖',pct:62},{name:'到店酒旅',pct:28},{name:'新业务',pct:10}] },
+  ]},
+  gaming: { companies: [
+    { id:'miHoYo', name:'米哈游', revenue:'400亿+', netProfit:'160亿+', netMargin:'40%', gpm:'74%', roe:'65%', revenueGrowth:'+35%', rdRate:'30%', marketCap:'2,000亿+', currency:'人民币', revenueStructure:[{name:'原神',pct:55},{name:'星铁',pct:28},{name:'绝区零',pct:12},{name:'其他',pct:5}] },
+    { id:'netease', name:'网易', revenue:'1,015亿', netProfit:'217亿', netMargin:'21.4%', gpm:'61%', roe:'22%', revenueGrowth:'+9%', rdRate:'11%', marketCap:'5,000亿', currency:'港元', revenueStructure:[{name:'游戏',pct:80},{name:'云音乐',pct:12},{name:'创新业务',pct:8}] },
+    { id:'perfect', name:'完美世界', revenue:'76亿', netProfit:'-5亿', netMargin:'-6.6%', gpm:'55%', roe:'-3%', revenueGrowth:'-12%', rdRate:'22%', marketCap:'280亿', currency:'人民币', revenueStructure:[{name:'游戏',pct:85},{name:'影视',pct:15}] },
+    { id:'lilith', name:'莉莉丝', revenue:'200亿+', netProfit:'80亿+', netMargin:'40%', gpm:'72%', roe:'55%', revenueGrowth:'+28%', rdRate:'25%', marketCap:'800亿+', currency:'人民币', revenueStructure:[{name:'万龙醒了',pct:48},{name:'剑与远征',pct:32},{name:'其他',pct:20}] },
+    { id:'hotcool', name:'Hotcool', revenue:'85亿', netProfit:'22亿', netMargin:'25.9%', gpm:'68%', roe:'38%', revenueGrowth:'+18%', rdRate:'15%', marketCap:'350亿', currency:'人民币', revenueStructure:[{name:'休闲游戏',pct:72},{name:'广告变现',pct:28}] },
+  ]},
+  finance: { companies: [
+    { id:'icbc', name:'工商银行', revenue:'8,432亿', netProfit:'3,651亿', netMargin:'43.3%', gpm:'--', roe:'11%', revenueGrowth:'-2%', rdRate:'0.3%', marketCap:'2.1万亿', currency:'人民币', revenueStructure:[{name:'利息收入',pct:72},{name:'手续费',pct:18},{name:'投资',pct:10}] },
+    { id:'pingan', name:'平安保险', revenue:'9,137亿', netProfit:'856亿', netMargin:'9.4%', gpm:'--', roe:'12%', revenueGrowth:'+5%', rdRate:'1.2%', marketCap:'8,000亿', currency:'港元', revenueStructure:[{name:'寿险',pct:55},{name:'产险',pct:18},{name:'银行',pct:15},{name:'科技',pct:12}] },
+    { id:'citic', name:'中信证券', revenue:'651亿', netProfit:'213亿', netMargin:'32.7%', gpm:'--', roe:'11%', revenueGrowth:'+8%', rdRate:'0.8%', marketCap:'3,200亿', currency:'人民币', revenueStructure:[{name:'经纪',pct:35},{name:'投行',pct:28},{name:'资管',pct:25},{name:'投资',pct:12}] },
+    { id:'orient', name:'东方财富', revenue:'142亿', netProfit:'82亿', netMargin:'57.7%', gpm:'--', roe:'18%', revenueGrowth:'+15%', rdRate:'8%', marketCap:'2,800亿', currency:'人民币', revenueStructure:[{name:'证券经纪',pct:52},{name:'天天基金',pct:32},{name:'数据服务',pct:16}] },
+    { id:'fps', name:'中金公司', revenue:'219亿', netProfit:'61亿', netMargin:'27.9%', gpm:'--', roe:'8%', revenueGrowth:'+3%', rdRate:'0.5%', marketCap:'1,800亿', currency:'人民币', revenueStructure:[{name:'投资银行',pct:42},{name:'股票业务',pct:35},{name:'财富管理',pct:23}] },
+  ]},
+  retail: { companies: [
+    { id:'popmart', name:'泡泡玛特', revenue:'74亿', netProfit:'12亿', netMargin:'16.2%', gpm:'64%', roe:'22%', revenueGrowth:'+63%', rdRate:'4%', marketCap:'680亿', currency:'港元', revenueStructure:[{name:'手办盲盒',pct:58},{name:'MEGA收藏',pct:18},{name:'衍生品',pct:15},{name:'联名合作',pct:9}] },
+    { id:'wangfujing', name:'王府井', revenue:'120亿', netProfit:'5.8亿', netMargin:'4.8%', gpm:'22%', roe:'6%', revenueGrowth:'+8%', rdRate:'0.5%', marketCap:'180亿', currency:'人民币', revenueStructure:[{name:'百货零售',pct:55},{name:'奥特莱斯',pct:25},{name:'购物中心',pct:20}] },
+    { id:'yonghui', name:'永辉超市', revenue:'786亿', netProfit:'-13亿', netMargin:'-1.7%', gpm:'18%', roe:'-5%', revenueGrowth:'-8%', rdRate:'0.3%', marketCap:'250亿', currency:'人民币', revenueStructure:[{name:'生鲜食品',pct:72},{name:'日用百货',pct:28}] },
+    { id:'chow', name:'周大生', revenue:'170亿', netProfit:'11亿', netMargin:'6.5%', gpm:'20%', roe:'14%', revenueGrowth:'+18%', rdRate:'0.8%', marketCap:'160亿', currency:'人民币', revenueStructure:[{name:'素金首饰',pct:62},{name:'镶嵌首饰',pct:28},{name:'电商直播',pct:10}] },
+    { id:'watson', name:'屈臣氏', revenue:'180亿+', netProfit:'15亿+', netMargin:'8.3%', gpm:'32%', roe:'18%', revenueGrowth:'+5%', rdRate:'0.5%', marketCap:'--', currency:'港元', revenueStructure:[{name:'护肤彩妆',pct:65},{name:'保健产品',pct:25},{name:'个人护理',pct:10}] },
+  ]},
+  energy: { companies: [
+    { id:'catl', name:'宁德时代', revenue:'3,222亿', netProfit:'401亿', netMargin:'12.4%', gpm:'22%', roe:'21%', revenueGrowth:'+22%', rdRate:'5.5%', marketCap:'9,000亿', currency:'人民币', revenueStructure:[{name:'动力电池',pct:72},{name:'储能电池',pct:18},{name:'电池材料',pct:10}] },
+    { id:'byd', name:'比亚迪', revenue:'6,023亿', netProfit:'300亿', netMargin:'5.0%', gpm:'20%', roe:'24%', revenueGrowth:'+42%', rdRate:'4.8%', marketCap:'7,500亿', currency:'人民币', revenueStructure:[{name:'汽车',pct:82},{name:'手机部件',pct:12},{name:'储能',pct:6}] },
+    { id:'sungrow', name:'阳光电源', revenue:'529亿', netProfit:'72亿', netMargin:'13.6%', gpm:'30%', roe:'32%', revenueGrowth:'+80%', rdRate:'4%', marketCap:'1,800亿', currency:'人民币', revenueStructure:[{name:'光伏逆变器',pct:55},{name:'储能系统',pct:32},{name:'EPC',pct:13}] },
+    { id:'envision', name:'远景能源', revenue:'450亿+', netProfit:'48亿+', netMargin:'10.7%', gpm:'28%', roe:'18%', revenueGrowth:'+35%', rdRate:'5%', marketCap:'1,200亿', currency:'人民币', revenueStructure:[{name:'风机',pct:52},{name:'储能',pct:28},{name:'智能物联',pct:20}] },
+    { id:'growatt', name:'固德威', revenue:'98亿', netProfit:'13亿', netMargin:'13.3%', gpm:'34%', roe:'28%', revenueGrowth:'+65%', rdRate:'6%', marketCap:'420亿', currency:'人民币', revenueStructure:[{name:'光伏逆变器',pct:65},{name:'储能逆变器',pct:25},{name:'户用系统',pct:10}] },
+  ]},
+  education: { companies: [
+    { id:'neworiental', name:'新东方', revenue:'298亿', netProfit:'26亿', netMargin:'8.7%', gpm:'42%', roe:'14%', revenueGrowth:'+43%', rdRate:'2%', marketCap:'680亿', currency:'港元', revenueStructure:[{name:'留学咨询',pct:42},{name:'直播电商',pct:38},{name:'素质教育',pct:20}] },
+    { id:'tal', name:'好未来', revenue:'225亿', netProfit:'18亿', netMargin:'8.0%', gpm:'48%', roe:'16%', revenueGrowth:'+38%', rdRate:'4%', marketCap:'550亿', currency:'美元', revenueStructure:[{name:'学习服务',pct:58},{name:'学习内容',pct:28},{name:'科技方案',pct:14}] },
+    { id:'dmi', name:'读书郎', revenue:'5.2亿', netProfit:'-0.8亿', netMargin:'-15.4%', gpm:'38%', roe:'-8%', revenueGrowth:'-25%', rdRate:'8%', marketCap:'12亿', currency:'港元', revenueStructure:[{name:'学习平板',pct:65},{name:'教育内容',pct:25},{name:'增值服务',pct:10}] },
+    { id:'k12', name:'高途', revenue:'28亿', netProfit:'2.5亿', netMargin:'8.9%', gpm:'55%', roe:'12%', revenueGrowth:'+55%', rdRate:'5%', marketCap:'80亿', currency:'美元', revenueStructure:[{name:'成人教育',pct:55},{name:'职业教育',pct:30},{name:'留学',pct:15}] },
+    { id:'yuantai', name:'猿辅导', revenue:'55亿', netProfit:'3.2亿', netMargin:'5.8%', gpm:'60%', roe:'10%', revenueGrowth:'+42%', rdRate:'8%', marketCap:'280亿', currency:'人民币', revenueStructure:[{name:'斑马AI课',pct:48},{name:'猿题库',pct:32},{name:'小猿搜题',pct:20}] },
+  ]},
+};
+
+function renderFinancialAnalysis() {
+  const ind = document.getElementById('finIndustrySelect') ? document.getElementById('finIndustrySelect').value : 'internet';
+  const sel = document.getElementById('finCompanySelect');
+  const map = FIN_INDUSTRY_MAP[ind];
+  if (!map) return;
+  
+  // Populate company select if needed
+  if (sel && sel.options.length === 0) {
+    map.companies.forEach(c => { const opt = document.createElement('option'); opt.value = c.id; opt.textContent = c.name; sel.appendChild(opt); });
+  }
+  
+  const companyId = sel ? sel.value : map.companies[0].id;
+  const company = map.companies.find(c => c.id === companyId) || map.companies[0];
+  
+  document.getElementById('an-kpi-income').textContent = company.currency + ' ' + company.revenue;
+  document.getElementById('an-kpi-expense').textContent = company.netMargin;
+  document.getElementById('an-kpi-net').textContent = company.netProfit;
+  document.getElementById('an-kpi-net-change').textContent = '净利率 ' + company.netMargin;
+  document.getElementById('an-kpi-ads').textContent = company.marketCap;
+  document.getElementById('an-kpi-ltv').textContent = company.revenueGrowth;
+  
+  // Income structure pie chart
+  if (!charts['incomeSourceChart']) {
+    charts['incomeSourceChart'] = new Chart(document.getElementById('incomeSourceChart'), {
+      type: 'doughnut',
+      data: { labels: [], datasets: [{ data: [], backgroundColor: ['#3b82f6','#22c55e','#f59e0b','#ef4444','#a855f7'], borderWidth: 0 }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
+    });
+  }
+  const rsc = company.revenueStructure;
+  charts['incomeSourceChart'].data.labels = rsc.map(s => s.name + ' ' + s.pct + '%');
+  charts['incomeSourceChart'].data.datasets[0].data = rsc.map(s => s.pct);
+  charts['incomeSourceChart'].update();
+  
+  // Compare chart
+  if (!charts['compareChart']) {
+    charts['compareChart'] = new Chart(document.getElementById('compareChart'), {
+      type: 'bar',
+      data: { labels: ['毛利率', '净利率', 'ROE'], datasets: [] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => v + '%' } } } }
+    });
+  }
+  const gpm = parseFloat(company.gpm) || 0;
+  const npm = parseFloat(company.netMargin) || 0;
+  const roe = parseFloat(company.roe) || 0;
+  charts['compareChart'].data.datasets = [
+    { label: company.name, data: [gpm, npm, roe], backgroundColor: '#3b82f6', borderRadius: 6 },
+    { label: '行业中位数', data: [gpm*0.85, npm*0.9, roe*0.88], backgroundColor: '#94a3b8', borderRadius: 6 },
+  ];
+  charts['compareChart'].update();
 }
 
 function renderAdIndustryPage() {
