@@ -480,7 +480,7 @@
     <div class="nav-item" onclick="showPage('analysis')"><span class="ni">📈</span><span>趋势分析</span></div>
     <div class="nav-section">🎯 渠道管理</div>
     <div class="nav-item" onclick="showPage('industry')"><span class="ni">🏭</span><span>行业分析</span></div>
-    <div class="nav-item" onclick="showPage('competitor')"><span class="ni">👥</span><span>受众分析</span></div>
+    <div class="nav-item" onclick="showPage('userProfile')"><span class="ni">👤</span><span>用户画像分析</span></div>
     <div class="nav-item" onclick="showPage('selfmedia')"><span class="ni">📱</span><span>自媒体分析</span></div>
     <div class="nav-section">💼 效果评估</div>
     <div class="nav-item" onclick="showPage('assets')"><span class="ni">💰</span><span>投放报表</span></div>
@@ -1422,12 +1422,21 @@
     <!-- ============ PAGE: USER PROFILE ============ -->
     <div id="page-userProfile" class="page">
       <div class="page-header">
-        <h1>👥 用户画像分析</h1>
-        <p class="page-desc">游戏用户行为数据与画像洞察</p>
+        <h1>👤 用户画像分析</h1>
+        <p class="page-desc">用户价值分层 · 行为深度分析 · 增长策略建议</p>
       </div>
 
-      <!-- KPI Cards -->
-      <div class="kpi-grid">
+      <!-- AI 洞察横幅 -->
+      <div style="background:linear-gradient(135deg,#0f172a,#1e3a8a);border-radius:16px;padding:20px 24px;margin-bottom:24px;display:flex;align-items:flex-start;gap:14px;color:#fff">
+        <div style="font-size:28px;flex-shrink:0;margin-top:2px">🤖</div>
+        <div>
+          <div style="font-size:14px;font-weight:700;margin-bottom:6px">AI 用户洞察 · 2025年用户增长策略</div>
+          <div style="font-size:13px;color:#94a3b8;line-height:1.7">高效投放的<b style="color:#fff">Top5行业</b>为：游戏/互联网（ROAS 3.8x）、金融保险（ROAS 4.2x）、电商零售（ROAS 5.1x）、美妆个护（ROAS 3.5x）、教育培训（ROAS 3.2x）。核心用户增长策略：<b style="color:#fff">高频触达轻度用户（通勤场景）+ 深度运营高价值用户（家庭场景）+ 精准锁定年轻女性（25-34岁，一线城市）</b>。</div>
+        </div>
+      </div>
+
+      <!-- 用户价值 KPI -->
+      <div class="kpi-grid" style="margin-bottom:24px">
         <div class="kpi-card">
           <div class="kpi-icon">👤</div>
           <div class="kpi-content">
@@ -1472,63 +1481,190 @@
         </div>
       </div>
 
-      <!-- 用户分布 -->
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-header"><div class="card-title">🎮 用户等级分布</div></div>
-          <div class="card-body"><div class="chart-wrap"><canvas id="userLevelChart"></canvas></div></div>
+      <!-- 一、用户价值LTV分层 -->
+      <div class="card" style="margin-bottom:24px">
+        <div class="card-header">
+          <div class="card-title">💎 用户价值分层（LTV模型）</div>
+          <div style="font-size:12px;color:var(--text-sub)">按用户生命周期价值划分 · 高/中/低价值用户占比与特征</div>
         </div>
-        <div class="card">
-          <div class="card-header"><div class="card-title">💳 付费用户等级分布</div></div>
-          <div class="card-body"><div class="chart-wrap"><canvas id="payUserLevelChart"></canvas></div></div>
-        </div>
-      </div>
-
-      <!-- 用户行为 -->
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-header"><div class="card-title">⏰ 用户活跃时段分布</div></div>
-          <div class="card-body"><div class="chart-wrap"><canvas id="userActiveTimeChart"></canvas></div></div>
-        </div>
-        <div class="card">
-          <div class="card-header"><div class="card-title">🎯 用户付费意愿分布</div></div>
-          <div class="card-body"><div class="chart-wrap"><canvas id="payWillingChart"></canvas></div></div>
-        </div>
-      </div>
-
-      <!-- 用户画像详情 -->
-      <div class="card">
-        <div class="card-header"><div class="card-title">👤 用户画像标签分析</div></div>
-        <div class="card-body" id="userProfileTags">
-          <div class="profile-tag-grid" id="profileTagGrid"></div>
-        </div>
-      </div>
-
-      <!-- 用户价值分层 -->
-      <div class="card">
-        <div class="card-header"><div class="card-title">📊 用户价值分层（RFM模型）</div></div>
-        <div class="card-body" style="padding:0">
+        <div class="card-body">
+          <div id="ltvTierChart" class="chart-wrap" style="height:280px;margin-bottom:20px"><canvas id="ltvBarChart"></canvas></div>
           <div class="table-wrap">
             <table class="qr-table">
               <thead>
-                <tr>
-                  <th>用户分层</th>
-                  <th>用户占比</th>
-                  <th>平均付费金额</th>
-                  <th>核心特征</th>
-                  <th>运营策略</th>
-                </tr>
+                <tr><th>价值分层</th><th>占比</th><th>LTV区间</th><th>ARPU/月</th><th>核心特征</th><th>获客成本上限</th><th>运营策略</th></tr>
               </thead>
-              <tbody id="rfmTableBody"></tbody>
+              <tbody id="ltvTableBody"></tbody>
             </table>
           </div>
         </div>
       </div>
 
-      <!-- 留存分析 -->
+      <!-- 二、行为深度分析 -->
+      <div class="grid-2" style="margin-bottom:24px">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">🔍 行为深度分析</div>
+            <div style="font-size:12px;color:var(--text-sub)">深度用户 vs 轻度用户对比</div>
+          </div>
+          <div class="card-body">
+            <div id="behaviorDepthChart" class="chart-wrap" style="height:260px"><canvas id="behaviorDepthCanvas"></canvas></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">⏱️ 使用频率分布</div>
+            <div style="font-size:12px;color:var(--text-sub)">高频/中频/低频用户占比</div>
+          </div>
+          <div class="card-body">
+            <div id="frequencyChart" class="chart-wrap" style="height:260px"><canvas id="frequencyCanvas"></canvas></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 行为深度详情表 -->
+      <div class="card" style="margin-bottom:24px">
+        <div class="card-header">
+          <div class="card-title">📋 行为深度对比表</div>
+        </div>
+        <div class="card-body" style="padding:0">
+          <div class="table-wrap">
+            <table class="qr-table">
+              <thead>
+                <tr><th>行为维度</th><th>深度用户(高)</th><th>中度用户(中)</th><th>轻度用户(低)</th><th>行业基准</th></tr>
+              </thead>
+              <tbody id="behaviorDepthTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 三、场景分析 -->
+      <div class="card" style="margin-bottom:24px">
+        <div class="card-header">
+          <div class="card-title">🎬 用户场景分析</div>
+          <div style="font-size:12px;color:var(--text-sub)">通勤 · 家庭 · 娱乐 三大核心场景占比与时段分布</div>
+        </div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:1fr 2fr;gap:20px;align-items:center">
+            <div id="scenePieChart" class="chart-wrap" style="height:240px"><canvas id="scenePieCanvas"></canvas></div>
+            <div>
+              <table class="qr-table">
+                <thead><tr><th>场景</th><th>占比</th><th>活跃时段</th><th>平均时长</th><th>付费转化率</th><th>适合内容类型</th></tr></thead>
+                <tbody id="sceneTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 四、属性分析 -->
+      <div class="card" style="margin-bottom:24px">
+        <div class="card-header">
+          <div class="card-title">👥 用户属性分析</div>
+          <div style="font-size:12px;color:var(--text-sub)">年龄 · 城市 · 收入 三大维度分布</div>
+        </div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px">
+            <div style="background:#f8fafc;border-radius:12px;padding:16px;text-align:center">
+              <div style="font-size:11px;color:#64748b;margin-bottom:8px">🎂 年龄分布</div>
+              <div style="font-size:14px;font-weight:700;color:#3b82f6;margin-bottom:4px">25-34岁 占比38%</div>
+              <div style="font-size:12px;color:#64748b">核心消费群体 · 高付费意愿</div>
+            </div>
+            <div style="background:#f8fafc;border-radius:12px;padding:16px;text-align:center">
+              <div style="font-size:11px;color:#64748b;margin-bottom:8px">🏙️ 城市分布</div>
+              <div style="font-size:14px;font-weight:700;color:#22c55e;margin-bottom:4px">一线城市 占比42%</div>
+              <div style="font-size:12px;color:#64748b">高消费力 · 品牌敏感</div>
+            </div>
+            <div style="background:#f8fafc;border-radius:12px;padding:16px;text-align:center">
+              <div style="font-size:11px;color:#64748b;margin-bottom:8px">💵 收入水平</div>
+              <div style="font-size:14px;font-weight:700;color:#f59e0b;margin-bottom:4px">8K-20K/月 占比45%</div>
+              <div style="font-size:12px;color:#64748b">中产主力 · 注重性价比</div>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div id="ageChart" class="chart-wrap" style="height:220px"><canvas id="ageBarChart"></canvas></div>
+            <div id="cityChart" class="chart-wrap" style="height:220px"><canvas id="cityBarChart"></canvas></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 五、Top5行业投放效果对比 -->
+      <div class="card" style="margin-bottom:24px">
+        <div class="card-header">
+          <div class="card-title">🏆 高效投放行业 Top5 对比</div>
+          <div style="font-size:12px;color:var(--text-sub)">按ROAS排序 · 2025年行业基准数据</div>
+        </div>
+        <div class="card-body" style="padding:0">
+          <div class="table-wrap">
+            <table class="qr-table">
+              <thead>
+                <tr><th>排名</th><th>行业</th><th>ROAS</th><th>CPM</th><th>CTR</th><th>CVR</th><th>目标用户</th><th>场景偏好</th><th>年龄区间</th><th>城市层级</th></tr>
+              </thead>
+              <tbody id="top5IndustryTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-body">
+          <div id="top5RadarChart" class="chart-wrap" style="height:320px"><canvas id="top5RadarCanvas"></canvas></div>
+        </div>
+      </div>
+
+      <!-- 六、用户增长策略 -->
+      <div class="card" style="margin-bottom:24px">
+        <div class="card-header">
+          <div class="card-title">🚀 用户增长策略建议</div>
+          <div style="font-size:12px;color:var(--text-sub)">基于用户画像与行业数据的增长方案</div>
+        </div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px">
+              <div style="font-size:14px;font-weight:700;color:#15803d;margin-bottom:10px">🎯 高价值用户策略</div>
+              <div style="font-size:12px;color:#374151;line-height:1.8">
+                <b>目标群体：</b>LTV高 + 行为深度<br>
+                <b>场景：</b>家庭场景为主<br>
+                <b>策略：</b>专属VIP权益、定制内容、线下活动邀请、1V1专属服务<br>
+                <b>触达方式：</b>私域社群 + 高端会员邮件<br>
+                <b>预期效果：</b>ARPU提升30%，流失率降低20%
+              </div>
+            </div>
+            <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:16px">
+              <div style="font-size:14px;font-weight:700;color:#1d4ed8;margin-bottom:10px">🔄 轻度用户激活策略</div>
+              <div style="font-size:12px;color:#374151;line-height:1.8">
+                <b>目标群体：</b>LTV中/低 + 通勤场景<br>
+                <b>场景：</b>通勤场景为主（碎片时间）<br>
+                <b>策略：</b>推送轻量内容、限时优惠、签到奖励、每日任务体系<br>
+                <b>触达方式：</b>PUSH推送 + 信息流广告<br>
+                <b>预期效果：</b>日活提升15%，转化率提升10%
+              </div>
+            </div>
+            <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:12px;padding:16px">
+              <div style="font-size:14px;font-weight:700;color:#b45309;margin-bottom:10px">📈 新用户获取策略</div>
+              <div style="font-size:12px;color:#374151;line-height:1.8">
+                <b>目标群体：</b>25-34岁 + 一二线城市 + 女性<br>
+                <b>场景：</b>娱乐场景（短视频/社交）<br>
+                <b>策略：</b>精准定向投放、KOL合作、裂变活动、新人礼包<br>
+                <b>渠道：</b>抖音/小红书/朋友圈广告<br>
+                <b>预期效果：</b>获客成本降低25%，7日留存提升12%
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 增长策略详情表 -->
       <div class="card">
-        <div class="card-header"><div class="card-title">📈 用户留存曲线</div></div>
-        <div class="card-body"><div class="chart-wrap"><canvas id="retentionCurveChart"></canvas></div></div>
+        <div class="card-header"><div class="card-title">📊 用户增长策略执行表</div></div>
+        <div class="card-body" style="padding:0">
+          <div class="table-wrap">
+            <table class="qr-table">
+              <thead>
+                <tr><th>策略阶段</th><th>目标群体</th><th>场景</th><th>核心行为</th><th>推荐渠道</th><th>转化目标</th><th>ROI预估</th></tr>
+              </thead>
+              <tbody id="growthStrategyTableBody"></tbody>
+            </table>
+          </div>
+        </div>
       </div>
 
     </div><!-- /page-userProfile -->
@@ -1978,7 +2114,7 @@ const LIABILITY_TYPE_LABELS = { mortgage:'房贷', carloan:'车贷', creditcard:
 // ==================== NAVIGATION ====================
 const PAGE_TITLES = {
   dashboard:'投放总览', analysis:'趋势分析', ai:'效果评估', assets:'投放报表', budget:'投放规划',
-  industry:'行业分析', competitor:'受众分析', selfmedia:'自媒体分析'
+  industry:'行业分析', userProfile:'用户画像分析', selfmedia:'自媒体分析'
 };
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -1998,7 +2134,6 @@ function refreshPage(name) {
   if(name === 'ai') { renderAI(); }
   if(name === 'report') { renderReports(); }
   if(name === 'industry') { renderAdIndustryPage(); }
-  if(name === 'competitor') { renderCompetitorPage(); }
   if(name === 'userProfile') { renderUserProfilePage(); }
   if(name === 'selfmedia') { renderSelfmediaPage(); }
 }
@@ -3750,177 +3885,219 @@ const USER_PROFILE_DATA = {
   retention1d: 42.5,
   retention7d: 28.2,
   retention30d: 15.8,
-  levelDist: [15, 25, 28, 18, 10, 4], // 1-10级, 11-20级, 21-30级, 31-40级, 41-50级, 51+级
-  payLevelDist: [5, 12, 22, 30, 20, 11], // 付费用户等级分布
-  activeTimeDist: [8, 12, 18, 25, 20, 10, 5, 2], // 0-3, 3-6, 6-9, 9-12, 12-15, 15-18, 18-21, 21-24时
-  payWillingDist: [45, 30, 15, 7, 3], // 从不付费, 偶尔付费, 定期付费, 高付费, 鲸鱼用户
+  // LTV分层
+  ltvDist: { high: 15, mid: 35, low: 50 },
+  ltvArpu: { high: 580, mid: 120, low: 28 },
+  ltvLtv: { high: 6800, mid: 1680, low: 320 },
+  // 行为深度
+  behaviorDepth: { deep: 18, mid: 42, light: 40 },
+  // 频率分布
+  freqDist: { high: 22, mid: 38, low: 40 },
+  // 场景分布
+  sceneDist: { commute: 35, home: 30, entertainment: 35 },
+  // 年龄分布
+  ageDist: [8, 15, 38, 25, 10, 4], // 18-, 18-24, 25-34, 35-44, 45-54, 55+
+  // 城市分布
+  cityDist: [42, 35, 23], // 一线, 二线, 三四线
+  // Top5行业数据
+  top5Industries: [
+    { rank: 1, name: '电商零售', roas: 5.1, cpm: 55, ctr: 3.2, cvr: 5.5, target: '25-34岁女性', scene: '家庭/通勤', age: '25-44岁', city: '一二线' },
+    { rank: 2, name: '金融保险', roas: 4.2, cpm: 48, ctr: 2.8, cvr: 4.2, target: '高收入白领', scene: '家庭/通勤', age: '28-45岁', city: '一二线' },
+    { rank: 3, name: '游戏/互联网', roas: 3.8, cpm: 45, ctr: 4.5, cvr: 3.5, target: 'Z世代/中青年', scene: '娱乐/通勤', age: '18-35岁', city: '全部' },
+    { rank: 4, name: '美妆个护', roas: 3.5, cpm: 75, ctr: 3.8, cvr: 4.0, target: '年轻女性', scene: '娱乐/家庭', age: '18-34岁', city: '一二三线' },
+    { rank: 5, name: '教育培训', roas: 3.2, cpm: 38, ctr: 3.5, cvr: 6.0, target: '25-40岁家长', scene: '通勤/家庭', age: '25-40岁', city: '一二线' },
+  ],
+  // 增长策略
+  growthStrategies: [
+    { phase: '拉新期', target: '25-34岁一线女性', scene: '娱乐场景', action: '抖音/小红书精准投放+KOL种草', channel: '抖音/小红书/朋友圈', goal: '注册率15%', roi: '3.2x' },
+    { phase: '激活期', target: '轻度用户/通勤人群', scene: '通勤场景', action: 'PUSH推送+签到奖励+轻量内容', channel: 'APP PUSH/信息流', goal: 'DAU提升20%', roi: '2.8x' },
+    { phase: '转化期', target: '中价值用户', scene: '家庭场景', action: '会员体系+限时优惠+私域触达', channel: '微信私域/短信', goal: '付费率提升8%', roi: '4.5x' },
+    { phase: '留存期', target: '高价值用户', scene: '家庭场景', action: 'VIP权益+线下活动+专属客服', channel: '1V1专属服务', goal: '流失率降低25%', roi: '5.2x' },
+  ],
 };
 
 function renderUserProfilePage() {
+  const d = USER_PROFILE_DATA;
+  
   // 更新KPI
-  document.getElementById('up-totalUsers').textContent = (USER_PROFILE_DATA.totalUsers / 10000).toFixed(0) + '万';
-  document.getElementById('up-dau').textContent = (USER_PROFILE_DATA.dau / 10000).toFixed(1) + '万';
-  document.getElementById('up-arpu').textContent = '¥' + USER_PROFILE_DATA.arpu;
-  document.getElementById('up-payRate').textContent = USER_PROFILE_DATA.payRate + '%';
-  document.getElementById('up-ltv').textContent = '¥' + USER_PROFILE_DATA.ltv;
-  document.getElementById('up-retention').textContent = USER_PROFILE_DATA.retention1d + '%';
+  document.getElementById('up-totalUsers').textContent = (d.totalUsers / 10000).toFixed(0) + '万';
+  document.getElementById('up-dau').textContent = (d.dau / 10000).toFixed(1) + '万';
+  document.getElementById('up-arpu').textContent = '¥' + d.arpu;
+  document.getElementById('up-payRate').textContent = d.payRate + '%';
+  document.getElementById('up-ltv').textContent = '¥' + d.ltv;
+  document.getElementById('up-retention').textContent = d.retention1d + '%';
 
-  // 用户等级分布图
-  destroyChart('userLevelChart');
-  charts['userLevelChart'] = new Chart(document.getElementById('userLevelChart'), {
+  // ===== 一、用户价值LTV分层 =====
+  destroyChart('ltvBarChart');
+  charts['ltvBarChart'] = new Chart(document.getElementById('ltvBarChart'), {
     type: 'bar',
     data: {
-      labels: ['1-10级', '11-20级', '21-30级', '31-40级', '41-50级', '51+级'],
+      labels: ['高价值用户', '中价值用户', '低价值用户'],
+      datasets: [
+        { label: '用户占比', data: [d.ltvDist.high, d.ltvDist.mid, d.ltvDist.low], backgroundColor: ['#ef4444', '#f59e0b', '#22c55e'], borderRadius: 8 },
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => v + '%' } } } }
+  });
+
+  const ltvRows = [
+    { tier: '🦋 高价值用户', pct: d.ltvDist.high + '%', range: '¥5,000+', arpu: d.ltvArpu.high, feature: '高频付费、长期留存、社交传播', cost: '¥800', strategy: 'VIP专属权益、线下活动、1V1服务' },
+    { tier: '🐟 中价值用户', pct: d.ltvDist.mid + '%', range: '¥1,000-5,000', arpu: d.ltvArpu.mid, feature: '稳定付费、活动敏感、潜力大', cost: '¥200', strategy: '会员体系、积分激励、升级引导' },
+    { tier: '🦐 低价值用户', pct: d.ltvDist.low + '%', range: '¥0-1,000', arpu: d.ltvArpu.low, feature: '免费玩家为主、社交活跃、传播价值', cost: '¥50', strategy: '广告变现、签到奖励、道具展示' },
+  ];
+  document.getElementById('ltvTableBody').innerHTML = ltvRows.map(r => `<tr><td><strong>${r.tier}</strong></td><td>${r.pct}</td><td>${r.range}</td><td>¥${r.arpu}</td><td>${r.feature}</td><td>¥${r.cost}</td><td>${r.strategy}</td></tr>`).join('');
+
+  // ===== 二、行为深度分析 =====
+  destroyChart('behaviorDepthCanvas');
+  charts['behaviorDepthCanvas'] = new Chart(document.getElementById('behaviorDepthCanvas'), {
+    type: 'bar',
+    data: {
+      labels: ['深度用户', '中度用户', '轻度用户'],
       datasets: [{
-        label: '用户数占比',
-        data: USER_PROFILE_DATA.levelDist,
-        backgroundColor: ['#3b82f6', '#22c55e', '#f59e0b', '#ef4444', '#a855f7', '#06b6d4'],
+        label: '占比',
+        data: [d.behaviorDepth.deep, d.behaviorDepth.mid, d.behaviorDepth.light],
+        backgroundColor: ['#3b82f6', '#f59e0b', '#22c55e'],
+        borderRadius: 8,
+      }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => v + '%' } } } }
+  });
+
+  destroyChart('frequencyCanvas');
+  charts['frequencyCanvas'] = new Chart(document.getElementById('frequencyCanvas'), {
+    type: 'doughnut',
+    data: {
+      labels: ['高频用户(5次+/周)', '中频用户(1-5次/周)', '低频用户(1次/周以下)'],
+      datasets: [{
+        data: [d.freqDist.high, d.freqDist.mid, d.freqDist.low],
+        backgroundColor: ['#ef4444', '#f59e0b', '#22c55e'],
+        borderWidth: 0,
+      }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
+  });
+
+  const behaviorRows = [
+    { dim: '日均使用时长', deep: '120分钟+', mid: '30-120分钟', light: '<30分钟', benchmark: '45分钟' },
+    { dim: '周登录次数', deep: '7次+', mid: '3-7次', light: '<3次', benchmark: '4次' },
+    { dim: '平均停留时长', deep: '25分钟+', mid: '8-25分钟', light: '<8分钟', benchmark: '12分钟' },
+    { dim: '功能使用数', deep: '8个+', mid: '3-8个', light: '<3个', benchmark: '5个' },
+    { dim: '付费转化率', deep: '15%+', mid: '5-15%', light: '<5%', benchmark: '8%' },
+    { dim: '分享传播率', deep: '12%+', mid: '3-12%', light: '<3%', benchmark: '5%' },
+  ];
+  document.getElementById('behaviorDepthTableBody').innerHTML = behaviorRows.map(r => `<tr><td><strong>${r.dim}</strong></td><td style="color:#3b82f6;font-weight:600">${r.deep}</td><td style="color:#f59e0b">${r.mid}</td><td style="color:#22c55e">${r.light}</td><td>${r.benchmark}</td></tr>`).join('');
+
+  // ===== 三、场景分析 =====
+  destroyChart('scenePieCanvas');
+  charts['scenePieCanvas'] = new Chart(document.getElementById('scenePieCanvas'), {
+    type: 'doughnut',
+    data: {
+      labels: ['🎬 通勤场景', '🏠 家庭场景', '🎮 娱乐场景'],
+      datasets: [{
+        data: [d.sceneDist.commute, d.sceneDist.home, d.sceneDist.entertainment],
+        backgroundColor: ['#3b82f6', '#22c55e', '#f59e0b'],
+        borderWidth: 0,
+      }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+  });
+
+  const sceneRows = [
+    { scene: '🎬 通勤场景', pct: '35%', time: '7-9时 / 18-21时', duration: '15分钟', cvr: '8%', type: '短视频/轻阅读/资讯' },
+    { scene: '🏠 家庭场景', pct: '30%', time: '21-24时', duration: '45分钟', cvr: '12%', type: '长视频/深度内容/游戏' },
+    { scene: '🎮 娱乐场景', pct: '35%', time: '12-15时 / 随时', duration: '30分钟', cvr: '6%', type: '社交/游戏/直播' },
+  ];
+  document.getElementById('sceneTableBody').innerHTML = sceneRows.map(r => `<tr><td><strong>${r.scene}</strong></td><td>${r.pct}</td><td>${r.time}</td><td>${r.duration}</td><td>${r.cvr}</td><td>${r.type}</td></tr>`).join('');
+
+  // ===== 四、属性分析 =====
+  destroyChart('ageBarChart');
+  charts['ageBarChart'] = new Chart(document.getElementById('ageBarChart'), {
+    type: 'bar',
+    data: {
+      labels: ['18岁以下', '18-24岁', '25-34岁', '35-44岁', '45-54岁', '55岁+'],
+      datasets: [{
+        label: '占比',
+        data: d.ageDist,
+        backgroundColor: ['#64748b', '#3b82f6', '#22c55e', '#f59e0b', '#ef4444', '#a855f7'],
         borderRadius: 6,
       }]
     },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: { y: { beginAtZero: true, ticks: { callback: v => v + '%' } } }
-    }
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => v + '%' } } } }
   });
 
-  // 付费用户等级分布图
-  destroyChart('payUserLevelChart');
-  charts['payUserLevelChart'] = new Chart(document.getElementById('payUserLevelChart'), {
-    type: 'doughnut',
+  destroyChart('cityBarChart');
+  charts['cityBarChart'] = new Chart(document.getElementById('cityBarChart'), {
+    type: 'bar',
     data: {
-      labels: ['1-10级', '11-20级', '21-30级', '31-40级', '41-50级', '51+级'],
+      labels: ['一线城市', '二线城市', '三四线城市'],
       datasets: [{
-        data: USER_PROFILE_DATA.payLevelDist,
-        backgroundColor: ['#3b82f6', '#22c55e', '#f59e0b', '#ef4444', '#a855f7', '#06b6d4'],
-        borderWidth: 0,
+        label: '占比',
+        data: d.cityDist,
+        backgroundColor: ['#3b82f6', '#22c55e', '#f59e0b'],
+        borderRadius: 6,
       }]
     },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { position: 'right' } },
-    }
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => v + '%' } } } }
   });
 
-  // 用户活跃时段分布图
-  destroyChart('userActiveTimeChart');
-  charts['userActiveTimeChart'] = new Chart(document.getElementById('userActiveTimeChart'), {
-    type: 'line',
-    data: {
-      labels: ['0-3时', '3-6时', '6-9时', '9-12时', '12-15时', '15-18时', '18-21时', '21-24时'],
-      datasets: [{
-        label: '活跃用户占比',
-        data: USER_PROFILE_DATA.activeTimeDist,
-        borderColor: '#a855f7',
-        backgroundColor: 'rgba(168, 85, 247, 0.1)',
-        fill: true,
-        tension: 0.4,
-        pointRadius: 4,
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: { y: { beginAtZero: true, ticks: { callback: v => v + '%' } } }
-    }
-  });
-
-  // 用户付费意愿分布
-  destroyChart('payWillingChart');
-  charts['payWillingChart'] = new Chart(document.getElementById('payWillingChart'), {
-    type: 'pie',
-    data: {
-      labels: ['从不付费', '偶尔付费', '定期付费', '高付费用户', '鲸鱼用户'],
-      datasets: [{
-        data: USER_PROFILE_DATA.payWillingDist,
-        backgroundColor: ['#64748b', '#3b82f6', '#22c55e', '#f59e0b', '#ef4444'],
-        borderWidth: 0,
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { position: 'right' } },
-    }
-  });
-
-  // 用户画像标签
-  const profileTags = [
-    { icon: '🎮', label: '硬核玩家', count: '18%', desc: '日均在线3小时+，付费意愿强' },
-    { icon: '⏰', label: '碎片时间用户', count: '35%', desc: '通勤/午休时段活跃，偏好轻度玩法' },
-    { icon: '💰', label: '高净值用户', count: '8%', desc: 'ARPU>500元，付费稳定，复购率高' },
-    { icon: '🌟', label: '活跃社交用户', count: '22%', desc: '公会/好友互动频繁，传播价值高' },
-    { icon: '📱', label: '移动端重度用户', count: '45%', desc: '主要使用手机游戏，iOS占比60%' },
-    { icon: '🎁', label: '活动敏感用户', count: '28%', desc: '对限时活动响应度高，促进付费转化' },
-    { icon: '👀', label: '内容消费型', count: '32%', desc: '关注剧情/世界观，愿意为内容付费' },
-    { icon: '🏆', label: '竞技追求型', count: '15%', desc: '追求排行榜排名，付费买战力' },
-  ];
-  document.getElementById('profileTagGrid').innerHTML = profileTags.map(tag => `
-    <div class="profile-tag-item">
-      <span class="profile-tag-icon">${tag.icon}</span>
-      <div class="profile-tag-content">
-        <div class="profile-tag-label">${tag.label} <span class="profile-tag-count">${tag.count}</span></div>
-        <div class="profile-tag-desc">${tag.desc}</div>
-      </div>
-    </div>
-  `).join('');
-
-  // RFM用户分层表
-  const rfmData = [
-    { tier: '🦈 鲸鱼用户', pct: '2%', avgPay: '¥5,800', feature: '高消费、高频次、重度粘性', strategy: '专属VIP服务、定制内容、线下活动邀请' },
-    { tier: '🐬 海豚用户', pct: '8%', avgPay: '¥1,200', feature: '稳定付费、关注性价比、活动敏感', strategy: '活动推送、订阅服务、会员权益' },
-    { tier: '🐟 小鱼用户', pct: '25%', avgPay: '¥280', feature: '偶发付费、新手向、潜力大', strategy: '新手礼包、成长引导、限时优惠' },
-    { tier: '🦐 虾米用户', pct: '65%', avgPay: '¥0', feature: '免费玩家、社交活跃、传播价值', strategy: '社交激励、广告变现、道具皮肤展示' },
-  ];
-  document.getElementById('rfmTableBody').innerHTML = rfmData.map(row => `
+  // ===== 五、Top5行业投放效果对比 =====
+  document.getElementById('top5IndustryTableBody').innerHTML = d.top5Industries.map(ind => `
     <tr>
-      <td><strong>${row.tier}</strong></td>
-      <td>${row.pct}</td>
-      <td>${row.avgPay}</td>
-      <td>${row.feature}</td>
-      <td>${row.strategy}</td>
+      <td><span style="background:#fef3c7;color:#b45309;padding:2px 8px;border-radius:12px;font-weight:700">${ind.rank}</span></td>
+      <td><strong>${ind.name}</strong></td>
+      <td><span style="color:#ef4444;font-weight:700">${ind.roas}x</span></td>
+      <td>¥${ind.cpm}</td>
+      <td>${ind.ctr}%</td>
+      <td>${ind.cvr}%</td>
+      <td>${ind.target}</td>
+      <td>${ind.scene}</td>
+      <td>${ind.age}</td>
+      <td>${ind.city}</td>
     </tr>
   `).join('');
 
-  // 留存曲线图
-  destroyChart('retentionCurveChart');
-  charts['retentionCurveChart'] = new Chart(document.getElementById('retentionCurveChart'), {
-    type: 'line',
+  destroyChart('top5RadarCanvas');
+  charts['top5RadarCanvas'] = new Chart(document.getElementById('top5RadarCanvas'), {
+    type: 'radar',
     data: {
-      labels: ['次日', '第3日', '第7日', '第14日', '第30日', '第60日', '第90日'],
-      datasets: [
-        {
-          label: '留存率',
-          data: [42.5, 35.2, 28.2, 22.5, 15.8, 10.2, 7.5],
-          borderColor: '#22c55e',
-          backgroundColor: 'rgba(34, 197, 94, 0.1)',
-          fill: true,
-          tension: 0.4,
-        },
-        {
-          label: '行业均值',
-          data: [38, 30, 22, 16, 10, 6, 4],
-          borderColor: '#64748b',
-          borderDash: [5, 5],
-          fill: false,
-          tension: 0.4,
-        }
-      ]
+      labels: ['ROAS', 'CPM(成本)', 'CTR', 'CVR', '用户匹配度', '场景覆盖'],
+      datasets: d.top5Industries.map((ind, i) => ({
+        label: ind.name,
+        data: [
+          Math.min(ind.roas / 5 * 100, 100),
+          Math.max(100 - (ind.cpm - 30) / 100 * 100, 0),
+          ind.ctr * 25,
+          ind.cvr * 18,
+          85 - i * 5,
+          80 - i * 3,
+        ],
+        borderColor: ['#ef4444', '#f59e0b', '#22c55e', '#3b82f6', '#a855f7'][i],
+        backgroundColor: ['rgba(239,68,68,0.1)', 'rgba(245,158,11,0.1)', 'rgba(34,197,94,0.1)', 'rgba(59,130,246,0.1)', 'rgba(168,85,247,0.1)'][i],
+        borderWidth: 2,
+        pointRadius: 4,
+      }))
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      plugins: { legend: { position: 'top' } },
-      scales: { y: { beginAtZero: true, ticks: { callback: v => v + '%' } } }
+      plugins: { legend: { position: 'right' } },
+      scales: { r: { beginAtZero: true, max: 100, ticks: { display: false } } }
     }
   });
-}
 
-// ==================== INIT ====================
+  // ===== 六、用户增长策略 =====
+  document.getElementById('growthStrategyTableBody').innerHTML = d.growthStrategies.map(s => `
+    <tr>
+      <td><strong>${s.phase}</strong></td>
+      <td>${s.target}</td>
+      <td>${s.scene}</td>
+      <td>${s.action}</td>
+      <td>${s.channel}</td>
+      <td>${s.goal}</td>
+      <td style="color:#22c55e;font-weight:600">${s.roi}</td>
+    </tr>
+  `).join('');
+}
 
 // ==================== INIT ====================
 function init() {
