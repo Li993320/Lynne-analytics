@@ -482,6 +482,8 @@
     <div class="nav-item" onclick="showPage('industry')"><span class="ni">🏭</span><span>行业分析</span></div>
     <div class="nav-item" onclick="showPage('userProfile')"><span class="ni">👤</span><span>用户画像分析</span></div>
     <div class="nav-item" onclick="showPage('selfmedia')"><span class="ni">📱</span><span>自媒体分析</span></div>
+    <div class="nav-section">🌐 宏观洞察</div>
+    <div class="nav-item" onclick="showPage('macroAnalysis')"><span class="ni">🌍</span><span>全行业分析</span></div>
     <div class="nav-section">💼 效果评估</div>
     <div class="nav-item" onclick="showPage('assets')"><span class="ni">💰</span><span>投放报表</span></div>
     <div class="nav-item" onclick="showPage('budget')"><span class="ni">🎯</span><span>投放规划</span></div>
@@ -1669,6 +1671,330 @@
 
     </div><!-- /page-userProfile -->
 
+    <!-- ============ PAGE: MACRO ANALYSIS ============ -->
+    <div id="page-macroAnalysis" class="page">
+
+      <!-- AI 洞察横幅 -->
+      <div style="background:linear-gradient(135deg,#0f172a,#1e293b);border-radius:16px;padding:20px 24px;margin-bottom:24px;display:flex;align-items:flex-start;gap:14px;color:#fff">
+        <div style="font-size:28px;flex-shrink:0;margin-top:2px">🌍</div>
+        <div>
+          <div style="font-size:15px;font-weight:700;margin-bottom:6px">全行业宏观分析 · 2026年Q1</div>
+          <div style="font-size:13px;opacity:0.85;line-height:1.6">基于最新政府政策报告、国家政策导向及全行业财务数据，追踪营收、净利润、净利润率Top5行业趋势，结合税务监管动态，为投资决策与商业布局提供宏观视角。</div>
+        </div>
+      </div>
+
+      <!-- 全行业概览KPI -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px">
+        <div style="background:#fff;border-radius:12px;padding:18px 20px;box-shadow:0 1px 3px rgba(0,0,0,.08)">
+          <div style="font-size:11px;color:#64748b;font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">全行业总营收</div>
+          <div style="font-size:22px;font-weight:800;color:#0f172a" id="macro-revenue">¥142.8万亿</div>
+          <div style="font-size:12px;color:#22c55e;margin-top:4px">↑ 6.2% YoY</div>
+        </div>
+        <div style="background:#fff;border-radius:12px;padding:18px 20px;box-shadow:0 1px 3px rgba(0,0,0,.08)">
+          <div style="font-size:11px;color:#64748b;font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">全行业净利润</div>
+          <div style="font-size:22px;font-weight:800;color:#0f172a" id="macro-profit">¥8.6万亿</div>
+          <div style="font-size:12px;color:#22c55e;margin-top:4px">↑ 8.5% YoY</div>
+        </div>
+        <div style="background:#fff;border-radius:12px;padding:18px 20px;box-shadow:0 1px 3px rgba(0,0,0,.08)">
+          <div style="font-size:11px;color:#64748b;font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">平均净利润率</div>
+          <div style="font-size:22px;font-weight:800;color:#0f172a" id="macro-rate">6.0%</div>
+          <div style="font-size:12px;color:#22c55e;margin-top:4px">↑ 0.3pp YoY</div>
+        </div>
+        <div style="background:#fff;border-radius:12px;padding:18px 20px;box-shadow:0 1px 3px rgba(0,0,0,.08)">
+          <div style="font-size:11px;color:#64748b;font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">政策监管强度</div>
+          <div style="font-size:22px;font-weight:800;color:#ef4444" id="macro-policy">⚠️ 趋严</div>
+          <div style="font-size:12px;color:#ef4444;margin-top:4px">税务/数据/互联网</div>
+        </div>
+      </div>
+
+      <!-- 政府政策与税务监管 -->
+      <div style="display:grid;grid-template-columns:1.2fr .8fr;gap:20px;margin-bottom:24px">
+        <!-- 2025-2026重要政策导向 -->
+        <div style="background:#fff;border-radius:12px;padding:22px;box-shadow:0 1px 3px rgba(0,0,0,.08)">
+          <div style="font-size:14px;font-weight:700;margin-bottom:16px;color:#0f172a">📋 国家政策导向（2025-2026）</div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="background:#f0fdf4;border-left:3px solid #22c55e;border-radius:0 8px 8px 0;padding:10px 14px">
+              <div style="font-size:13px;font-weight:700;color:#166534;margin-bottom:4px">✅ 新质生产力政策</div>
+              <div style="font-size:11px;color:#15803d;line-height:1.5">推动人工智能、量子计算、氢能、生物制造等战略性新兴产业高质量发展，给予税收优惠与研发加计扣除。</div>
+            </div>
+            <div style="background:#eff6ff;border-left:3px solid #3b82f6;border-radius:0 8px 8px 0;padding:10px 14px">
+              <div style="font-size:13px;font-weight:700;color:#1d4ed8;margin-bottom:4px">✅ 消费提振行动</div>
+              <div style="font-size:11px;color:#1e40af;line-height:1.5">大规模设备更新与消费品以旧换新，补贴覆盖家电/汽车/数码，教育/旅游/养老服务消费潜力释放。</div>
+            </div>
+            <div style="background:#fef9c3;border-left:3px solid #eab308;border-radius:0 8px 8px 0;padding:10px 14px">
+              <div style="font-size:13px;font-weight:700;color:#854d0e;margin-bottom:4px">⚡ 平台经济规范</div>
+              <div style="font-size:11px;color:#a16207;line-height:1.5">常态化反垄断审查，数据安全评估要求收紧，直播电商Tax监管升级，平台税前扣除比例调整。</div>
+            </div>
+            <div style="background:#fef2f2;border-left:3px solid #ef4444;border-radius:0 8px 8px 0;padding:10px 14px">
+              <div style="font-size:13px;font-weight:700;color:#991b1b;margin-bottom:4px">🔴 金税四期深化</div>
+              <div style="font-size:11px;color:#b91c1c;line-height:1.5">2025年全面深化「金税四期」，数电票覆盖企业突破1500万户，虚开增值税专用发票刑事立案标准提高至500万元。</div>
+            </div>
+            <div style="background:#f5f3ff;border-left:3px solid #a855f7;border-radius:0 8px 8px 0;padding:10px 14px">
+              <div style="font-size:13px;font-weight:700;color:#6b21a8;margin-bottom:4px">✅ 绿色低碳转型</div>
+              <div style="font-size:11px;color:#7e22ce;line-height:1.5">碳交易市场扩容至水泥/钢铁/电解铝，新能源汽车购置税减免延续至2027年，碳足迹核算强制要求。</div>
+            </div>
+            <div style="background:#fff7ed;border-left:3px solid #f97316;border-radius:0 8px 8px 0;padding:10px 14px">
+              <div style="font-size:13px;font-weight:700;color:#9a3412;margin-bottom:4px">⚡ 数据要素市场化</div>
+              <div style="font-size:11px;color:#c2410c;line-height:1.5">数据资产入表正式落地，企业数据资源相关会计处理暂行规定实施，数据交易规模目标破万亿。</div>
+            </div>
+          </div>
+        </div>
+        <!-- 税务监管重点 -->
+        <div style="background:#fff;border-radius:12px;padding:22px;box-shadow:0 1px 3px rgba(0,0,0,.08)">
+          <div style="font-size:14px;font-weight:700;margin-bottom:16px;color:#0f172a">📢 税务监管重点（2025-2026）</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="background:#fef2f2;border-radius:8px;padding:12px">
+              <div style="font-size:12px;font-weight:700;color:#991b1b;margin-bottom:6px">🔴 高风险领域</div>
+              <div style="font-size:11px;color:#7f1d1d;line-height:1.8">• 直播电商/网红达人个人所得税<br>• 跨境电商VAT与转让定价<br>• 灵活用工平台税务合规<br>• 股权激励与限售股减持Tax</div>
+            </div>
+            <div style="background:#fff7ed;border-radius:8px;padding:12px">
+              <div style="font-size:12px;font-weight:700;color:#9a3412;margin-bottom:6px">⚠️ 重点关注</div>
+              <div style="font-size:11px;color:#7c2d12;line-height:1.8">• 软件企业税收优惠核查<br>• 高新技术企业研发费归集<br>• 关联交易定价公平性<br>• 增值税留抵退税风险排查</div>
+            </div>
+            <div style="background:#f0fdf4;border-radius:8px;padding:12px">
+              <div style="font-size:12px;font-weight:700;color:#166534;margin-bottom:6px">✅ 合规优化方向</div>
+              <div style="font-size:11px;color:#14532d;line-height:1.8">• 研发费用加计扣除（比例提升至120%）<br>• 小微企业优惠延续（应税所得≤300万税负12.5%）<br>• 西部鼓励类企业Tax优惠15%<br>• 出口退税提速至3个工作日</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 全行业Top5对比 -->
+      <div style="background:#fff;border-radius:12px;padding:22px;box-shadow:0 1px 3px rgba(0,0,0,.08);margin-bottom:24px">
+        <div style="font-size:14px;font-weight:700;margin-bottom:16px;color:#0f172a">🏆 全行业Top5对比（按2025年数据）</div>
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:12px">
+            <thead>
+              <tr style="background:#f8fafc">
+                <th style="padding:10px 12px;text-align:left;color:#64748b;font-weight:600">排名</th>
+                <th style="padding:10px 12px;text-align:left;color:#64748b;font-weight:600">行业</th>
+                <th style="padding:10px 12px;text-align:right;color:#64748b;font-weight:600">营业收入（万亿）</th>
+                <th style="padding:10px 12px;text-align:right;color:#64748b;font-weight:600">净利润（万亿）</th>
+                <th style="padding:10px 12px;text-align:right;color:#64748b;font-weight:600">净利润率</th>
+                <th style="padding:10px 12px;text-align:center;color:#64748b;font-weight:600">政策导向</th>
+                <th style="padding:10px 12px;text-align:center;color:#64748b;font-weight:600">Tax监管</th>
+              </tr>
+            </thead>
+            <tbody id="macroTopTable">
+              <tr style="border-bottom:1px solid #f1f5f9">
+                <td style="padding:10px 12px"><span style="background:#fbbf24;color:#fff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:11px">1</span></td>
+                <td style="padding:10px 12px;font-weight:700;color:#0f172a">🏦 金融业</td>
+                <td style="padding:10px 12px;text-align:right;font-weight:700;color:#0f172a">¥18.5</td>
+                <td style="padding:10px 12px;text-align:right;color:#22c55e;font-weight:600">¥3.2</td>
+                <td style="padding:10px 12px;text-align:right"><span style="background:#dcfce7;color:#166534;padding:2px 8px;border-radius:4px;font-weight:600">17.3%</span></td>
+                <td style="padding:10px 12px;text-align:center"><span style="background:#dbeafe;color:#1d4ed8;padding:2px 8px;border-radius:4px;font-size:11px">支持</span></td>
+                <td style="padding:10px 12px;text-align:center"><span style="background:#fef9c3;color:#854d0e;padding:2px 8px;border-radius:4px;font-size:11px">中等</span></td>
+              </tr>
+              <tr style="border-bottom:1px solid #f1f5f9;background:#f8fafc">
+                <td style="padding:10px 12px"><span style="background:#94a3b8;color:#fff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:11px">2</span></td>
+                <td style="padding:10px 12px;font-weight:700;color:#0f172a">⚡ 能源（电力/油气）</td>
+                <td style="padding:10px 12px;text-align:right;font-weight:700;color:#0f172a">¥15.2</td>
+                <td style="padding:10px 12px;text-align:right;color:#22c55e;font-weight:600">¥2.1</td>
+                <td style="padding:10px 12px;text-align:right"><span style="background:#dcfce7;color:#166534;padding:2px 8px;border-radius:4px;font-weight:600">13.8%</span></td>
+                <td style="padding:10px 12px;text-align:center"><span style="background:#dbeafe;color:#1d4ed8;padding:2px 8px;border-radius:4px;font-size:11px">支持</span></td>
+                <td style="padding:10px 12px;text-align:center"><span style="background:#dcfce7;color:#166534;padding:2px 8px;border-radius:4px;font-size:11px">宽松</span></td>
+              </tr>
+              <tr style="border-bottom:1px solid #f1f5f9">
+                <td style="padding:10px 12px"><span style="background:#d97706;color:#fff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:11px">3</span></td>
+                <td style="padding:10px 12px;font-weight:700;color:#0f172a">🛒 零售/消费品</td>
+                <td style="padding:10px 12px;text-align:right;font-weight:700;color:#0f172a">¥12.8</td>
+                <td style="padding:10px 12px;text-align:right;color:#22c55e;font-weight:600">¥0.98</td>
+                <td style="padding:10px 12px;text-align:right"><span style="background:#dcfce7;color:#166534;padding:2px 8px;border-radius:4px;font-weight:600">7.7%</span></td>
+                <td style="padding:10px 12px;text-align:center"><span style="background:#dbeafe;color:#1d4ed8;padding:2px 8px;border-radius:4px;font-size:11px">支持</span></td>
+                <td style="padding:10px 12px;text-align:center"><span style="background:#fef9c3;color:#854d0e;padding:2px 8px;border-radius:4px;font-size:11px">中等</span></td>
+              </tr>
+              <tr style="border-bottom:1px solid #f1f5f9;background:#f8fafc">
+                <td style="padding:10px 12px"><span style="background:#94a3b8;color:#fff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:11px">4</span></td>
+                <td style="padding:10px 12px;font-weight:700;color:#0f172a">💊 医疗健康</td>
+                <td style="padding:10px 12px;text-align:right;font-weight:700;color:#0f172a">¥9.5</td>
+                <td style="padding:10px 12px;text-align:right;color:#22c55e;font-weight:600">¥0.72</td>
+                <td style="padding:10px 12px;text-align:right"><span style="background:#dcfce7;color:#166534;padding:2px 8px;border-radius:4px;font-weight:600">7.6%</span></td>
+                <td style="padding:10px 12px;text-align:center"><span style="background:#dbeafe;color:#1d4ed8;padding:2px 8px;border-radius:4px;font-size:11px">支持</span></td>
+                <td style="padding:10px 12px;text-align:center"><span style="background:#dcfce7;color:#166534;padding:2px 8px;border-radius:4px;font-size:11px">宽松</span></td>
+              </tr>
+              <tr style="border-bottom:1px solid #f1f5f9">
+                <td style="padding:10px 12px"><span style="background:#94a3b8;color:#fff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:11px">5</span></td>
+                <td style="padding:10px 12px;font-weight:700;color:#0f172a">📱 互联网/软件</td>
+                <td style="padding:10px 12px;text-align:right;font-weight:700;color:#0f172a">¥8.2</td>
+                <td style="padding:10px 12px;text-align:right;color:#22c55e;font-weight:600">¥0.65</td>
+                <td style="padding:10px 12px;text-align:right"><span style="background:#fef9c3;color:#854d0e;padding:2px 8px;border-radius:4px;font-weight:600">7.9%</span></td>
+                <td style="padding:10px 12px;text-align:center"><span style="background:#fef9c3;color:#854d0e;padding:2px 8px;border-radius:4px;font-size:11px">规范</span></td>
+                <td style="padding:10px 12px;text-align:center"><span style="background:#fef2f2;color:#991b1b;padding:2px 8px;border-radius:4px;font-size:11px">趋严</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top:14px;padding:12px;background:#f8fafc;border-radius:8px;font-size:11px;color:#64748b;line-height:1.6">
+          📊 数据来源：国家统计局2025年度数据、Wind一致预期、上市公司年报。营收/净利润为全行业合计口径，包含上市公司及规模以上非上市公司。净利润率 = 净利润 / 营业收入。
+        </div>
+      </div>
+
+      <!-- 全行业分类雷达对比 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div style="background:#fff;border-radius:12px;padding:22px;box-shadow:0 1px 3px rgba(0,0,0,.08)">
+          <div style="font-size:14px;font-weight:700;margin-bottom:16px;color:#0f172a">📡 全行业六维对比雷达图</div>
+          <div style="height:280px"><canvas id="macroRadarChart"></canvas></div>
+        </div>
+        <div style="background:#fff;border-radius:12px;padding:22px;box-shadow:0 1px 3px rgba(0,0,0,.08)">
+          <div style="font-size:14px;font-weight:700;margin-bottom:16px;color:#0f172a">📈 行业净利润率趋势（月度）</div>
+          <div style="height:280px"><canvas id="macroTrendChart"></canvas></div>
+        </div>
+      </div>
+
+      <!-- 完整行业列表 -->
+      <div style="background:#fff;border-radius:12px;padding:22px;box-shadow:0 1px 3px rgba(0,0,0,.08);margin-top:20px">
+        <div style="font-size:14px;font-weight:700;margin-bottom:16px;color:#0f172a">📋 全行业完整列表（按营收规模排序）</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px" id="macroIndustryGrid">
+          <!-- 金融 -->
+          <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:14px">
+            <div style="font-size:13px;font-weight:700;color:#1d4ed8;margin-bottom:10px">🏦 金融业</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px">
+              <div><span style="color:#64748b">营收:</span> <strong style="color:#0f172a">18.5万亿</strong></div>
+              <div><span style="color:#64748b">净利:</span> <strong style="color:#166534">3.2万亿</strong></div>
+              <div><span style="color:#64748b">利润率:</span> <strong style="color:#166534">17.3%</strong></div>
+              <div><span style="color:#64748b">政策:</span> <strong style="color:#1d4ed8">支持</strong></div>
+            </div>
+          </div>
+          <!-- 能源 -->
+          <div style="background:#fef9c3;border:1px solid #fde047;border-radius:10px;padding:14px">
+            <div style="font-size:13px;font-weight:700;color:#854d0e;margin-bottom:10px">⚡ 能源电力</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px">
+              <div><span style="color:#64748b">营收:</span> <strong style="color:#0f172a">15.2万亿</strong></div>
+              <div><span style="color:#64748b">净利:</span> <strong style="color:#166534">2.1万亿</strong></div>
+              <div><span style="color:#64748b">利润率:</span> <strong style="color:#166534">13.8%</strong></div>
+              <div><span style="color:#64748b">政策:</span> <strong style="color:#1d4ed8">支持</strong></div>
+            </div>
+          </div>
+          <!-- 零售消费 -->
+          <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:14px">
+            <div style="font-size:13px;font-weight:700;color:#166534;margin-bottom:10px">🛒 零售消费</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px">
+              <div><span style="color:#64748b">营收:</span> <strong style="color:#0f172a">12.8万亿</strong></div>
+              <div><span style="color:#64748b">净利:</span> <strong style="color:#166534">0.98万亿</strong></div>
+              <div><span style="color:#64748b">利润率:</span> <strong style="color:#22c55e">7.7%</strong></div>
+              <div><span style="color:#64748b">政策:</span> <strong style="color:#1d4ed8">支持</strong></div>
+            </div>
+          </div>
+          <!-- 医疗健康 -->
+          <div style="background:#fdf4ff;border:1px solid #e9d5ff;border-radius:10px;padding:14px">
+            <div style="font-size:13px;font-weight:700;color:#7e22ce;margin-bottom:10px">💊 医疗健康</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px">
+              <div><span style="color:#64748b">营收:</span> <strong style="color:#0f172a">9.5万亿</strong></div>
+              <div><span style="color:#64748b">净利:</span> <strong style="color:#166534">0.72万亿</strong></div>
+              <div><span style="color:#64748b">利润率:</span> <strong style="color:#a855f7">7.6%</strong></div>
+              <div><span style="color:#64748b">政策:</span> <strong style="color:#1d4ed8">支持</strong></div>
+            </div>
+          </div>
+          <!-- 互联网软件 -->
+          <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:14px">
+            <div style="font-size:13px;font-weight:700;color:#9a3412;margin-bottom:10px">📱 互联网/软件</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px">
+              <div><span style="color:#64748b">营收:</span> <strong style="color:#0f172a">8.2万亿</strong></div>
+              <div><span style="color:#64748b">净利:</span> <strong style="color:#166534">0.65万亿</strong></div>
+              <div><span style="color:#64748b">利润率:</span> <strong style="color:#22c55e">7.9%</strong></div>
+              <div><span style="color:#64748b">政策:</span> <strong style="color:#854d0e">规范</strong></div>
+            </div>
+          </div>
+          <!-- 制造业 -->
+          <div style="background:#f1f5f9;border:1px solid #cbd5e1;border-radius:10px;padding:14px">
+            <div style="font-size:13px;font-weight:700;color:#475569;margin-bottom:10px">🏭 制造业</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px">
+              <div><span style="color:#64748b">营收:</span> <strong style="color:#0f172a">25.5万亿</strong></div>
+              <div><span style="color:#64748b">净利:</span> <strong style="color:#166534">1.53万亿</strong></div>
+              <div><span style="color:#64748b">利润率:</span> <strong style="color:#64748b">6.0%</strong></div>
+              <div><span style="color:#64748b">政策:</span> <strong style="color:#475569">中性</strong></div>
+            </div>
+          </div>
+          <!-- 房地产 -->
+          <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:14px">
+            <div style="font-size:13px;font-weight:700;color:#991b1b;margin-bottom:10px">🏠 房地产</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px">
+              <div><span style="color:#64748b">营收:</span> <strong style="color:#0f172a">6.8万亿</strong></div>
+              <div><span style="color:#64748b">净利:</span> <strong style="color:#7f1d1d">-0.18万亿</strong></div>
+              <div><span style="color:#64748b">利润率:</span> <strong style="color:#ef4444">-2.6%</strong></div>
+              <div><span style="color:#64748b">政策:</span> <strong style="color:#166534">支持</strong></div>
+            </div>
+          </div>
+          <!-- 交通运输 -->
+          <div style="background:#f0fdfa;border:1px solid #99f6e4;border-radius:10px;padding:14px">
+            <div style="font-size:13px;font-weight:700;color:#0f766e;margin-bottom:10px">🚚 交通运输</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px">
+              <div><span style="color:#64748b">营收:</span> <strong style="color:#0f172a">5.2万亿</strong></div>
+              <div><span style="color:#64748b">净利:</span> <strong style="color:#166534">0.42万亿</strong></div>
+              <div><span style="color:#64748b">利润率:</span> <strong style="color:#22c55e">8.1%</strong></div>
+              <div><span style="color:#64748b">政策:</span> <strong style="color:#1d4ed8">支持</strong></div>
+            </div>
+          </div>
+          <!-- 建筑工程 -->
+          <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px">
+            <div style="font-size:13px;font-weight:700;color:#64748b;margin-bottom:10px">🏗️ 建筑工程</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px">
+              <div><span style="color:#64748b">营收:</span> <strong style="color:#0f172a">9.8万亿</strong></div>
+              <div><span style="color:#64748b">净利:</span> <strong style="color:#166534">0.59万亿</strong></div>
+              <div><span style="color:#64748b">利润率:</span> <strong style="color:#64748b">6.0%</strong></div>
+              <div><span style="color:#64748b">政策:</span> <strong style="color:#475569">中性</strong></div>
+            </div>
+          </div>
+          <!-- 通信 -->
+          <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:14px">
+            <div style="font-size:13px;font-weight:700;color:#0369a1;margin-bottom:10px">📡 通信服务</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px">
+              <div><span style="color:#64748b">营收:</span> <strong style="color:#0f172a">2.1万亿</strong></div>
+              <div><span style="color:#64748b">净利:</span> <strong style="color:#166534">0.18万亿</strong></div>
+              <div><span style="color:#64748b">利润率:</span> <strong style="color:#22c55e">8.6%</strong></div>
+              <div><span style="color:#64748b">政策:</span> <strong style="color:#1d4ed8">支持</strong></div>
+            </div>
+          </div>
+          <!-- 教育 -->
+          <div style="background:#fdf2f8;border:1px solid #fbcfe8;border-radius:10px;padding:14px">
+            <div style="font-size:13px;font-weight:700;color:#9d174d;margin-bottom:10px">🎓 教育培训</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px">
+              <div><span style="color:#64748b">营收:</span> <strong style="color:#0f172a">1.8万亿</strong></div>
+              <div><span style="color:#64748b">净利:</span> <strong style="color:#166534">0.09万亿</strong></div>
+              <div><span style="color:#64748b">利润率:</span> <strong style="color:#22c55e">5.0%</strong></div>
+              <div><span style="color:#64748b">政策:</span> <strong style="color:#854d0e">规范</strong></div>
+            </div>
+          </div>
+          <!-- 文化娱乐 -->
+          <div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:10px;padding:14px">
+            <div style="font-size:13px;font-weight:700;color:#6b21a8;margin-bottom:10px">🎬 文化娱乐</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:11px">
+              <div><span style="color:#64748b">营收:</span> <strong style="color:#0f172a">1.2万亿</strong></div>
+              <div><span style="color:#64748b">净利:</span> <strong style="color:#166534">0.08万亿</strong></div>
+              <div><span style="color:#64748b">利润率:</span> <strong style="color:#a855f7">6.7%</strong></div>
+              <div><span style="color:#64748b">政策:</span> <strong style="color:#854d0e">规范</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 行业AI洞察 -->
+      <div style="background:linear-gradient(135deg,#1e3a8a,#312e81);border-radius:16px;padding:22px 24px;margin-top:24px;color:#fff">
+        <div style="font-size:14px;font-weight:700;margin-bottom:16px">🧠 AI宏观洞察</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div>
+            <div style="font-size:12px;opacity:0.7;margin-bottom:8px">📈 值得关注</div>
+            <ul style="font-size:12px;line-height:2;padding-left:16px;opacity:0.9">
+              <li>金融业（保险/银行）净利润率17.3%，政策支持持续，建议关注财富管理转型</li>
+              <li>交通运输受益于新能源物流，利润率8.1%超预期，政策补贴延续</li>
+              <li>通信服务5G to B业务增长，ARPU提升，利润率8.6%领跑科技赛道</li>
+              <li>医疗健康受老龄化驱动，政策支持创新药械，长期确定性高</li>
+            </ul>
+          </div>
+          <div>
+            <div style="font-size:12px;opacity:0.7;margin-bottom:8px">⚠️ 风险预警</div>
+            <ul style="font-size:12px;line-height:2;padding-left:16px;opacity:0.9">
+              <li>房地产全行业亏损，净利率-2.6%，Tax监管趋严（土地增值税清算）</li>
+              <li>互联网平台经济规范期，直播电商Tax核查力度加大，头部主播追缴影响持续</li>
+              <li>教育培训行业利润率仅5%，"双减"政策延续，K12教培合规成本上升</li>
+              <li>制造业利润承压，原材料价格波动+产能过剩，中游加工型企业净利率跌破5%</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /page-macroAnalysis -->
+
     <!-- ============ PAGE: SELFMEDIA ============ -->
     <div id="page-selfmedia" class="page">
 
@@ -2136,6 +2462,7 @@ function refreshPage(name) {
   if(name === 'industry') { renderAdIndustryPage(); }
   if(name === 'userProfile') { renderUserProfilePage(); }
   if(name === 'selfmedia') { renderSelfmediaPage(); }
+  if(name === 'macroAnalysis') { renderMacroAnalysisPage(); }
 }
 
 // ==================== MODAL ====================
@@ -3309,6 +3636,43 @@ function analyzeSelectedCompany() {
 function resetCompanyAnalysis() {
   document.getElementById('comp-detail-grid-default').style.display = 'block';
   document.getElementById('company-detail-content').innerHTML = '';
+}
+
+// ==================== MACRO ANALYSIS RENDER ====================
+function renderMacroAnalysisPage() {
+  // 全行业六维雷达图
+  destroyChart('macroRadarChart');
+  charts['macroRadarChart'] = new Chart(document.getElementById('macroRadarChart'), {
+    type: 'radar',
+    data: {
+      labels: ['营收规模', '净利润', '净利润率', '增速', '政策友好度', 'Tax合规压力'],
+      datasets: [
+        { label: '金融', data: [92, 95, 100, 75, 90, 60], borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,.12)', borderWidth: 2, pointBackgroundColor: '#3b82f6', pointRadius: 3 },
+        { label: '能源', data: [85, 88, 88, 70, 85, 55], borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,.12)', borderWidth: 2, pointBackgroundColor: '#f59e0b', pointRadius: 3 },
+        { label: '零售', data: [80, 75, 68, 82, 92, 70], borderColor: '#22c55e', backgroundColor: 'rgba(34,197,94,.12)', borderWidth: 2, pointBackgroundColor: '#22c55e', pointRadius: 3 },
+        { label: '医疗', data: [72, 70, 72, 80, 88, 50], borderColor: '#a855f7', backgroundColor: 'rgba(168,85,247,.12)', borderWidth: 2, pointBackgroundColor: '#a855f7', pointRadius: 3 },
+        { label: '互联网', data: [78, 72, 70, 78, 55, 85], borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,.12)', borderWidth: 2, pointBackgroundColor: '#ef4444', pointRadius: 3 },
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', font: { size: 11 } } }, scales: { r: { beginAtZero: true, max: 100, ticks: { stepSize: 20, font: { size: 10 } }, pointLabels: { font: { size: 11 } } } } }
+  });
+
+  // 行业净利润率趋势图
+  destroyChart('macroTrendChart');
+  charts['macroTrendChart'] = new Chart(document.getElementById('macroTrendChart'), {
+    type: 'line',
+    data: {
+      labels: ['2025Q1', '2025Q2', '2025Q3', '2025Q4', '2026Q1'],
+      datasets: [
+        { label: '金融', data: [16.8, 17.1, 17.3, 17.5, 17.3], borderColor: '#3b82f6', tension: .4, pointRadius: 4, fill: false },
+        { label: '能源', data: [13.2, 13.5, 13.9, 14.0, 13.8], borderColor: '#f59e0b', tension: .4, pointRadius: 4, fill: false },
+        { label: '零售', data: [7.2, 7.4, 7.6, 7.8, 7.7], borderColor: '#22c55e', tension: .4, pointRadius: 4, fill: false },
+        { label: '医疗', data: [7.0, 7.3, 7.5, 7.5, 7.6], borderColor: '#a855f7', tension: .4, pointRadius: 4, fill: false },
+        { label: '互联网', data: [8.5, 8.2, 7.8, 7.6, 7.9], borderColor: '#ef4444', tension: .4, pointRadius: 4, fill: false },
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', font: { size: 11 } } }, scales: { y: { beginAtZero: false, ticks: { callback: v => v + '%' } } } }
+  });
 }
 
 // ==================== SELF-MEDIA RENDER ====================
