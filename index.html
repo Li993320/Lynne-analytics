@@ -4603,11 +4603,7 @@ function init() {
       map.companies.forEach(c => { const opt = document.createElement('option'); opt.value = c.id; opt.textContent = c.name; finSel.appendChild(opt); });
     }
   }
-  // Init dashboard
-  refreshPage('industry');
-  document.getElementById('pageTitle').textContent = '渠道分析';
-  updateModalCategories();
-  // Init dashboard
+  // Init dashboard - show industry page by default
   refreshPage('industry');
   document.getElementById('pageTitle').textContent = '渠道分析';
 
