@@ -476,7 +476,6 @@
   <nav class="sidebar-nav">
     <div class="nav-section">📊 广告投放</div>
     <div class="nav-item active" onclick="showPage('dashboard')"><span class="ni">🏠</span><span>投放总览</span></div>
-    <div class="nav-item" onclick="showPage('entry')"><span class="ni">✏️</span><span>广告录入</span></div>
     <div class="nav-item" onclick="showPage('ai')"><span class="ni">🤖</span><span>效果评估</span></div>
     <div class="nav-item" onclick="showPage('analysis')"><span class="ni">📈</span><span>趋势分析</span></div>
     <div class="nav-section">🎯 渠道管理</div>
@@ -557,89 +556,6 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title">📝 最近投放记录</div>
-          <button class="btn btn-outline" onclick="showPage('entry')">查看全部</button>
-        </div>
-        <div class="card-body" style="padding:0">
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>日期</th><th>类型</th><th>分类</th><th>描述</th><th>金额</th></tr></thead>
-              <tbody id="recentTable">
-                <tr><td colspan="5" style="text-align:center;color:var(--text-sub);padding:32px">暂无记录，点击"录一笔"开始录入</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ============ PAGE: ENTRY ============ -->
-    <div id="page-entry" class="page">
-      <div class="grid-2">
-        <!-- Quick Entry -->
-        <div class="card">
-          <div class="card-header"><div class="card-title">✏️ 广告录入</div></div>
-          <div class="card-body">
-            <div class="form-grid">
-              <div class="form-group">
-                <label class="form-label">类型</label>
-                <select class="form-control" id="entryType" onchange="updateCategories()">
-                  <option value="income">收入</option>
-                  <option value="expense" selected>支出</option>
-                  <option value="invest">投资</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label">金额（¥）</label>
-                <input type="number" class="form-control" id="entryAmount" placeholder="0.00" step="0.01" />
-              </div>
-              <div class="form-group">
-                <label class="form-label">分类</label>
-                <select class="form-control" id="entryCategory"></select>
-              </div>
-              <div class="form-group">
-                <label class="form-label">日期</label>
-                <input type="date" class="form-control" id="entryDate" />
-              </div>
-              <div class="form-group full">
-                <label class="form-label">备注</label>
-                <input type="text" class="form-control" id="entryNote" placeholder="可选备注..." />
-              </div>
-            </div>
-            <div class="form-actions">
-              <button class="btn btn-success" onclick="addRecord()">✅ 保存记录</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Month Stats -->
-        <div class="card">
-          <div class="card-header"><div class="card-title">📊 本月渠道汇总</div></div>
-          <div class="card-body">
-            <div class="chart-wrap-sm"><canvas id="monthBarChart"></canvas></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- All Records Table -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">🗒️ 全部投放记录</div>
-          <div style="display:flex;gap:8px;">
-            <select class="form-control" id="filterType" style="width:100px;padding:6px 10px;" onchange="renderTable()">
-              <option value="">全部</option>
-              <option value="income">收入</option>
-              <option value="expense">支出</option>
-              <option value="invest">投资</option>
-            </select>
-            <input type="month" class="form-control" id="filterMonth" style="width:140px;padding:6px 10px;" onchange="renderTable()" />
-          </div>
-        </div>
-        <div class="card-body" style="padding:0">
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>日期</th><th>类型</th><th>分类</th><th>描述</th><th>金额</th><th>操作</th></tr></thead>
-              <tbody id="allTable"></tbody>
-            </table>
           </div>
         </div>
       </div>
@@ -2061,9 +1977,8 @@ const LIABILITY_TYPE_LABELS = { mortgage:'房贷', carloan:'车贷', creditcard:
 
 // ==================== NAVIGATION ====================
 const PAGE_TITLES = {
-  dashboard:'投放总览', entry:'广告录入', analysis:'趋势分析',
-  ai:'效果评估', report:'趋势分析', assets:'投放报表', budget:'投放规划',
-  industry:'渠道分析', competitor:'受众分析', userProfile:'素材分析', selfmedia:'报表导出'
+  dashboard:'投放总览', analysis:'趋势分析', ai:'效果评估', assets:'投放报表', budget:'投放规划',
+  industry:'行业分析', competitor:'受众分析', selfmedia:'自媒体分析'
 };
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
