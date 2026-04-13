@@ -474,16 +474,12 @@
     </div>
   </div>
   <nav class="sidebar-nav">
-    <div class="nav-section">📊 广告投放</div>
-    <div class="nav-item active" onclick="showPage('dashboard')"><span class="ni">🏠</span><span>投放总览</span></div>
     <div class="nav-section">🎯 渠道管理</div>
-    <div class="nav-item" onclick="showPage('industry')"><span class="ni">📡</span><span>渠道分析</span></div>
+    <div class="nav-item active" onclick="showPage('industry')"><span class="ni">📡</span><span>渠道分析</span></div>
     <div class="nav-item" onclick="showPage('userProfile')"><span class="ni">👤</span><span>用户画像分析</span></div>
     <div class="nav-item" onclick="showPage('selfmedia')"><span class="ni">📱</span><span>自媒体分析</span></div>
     <div class="nav-section">🌐 宏观洞察</div>
     <div class="nav-item" onclick="showPage('macroAnalysis')"><span class="ni">🌍</span><span>全行业分析</span></div>
-    <div class="nav-item" onclick="showPage('assets')"><span class="ni">💰</span><span>投放报表</span></div>
-    <div class="nav-item" onclick="showPage('budget')"><span class="ni">🎯</span><span>投放规划</span></div>
   </nav>
   <div class="sidebar-footer">v2.0 · 2026年</div>
 </aside>
@@ -2436,7 +2432,6 @@ const LIABILITY_TYPE_LABELS = { mortgage:'房贷', carloan:'车贷', creditcard:
 
 // ==================== NAVIGATION ====================
 const PAGE_TITLES = {
-  dashboard:'投放总览', analysis:'趋势分析', assets:'投放报表', budget:'投放规划',
   industry:'渠道分析', userProfile:'用户画像分析', selfmedia:'自媒体分析', macroAnalysis:'全行业分析'
 };
 function showPage(name) {
@@ -4472,7 +4467,8 @@ function init() {
   updateCategories();
   updateModalCategories();
   // Init dashboard
-  refreshPage('dashboard');
+  refreshPage('industry');
+  document.getElementById('pageTitle').textContent = '渠道分析';
 
   // Add demo data if empty
   if(!DB.records.length) {
