@@ -2817,9 +2817,11 @@ function renderAnalysisCharts() {
     }
   });
 
-  // 收入结构分析
+  // 收入结构分析（使用选中公司的财务数据）
   const incSrc = {};
-  DB.records.filter(r=>r.type==='income').forEach(r=>{ incSrc[r.category]=(incSrc[r.category]||0)+r.amount; });
+  if(company && company.revenueStructure) {
+    company.revenueStructure.forEach(s => { incSrc[s.name] = s.pct; });
+  }
   destroyChart('incomeSourceChart');
   const iKeys = Object.keys(incSrc);
   const incColors = [BLOOMBERG_COLORS.green, BLOOMBERG_COLORS.blue, BLOOMBERG_COLORS.purple, BLOOMBERG_COLORS.orange, BLOOMBERG_COLORS.pink, BLOOMBERG_COLORS.cyan];
@@ -2830,7 +2832,7 @@ function renderAnalysisCharts() {
       responsive:true,maintainAspectRatio:false,
       plugins:{
         legend:{position:'right',labels:{...CHART_DEFAULTS.font,padding:12,usePointStyle:true,pointStyle:'circle'}},
-        tooltip:{backgroundColor:'rgba(26,26,46,0.95)',titleColor:'#fff',bodyColor:'#e8e8e8',borderColor:'#2d2d44',borderWidth:1,padding:12,callbacks:{label:ctx=>`${ctx.label}: ¥${ctx.raw.toLocaleString()} (${(ctx.raw/incSrc[ctx.label]*100).toFixed(1)}%)`}}
+        tooltip:{backgroundColor:'rgba(26,26,46,0.95)',titleColor:'#fff',bodyColor:'#e8e8e8',borderColor:'#2d2d44',borderWidth:1,padding:12,callbacks:{label:ctx=>`${ctx.label}: ${ctx.raw}%`}}
       },
       cutout:'55%'
     }
@@ -2939,25 +2941,6 @@ function renderAnalysisCharts() {
         x:{grid:{color:'rgba(0,0,0,0.05)'},ticks:{...CHART_DEFAULTS.font,color:'#64748b'}},
         y:{grid:{color:'rgba(0,0,0,0.05)'},ticks:{callback:v=>'¥'+(v>=1000?(v/1000).toFixed(0)+'k':v),...CHART_DEFAULTS.font,color:'#64748b'}}
       }
-    }
-  });
-
-  // 成本结构饼图
-  const expCats = {};
-  DB.records.filter(r=>r.type==='expense').forEach(r=>{ expCats[r.category]=(expCats[r.category]||0)+r.amount; });
-  destroyChart('costPieChart');
-  const expKeys = Object.keys(expCats);
-  const expColors = [BLOOMBERG_COLORS.red, BLOOMBERG_COLORS.yellow, BLOOMBERG_COLORS.purple, BLOOMBERG_COLORS.orange, BLOOMBERG_COLORS.blue, BLOOMBERG_COLORS.pink];
-  if(expKeys.length) charts['costPieChart'] = new Chart(document.getElementById('costPieChart'), {
-    type:'doughnut',
-    data:{labels:expKeys,datasets:[{data:expKeys.map((k,i)=>expCats[k]),backgroundColor:expKeys.map((k,i)=>expColors[i%expColors.length]),borderWidth:2,borderColor:'#fff',hoverOffset:8}]},
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{
-        legend:{position:'right',labels:{...CHART_DEFAULTS.font,padding:12,usePointStyle:true,pointStyle:'circle'}},
-        tooltip:{backgroundColor:'rgba(26,26,46,0.95)',titleColor:'#fff',bodyColor:'#e8e8e8',borderColor:'#2d2d44',borderWidth:1,padding:12}
-      },
-      cutout:'55%'
     }
   });
 
