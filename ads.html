@@ -1987,12 +1987,69 @@
               <div><span style="color:#64748b">净利:</span> <strong style="color:#166534">0.08万亿</strong></div>
               <div><span style="color:#64748b">利润率:</span> <strong style="color:#a855f7">6.7%</strong></div>
               <div><span style="color:#64748b">政策:</span> <strong style="color:#854d0e">规范</strong></div>
-            </div>
+</div>
           </div>
         </div>
       </div>
 
-      <!-- 行业AI洞察 -->
+      <!-- 战略分析 -->
+      <div class="card" style="margin-top:24px">
+        <div class="card-header">
+          <div class="card-title">📊 行业战略分析</div>
+          <div style="font-size:12px;color:var(--text-sub)">基于净利润前5名发展路径 · 数据来源：Wind/同花顺/券商研报</div>
+        </div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+            <div>
+              <div style="font-size:12px;font-weight:600;color:var(--text-sub);margin-bottom:8px">选择行业</div>
+              <select id="stratIndSelect" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);font-size:13px" onchange="renderStrategyAnalysis()">
+                <option value="internet">🌐 互联网</option>
+                <option value="gaming">🎮 游戏</option>
+                <option value="finance">🏦 金融</option>
+                <option value="retail">🛒 消费零售</option>
+                <option value="energy">⚡ 新能源</option>
+                <option value="education">📚 教育</option>
+              </select>
+            </div>
+            <div>
+              <div style="font-size:12px;font-weight:600;color:var(--text-sub);margin-bottom:8px">选择年份</div>
+              <select id="stratYearSelect" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);font-size:13px" onchange="renderStrategyAnalysis()">
+                <option value="2025">2025年报（最新）</option>
+                <option value="2024">2024年报</option>
+                <option value="2023">2023年报</option>
+                <option value="2022">2022年报</option>
+              </select>
+            </div>
+          </div>
+          <div id="stratSummary" style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:12px;padding:16px 20px;color:#fff;margin-bottom:14px">
+            <div style="font-size:12px;font-weight:600;margin-bottom:8px">🎯 行业核心战略</div>
+            <div id="stratTopStrategy" style="font-size:14px;font-weight:700;margin-bottom:10px;"></div>
+            <div style="font-size:12px;opacity:0.9;line-height:1.7" id="stratTrend"></div>
+          </div>
+          <div class="swot-grid" id="stratSwotGrid">
+            <div class="swot-card strength">
+              <div class="swot-title">💪 优势 Strength</div>
+              <div class="swot-item" id="strat-s1"></div>
+              <div class="swot-item" id="strat-s2"></div>
+              <div class="swot-item" id="strat-s3"></div>
+            </div>
+            <div class="swot-card weakness">
+              <div class="swot-title">⚠️ 劣势 Weakness</div>
+              <div class="swot-item" id="strat-w1"></div>
+              <div class="swot-item" id="strat-w2"></div>
+              <div class="swot-item" id="strat-w3"></div>
+            </div>
+            <div class="swot-card opportunity">
+              <div class="swot-title">🚀 机会 Opportunity</div>
+              <div class="swot-item" id="strat-o1"></div>
+              <div class="swot-item" id="strat-o2"></div>
+              <div class="swot-item" id="strat-o3"></div>
+            </div>
+            <div class="swot-card threat">
+              <div class="swot-title">⚡ 威胁 Threat</div>
+              <div class="swot-item" id="strat-t1"></div>
+              <div class="swot-item" id="strat-t2"></div>
+              <div class="swot-item" id="strat-t3"></div
       <div style="background:linear-gradient(135deg,#1e3a8a,#312e81);border-radius:16px;padding:22px 24px;margin-top:24px;color:#fff">
         <div style="font-size:14px;font-weight:700;margin-bottom:16px">🧠 AI宏观洞察</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
@@ -2485,7 +2542,7 @@ function refreshPage(name) {
   if(name === 'industry') { renderAdIndustryPage(); }
   if(name === 'userProfile') { renderUserProfilePage(); }
   if(name === 'selfmedia') { renderSelfmediaPage(); }
-  if(name === 'macroAnalysis') { renderMacroAnalysisPage(); }
+  if(name === 'macroAnalysis') { renderMacroAnalysisPage(); renderStrategyAnalysis(); }
   if(name === 'competitor') { renderCompetitorPage(); }
 }
 
@@ -3915,6 +3972,81 @@ function analyzeSelectedCompany() {
 function resetCompanyAnalysis() {
   document.getElementById('comp-detail-grid-default').style.display = 'block';
   document.getElementById('company-detail-content').innerHTML = '';
+}
+
+// ==================== STRATEGY ANALYSIS RENDER ====================
+function renderStrategyAnalysis() {
+  const industry = document.getElementById('stratIndSelect')?.value || 'gaming';
+  const year = document.getElementById('stratYearSelect')?.value || '2024';
+  
+  const strategyData = {
+    gaming: {
+      name: '游戏', topStrategy: '精品化 + IP化 + 全球化 + AI研发',
+      trend: '买量红利消退（2021年后），版号常态化加速精品化进程。2022-2024年头部厂商从"重营销"转向"重研发"，研发投入比从15%提升至20%+。AI辅助研发（美术/文案/配乐）降本30-50%，《完蛋！我被包围了》验证玩法创新路径。小游戏赛道爆发（微信/抖音DAU破5亿）。代表：腾讯/网易/米哈游/完美世界/莉莉丝战略路径一致。',
+      s:['研发投入比20%+，技术储备领先行业均值18%','净利率25%+，盈利能力达行业中位数','ROE20%+，股东回报优秀，资本效率高'],
+      w:['版号审批不确定性，项目周期长现金流压力大','单款游戏收入集中度高，产品依赖风险','海外本地化难度大，文化差异影响运营'],
+      o:['AI辅助研发降本30-50%，《完蛋！》验证AI+玩法创新','主机/PC游戏出海Steam全球市场持续增长','小游戏爆发：微信/抖音小游戏DAU破5亿'],
+      t:['买量ROI持续下降，迫使转型精品化','青少年防沉迷政策趋严，核心用户时长被挤压','全球竞争加剧，索尼/微软加码中国']
+    },
+    internet: {
+      name: '互联网', topStrategy: '降本增效 + AI驱动 + 出海扩张',
+      trend: '2022年后互联网从"规模扩张"转向"盈利优先"。广告收入受宏观经济影响，广告主预算收缩。AI大模型（通义/文心/Kimi）成新战场，2023-2024年各家大模型投入超百亿。出海进入收获期，东南亚/中东/非洲市场贡献第二增长曲线。产业互联网B端市场空间广阔。',
+      s:['毛利率55%+，达行业健康水平','净利率15%+，盈利能力强','营收增速10%+，高于行业平均'],
+      w:['用户增长见顶，存量竞争加剧','监管政策收紧，合规成本上升','营收结构单一，抗风险能力待提升'],
+      o:['AI大模型赋能降本增效，ChatGPT推动变革','出海进入收获期，东南亚/中东红利仍在','产业互联网B端市场空间广阔，定制化溢价高'],
+      t:['宏观经济不确定性影响广告收入','中美科技竞争，技术封锁风险上升','行业集中度提升，中小玩家空间收窄']
+    },
+    finance: {
+      name: '金融', topStrategy: '数字化转型 + 场景金融 + 风控为王',
+      trend: '互联网金融进入合规发展期，2022年后行业规范化。AI风控降低坏账率，数字货币（DC/EP）推广加速。供应链金融解决中小企业融资难，政策支持力度大。财富管理转型成为银行/保险新增长点。',
+      s:['净利率20%+，盈利稳健','不良率控制良好，资产质量优','牌照优势，合规壁垒高'],
+      w:['息差收窄，利息净收入受利率波动影响','科技投入大，技术人才竞争激烈','数字化转型投入期，短期利润承压'],
+      o:['数字人民币推广，跨境支付空间广阔','AI风控降低坏账率，智能投顾市场爆发','供应链金融政策支持，解决中小企业融资难'],
+      t:['息差持续收窄，银行净利增速放缓','互联网巨头布局金融，竞争格局生变','监管科技趋严，合规成本持续上升']
+    },
+    retail: {
+      name: '消费零售', topStrategy: '全渠道融合 + 私域运营 + 供应链优化',
+      trend: '线上线下融合加速，直播电商重塑人货场。2020-2023年直播电商爆发（抖音/快手/淘宝直播），但2024年后流量成本攀升，私域流量成核心资产。即时零售（美团闪购/京东小时达）渗透率持续提升。',
+      s:['供应链成熟，库存周转效率高','毛利率25%+，达行业水平','全渠道布局，营收正增长'],
+      w:['线上流量成本攀升，推广费侵蚀利润','退货率高（电商15-20%），售后成本大','同质化竞争，差异化难度增加'],
+      o:['即时零售渗透率持续提升','私域运营降本，会员复购率提升2-3倍','下沉市场三四线城市消费升级'],
+      t:['价格战持续，直播电商拉低行业均价','消费者价格敏感度提升，忠诚度下降','原材料成本波动，成本控制压力大']
+    },
+    energy: {
+      name: '新能源', topStrategy: '技术迭代 + 全球化布局 + 垂直整合',
+      trend: '锂电竞争进入下半场（2022年后），从产能竞争转向技术竞争。宁德时代/比亚迪引领，海外建厂成必争之地（欧洲/北美）。储能市场爆发成第二增长曲线。固态电池/钠电池新技术颠覆现有格局。',
+      s:['毛利率20%+，达行业水平','营收增速30%+，高成长性','技术壁垒高，专利布局领先'],
+      w:['原材料（锂/钴/镍）价格波动大','产能扩张期资本支出大，现金流压力','技术迭代快，研发投入持续高企'],
+      o:['储能市场爆发，第二增长曲线明确','海外建厂享受补贴，欧洲/北美市场准入','固态电池/钠电池新技术颠覆格局'],
+      t:['行业产能过剩，价格战加剧盈利压力','欧美补贴退坡，海外增速放缓','替代技术（氢能源）长期不确定性']
+    },
+    education: {
+      name: '教育', topStrategy: '素质教育 + 职业教育 + AI+教育',
+      trend: 'K12教培2021年"双减"后规范，行业转向成人市场。2022-2024年素质教育（艺术/体育/编程）、职业教育（考公/技能培训）、AI+教育成新方向。AI辅导工具降低师资依赖，提升毛利率。',
+      s:['净利率10%+，盈利改善','政策风险释放，商业模式合规化','AI教育产品提升客单价和续费率'],
+      w:['用户生命周期短，续费成本高','师资成本刚性，利润空间受限','竞争激烈，同质化严重'],
+      o:['AI辅导降低师资依赖，毛利率提升空间大','成人职业教育需求旺盛，政策支持','中文教育出海市场空间广阔'],
+      t:['出生率下降，K12用户群持续萎缩','监管政策不确定性仍存','AI教育产品同质化，竞争加剧']
+    },
+  };
+  
+  const data = strategyData[industry] || strategyData.gaming;
+  document.getElementById('stratTopStrategy').textContent = `▶ ${year}年${data.name}行业前5核心战略：${data.topStrategy}`;
+  document.getElementById('stratTrend').textContent = `📈 趋势研判：${data.trend}`;
+  
+  const sArr = data.s, wArr = data.w, oArr = data.o, tArr = data.t;
+  document.getElementById('strat-s1').textContent = sArr[0];
+  document.getElementById('strat-s2').textContent = sArr[1];
+  document.getElementById('strat-s3').textContent = sArr[2];
+  document.getElementById('strat-w1').textContent = wArr[0];
+  document.getElementById('strat-w2').textContent = wArr[1];
+  document.getElementById('strat-w3').textContent = wArr[2];
+  document.getElementById('strat-o1').textContent = oArr[0];
+  document.getElementById('strat-o2').textContent = oArr[1];
+  document.getElementById('strat-o3').textContent = oArr[2];
+  document.getElementById('strat-t1').textContent = tArr[0];
+  document.getElementById('strat-t2').textContent = tArr[1];
+  document.getElementById('strat-t3').textContent = tArr[2];
 }
 
 // ==================== MACRO ANALYSIS RENDER ====================
