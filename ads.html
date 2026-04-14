@@ -2049,7 +2049,12 @@
               <div class="swot-title">⚡ 威胁 Threat</div>
               <div class="swot-item" id="strat-t1"></div>
               <div class="swot-item" id="strat-t2"></div>
-              <div class="swot-item" id="strat-t3"></div
+              <div class="swot-item" id="strat-t3"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div style="background:linear-gradient(135deg,#1e3a8a,#312e81);border-radius:16px;padding:22px 24px;margin-top:24px;color:#fff">
         <div style="font-size:14px;font-weight:700;margin-bottom:16px">🧠 AI宏观洞察</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
@@ -2068,13 +2073,69 @@
               <li>房地产全行业亏损，净利率-2.6%，Tax监管趋严（土地增值税清算）</li>
               <li>互联网平台经济规范期，直播电商Tax核查力度加大，头部主播追缴影响持续</li>
               <li>教育培训行业利润率仅5%，"双减"政策延续，K12教培合规成本上升</li>
-              <li>制造业利润承压，原材料价格波动+产能过剩，中游加工型企业净利率跌破5%</li>
+<li>制造业利润承压，原材料价格波动+产能过剩，中游加工型企业净利率跌破5%</li>
             </ul>
           </div>
         </div>
       </div>
 
-    </div><!-- /page-macroAnalysis -->
+      <!-- 战略分析 -->
+      <div class="card" style="margin-top:24px">
+        <div class="card-header">
+          <div class="card-title">📊 行业战略分析</div>
+          <div style="font-size:12px;color:var(--text-sub)">基于净利润前5名发展路径 · 数据来源：Wind/同花顺/券商研报</div>
+        </div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+            <div>
+              <div style="font-size:12px;font-weight:600;color:var(--text-sub);margin-bottom:8px">选择行业</div>
+              <select id="stratIndSelect" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);font-size:13px" onchange="renderStrategyAnalysis()">
+                <option value="gaming">🎮 游戏</option>
+                <option value="internet">🌐 互联网</option>
+                <option value="finance">🏦 金融</option>
+                <option value="retail">🛒 消费零售</option>
+                <option value="energy">⚡ 新能源</option>
+                <option value="education">📚 教育</option>
+              </select>
+            </div>
+            <div>
+              <div style="font-size:12px;font-weight:600;color:var(--text-sub);margin-bottom:8px">选择年份</div>
+              <select id="stratYearSelect" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);font-size:13px" onchange="renderStrategyAnalysis()">
+                <option value="2025">2025年报（最新）</option>
+                <option value="2024">2024年报</option>
+                <option value="2023">2023年报</option>
+                <option value="2022">2022年报</option>
+              </select>
+            </div>
+          </div>
+          <div id="stratSummary" style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:12px;padding:16px 20px;color:#fff;margin-bottom:14px">
+            <div style="font-size:12px;font-weight:600;margin-bottom:8px">🎯 行业核心战略</div>
+            <div id="stratTopStrategy" style="font-size:14px;font-weight:700;margin-bottom:10px;"></div>
+            <div style="font-size:12px;opacity:0.9;line-height:1.7" id="stratTrend"></div>
+          </div>
+          <div class="swot-grid" id="stratSwotGrid">
+            <div class="swot-card strength">
+              <div class="swot-title">💪 优势 Strength</div>
+              <div class="swot-item" id="strat-s1"></div>
+              <div class="swot-item" id="strat-s2"></div>
+              <div class="swot-item" id="strat-s3"></div>
+            </div>
+            <div class="swot-card weakness">
+              <div class="swot-title">⚠️ 劣势 Weakness</div>
+              <div class="swot-item" id="strat-w1"></div>
+              <div class="swot-item" id="strat-w2"></div>
+              <div class="swot-item" id="strat-w3"></div>
+            </div>
+            <div class="swot-card opportunity">
+              <div class="swot-title">🚀 机会 Opportunity</div>
+              <div class="swot-item" id="strat-o1"></div>
+              <div class="swot-item" id="strat-o2"></div>
+              <div class="swot-item" id="strat-o3"></div>
+            </div>
+            <div class="swot-card threat">
+              <div class="swot-title">⚡ 威胁 Threat</div>
+              <div class="swot-item" id="strat-t1"></div>
+              <div class="swot-item" id="strat-t2"></div>
 
     <!-- ============ PAGE: SELFMEDIA ============ -->
     <div id="page-selfmedia" class="page">
