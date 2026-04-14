@@ -601,21 +601,17 @@
           <div class="kpi-value neutral" id="an-kpi-net">¥0</div>
           <div class="kpi-change" id="an-kpi-net-change">净利率 --%</div>
         </div>
-<div class="kpi-card purple">
-          <div class="kpi-label">销售费用</div>
+        <div class="kpi-card purple">
+          <div class="kpi-label">公司市值</div>
           <div class="kpi-value neutral" id="an-kpi-ads">¥0</div>
-          <div class="kpi-change" id="an-kpi-ads-rate">占营收 --%</div>
+          <div class="kpi-change">ROI --x</div>
         </div>
         <div class="kpi-card orange">
-          <div class="kpi-label">管理费用</div>
+          <div class="kpi-label">用户LTV</div>
           <div class="kpi-value neutral" id="an-kpi-ltv">¥0</div>
-          <div class="kpi-change" id="an-kpi-ltv-rate">占营收 --%</div>
+          <div class="kpi-change">ARPU ¥0</div>
         </div>
-        <div class="kpi-card teal">
-          <div class="kpi-label">营业成本</div>
-          <div class="kpi-value neutral" id="an-kpi-cost">¥0</div>
-          <div class="kpi-change" id="an-kpi-cost-rate">毛利率 --%</div>
-        </div>
+      </div>
 
       <!-- 营收与成本分析 -->
       <div class="grid-2">
@@ -1405,10 +1401,6 @@
         </div>
         <div class="card-body">
           <div class="swot-grid" id="swotGrid">
-          <div class="strategy-trend" style="grid-column:1/-1;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:10px;padding:14px 18px;margin-bottom:8px;color:#fff;">
-            <div style="font-size:12px;font-weight:600;margin-bottom:6px;">📊 行业战略趋势 · 前5名发展路径总结（数据来源：Wind/同花顺/券商研报）</div>
-            <div id="indStrategyTrend" style="font-size:13px;line-height:1.6;"></div>
-          </div>
             <div class="swot-card strength">
               <div class="swot-title">💪 优势 Strength</div>
               <div class="swot-item" id="swot-s1"></div>
@@ -1987,74 +1979,12 @@
               <div><span style="color:#64748b">净利:</span> <strong style="color:#166534">0.08万亿</strong></div>
               <div><span style="color:#64748b">利润率:</span> <strong style="color:#a855f7">6.7%</strong></div>
               <div><span style="color:#64748b">政策:</span> <strong style="color:#854d0e">规范</strong></div>
-</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 战略分析 -->
-      <div class="card" style="margin-top:24px">
-        <div class="card-header">
-          <div class="card-title">📊 行业战略分析</div>
-          <div style="font-size:12px;color:var(--text-sub)">基于净利润前5名发展路径 · 数据来源：Wind/同花顺/券商研报</div>
-        </div>
-        <div class="card-body">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
-            <div>
-              <div style="font-size:12px;font-weight:600;color:var(--text-sub);margin-bottom:8px">选择行业</div>
-              <select id="stratIndSelect" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);font-size:13px" onchange="renderStrategyAnalysis()">
-                <option value="internet">🌐 互联网</option>
-                <option value="gaming">🎮 游戏</option>
-                <option value="finance">🏦 金融</option>
-                <option value="retail">🛒 消费零售</option>
-                <option value="energy">⚡ 新能源</option>
-                <option value="education">📚 教育</option>
-              </select>
-            </div>
-            <div>
-              <div style="font-size:12px;font-weight:600;color:var(--text-sub);margin-bottom:8px">选择年份</div>
-              <select id="stratYearSelect" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);font-size:13px" onchange="renderStrategyAnalysis()">
-                <option value="2025">2025年报（最新）</option>
-                <option value="2024">2024年报</option>
-                <option value="2023">2023年报</option>
-                <option value="2022">2022年报</option>
-              </select>
-            </div>
-          </div>
-          <div id="stratSummary" style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:12px;padding:16px 20px;color:#fff;margin-bottom:14px">
-            <div style="font-size:12px;font-weight:600;margin-bottom:8px">🎯 行业核心战略</div>
-            <div id="stratTopStrategy" style="font-size:14px;font-weight:700;margin-bottom:10px;"></div>
-            <div style="font-size:12px;opacity:0.9;line-height:1.7" id="stratTrend"></div>
-          </div>
-          <div class="swot-grid" id="stratSwotGrid">
-            <div class="swot-card strength">
-              <div class="swot-title">💪 优势 Strength</div>
-              <div class="swot-item" id="strat-s1"></div>
-              <div class="swot-item" id="strat-s2"></div>
-              <div class="swot-item" id="strat-s3"></div>
-            </div>
-            <div class="swot-card weakness">
-              <div class="swot-title">⚠️ 劣势 Weakness</div>
-              <div class="swot-item" id="strat-w1"></div>
-              <div class="swot-item" id="strat-w2"></div>
-              <div class="swot-item" id="strat-w3"></div>
-            </div>
-            <div class="swot-card opportunity">
-              <div class="swot-title">🚀 机会 Opportunity</div>
-              <div class="swot-item" id="strat-o1"></div>
-              <div class="swot-item" id="strat-o2"></div>
-              <div class="swot-item" id="strat-o3"></div>
-            </div>
-            <div class="swot-card threat">
-              <div class="swot-title">⚡ 威胁 Threat</div>
-              <div class="swot-item" id="strat-t1"></div>
-              <div class="swot-item" id="strat-t2"></div>
-              <div class="swot-item" id="strat-t3"></div>
             </div>
           </div>
         </div>
       </div>
 
+      <!-- 行业AI洞察 -->
       <div style="background:linear-gradient(135deg,#1e3a8a,#312e81);border-radius:16px;padding:22px 24px;margin-top:24px;color:#fff">
         <div style="font-size:14px;font-weight:700;margin-bottom:16px">🧠 AI宏观洞察</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
@@ -2073,69 +2003,13 @@
               <li>房地产全行业亏损，净利率-2.6%，Tax监管趋严（土地增值税清算）</li>
               <li>互联网平台经济规范期，直播电商Tax核查力度加大，头部主播追缴影响持续</li>
               <li>教育培训行业利润率仅5%，"双减"政策延续，K12教培合规成本上升</li>
-<li>制造业利润承压，原材料价格波动+产能过剩，中游加工型企业净利率跌破5%</li>
+              <li>制造业利润承压，原材料价格波动+产能过剩，中游加工型企业净利率跌破5%</li>
             </ul>
           </div>
         </div>
       </div>
 
-      <!-- 战略分析 -->
-      <div class="card" style="margin-top:24px">
-        <div class="card-header">
-          <div class="card-title">📊 行业战略分析</div>
-          <div style="font-size:12px;color:var(--text-sub)">基于净利润前5名发展路径 · 数据来源：Wind/同花顺/券商研报</div>
-        </div>
-        <div class="card-body">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
-            <div>
-              <div style="font-size:12px;font-weight:600;color:var(--text-sub);margin-bottom:8px">选择行业</div>
-              <select id="stratIndSelect" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);font-size:13px" onchange="renderStrategyAnalysis()">
-                <option value="gaming">🎮 游戏</option>
-                <option value="internet">🌐 互联网</option>
-                <option value="finance">🏦 金融</option>
-                <option value="retail">🛒 消费零售</option>
-                <option value="energy">⚡ 新能源</option>
-                <option value="education">📚 教育</option>
-              </select>
-            </div>
-            <div>
-              <div style="font-size:12px;font-weight:600;color:var(--text-sub);margin-bottom:8px">选择年份</div>
-              <select id="stratYearSelect" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);font-size:13px" onchange="renderStrategyAnalysis()">
-                <option value="2025">2025年报（最新）</option>
-                <option value="2024">2024年报</option>
-                <option value="2023">2023年报</option>
-                <option value="2022">2022年报</option>
-              </select>
-            </div>
-          </div>
-          <div id="stratSummary" style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:12px;padding:16px 20px;color:#fff;margin-bottom:14px">
-            <div style="font-size:12px;font-weight:600;margin-bottom:8px">🎯 行业核心战略</div>
-            <div id="stratTopStrategy" style="font-size:14px;font-weight:700;margin-bottom:10px;"></div>
-            <div style="font-size:12px;opacity:0.9;line-height:1.7" id="stratTrend"></div>
-          </div>
-          <div class="swot-grid" id="stratSwotGrid">
-            <div class="swot-card strength">
-              <div class="swot-title">💪 优势 Strength</div>
-              <div class="swot-item" id="strat-s1"></div>
-              <div class="swot-item" id="strat-s2"></div>
-              <div class="swot-item" id="strat-s3"></div>
-            </div>
-            <div class="swot-card weakness">
-              <div class="swot-title">⚠️ 劣势 Weakness</div>
-              <div class="swot-item" id="strat-w1"></div>
-              <div class="swot-item" id="strat-w2"></div>
-              <div class="swot-item" id="strat-w3"></div>
-            </div>
-            <div class="swot-card opportunity">
-              <div class="swot-title">🚀 机会 Opportunity</div>
-              <div class="swot-item" id="strat-o1"></div>
-              <div class="swot-item" id="strat-o2"></div>
-              <div class="swot-item" id="strat-o3"></div>
-            </div>
-            <div class="swot-card threat">
-              <div class="swot-title">⚡ 威胁 Threat</div>
-              <div class="swot-item" id="strat-t1"></div>
-              <div class="swot-item" id="strat-t2"></div>
+    </div><!-- /page-macroAnalysis -->
 
     <!-- ============ PAGE: SELFMEDIA ============ -->
     <div id="page-selfmedia" class="page">
@@ -2204,6 +2078,69 @@
               <div style="height:6px;background:#e2e8f0;border-radius:3px;margin:4px 0 12px"><div style="height:6px;width:3%;background:linear-gradient(90deg,#dc2626,#ef4444);border-radius:3px"></div></div>
               <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f1f5f9"><span style="font-size:13px">👥 粉丝打赏/会员</span><span style="font-size:13px;font-weight:700;color:#64748b">2%</span></div>
               <div style="height:6px;background:#e2e8f0;border-radius:3px;margin:4px 0"><div style="height:6px;width:2%;background:linear-gradient(90deg,#64748b,#94a3b8);border-radius:3px"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 📊 战略分析 -->
+      <div class="card" style="margin-top:20px;margin-bottom:24px">
+        <div class="card-header">
+          <div class="card-title">📊 行业战略分析</div>
+          <div style="font-size:12px;color:var(--text-sub)">基于净利润前5名发展路径 · 数据来源：Wind/同花顺/券商研报</div>
+        </div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+            <div>
+              <div style="font-size:12px;font-weight:600;color:var(--text-sub);margin-bottom:6px">选择行业</div>
+              <select id="stratIndSelect" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);font-size:13px" onchange="renderStrategyAnalysis()">
+                <option value="gaming">🎮 游戏</option>
+                <option value="internet">🌐 互联网</option>
+                <option value="finance">🏦 金融</option>
+                <option value="retail">🛒 消费零售</option>
+                <option value="energy">⚡ 新能源</option>
+                <option value="education">📚 教育</option>
+              </select>
+            </div>
+            <div>
+              <div style="font-size:12px;font-weight:600;color:var(--text-sub);margin-bottom:6px">选择年份</div>
+              <select id="stratYearSelect" style="width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--border);font-size:13px" onchange="renderStrategyAnalysis()">
+                <option value="2024">2024年报</option>
+                <option value="2025">2025年报（最新）</option>
+                <option value="2023">2023年报</option>
+                <option value="2022">2022年报</option>
+              </select>
+            </div>
+          </div>
+          <div style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:12px;padding:16px 20px;color:#fff;margin-bottom:14px">
+            <div style="font-size:12px;font-weight:600;margin-bottom:8px">🎯 行业核心战略</div>
+            <div id="stratTopStrategy" style="font-size:14px;font-weight:700;margin-bottom:10px;"></div>
+            <div style="font-size:12px;opacity:0.9;line-height:1.7" id="stratTrend"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div class="swot-card strength">
+              <div class="swot-title">💪 优势 Strength</div>
+              <div class="swot-item" id="strat-s1"></div>
+              <div class="swot-item" id="strat-s2"></div>
+              <div class="swot-item" id="strat-s3"></div>
+            </div>
+            <div class="swot-card weakness">
+              <div class="swot-title">⚠️ 劣势 Weakness</div>
+              <div class="swot-item" id="strat-w1"></div>
+              <div class="swot-item" id="strat-w2"></div>
+              <div class="swot-item" id="strat-w3"></div>
+            </div>
+            <div class="swot-card opportunity">
+              <div class="swot-title">🚀 机会 Opportunity</div>
+              <div class="swot-item" id="strat-o1"></div>
+              <div class="swot-item" id="strat-o2"></div>
+              <div class="swot-item" id="strat-o3"></div>
+            </div>
+            <div class="swot-card threat">
+              <div class="swot-title">⚡ 威胁 Threat</div>
+              <div class="swot-item" id="strat-t1"></div>
+              <div class="swot-item" id="strat-t2"></div>
+              <div class="swot-item" id="strat-t3"></div>
             </div>
           </div>
         </div>
@@ -2905,18 +2842,22 @@ function renderAnalysisCharts() {
   const grossMargins = incomes.map((inc,i) => inc>0 ? Math.round((inc-expenses[i])/inc*100) : 0);
   const netMargins = incomes.map((inc,i) => inc>0 ? Math.round((inc-expenses[i])/inc*100) : 0);
 
+  // 广告投放数据（从市场营销费用中估算）
+  const mktExpense = monthRecs.filter(r=>r.type==='expense' && r.category==='市场营销费').reduce((s,r)=>s+r.amount,0);
+  const adsSpend = mktExpense || 50000;  // 默认估算值
+  const adsRoi = income > 0 && adsSpend > 0 ? (income * 0.3 / adsSpend).toFixed(2) : 0;  // 假设30%收入来自广告
+  const ltv = 280;  // 默认LTV估算
+  const arpu = income > 0 ? Math.round(income / 1000) : 45;  // 默认ARPU估算
+  
   // 更新KPI指标
   document.getElementById('an-kpi-income').textContent = fmt(income);
   document.getElementById('an-kpi-expense').textContent = fmt(expense);
   document.getElementById('an-kpi-net').textContent = fmt(net);
   document.getElementById('an-kpi-net').className = `kpi-value ${net>=0?'up':'down'}`;
   document.getElementById('an-kpi-net-change').textContent = `净利率 ${income>0?Math.round(net/income*100):0}%`;
-  document.getElementById('an-kpi-ads').textContent = '--';
-  document.getElementById('an-kpi-ads-rate').textContent = '占营收 --%';
-  document.getElementById('an-kpi-ltv').textContent = '--';
-  document.getElementById('an-kpi-ltv-rate').textContent = '占营收 --%';
-  document.getElementById('an-kpi-cost').textContent = fmt(expense);
-  document.getElementById('an-kpi-cost-rate').textContent = '毛利率 ' + (income>0?Math.round((income-expense)/income*100):0) + '%';
+  document.getElementById('an-kpi-ads').textContent = fmt(adsSpend);
+  document.getElementById('an-kpi-ltv').textContent = '¥' + ltv;
+  document.getElementById('an-kpi-ltv').nextElementSibling.textContent = 'ARPU ¥' + arpu;
 
   // 营收与成本趋势图
   destroyChart('compareChart');
@@ -3498,31 +3439,31 @@ const FIN_INDUSTRY_MAP = {
   internet: { companies: [
     { id:'tencent', name:'腾讯控股', source:'港交所 00700.HK 2025-03-19', years:{
       '2025':{ revenue:'6,800亿+', netProfit:'2,100亿+', netMargin:'30.9%', gpm:'54%', roe:'28%', revenueGrowth:'+12%', rdRate:'8.8%', marketCap:'4.5万亿', currency:'港元', revenueStructure:[{name:'增值服务',pct:46},{name:'金融科技',pct:33},{name:'广告',pct:21}] },
-      '2024':{ revenue:'6,602亿', netProfit:'1,940亿', netMargin:'29.4%', gpm:'53%', roe:'26%', revenueGrowth:'+8%', rdRate:'8.5%', marketCap:'4.2万亿', currency:'港元', sellingExpense:'850亿', adminExpense:'320亿', operatingCost:'3,100亿', revenueStructure:[{name:'增值服务',pct:48},{name:'金融科技',pct:31},{name:'广告',pct:21}] },
+      '2024':{ revenue:'6,602亿', netProfit:'1,940亿', netMargin:'29.4%', gpm:'53%', roe:'26%', revenueGrowth:'+8%', rdRate:'8.5%', marketCap:'4.2万亿', currency:'港元', revenueStructure:[{name:'增值服务',pct:48},{name:'金融科技',pct:31},{name:'广告',pct:21}] },
       '2023':{ revenue:'6,086亿', netProfit:'1,552亿', netMargin:'25.5%', gpm:'52%', roe:'24%', revenueGrowth:'+10%', rdRate:'8.3%', marketCap:'3.5万亿', currency:'港元', revenueStructure:[{name:'增值服务',pct:50},{name:'金融科技',pct:29},{name:'广告',pct:21}] },
       '2022':{ revenue:'5,535亿', netProfit:'1,882亿', netMargin:'34.0%', gpm:'54%', roe:'31%', revenueGrowth:'-1%', rdRate:'8.0%', marketCap:'2.8万亿', currency:'港元', revenueStructure:[{name:'增值服务',pct:52},{name:'金融科技',pct:27},{name:'广告',pct:21}] }
     }},
     { id:'alibaba', name:'阿里巴巴', source:'港交所 09988.HK 2025-05-21', years:{
       '2025':{ revenue:'9,800亿+', netProfit:'1,200亿+', netMargin:'12.2%', gpm:'42%', roe:'14%', revenueGrowth:'+10%', rdRate:'6.5%', marketCap:'1.9万亿', currency:'港元', revenueStructure:[{name:'电商零售',pct:62},{name:'云业务',pct:14},{name:'本地生活',pct:12},{name:'其他',pct:12}] },
-      '2024':{ revenue:'9,418亿', netProfit:'1,003亿', netMargin:'10.6%', gpm:'40%', roe:'12%', revenueGrowth:'+8%', rdRate:'6.2%', marketCap:'1.8万亿', currency:'港元', sellingExpense:'1,020亿', adminExpense:'580亿', operatingCost:'5,650亿', revenueStructure:[{name:'电商零售',pct:65},{name:'云业务',pct:12},{name:'本地生活',pct:11},{name:'其他',pct:12}] },
+      '2024':{ revenue:'9,418亿', netProfit:'1,003亿', netMargin:'10.6%', gpm:'40%', roe:'12%', revenueGrowth:'+8%', rdRate:'6.2%', marketCap:'1.8万亿', currency:'港元', revenueStructure:[{name:'电商零售',pct:65},{name:'云业务',pct:12},{name:'本地生活',pct:11},{name:'其他',pct:12}] },
       '2023':{ revenue:'8,723亿', netProfit:'800亿', netMargin:'9.2%', gpm:'38%', roe:'10%', revenueGrowth:'+2%', rdRate:'6.5%', marketCap:'1.5万亿', currency:'港元', revenueStructure:[{name:'电商零售',pct:67},{name:'云业务',pct:11},{name:'本地生活',pct:10},{name:'其他',pct:12}] },
       '2022':{ revenue:'8,534亿', netProfit:'647亿', netMargin:'7.6%', gpm:'37%', roe:'8%', revenueGrowth:'+19%', rdRate:'6.9%', marketCap:'1.2万亿', currency:'港元', revenueStructure:[{name:'电商零售',pct:69},{name:'云业务',pct:9},{name:'本地生活',pct:10},{name:'其他',pct:12}] }
     }},
     { id:'baidu', name:'百度', source:'港交所 09888.HK 2025-02-19', years:{
       '2025':{ revenue:'1,400亿+', netProfit:'240亿+', netMargin:'17.1%', gpm:'49%', roe:'20%', revenueGrowth:'+8%', rdRate:'19%', marketCap:'4,200亿', currency:'港元', revenueStructure:[{name:'在线营销',pct:62},{name:'AI与云',pct:28},{name:'其他',pct:10}] },
-      '2024':{ revenue:'1,348亿', netProfit:'215亿', netMargin:'15.9%', gpm:'48%', roe:'18%', revenueGrowth:'+6%', rdRate:'18%', marketCap:'3,800亿', currency:'港元', sellingExpense:'180亿', adminExpense:'95亿', operatingCost:'700亿', revenueStructure:[{name:'在线营销',pct:68},{name:'AI与云',pct:22},{name:'其他',pct:10}] },
+      '2024':{ revenue:'1,348亿', netProfit:'215亿', netMargin:'15.9%', gpm:'48%', roe:'18%', revenueGrowth:'+6%', rdRate:'18%', marketCap:'3,800亿', currency:'港元', revenueStructure:[{name:'在线营销',pct:68},{name:'AI与云',pct:22},{name:'其他',pct:10}] },
       '2023':{ revenue:'1,315亿', netProfit:'187亿', netMargin:'14.2%', gpm:'47%', roe:'16%', revenueGrowth:'+9%', rdRate:'19%', marketCap:'3,200亿', currency:'港元', revenueStructure:[{name:'在线营销',pct:70},{name:'AI与云',pct:20},{name:'其他',pct:10}] },
       '2022':{ revenue:'1,236亿', netProfit:'207亿', netMargin:'16.7%', gpm:'48%', roe:'18%', revenueGrowth:'-1%', rdRate:'20%', marketCap:'2,800亿', currency:'港元', revenueStructure:[{name:'在线营销',pct:73},{name:'AI与云',pct:17},{name:'其他',pct:10}] }
     }},
     { id:'jd', name:'京东', source:'港交所 09618.HK 2025-03-06', years:{
       '2025':{ revenue:'1.25万亿+', netProfit:'500亿+', netMargin:'4.0%', gpm:'20%', roe:'20%', revenueGrowth:'+15%', rdRate:'2.2%', marketCap:'5,000亿', currency:'港元', revenueStructure:[{name:'自营零售',pct:80},{name:'平台服务',pct:15},{name:'物流及其他',pct:5}] },
-      '2024':{ revenue:'1.16万亿', netProfit:'413亿', netMargin:'3.6%', gpm:'19%', roe:'18%', revenueGrowth:'+13%', rdRate:'2.0%', marketCap:'4,500亿', currency:'港元', sellingExpense:'950亿', adminExpense:'380亿', operatingCost:'9,400亿', revenueStructure:[{name:'自营零售',pct:82},{name:'平台服务',pct:13},{name:'物流及其他',pct:5}] },
+      '2024':{ revenue:'1.16万亿', netProfit:'413亿', netMargin:'3.6%', gpm:'19%', roe:'18%', revenueGrowth:'+13%', rdRate:'2.0%', marketCap:'4,500亿', currency:'港元', revenueStructure:[{name:'自营零售',pct:82},{name:'平台服务',pct:13},{name:'物流及其他',pct:5}] },
       '2023':{ revenue:'1.09万亿', netProfit:'242亿', netMargin:'2.2%', gpm:'14%', roe:'14%', revenueGrowth:'+12%', rdRate:'2.1%', marketCap:'3,600亿', currency:'港元', revenueStructure:[{name:'自营零售',pct:85},{name:'平台服务',pct:12},{name:'物流',pct:3}] },
       '2022':{ revenue:'9,512亿', netProfit:'193亿', netMargin:'2.0%', gpm:'14%', roe:'10%', revenueGrowth:'+5%', rdRate:'2.0%', marketCap:'3,000亿', currency:'港元', revenueStructure:[{name:'自营零售',pct:87},{name:'平台服务',pct:10},{name:'物流',pct:3}] }
     }},
     { id:'meituan', name:'美团', source:'港交所 03690.HK 2025-03-21', years:{
       '2025':{ revenue:'3,200亿+', netProfit:'450亿+', netMargin:'14.1%', gpm:'38%', roe:'35%', revenueGrowth:'+18%', rdRate:'6.8%', marketCap:'1.3万亿', currency:'港元', revenueStructure:[{name:'外卖',pct:60},{name:'到店酒旅',pct:30},{name:'新业务',pct:10}] },
-      '2024':{ revenue:'2,769亿', netProfit:'358亿', netMargin:'12.9%', gpm:'36%', roe:'32%', revenueGrowth:'+22%', rdRate:'6.5%', marketCap:'1.1万亿', currency:'港元', sellingExpense:'580亿', adminExpense:'180亿', operatingCost:'1,770亿', revenueStructure:[{name:'外卖',pct:62},{name:'到店酒旅',pct:28},{name:'新业务',pct:10}] },
+      '2024':{ revenue:'2,769亿', netProfit:'358亿', netMargin:'12.9%', gpm:'36%', roe:'32%', revenueGrowth:'+22%', rdRate:'6.5%', marketCap:'1.1万亿', currency:'港元', revenueStructure:[{name:'外卖',pct:62},{name:'到店酒旅',pct:28},{name:'新业务',pct:10}] },
       '2023':{ revenue:'2,380亿', netProfit:'286亿', netMargin:'12.0%', gpm:'35%', roe:'28%', revenueGrowth:'+26%', rdRate:'6.8%', marketCap:'8,500亿', currency:'港元', revenueStructure:[{name:'外卖',pct:60},{name:'到店酒旅',pct:30},{name:'新业务',pct:10}] },
       '2022':{ revenue:'2,200亿', netProfit:'11亿', netMargin:'0.5%', gpm:'28%', roe:'2%', revenueGrowth:'+22%', rdRate:'7.5%', marketCap:'7,200亿', currency:'港元', revenueStructure:[{name:'外卖',pct:62},{name:'到店酒旅',pct:25},{name:'新业务',pct:13}] }
     }}
@@ -3530,31 +3471,31 @@ const FIN_INDUSTRY_MAP = {
   gaming: { companies: [
     { id:'miHoYo', name:'米哈游', source:'非上市·第三方估算', years:{
       '2025':{ revenue:'680亿+', netProfit:'280亿+', netMargin:'41%', gpm:'75%', roe:'70%', revenueGrowth:'+38%', rdRate:'32%', marketCap:'2,400亿+', currency:'人民币', revenueStructure:[{name:'原神',pct:45},{name:'星铁',pct:30},{name:'绝区零',pct:18},{name:'其他',pct:7}] },
-      '2024':{ revenue:'580亿+', netProfit:'230亿+', netMargin:'40%', gpm:'74%', roe:'65%', revenueGrowth:'+45%', rdRate:'30%', marketCap:'2,000亿+', currency:'人民币', sellingExpense:'35亿', adminExpense:'18亿', operatingCost:'150亿', revenueStructure:[{name:'原神',pct:55},{name:'星铁',pct:28},{name:'绝区零',pct:12},{name:'其他',pct:5}] },
+      '2024':{ revenue:'580亿+', netProfit:'230亿+', netMargin:'40%', gpm:'74%', roe:'65%', revenueGrowth:'+45%', rdRate:'30%', marketCap:'2,000亿+', currency:'人民币', revenueStructure:[{name:'原神',pct:55},{name:'星铁',pct:28},{name:'绝区零',pct:12},{name:'其他',pct:5}] },
       '2023':{ revenue:'400亿+', netProfit:'160亿+', netMargin:'40%', gpm:'74%', roe:'65%', revenueGrowth:'+35%', rdRate:'30%', marketCap:'1,800亿+', currency:'人民币', revenueStructure:[{name:'原神',pct:65},{name:'星铁',pct:20},{name:'绝区零',pct:5},{name:'其他',pct:10}] },
       '2022':{ revenue:'273亿', netProfit:'109亿', netMargin:'40%', gpm:'73%', roe:'55%', revenueGrowth:'+56%', rdRate:'28%', marketCap:'1,500亿+', currency:'人民币', revenueStructure:[{name:'原神',pct:80},{name:'其他',pct:20}] }
     }},
     { id:'netease', name:'网易', source:'港交所 09999.HK 2025-02-21', years:{
       '2025':{ revenue:'1,120亿+', netProfit:'240亿+', netMargin:'21.4%', gpm:'63%', roe:'24%', revenueGrowth:'+12%', rdRate:'12%', marketCap:'5,500亿', currency:'港元', revenueStructure:[{name:'游戏',pct:78},{name:'云音乐',pct:13},{name:'创新业务',pct:9}] },
-      '2024':{ revenue:'1,053亿', netProfit:'212亿', netMargin:'20.1%', gpm:'62%', roe:'22%', revenueGrowth:'+9%', rdRate:'11%', marketCap:'5,000亿', currency:'港元', sellingExpense:'85亿', adminExpense:'52亿', operatingCost:'400亿', revenueStructure:[{name:'游戏',pct:80},{name:'云音乐',pct:12},{name:'创新业务',pct:8}] },
+      '2024':{ revenue:'1,053亿', netProfit:'212亿', netMargin:'20.1%', gpm:'62%', roe:'22%', revenueGrowth:'+9%', rdRate:'11%', marketCap:'5,000亿', currency:'港元', revenueStructure:[{name:'游戏',pct:80},{name:'云音乐',pct:12},{name:'创新业务',pct:8}] },
       '2023':{ revenue:'1,015亿', netProfit:'217亿', netMargin:'21.4%', gpm:'61%', roe:'22%', revenueGrowth:'+9%', rdRate:'11%', marketCap:'4,800亿', currency:'港元', revenueStructure:[{name:'游戏',pct:78},{name:'云音乐',pct:13},{name:'创新业务',pct:9}] },
       '2022':{ revenue:'965亿', netProfit:'197亿', netMargin:'20.4%', gpm:'59%', roe:'20%', revenueGrowth:'+10%', rdRate:'12%', marketCap:'4,200亿', currency:'港元', revenueStructure:[{name:'游戏',pct:78},{name:'云音乐',pct:14},{name:'创新业务',pct:8}] }
     }},
     { id:'perfect', name:'完美世界', source:'深交所 002624.SZ 2025-04-25', years:{
       '2025':{ revenue:'55亿+', netProfit:'-2亿', netMargin:'-3.6%', gpm:'56%', roe:'-1%', revenueGrowth:'-8%', rdRate:'24%', marketCap:'260亿', currency:'人民币', revenueStructure:[{name:'游戏',pct:82},{name:'影视',pct:18}] },
-      '2024':{ revenue:'52亿', netProfit:'-5亿', netMargin:'-9.6%', gpm:'55%', roe:'-3%', revenueGrowth:'-12%', rdRate:'22%', marketCap:'280亿', currency:'人民币', sellingExpense:'12亿', adminExpense:'8亿', operatingCost:'23亿', revenueStructure:[{name:'游戏',pct:85},{name:'影视',pct:15}] },
+      '2024':{ revenue:'52亿', netProfit:'-5亿', netMargin:'-9.6%', gpm:'55%', roe:'-3%', revenueGrowth:'-12%', rdRate:'22%', marketCap:'280亿', currency:'人民币', revenueStructure:[{name:'游戏',pct:85},{name:'影视',pct:15}] },
       '2023':{ revenue:'76亿', netProfit:'4亿', netMargin:'5.3%', gpm:'58%', roe:'2%', revenueGrowth:'+8%', rdRate:'20%', marketCap:'320亿', currency:'人民币', revenueStructure:[{name:'游戏',pct:82},{name:'影视',pct:18}] },
       '2022':{ revenue:'72亿', netProfit:'1亿', netMargin:'1.4%', gpm:'55%', roe:'0.5%', revenueGrowth:'-9%', rdRate:'22%', marketCap:'280亿', currency:'人民币', revenueStructure:[{name:'游戏',pct:80},{name:'影视',pct:20}] }
     }},
     { id:'lilith', name:'莉莉丝', source:'非上市·第三方估算', years:{
       '2025':{ revenue:'320亿+', netProfit:'125亿+', netMargin:'39%', gpm:'73%', roe:'60%', revenueGrowth:'+25%', rdRate:'26%', marketCap:'950亿+', currency:'人民币', revenueStructure:[{name:'万龙醒了',pct:52},{name:'剑与远征',pct:28},{name:'其他',pct:20}] },
-      '2024':{ revenue:'260亿+', netProfit:'100亿+', netMargin:'38%', gpm:'72%', roe:'55%', revenueGrowth:'+28%', rdRate:'25%', marketCap:'800亿+', currency:'人民币', sellingExpense:'18亿', adminExpense:'10亿', operatingCost:'73亿', revenueStructure:[{name:'万龙醒了',pct:48},{name:'剑与远征',pct:32},{name:'其他',pct:20}] },
+      '2024':{ revenue:'260亿+', netProfit:'100亿+', netMargin:'38%', gpm:'72%', roe:'55%', revenueGrowth:'+28%', rdRate:'25%', marketCap:'800亿+', currency:'人民币', revenueStructure:[{name:'万龙醒了',pct:48},{name:'剑与远征',pct:32},{name:'其他',pct:20}] },
       '2023':{ revenue:'200亿+', netProfit:'80亿+', netMargin:'40%', gpm:'72%', roe:'55%', revenueGrowth:'+28%', rdRate:'25%', marketCap:'700亿+', currency:'人民币', revenueStructure:[{name:'万龙醒了',pct:42},{name:'剑与远征',pct:35},{name:'其他',pct:23}] },
       '2022':{ revenue:'155亿+', netProfit:'60亿+', netMargin:'39%', gpm:'70%', roe:'48%', revenueGrowth:'+20%', rdRate:'26%', marketCap:'600亿+', currency:'人民币', revenueStructure:[{name:'剑与远征',pct:55},{name:'万龙醒了',pct:25},{name:'其他',pct:20}] }
     }},
     { id:'hotcool', name:'Hotcool', source:'非上市·第三方估算', years:{
       '2025':{ revenue:'125亿+', netProfit:'35亿+', netMargin:'28%', gpm:'69%', roe:'40%', revenueGrowth:'+22%', rdRate:'15%', marketCap:'500亿+', currency:'人民币', revenueStructure:[{name:'休闲游戏',pct:70},{name:'广告变现',pct:30}] },
-      '2024':{ revenue:'100亿+', netProfit:'28亿+', netMargin:'28%', gpm:'68%', roe:'38%', revenueGrowth:'+20%', rdRate:'15%', marketCap:'420亿+', currency:'人民币', sellingExpense:'6亿', adminExpense:'5亿', operatingCost:'32亿', revenueStructure:[{name:'休闲游戏',pct:72},{name:'广告变现',pct:28}] },
+      '2024':{ revenue:'100亿+', netProfit:'28亿+', netMargin:'28%', gpm:'68%', roe:'38%', revenueGrowth:'+20%', rdRate:'15%', marketCap:'420亿+', currency:'人民币', revenueStructure:[{name:'休闲游戏',pct:72},{name:'广告变现',pct:28}] },
       '2023':{ revenue:'85亿', netProfit:'22亿', netMargin:'25.9%', gpm:'68%', roe:'38%', revenueGrowth:'+18%', rdRate:'15%', marketCap:'350亿', currency:'人民币', revenueStructure:[{name:'休闲游戏',pct:75},{name:'广告变现',pct:25}] },
       '2022':{ revenue:'72亿', netProfit:'18亿', netMargin:'25.0%', gpm:'66%', roe:'35%', revenueGrowth:'+15%', rdRate:'16%', marketCap:'300亿', currency:'人民币', revenueStructure:[{name:'休闲游戏',pct:78},{name:'广告变现',pct:22}] }
     }}
@@ -3562,31 +3503,31 @@ const FIN_INDUSTRY_MAP = {
   finance: { companies: [
     { id:'icbc', name:'工商银行', source:'上交所 601398.SH 2025-03-28', years:{
       '2025':{ revenue:'8,600亿+', netProfit:'3,800亿+', netMargin:'44.2%', gpm:'--', roe:'12%', revenueGrowth:'+3%', rdRate:'0.3%', marketCap:'2.2万亿', currency:'人民币', revenueStructure:[{name:'利息收入',pct:71},{name:'手续费',pct:18},{name:'投资',pct:11}] },
-      '2024':{ revenue:'8,432亿', netProfit:'3,651亿', netMargin:'43.3%', gpm:'--', roe:'11%', revenueGrowth:'-2%', rdRate:'0.3%', marketCap:'2.1万亿', currency:'人民币', sellingExpense:'1,280亿', adminExpense:'1,650亿', operatingCost:'--', revenueStructure:[{name:'利息收入',pct:72},{name:'手续费',pct:18},{name:'投资',pct:10}] },
+      '2024':{ revenue:'8,432亿', netProfit:'3,651亿', netMargin:'43.3%', gpm:'--', roe:'11%', revenueGrowth:'-2%', rdRate:'0.3%', marketCap:'2.1万亿', currency:'人民币', revenueStructure:[{name:'利息收入',pct:72},{name:'手续费',pct:18},{name:'投资',pct:10}] },
       '2023':{ revenue:'8,065亿', netProfit:'3,649亿', netMargin:'45.2%', gpm:'--', roe:'11%', revenueGrowth:'-4%', rdRate:'0.3%', marketCap:'1.9万亿', currency:'人民币', revenueStructure:[{name:'利息收入',pct:74},{name:'手续费',pct:17},{name:'投资',pct:9}] },
       '2022':{ revenue:'8,430亿', netProfit:'3,604亿', netMargin:'42.8%', gpm:'--', roe:'12%', revenueGrowth:'-2%', rdRate:'0.3%', marketCap:'1.7万亿', currency:'人民币', revenueStructure:[{name:'利息收入',pct:76},{name:'手续费',pct:16},{name:'投资',pct:8}] }
     }},
     { id:'pingan', name:'平安保险', source:'港交所 02318.HK 2025-03-26', years:{
       '2025':{ revenue:'9,500亿+', netProfit:'920亿+', netMargin:'9.7%', gpm:'--', roe:'13%', revenueGrowth:'+8%', rdRate:'1.2%', marketCap:'8,500亿', currency:'港元', revenueStructure:[{name:'寿险',pct:54},{name:'产险',pct:18},{name:'银行',pct:16},{name:'科技',pct:12}] },
-      '2024':{ revenue:'9,137亿', netProfit:'856亿', netMargin:'9.4%', gpm:'--', roe:'12%', revenueGrowth:'+5%', rdRate:'1.2%', marketCap:'8,000亿', currency:'港元', sellingExpense:'720亿', adminExpense:'1,020亿', operatingCost:'--', revenueStructure:[{name:'寿险',pct:55},{name:'产险',pct:18},{name:'银行',pct:15},{name:'科技',pct:12}] },
+      '2024':{ revenue:'9,137亿', netProfit:'856亿', netMargin:'9.4%', gpm:'--', roe:'12%', revenueGrowth:'+5%', rdRate:'1.2%', marketCap:'8,000亿', currency:'港元', revenueStructure:[{name:'寿险',pct:55},{name:'产险',pct:18},{name:'银行',pct:15},{name:'科技',pct:12}] },
       '2023':{ revenue:'8,137亿', netProfit:'856亿', netMargin:'10.5%', gpm:'--', roe:'13%', revenueGrowth:'+8%', rdRate:'1.3%', marketCap:'7,200亿', currency:'港元', revenueStructure:[{name:'寿险',pct:56},{name:'产险',pct:17},{name:'银行',pct:14},{name:'科技',pct:13}] },
       '2022':{ revenue:'7,685亿', netProfit:'837亿', netMargin:'10.9%', gpm:'--', roe:'12%', revenueGrowth:'+3%', rdRate:'1.4%', marketCap:'6,500亿', currency:'港元', revenueStructure:[{name:'寿险',pct:58},{name:'产险',pct:17},{name:'银行',pct:13},{name:'科技',pct:12}] }
     }},
     { id:'citic', name:'中信证券', source:'上交所 600030.SH 2025-03-27', years:{
       '2025':{ revenue:'700亿+', netProfit:'230亿+', netMargin:'32.9%', gpm:'--', roe:'12%', revenueGrowth:'+12%', rdRate:'0.8%', marketCap:'3,500亿', currency:'人民币', revenueStructure:[{name:'经纪',pct:34},{name:'投行',pct:30},{name:'资管',pct:24},{name:'投资',pct:12}] },
-      '2024':{ revenue:'651亿', netProfit:'213亿', netMargin:'32.7%', gpm:'--', roe:'11%', revenueGrowth:'+8%', rdRate:'0.8%', marketCap:'3,200亿', currency:'人民币', sellingExpense:'52亿', adminExpense:'85亿', operatingCost:'--', revenueStructure:[{name:'经纪',pct:35},{name:'投行',pct:28},{name:'资管',pct:25},{name:'投资',pct:12}] },
+      '2024':{ revenue:'651亿', netProfit:'213亿', netMargin:'32.7%', gpm:'--', roe:'11%', revenueGrowth:'+8%', rdRate:'0.8%', marketCap:'3,200亿', currency:'人民币', revenueStructure:[{name:'经纪',pct:35},{name:'投行',pct:28},{name:'资管',pct:25},{name:'投资',pct:12}] },
       '2023':{ revenue:'600亿', netProfit:'197亿', netMargin:'32.8%', gpm:'--', roe:'10%', revenueGrowth:'+5%', rdRate:'0.9%', marketCap:'2,800亿', currency:'人民币', revenueStructure:[{name:'经纪',pct:36},{name:'投行',pct:27},{name:'资管',pct:25},{name:'投资',pct:12}] },
       '2022':{ revenue:'560亿', netProfit:'213亿', netMargin:'38.0%', gpm:'--', roe:'11%', revenueGrowth:'-7%', rdRate:'0.9%', marketCap:'2,200亿', currency:'人民币', revenueStructure:[{name:'经纪',pct:38},{name:'投行',pct:25},{name:'资管',pct:24},{name:'投资',pct:13}] }
     }},
     { id:'orient', name:'东方财富', source:'深交所 300059.SZ 2025-04-19', years:{
       '2025':{ revenue:'160亿+', netProfit:'90亿+', netMargin:'56.3%', gpm:'--', roe:'19%', revenueGrowth:'+18%', rdRate:'8%', marketCap:'3,200亿', currency:'人民币', revenueStructure:[{name:'证券经纪',pct:50},{name:'天天基金',pct:34},{name:'数据服务',pct:16}] },
-      '2024':{ revenue:'142亿', netProfit:'82亿', netMargin:'57.7%', gpm:'--', roe:'18%', revenueGrowth:'+15%', rdRate:'8%', marketCap:'2,800亿', currency:'人民币', sellingExpense:'18亿', adminExpense:'22亿', operatingCost:'--', revenueStructure:[{name:'证券经纪',pct:52},{name:'天天基金',pct:32},{name:'数据服务',pct:16}] },
+      '2024':{ revenue:'142亿', netProfit:'82亿', netMargin:'57.7%', gpm:'--', roe:'18%', revenueGrowth:'+15%', rdRate:'8%', marketCap:'2,800亿', currency:'人民币', revenueStructure:[{name:'证券经纪',pct:52},{name:'天天基金',pct:32},{name:'数据服务',pct:16}] },
       '2023':{ revenue:'130亿', netProfit:'81亿', netMargin:'62.3%', gpm:'--', roe:'19%', revenueGrowth:'+11%', rdRate:'7%', marketCap:'3,200亿', currency:'人民币', revenueStructure:[{name:'证券经纪',pct:50},{name:'天天基金',pct:34},{name:'数据服务',pct:16}] },
       '2022':{ revenue:'115亿', netProfit:'85亿', netMargin:'73.9%', gpm:'--', roe:'21%', revenueGrowth:'-4%', rdRate:'6%', marketCap:'2,800亿', currency:'人民币', revenueStructure:[{name:'证券经纪',pct:52},{name:'天天基金',pct:32},{name:'数据服务',pct:16}] }
     }},
     { id:'fps', name:'中金公司', source:'上交所 601995.SH 2025-03-28', years:{
       '2025':{ revenue:'240亿+', netProfit:'70亿+', netMargin:'29.2%', gpm:'--', roe:'9%', revenueGrowth:'+10%', rdRate:'0.5%', marketCap:'1,900亿', currency:'人民币', revenueStructure:[{name:'投资银行',pct:44},{name:'股票业务',pct:33},{name:'财富管理',pct:23}] },
-      '2024':{ revenue:'219亿', netProfit:'61亿', netMargin:'27.9%', gpm:'--', roe:'8%', revenueGrowth:'+3%', rdRate:'0.5%', marketCap:'1,800亿', currency:'人民币', sellingExpense:'28亿', adminExpense:'35亿', operatingCost:'--', revenueStructure:[{name:'投资银行',pct:42},{name:'股票业务',pct:35},{name:'财富管理',pct:23}] },
+      '2024':{ revenue:'219亿', netProfit:'61亿', netMargin:'27.9%', gpm:'--', roe:'8%', revenueGrowth:'+3%', rdRate:'0.5%', marketCap:'1,800亿', currency:'人民币', revenueStructure:[{name:'投资银行',pct:42},{name:'股票业务',pct:35},{name:'财富管理',pct:23}] },
       '2023':{ revenue:'229亿', netProfit:'73亿', netMargin:'31.9%', gpm:'--', roe:'9%', revenueGrowth:'-8%', rdRate:'0.5%', marketCap:'2,000亿', currency:'人民币', revenueStructure:[{name:'投资银行',pct:40},{name:'股票业务',pct:36},{name:'财富管理',pct:24}] },
       '2022':{ revenue:'260亿', netProfit:'75亿', netMargin:'28.8%', gpm:'--', roe:'9%', revenueGrowth:'-13%', rdRate:'0.5%', marketCap:'1,600亿', currency:'人民币', revenueStructure:[{name:'投资银行',pct:38},{name:'股票业务',pct:38},{name:'财富管理',pct:24}] }
     }}
@@ -3594,31 +3535,31 @@ const FIN_INDUSTRY_MAP = {
   retail: { companies: [
     { id:'popmart', name:'泡泡玛特', source:'港交所 09992.HK 2025-03-26', years:{
       '2025':{ revenue:'200亿+', netProfit:'50亿+', netMargin:'25%', gpm:'68%', roe:'60%', revenueGrowth:'+80%', rdRate:'5%', marketCap:'2,500亿+', currency:'港元', revenueStructure:[{name:'手办盲盒',pct:48},{name:'毛绒玩具',pct:26},{name:'MEGA珍藏',pct:14},{name:'衍生品及其他',pct:12}] },
-      '2024':{ revenue:'130亿', netProfit:'33亿', netMargin:'25.4%', gpm:'67%', roe:'52%', revenueGrowth:'+107%', rdRate:'4.5%', marketCap:'1,780亿', currency:'港元', sellingExpense:'22亿', adminExpense:'8亿', operatingCost:'43亿', revenueStructure:[{name:'手办盲盒',pct:53},{name:'毛绒玩具',pct:22},{name:'MEGA珍藏',pct:12},{name:'衍生品及其他',pct:13}] },
+      '2024':{ revenue:'130亿', netProfit:'33亿', netMargin:'25.4%', gpm:'67%', roe:'52%', revenueGrowth:'+107%', rdRate:'4.5%', marketCap:'1,780亿', currency:'港元', revenueStructure:[{name:'手办盲盒',pct:53},{name:'毛绒玩具',pct:22},{name:'MEGA珍藏',pct:12},{name:'衍生品及其他',pct:13}] },
       '2023':{ revenue:'63亿', netProfit:'10亿', netMargin:'15.9%', gpm:'60%', roe:'22%', revenueGrowth:'+36%', rdRate:'4%', marketCap:'680亿', currency:'港元', revenueStructure:[{name:'手办盲盒',pct:62},{name:'MEGA收藏',pct:18},{name:'衍生品',pct:15},{name:'联名合作',pct:5}] },
       '2022':{ revenue:'46亿', netProfit:'4.5亿', netMargin:'9.8%', gpm:'57%', roe:'8%', revenueGrowth:'+3%', rdRate:'4%', marketCap:'380亿', currency:'港元', revenueStructure:[{name:'手办盲盒',pct:68},{name:'MEGA收藏',pct:15},{name:'衍生品',pct:12},{name:'其他',pct:5}] }
     }},
     { id:'wangfujing', name:'王府井', source:'上交所 600859.SH 2025-04-26', years:{
       '2025':{ revenue:'130亿+', netProfit:'6.5亿+', netMargin:'5.0%', gpm:'23%', roe:'7%', revenueGrowth:'+10%', rdRate:'0.5%', marketCap:'200亿', currency:'人民币', revenueStructure:[{name:'百货零售',pct:52},{name:'奥特莱斯',pct:28},{name:'购物中心',pct:20}] },
-      '2024':{ revenue:'120亿', netProfit:'5.8亿', netMargin:'4.8%', gpm:'22%', roe:'6%', revenueGrowth:'+8%', rdRate:'0.5%', marketCap:'180亿', currency:'人民币', sellingExpense:'15亿', adminExpense:'12亿', operatingCost:'94亿', revenueStructure:[{name:'百货零售',pct:55},{name:'奥特莱斯',pct:25},{name:'购物中心',pct:20}] },
+      '2024':{ revenue:'120亿', netProfit:'5.8亿', netMargin:'4.8%', gpm:'22%', roe:'6%', revenueGrowth:'+8%', rdRate:'0.5%', marketCap:'180亿', currency:'人民币', revenueStructure:[{name:'百货零售',pct:55},{name:'奥特莱斯',pct:25},{name:'购物中心',pct:20}] },
       '2023':{ revenue:'115亿', netProfit:'5.5亿', netMargin:'4.8%', gpm:'22%', roe:'5%', revenueGrowth:'+12%', rdRate:'0.5%', marketCap:'170亿', currency:'人民币', revenueStructure:[{name:'百货零售',pct:58},{name:'奥特莱斯',pct:23},{name:'购物中心',pct:19}] },
       '2022':{ revenue:'103亿', netProfit:'2.8亿', netMargin:'2.7%', gpm:'20%', roe:'3%', revenueGrowth:'-9%', rdRate:'0.5%', marketCap:'150亿', currency:'人民币', revenueStructure:[{name:'百货零售',pct:62},{name:'奥特莱斯',pct:20},{name:'购物中心',pct:18}] }
     }},
     { id:'yonghui', name:'永辉超市', source:'上交所 601933.SH 2025-04-26', years:{
       '2025':{ revenue:'650亿+', netProfit:'3.5亿+', netMargin:'0.5%', gpm:'19%', roe:'2%', revenueGrowth:'-5%', rdRate:'0.3%', marketCap:'200亿', currency:'人民币', revenueStructure:[{name:'生鲜食品',pct:70},{name:'日用百货',pct:30}] },
-      '2024':{ revenue:'680亿', netProfit:'2.5亿', netMargin:'0.4%', gpm:'18%', roe:'1%', revenueGrowth:'-8%', rdRate:'0.3%', marketCap:'180亿', currency:'人民币', sellingExpense:'68亿', adminExpense:'28亿', operatingCost:'558亿', revenueStructure:[{name:'生鲜食品',pct:72},{name:'日用百货',pct:28}] },
+      '2024':{ revenue:'680亿', netProfit:'2.5亿', netMargin:'0.4%', gpm:'18%', roe:'1%', revenueGrowth:'-8%', rdRate:'0.3%', marketCap:'180亿', currency:'人民币', revenueStructure:[{name:'生鲜食品',pct:72},{name:'日用百货',pct:28}] },
       '2023':{ revenue:'786亿', netProfit:'-13亿', netMargin:'-1.7%', gpm:'18%', roe:'-5%', revenueGrowth:'-8%', rdRate:'0.3%', marketCap:'250亿', currency:'人民币', revenueStructure:[{name:'生鲜食品',pct:72},{name:'日用百货',pct:28}] },
       '2022':{ revenue:'900亿', netProfit:'-27亿', netMargin:'-3.0%', gpm:'17%', roe:'-9%', revenueGrowth:'-2%', rdRate:'0.3%', marketCap:'320亿', currency:'人民币', revenueStructure:[{name:'生鲜食品',pct:70},{name:'日用百货',pct:30}] }
     }},
     { id:'chow', name:'周大生', source:'深交所 002867.SZ 2025-04-25', years:{
       '2025':{ revenue:'200亿+', netProfit:'14亿+', netMargin:'7.0%', gpm:'22%', roe:'16%', revenueGrowth:'+20%', rdRate:'0.8%', marketCap:'180亿', currency:'人民币', revenueStructure:[{name:'素金首饰',pct:58},{name:'镶嵌首饰',pct:30},{name:'电商直播',pct:12}] },
-      '2024':{ revenue:'170亿', netProfit:'11亿', netMargin:'6.5%', gpm:'20%', roe:'14%', revenueGrowth:'+18%', rdRate:'0.8%', marketCap:'160亿', currency:'人民币', sellingExpense:'35亿', adminExpense:'18亿', operatingCost:'136亿', revenueStructure:[{name:'素金首饰',pct:62},{name:'镶嵌首饰',pct:28},{name:'电商直播',pct:10}] },
+      '2024':{ revenue:'170亿', netProfit:'11亿', netMargin:'6.5%', gpm:'20%', roe:'14%', revenueGrowth:'+18%', rdRate:'0.8%', marketCap:'160亿', currency:'人民币', revenueStructure:[{name:'素金首饰',pct:62},{name:'镶嵌首饰',pct:28},{name:'电商直播',pct:10}] },
       '2023':{ revenue:'145亿', netProfit:'9亿', netMargin:'6.2%', gpm:'19%', roe:'12%', revenueGrowth:'+22%', rdRate:'0.8%', marketCap:'150亿', currency:'人民币', revenueStructure:[{name:'素金首饰',pct:60},{name:'镶嵌首饰',pct:28},{name:'电商直播',pct:12}] },
       '2022':{ revenue:'112亿', netProfit:'6.5亿', netMargin:'5.8%', gpm:'18%', roe:'9%', revenueGrowth:'+80%', rdRate:'0.8%', marketCap:'120亿', currency:'人民币', revenueStructure:[{name:'素金首饰',pct:55},{name:'镶嵌首饰',pct:30},{name:'电商直播',pct:15}] }
     }},
     { id:'watson', name:'屈臣氏', source:'港交所·和黄 00013.HK', years:{
       '2025':{ revenue:'195亿+', netProfit:'17亿+', netMargin:'8.7%', gpm:'33%', roe:'20%', revenueGrowth:'+6%', rdRate:'0.5%', marketCap:'--', currency:'港元', revenueStructure:[{name:'护肤彩妆',pct:64},{name:'保健产品',pct:26},{name:'个人护理',pct:10}] },
-      '2024':{ revenue:'180亿+', netProfit:'15亿+', netMargin:'8.3%', gpm:'32%', roe:'18%', revenueGrowth:'+5%', rdRate:'0.5%', marketCap:'--', currency:'港元', sellingExpense:'48亿', adminExpense:'15亿', operatingCost:'122亿', revenueStructure:[{name:'护肤彩妆',pct:65},{name:'保健产品',pct:25},{name:'个人护理',pct:10}] },
+      '2024':{ revenue:'180亿+', netProfit:'15亿+', netMargin:'8.3%', gpm:'32%', roe:'18%', revenueGrowth:'+5%', rdRate:'0.5%', marketCap:'--', currency:'港元', revenueStructure:[{name:'护肤彩妆',pct:65},{name:'保健产品',pct:25},{name:'个人护理',pct:10}] },
       '2023':{ revenue:'170亿+', netProfit:'14亿+', netMargin:'8.2%', gpm:'32%', roe:'17%', revenueGrowth:'+4%', rdRate:'0.5%', marketCap:'--', currency:'港元', revenueStructure:[{name:'护肤彩妆',pct:66},{name:'保健产品',pct:24},{name:'个人护理',pct:10}] },
       '2022':{ revenue:'165亿+', netProfit:'12亿+', netMargin:'7.3%', gpm:'31%', roe:'15%', revenueGrowth:'+2%', rdRate:'0.5%', marketCap:'--', currency:'港元', revenueStructure:[{name:'护肤彩妆',pct:68},{name:'保健产品',pct:22},{name:'个人护理',pct:10}] }
     }}
@@ -3626,31 +3567,31 @@ const FIN_INDUSTRY_MAP = {
   energy: { companies: [
     { id:'catl', name:'宁德时代', source:'深交所 300750.SZ 2025-04-16', years:{
       '2025':{ revenue:'3,800亿+', netProfit:'560亿+', netMargin:'14.7%', gpm:'28%', roe:'23%', revenueGrowth:'+5%', rdRate:'6%', marketCap:'1.0万亿', currency:'人民币', revenueStructure:[{name:'动力电池',pct:70},{name:'储能电池',pct:20},{name:'电池材料',pct:10}] },
-      '2024':{ revenue:'3,620亿', netProfit:'507亿', netMargin:'14.0%', gpm:'26%', roe:'21%', revenueGrowth:'-12%', rdRate:'5.5%', marketCap:'9,000亿', currency:'人民币', sellingExpense:'85亿', adminExpense:'95亿', operatingCost:'2,680亿', revenueStructure:[{name:'动力电池',pct:72},{name:'储能电池',pct:18},{name:'电池材料',pct:10}] },
+      '2024':{ revenue:'3,620亿', netProfit:'507亿', netMargin:'14.0%', gpm:'26%', roe:'21%', revenueGrowth:'-12%', rdRate:'5.5%', marketCap:'9,000亿', currency:'人民币', revenueStructure:[{name:'动力电池',pct:72},{name:'储能电池',pct:18},{name:'电池材料',pct:10}] },
       '2023':{ revenue:'4,222亿', netProfit:'439亿', netMargin:'10.4%', gpm:'22%', roe:'24%', revenueGrowth:'+22%', rdRate:'5.5%', marketCap:'1.1万亿', currency:'人民币', revenueStructure:[{name:'动力电池',pct:70},{name:'储能电池',pct:20},{name:'电池材料',pct:10}] },
       '2022':{ revenue:'3,285亿', netProfit:'335亿', netMargin:'10.2%', gpm:'22%', roe:'21%', revenueGrowth:'+152%', rdRate:'5.2%', marketCap:'8,500亿', currency:'人民币', revenueStructure:[{name:'动力电池',pct:76},{name:'储能电池',pct:14},{name:'电池材料',pct:10}] }
     }},
     { id:'byd', name:'比亚迪', source:'深交所 002594.SZ 2025-03-25', years:{
       '2025':{ revenue:'8,500亿+', netProfit:'480亿+', netMargin:'5.6%', gpm:'22%', roe:'26%', revenueGrowth:'+25%', rdRate:'5%', marketCap:'8,500亿', currency:'人民币', revenueStructure:[{name:'汽车',pct:85},{name:'手机部件',pct:10},{name:'储能',pct:5}] },
-      '2024':{ revenue:'7,721亿', netProfit:'402亿', netMargin:'5.2%', gpm:'20%', roe:'24%', revenueGrowth:'+29%', rdRate:'4.8%', marketCap:'7,500亿', currency:'人民币', sellingExpense:'680亿', adminExpense:'320亿', operatingCost:'6,180亿', revenueStructure:[{name:'汽车',pct:82},{name:'手机部件',pct:12},{name:'储能',pct:6}] },
+      '2024':{ revenue:'7,721亿', netProfit:'402亿', netMargin:'5.2%', gpm:'20%', roe:'24%', revenueGrowth:'+29%', rdRate:'4.8%', marketCap:'7,500亿', currency:'人民币', revenueStructure:[{name:'汽车',pct:82},{name:'手机部件',pct:12},{name:'储能',pct:6}] },
       '2023':{ revenue:'6,023亿', netProfit:'300亿', netMargin:'5.0%', gpm:'20%', roe:'24%', revenueGrowth:'+42%', rdRate:'4.8%', marketCap:'6,800亿', currency:'人民币', revenueStructure:[{name:'汽车',pct:80},{name:'手机部件',pct:14},{name:'储能',pct:6}] },
       '2022':{ revenue:'4,240亿', netProfit:'166亿', netMargin:'3.9%', gpm:'17%', roe:'16%', revenueGrowth:'+96%', rdRate:'4.5%', marketCap:'5,200亿', currency:'人民币', revenueStructure:[{name:'汽车',pct:76},{name:'手机部件',pct:18},{name:'储能',pct:6}] }
     }},
     { id:'sungrow', name:'阳光电源', source:'深交所 300274.SZ 2025-04-21', years:{
       '2025':{ revenue:'850亿+', netProfit:'95亿+', netMargin:'11.2%', gpm:'31%', roe:'35%', revenueGrowth:'+75%', rdRate:'4%', marketCap:'2,200亿', currency:'人民币', revenueStructure:[{name:'光伏逆变器',pct:50},{name:'储能系统',pct:38},{name:'EPC',pct:12}] },
-      '2024':{ revenue:'680亿', netProfit:'78亿', netMargin:'11.5%', gpm:'30%', roe:'32%', revenueGrowth:'+85%', rdRate:'4%', marketCap:'1,800亿', currency:'人民币', sellingExpense:'38亿', adminExpense:'22亿', operatingCost:'476亿', revenueStructure:[{name:'光伏逆变器',pct:55},{name:'储能系统',pct:32},{name:'EPC',pct:13}] },
+      '2024':{ revenue:'680亿', netProfit:'78亿', netMargin:'11.5%', gpm:'30%', roe:'32%', revenueGrowth:'+85%', rdRate:'4%', marketCap:'1,800亿', currency:'人民币', revenueStructure:[{name:'光伏逆变器',pct:55},{name:'储能系统',pct:32},{name:'EPC',pct:13}] },
       '2023':{ revenue:'529亿', netProfit:'72亿', netMargin:'13.6%', gpm:'30%', roe:'32%', revenueGrowth:'+80%', rdRate:'4%', marketCap:'1,400亿', currency:'人民币', revenueStructure:[{name:'光伏逆变器',pct:58},{name:'储能系统',pct:30},{name:'EPC',pct:12}] },
       '2022':{ revenue:'300亿', netProfit:'35亿', netMargin:'11.7%', gpm:'29%', roe:'20%', revenueGrowth:'+25%', rdRate:'4%', marketCap:'800亿', currency:'人民币', revenueStructure:[{name:'光伏逆变器',pct:65},{name:'储能系统',pct:22},{name:'EPC',pct:13}] }
     }},
     { id:'envision', name:'远景能源', source:'非上市·第三方估算', years:{
       '2025':{ revenue:'720亿+', netProfit:'70亿+', netMargin:'9.7%', gpm:'29%', roe:'20%', revenueGrowth:'+28%', rdRate:'5%', marketCap:'1,500亿+', currency:'人民币', revenueStructure:[{name:'风机',pct:50},{name:'储能',pct:30},{name:'智能物联',pct:20}] },
-      '2024':{ revenue:'580亿+', netProfit:'55亿+', netMargin:'9.5%', gpm:'28%', roe:'18%', revenueGrowth:'+30%', rdRate:'5%', marketCap:'1,200亿+', currency:'人民币', sellingExpense:'32亿', adminExpense:'18亿', operatingCost:'418亿', revenueStructure:[{name:'风机',pct:52},{name:'储能',pct:28},{name:'智能物联',pct:20}] },
+      '2024':{ revenue:'580亿+', netProfit:'55亿+', netMargin:'9.5%', gpm:'28%', roe:'18%', revenueGrowth:'+30%', rdRate:'5%', marketCap:'1,200亿+', currency:'人民币', revenueStructure:[{name:'风机',pct:52},{name:'储能',pct:28},{name:'智能物联',pct:20}] },
       '2023':{ revenue:'450亿+', netProfit:'48亿+', netMargin:'10.7%', gpm:'28%', roe:'18%', revenueGrowth:'+35%', rdRate:'5%', marketCap:'1,000亿+', currency:'人民币', revenueStructure:[{name:'风机',pct:55},{name:'储能',pct:25},{name:'智能物联',pct:20}] },
       '2022':{ revenue:'330亿+', netProfit:'30亿+', netMargin:'9.1%', gpm:'26%', roe:'15%', revenueGrowth:'+20%', rdRate:'5%', marketCap:'800亿+', currency:'人民币', revenueStructure:[{name:'风机',pct:58},{name:'储能',pct:22},{name:'智能物联',pct:20}] }
     }},
     { id:'growatt', name:'固德威', source:'科创板 688390.SH 2025-04-28', years:{
       '2025':{ revenue:'130亿+', netProfit:'18亿+', netMargin:'13.8%', gpm:'35%', roe:'32%', revenueGrowth:'+55%', rdRate:'6%', marketCap:'550亿', currency:'人民币', revenueStructure:[{name:'光伏逆变器',pct:62},{name:'储能逆变器',pct:28},{name:'户用系统',pct:10}] },
-      '2024':{ revenue:'98亿', netProfit:'13亿', netMargin:'13.3%', gpm:'34%', roe:'28%', revenueGrowth:'+65%', rdRate:'6%', marketCap:'420亿', currency:'人民币', sellingExpense:'6亿', adminExpense:'4亿', operatingCost:'65亿', revenueStructure:[{name:'光伏逆变器',pct:65},{name:'储能逆变器',pct:25},{name:'户用系统',pct:10}] },
+      '2024':{ revenue:'98亿', netProfit:'13亿', netMargin:'13.3%', gpm:'34%', roe:'28%', revenueGrowth:'+65%', rdRate:'6%', marketCap:'420亿', currency:'人民币', revenueStructure:[{name:'光伏逆变器',pct:65},{name:'储能逆变器',pct:25},{name:'户用系统',pct:10}] },
       '2023':{ revenue:'73亿', netProfit:'8.5亿', netMargin:'11.6%', gpm:'33%', roe:'20%', revenueGrowth:'+45%', rdRate:'6%', marketCap:'320亿', currency:'人民币', revenueStructure:[{name:'光伏逆变器',pct:68},{name:'储能逆变器',pct:22},{name:'户用系统',pct:10}] },
       '2022':{ revenue:'45亿', netProfit:'2.5亿', netMargin:'5.6%', gpm:'30%', roe:'8%', revenueGrowth:'+15%', rdRate:'6%', marketCap:'180亿', currency:'人民币', revenueStructure:[{name:'光伏逆变器',pct:72},{name:'储能逆变器',pct:18},{name:'户用系统',pct:10}] }
     }}
@@ -3658,7 +3599,7 @@ const FIN_INDUSTRY_MAP = {
   education: { companies: [
     { id:'neworiental', name:'新东方', source:'港交所 09901.HK 2025-01-22', years:{
       '2025':{ revenue:'380亿+', netProfit:'35亿+', netMargin:'9.2%', gpm:'44%', roe:'18%', revenueGrowth:'+38%', rdRate:'2%', marketCap:'850亿', currency:'港元', revenueStructure:[{name:'留学咨询',pct:38},{name:'直播电商',pct:42},{name:'素质教育',pct:20}] },
-      '2024':{ revenue:'298亿', netProfit:'26亿', netMargin:'8.7%', gpm:'42%', roe:'14%', revenueGrowth:'+43%', rdRate:'2%', marketCap:'680亿', currency:'港元', sellingExpense:'55亿', adminExpense:'28亿', operatingCost:'173亿', revenueStructure:[{name:'留学咨询',pct:42},{name:'直播电商',pct:38},{name:'素质教育',pct:20}] },
+      '2024':{ revenue:'298亿', netProfit:'26亿', netMargin:'8.7%', gpm:'42%', roe:'14%', revenueGrowth:'+43%', rdRate:'2%', marketCap:'680亿', currency:'港元', revenueStructure:[{name:'留学咨询',pct:42},{name:'直播电商',pct:38},{name:'素质教育',pct:20}] },
       '2023':{ revenue:'210亿', netProfit:'11亿', netMargin:'5.2%', gpm:'38%', roe:'8%', revenueGrowth:'+73%', rdRate:'2%', marketCap:'480亿', currency:'港元', revenueStructure:[{name:'留学咨询',pct:50},{name:'直播电商',pct:30},{name:'素质教育',pct:20}] },
       '2022':{ revenue:'125亿', netProfit:'-10亿', netMargin:'-8.0%', gpm:'32%', roe:'-6%', revenueGrowth:'-27%', rdRate:'3%', marketCap:'280亿', currency:'港元', revenueStructure:[{name:'留学咨询',pct:65},{name:'直播电商',pct:15},{name:'素质教育',pct:20}] }
     }},
@@ -3713,12 +3654,8 @@ function renderFinancialAnalysis() {
   document.getElementById('an-kpi-expense').textContent = company.netMargin;
   document.getElementById('an-kpi-net').textContent = company.netProfit;
   document.getElementById('an-kpi-net-change').textContent = '净利率 ' + company.netMargin;
-  document.getElementById('an-kpi-ads').textContent = (company.currency || '') + ' ' + (company.sellingExpense || '--');
-  document.getElementById('an-kpi-ads-rate').textContent = '占营收 ' + (company.sellingExpense && company.revenue ? Math.round(parseFloat(company.sellingExpense)/parseFloat(company.revenue)*100)+'%' : '--');
-  document.getElementById('an-kpi-ltv').textContent = (company.currency || '') + ' ' + (company.adminExpense || '--');
-  document.getElementById('an-kpi-ltv-rate').textContent = '占营收 ' + (company.adminExpense && company.revenue ? Math.round(parseFloat(company.adminExpense)/parseFloat(company.revenue)*100)+'%' : '--');
-  document.getElementById('an-kpi-cost').textContent = (company.currency || '') + ' ' + (company.operatingCost || '--');
-  document.getElementById('an-kpi-cost-rate').textContent = '毛利率 ' + (company.gpm || '--');
+  document.getElementById('an-kpi-ads').textContent = (company.currency || '') + ' ' + company.marketCap;
+  document.getElementById('an-kpi-ltv').textContent = company.revenueGrowth;
   
   // Income structure pie chart
   if (!charts['incomeSourceChart']) {
@@ -4035,11 +3972,10 @@ function resetCompanyAnalysis() {
   document.getElementById('company-detail-content').innerHTML = '';
 }
 
-// ==================== STRATEGY ANALYSIS RENDER ====================
+// ==================== STRATEGY ANALYSIS ====================
 function renderStrategyAnalysis() {
   const industry = document.getElementById('stratIndSelect')?.value || 'gaming';
   const year = document.getElementById('stratYearSelect')?.value || '2024';
-  
   const strategyData = {
     gaming: {
       name: '游戏', topStrategy: '精品化 + IP化 + 全球化 + AI研发',
@@ -4059,7 +3995,7 @@ function renderStrategyAnalysis() {
     },
     finance: {
       name: '金融', topStrategy: '数字化转型 + 场景金融 + 风控为王',
-      trend: '互联网金融进入合规发展期，2022年后行业规范化。AI风控降低坏账率，数字货币（DC/EP）推广加速。供应链金融解决中小企业融资难，政策支持力度大。财富管理转型成为银行/保险新增长点。',
+      trend: '互联网金融进入合规发展期，2022年后行业规范化。AI风控降低坏账率，数字货币推广加速。供应链金融解决中小企业融资难，政策支持力度大。财富管理转型成为银行/保险新增长点。',
       s:['净利率20%+，盈利稳健','不良率控制良好，资产质量优','牌照优势，合规壁垒高'],
       w:['息差收窄，利息净收入受利率波动影响','科技投入大，技术人才竞争激烈','数字化转型投入期，短期利润承压'],
       o:['数字人民币推广，跨境支付空间广阔','AI风控降低坏账率，智能投顾市场爆发','供应链金融政策支持，解决中小企业融资难'],
@@ -4067,7 +4003,7 @@ function renderStrategyAnalysis() {
     },
     retail: {
       name: '消费零售', topStrategy: '全渠道融合 + 私域运营 + 供应链优化',
-      trend: '线上线下融合加速，直播电商重塑人货场。2020-2023年直播电商爆发（抖音/快手/淘宝直播），但2024年后流量成本攀升，私域流量成核心资产。即时零售（美团闪购/京东小时达）渗透率持续提升。',
+      trend: '线上线下融合加速，直播电商重塑人货场。2020-2023年直播电商爆发，但2024年后流量成本攀升，私域流量成核心资产。即时零售（美团闪购/京东小时达）渗透率持续提升。',
       s:['供应链成熟，库存周转效率高','毛利率25%+，达行业水平','全渠道布局，营收正增长'],
       w:['线上流量成本攀升，推广费侵蚀利润','退货率高（电商15-20%），售后成本大','同质化竞争，差异化难度增加'],
       o:['即时零售渗透率持续提升','私域运营降本，会员复购率提升2-3倍','下沉市场三四线城市消费升级'],
@@ -4090,24 +4026,14 @@ function renderStrategyAnalysis() {
       t:['出生率下降，K12用户群持续萎缩','监管政策不确定性仍存','AI教育产品同质化，竞争加剧']
     },
   };
-  
   const data = strategyData[industry] || strategyData.gaming;
   document.getElementById('stratTopStrategy').textContent = `▶ ${year}年${data.name}行业前5核心战略：${data.topStrategy}`;
   document.getElementById('stratTrend').textContent = `📈 趋势研判：${data.trend}`;
-  
-  const sArr = data.s, wArr = data.w, oArr = data.o, tArr = data.t;
-  document.getElementById('strat-s1').textContent = sArr[0];
-  document.getElementById('strat-s2').textContent = sArr[1];
-  document.getElementById('strat-s3').textContent = sArr[2];
-  document.getElementById('strat-w1').textContent = wArr[0];
-  document.getElementById('strat-w2').textContent = wArr[1];
-  document.getElementById('strat-w3').textContent = wArr[2];
-  document.getElementById('strat-o1').textContent = oArr[0];
-  document.getElementById('strat-o2').textContent = oArr[1];
-  document.getElementById('strat-o3').textContent = oArr[2];
-  document.getElementById('strat-t1').textContent = tArr[0];
-  document.getElementById('strat-t2').textContent = tArr[1];
-  document.getElementById('strat-t3').textContent = tArr[2];
+  const s=data.s, w=data.w, o=data.o, t=data.t;
+  document.getElementById('strat-s1').textContent=s[0]; document.getElementById('strat-s2').textContent=s[1]; document.getElementById('strat-s3').textContent=s[2];
+  document.getElementById('strat-w1').textContent=w[0]; document.getElementById('strat-w2').textContent=w[1]; document.getElementById('strat-w3').textContent=w[2];
+  document.getElementById('strat-o1').textContent=o[0]; document.getElementById('strat-o2').textContent=o[1]; document.getElementById('strat-o3').textContent=o[2];
+  document.getElementById('strat-t1').textContent=t[0]; document.getElementById('strat-t2').textContent=t[1]; document.getElementById('strat-t3').textContent=t[2];
 }
 
 // ==================== MACRO ANALYSIS RENDER ====================
@@ -4610,177 +4536,28 @@ function renderCompetitorPage() {
     options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'top'}}, scales:{y:{beginAtZero:false,ticks:{callback:v=>v+'%'}}} }
   });
 
-  // ===== SWOT（行业战略分析）=====
-  // 基于行业净利润前5的发展战略，结合券商研报洞察
-  const finIndSel = document.getElementById('finIndSelect');
-  const finComSel = document.getElementById('finComSelect');
-  const finYearSel = document.getElementById('finYearSelect');
-  const industry = finIndSel?.value || 'internet';
-  const year = finYearSel?.value || '2024';
-  const companyId = finComSel?.value || '';
-  
-  // 行业战略趋势数据（基于2022-2025年行业前5发展战略总结）
-  const industryStrategy = {
-    internet: {
-      name: '互联网',
-      topStrategy: '降本增效+AI驱动+出海扩张',
-      trend: '头部企业从规模扩张转向盈利优先，研发AI大模型，海外市场成第二增长曲线',
-      s: [
-        `毛利率 ${self.gpm.toFixed(1)}%，${self.gpm>=55?'达行业健康水平':'低于行业中位数55%'}`,
-        `净利率 ${self.npm.toFixed(1)}%，${self.npm>=15?'盈利能力强':'盈利承压'}`,
-        `营收增速 ${self.growth>=0?'+':''}${self.growth.toFixed(1)}%，${self.growth>=10?'高于行业平均':'低于行业平均'}`,
-      ],
-      w: [
-        '用户增长见顶，存量竞争加剧，获客成本攀升',
-        '监管政策持续收紧，数据安全合规成本上升',
-        `${self.revenue<500?'规模效应不足，':'营收结构单一，'}抗风险能力待提升`,
-      ],
-      o: [
-        'AI大模型赋能降本增效，ChatGPT/Claude推动生产力工具变革',
-        '出海进入收获期，东南亚/中东/非洲市场红利仍在',
-        '产业互联网B端市场空间广阔，定制化服务溢价高',
-      ],
-      t: [
-        '宏观经济不确定性影响广告收入，广告主预算收缩',
-        '中美科技竞争持续，技术封锁风险上升',
-        '行业集中度提升，中小玩家生存空间收窄',
-      ],
-    },
-    gaming: {
-      name: '游戏',
-      topStrategy: '精品化+IP化+全球化+AI研发',
-      trend: '买量红利消退，从"重营销"转向"重研发"，版号常态化加速精品化进程，AI辅助研发成新趋势',
-      s: [
-        `研发投入比 ${self.rdRatio.toFixed(1)}%，${self.rdRatio>=20?'高于行业均值18%，技术储备领先':'接近行业水平'}`,
-        `净利率 ${self.npm.toFixed(1)}%，${self.npm>=25?'达行业健康水平':'盈利能力待提升'}`,
-        `ROE ${self.roe.toFixed(1)}%，${self.roe>=20?'股东回报优秀':'低于行业均值20%'}`,
-      ],
-      w: [
-        '版号审批不确定性，项目周期长现金流压力大',
-        '产品依赖度高，单款游戏收入占比过重风险',
-        '海外市场本地化难度大，文化差异影响运营',
-      ],
-      o: [
-        'AI辅助研发降本30-50%，《完蛋！我被包围了》验证AI+玩法创新路径',
-        '主机/PC游戏出海溢价高，Steam全球市场持续增长',
-        '小游戏赛道爆发，微信/抖音小游戏用户规模破5亿',
-      ],
-      t: [
-        '买量成本持续攀升，ROI下降迫使转型精品化',
-        '青少年防沉迷政策趋严，核心用户时长被挤压',
-        '全球游戏市场竞争加剧，索尼/微软加码中国市场',
-      ],
-    },
-    finance: {
-      name: '金融科技',
-      topStrategy: '数字化转型+场景金融+风控为王',
-      trend: '互联网金融进入合规发展期，AI风控、数字货币、供应链金融成新方向',
-      s: [
-        `净利率 ${self.npm.toFixed(1)}%，${self.npm>=20?'盈利能力稳健':'净利承压'}`,
-        `资产质量 ${self.gpm>0?'不良率控制良好':'资产质量需关注'}`,
-        '牌照优势明显，合规壁垒高',
-      ],
-      w: [
-        '利息净收入受利率波动影响大',
-        '科技投入大，技术人才竞争激烈',
-        '数字化转型投入期，短期利润承压',
-      ],
-      o: [
-        '数字人民币推广带来新场景，跨境支付空间广阔',
-        'AI风控降低坏账率，智能投顾市场爆发',
-        '供应链金融解决中小企业融资难，政策支持力度大',
-      ],
-      t: [
-        '息差收窄趋势持续，银行净利增速放缓',
-        '互联网巨头布局金融，竞争格局生变',
-        '监管科技趋严，合规成本持续上升',
-      ],
-    },
-    retail: {
-      name: '消费零售',
-      topStrategy: '全渠道融合+私域运营+供应链优化',
-      trend: '线上线下融合加速，直播电商重塑人货场，私域流量成核心资产',
-      s: [
-        `毛利率 ${self.gpm.toFixed(1)}%，${self.gpm>=25?'达行业水平':'低于行业均值25%'}`,
-        '供应链成熟，库存周转效率高',
-        `${self.growth>=0?'营收正增长，':'营收下滑，'}渠道布局${self.growth>=0?'优势':'需优化'}`,
-      ],
-      w: [
-        '线上流量成本持续攀升，推广费用侵蚀利润',
-        '退货率高（电商平均15-20%），售后成本大',
-        '同质化竞争激烈，差异化难度增加',
-      ],
-      o: [
-        '即时零售（美团闪购/京东小时达）渗透率持续提升',
-        '私域运营降本增效，会员复购率提升2-3倍',
-        '下沉市场三四线城市消费升级，空间广阔',
-      ],
-      t: [
-        '价格战持续，直播电商拉低行业均价',
-        '消费者价格敏感度提升，忠诚度下降',
-        '原材料成本波动，成本控制压力大',
-      ],
-    },
-    energy: {
-      name: '新能源',
-      topStrategy: '技术迭代+全球化布局+垂直整合',
-      trend: '锂电竞争进入下半场，从产能竞争转向技术竞争，海外建厂成必争之地',
-      s: [
-        `毛利率 ${self.gpm.toFixed(1)}%，${self.gpm>=20?'达行业水平':'毛利率承压'}`,
-        `营收增速 ${self.growth>=0?'+':''}${self.growth.toFixed(1)}%，${self.growth>=30?'高成长性':'增速放缓'}`,
-        '技术壁垒高，专利布局领先',
-      ],
-      w: [
-        '原材料（锂/钴/镍）价格波动大，成本控制难',
-        '产能扩张期资本支出大，现金流压力大',
-        '技术迭代快，研发投入持续高企',
-      ],
-      o: [
-        '储能市场爆发，第二增长曲线明确',
-        '海外建厂享受当地补贴，欧洲/北美市场准入',
-        '固态电池/钠电池新技术颠覆现有格局',
-      ],
-      t: [
-        '行业产能过剩，价格战加剧盈利压力',
-        '欧美补贴退坡，海外市场增速放缓',
-        '替代技术（氢能源）威胁长期不确定性',
-      ],
-    },
-    education: {
-      name: '教育',
-      topStrategy: '素质教育和职业教育为主',
-      trend: 'K12教培规范后，行业转向素质教育、职业教育、AI+教育新方向',
-      s: [
-        `净利率 ${self.npm.toFixed(1)}%，${self.npm>=10?'盈利改善':'仍在亏损'}`,
-        '政策风险释放，商业模式合规化',
-        'AI教育产品提升客单价和续费率',
-      ],
-      w: [
-        '用户生命周期短，续费成本高',
-        '师资成本刚性，利润空间受限',
-        '竞争激烈，同质化严重',
-      ],
-      o: [
-        'AI辅导工具降低师资依赖，毛利率提升空间大',
-        '成人职业教育需求旺盛，政策支持',
-        '出海市场（中文教育）空间广阔',
-      ],
-      t: [
-        '出生率下降，K12用户群持续萎缩',
-        '监管政策不确定性仍存',
-        'AI教育产品同质化，竞争加剧',
-      ],
-    },
-  };
-  
-  const indData = industryStrategy[industry] || industryStrategy.internet;
-  const swotS = indData.s;
-  const swotW = indData.w;
-  const swotO = indData.o;
-  const swotT = indData.t;
-  
-  // 填充行业战略趋势
-  document.getElementById('indStrategyTrend').innerHTML = `<strong>▶ ${year}年${indData.name}行业前5战略路径：</strong>${indData.topStrategy}<br>📈 趋势研判：${indData.trend}`;
+  // ===== SWOT（基于2025年数据）=====
+  const bestComp = COMP_DATA.comp3; // 米哈游作最强竞对参照
+  const swotS = [
+    `毛利率 ${self.gpm.toFixed(1)}%，${self.gpm>=bestComp.gpm*0.9?'接近行业领先水平':'具备追赶空间'}`,
+    `净利率 ${self.npm.toFixed(1)}%，${self.npm>=26?'达到行业健康水平':'盈利能力有待提升'}`,
+    `研发投入比 ${self.rdRatio.toFixed(1)}%，高于腾讯(${COMP_DATA.comp1.rdRatio.toFixed(1)}%)，技术储备充足`,
+  ];
+  const swotW = [
+    `规模效应尚未充分体现，与头部竞对差距明显（腾讯营收是本公司${(COMP_DATA.comp1.revenue/(self.revenue||1)).toFixed(0)}倍）`,
+    `用户规模有限(${self.users||0.01}亿)，品牌影响力有待进一步提升`,
+    `营收增速${self.growth>=0?'正增长':'出现下滑'}，需寻找新增长点`,
+  ];
+  const swotO = [
+    'AI大模型赋能内容生产，研发效率提升空间巨大',
+    '出海市场仍为蓝海，差异化竞争策略可行',
+    'IP化运营模式成熟，原神等案例验证可行路径',
+  ];
+  const swotT = [
+    '监管政策不确定性上升，版号审批节奏影响产品上线',
+    '头部企业加速扩张，竞争格局进一步固化',
+    '用户获取成本上升，存量市场竞争加剧',
+  ];
   [
     ['swot-s1','swot-s2','swot-s3',swotS],
     ['swot-w1','swot-w2','swot-w3',swotW],
