@@ -3415,9 +3415,11 @@ function renderFinancialAnalysis() {
   const map = FIN_INDUSTRY_MAP[ind];
   if (!map) return;
   
-  // Populate company select if needed
-  if (sel && sel.options.length === 0) {
+  // 填充公司下拉（行业切换时也重填）
+  if (sel) {
+    sel.innerHTML = '';
     map.companies.forEach(c => { const opt = document.createElement('option'); opt.value = c.id; opt.textContent = c.name; sel.appendChild(opt); });
+    sel.value = map.companies[0].id; // 切行业后默认选第一个
   }
   
   const companyId = sel ? sel.value : map.companies[0].id;
