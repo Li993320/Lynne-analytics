@@ -595,7 +595,7 @@
           <div class="kpi-change" id="an-kpi-net-change">净利率 --%</div>
         </div>
         <div class="kpi-card purple">
-          <div class="kpi-label">广告投放</div>
+          <div class="kpi-label">公司市值</div>
           <div class="kpi-value neutral" id="an-kpi-ads">¥0</div>
           <div class="kpi-change">ROI --x</div>
         </div>
@@ -3427,7 +3427,7 @@ function renderFinancialAnalysis() {
   document.getElementById('an-kpi-expense').textContent = company.netMargin;
   document.getElementById('an-kpi-net').textContent = company.netProfit;
   document.getElementById('an-kpi-net-change').textContent = '净利率 ' + company.netMargin;
-  document.getElementById('an-kpi-ads').textContent = company.marketCap;
+  document.getElementById('an-kpi-ads').textContent = (company.currency || '') + ' ' + company.marketCap;
   document.getElementById('an-kpi-ltv').textContent = company.revenueGrowth;
   
   // Income structure pie chart
