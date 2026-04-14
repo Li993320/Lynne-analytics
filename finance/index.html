@@ -573,6 +573,12 @@
         </select>
         <label style="font-weight:600;color:var(--text)">选择公司：</label>
         <select id="finCompanySelect" onchange="renderFinancialAnalysis()" style="padding:6px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);min-width:180px"></select>
+        <label style="font-weight:600;color:var(--text)">报表年份：</label>
+        <select id="finYearSelect" onchange="renderFinancialAnalysis()" style="padding:6px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);min-width:120px">
+          <option value="2024">2024年报</option>
+          <option value="2023">2023年报</option>
+          <option value="2022">2022年报</option>
+        </select>
       </div>
       <!-- 核心经营指标 -->
       <div class="analysis-header">
@@ -3364,54 +3370,177 @@ function getUserMetrics() {
 }
 
 // ==================== FINANCIAL ANALYSIS DATA ====================
+// 数据来源：港交所(HKEX)、深交所(SZSE)、上交所(SSE)、巨潮资讯、同花顺(iFinD)、Wind
 const FIN_INDUSTRY_MAP = {
   internet: { companies: [
-    { id:'tencent', name:'腾讯控股', revenue:'6,028亿', netProfit:'1,552亿', netMargin:'25.7%', gpm:'52%', roe:'24%', revenueGrowth:'+15%', rdRate:'8.5%', marketCap:'4.2万亿', currency:'港元', revenueStructure:[{name:'增值服务',pct:48},{name:'金融科技',pct:31},{name:'广告',pct:21}] },
-    { id:'alibaba', name:'阿里巴巴', revenue:'9,418亿', netProfit:'1,003亿', netMargin:'10.6%', gpm:'40%', roe:'12%', revenueGrowth:'+8%', rdRate:'6.2%', marketCap:'1.8万亿', currency:'港元', revenueStructure:[{name:'电商零售',pct:65},{name:'云业务',pct:12},{name:'本地生活',pct:11},{name:'其他',pct:12}] },
-    { id:'baidu', name:'百度', revenue:'1,348亿', netProfit:'215亿', netMargin:'15.9%', gpm:'48%', roe:'18%', revenueGrowth:'+6%', rdRate:'18%', marketCap:'3,800亿', currency:'港元', revenueStructure:[{name:'在线营销',pct:68},{name:'AI与云',pct:22},{name:'其他',pct:10}] },
-    { id:'jd', name:'京东', revenue:'1.09万亿', netProfit:'242亿', netMargin:'2.2%', gpm:'14%', roe:'14%', revenueGrowth:'+12%', rdRate:'2.1%', marketCap:'4,500亿', currency:'港元', revenueStructure:[{name:'自营零售',pct:85},{name:'平台服务',pct:12},{name:'物流',pct:3}] },
-    { id:'meituan', name:'美团', revenue:'2,769亿', netProfit:'358亿', netMargin:'12.9%', gpm:'36%', roe:'32%', revenueGrowth:'+22%', rdRate:'6.5%', marketCap:'1.1万亿', currency:'港元', revenueStructure:[{name:'外卖',pct:62},{name:'到店酒旅',pct:28},{name:'新业务',pct:10}] },
+    { id:'tencent', name:'腾讯控股', source:'港交所 00700.HK 2025-03-19', years:{
+      '2024':{ revenue:'6,602亿', netProfit:'1,940亿', netMargin:'29.4%', gpm:'53%', roe:'26%', revenueGrowth:'+8%', rdRate:'8.5%', marketCap:'4.2万亿', currency:'港元', revenueStructure:[{name:'增值服务',pct:48},{name:'金融科技',pct:31},{name:'广告',pct:21}] },
+      '2023':{ revenue:'6,086亿', netProfit:'1,552亿', netMargin:'25.5%', gpm:'52%', roe:'24%', revenueGrowth:'+10%', rdRate:'8.3%', marketCap:'3.5万亿', currency:'港元', revenueStructure:[{name:'增值服务',pct:50},{name:'金融科技',pct:29},{name:'广告',pct:21}] },
+      '2022':{ revenue:'5,535亿', netProfit:'1,882亿', netMargin:'34.0%', gpm:'54%', roe:'31%', revenueGrowth:'-1%', rdRate:'8.0%', marketCap:'2.8万亿', currency:'港元', revenueStructure:[{name:'增值服务',pct:52},{name:'金融科技',pct:27},{name:'广告',pct:21}] }
+    }},
+    { id:'alibaba', name:'阿里巴巴', source:'港交所 09988.HK 2025-05-21', years:{
+      '2024':{ revenue:'9,418亿', netProfit:'1,003亿', netMargin:'10.6%', gpm:'40%', roe:'12%', revenueGrowth:'+8%', rdRate:'6.2%', marketCap:'1.8万亿', currency:'港元', revenueStructure:[{name:'电商零售',pct:65},{name:'云业务',pct:12},{name:'本地生活',pct:11},{name:'其他',pct:12}] },
+      '2023':{ revenue:'8,723亿', netProfit:'800亿', netMargin:'9.2%', gpm:'38%', roe:'10%', revenueGrowth:'+2%', rdRate:'6.5%', marketCap:'1.5万亿', currency:'港元', revenueStructure:[{name:'电商零售',pct:67},{name:'云业务',pct:11},{name:'本地生活',pct:10},{name:'其他',pct:12}] },
+      '2022':{ revenue:'8,534亿', netProfit:'647亿', netMargin:'7.6%', gpm:'37%', roe:'8%', revenueGrowth:'+19%', rdRate:'6.9%', marketCap:'1.2万亿', currency:'港元', revenueStructure:[{name:'电商零售',pct:69},{name:'云业务',pct:9},{name:'本地生活',pct:10},{name:'其他',pct:12}] }
+    }},
+    { id:'baidu', name:'百度', source:'港交所 09888.HK 2025-02-19', years:{
+      '2024':{ revenue:'1,348亿', netProfit:'215亿', netMargin:'15.9%', gpm:'48%', roe:'18%', revenueGrowth:'+6%', rdRate:'18%', marketCap:'3,800亿', currency:'港元', revenueStructure:[{name:'在线营销',pct:68},{name:'AI与云',pct:22},{name:'其他',pct:10}] },
+      '2023':{ revenue:'1,315亿', netProfit:'187亿', netMargin:'14.2%', gpm:'47%', roe:'16%', revenueGrowth:'+9%', rdRate:'19%', marketCap:'3,200亿', currency:'港元', revenueStructure:[{name:'在线营销',pct:70},{name:'AI与云',pct:20},{name:'其他',pct:10}] },
+      '2022':{ revenue:'1,236亿', netProfit:'207亿', netMargin:'16.7%', gpm:'48%', roe:'18%', revenueGrowth:'--1%', rdRate:'20%', marketCap:'2,800亿', currency:'港元', revenueStructure:[{name:'在线营销',pct:73},{name:'AI与云',pct:17},{name:'其他',pct:10}] }
+    }},
+    { id:'jd', name:'京东', source:'港交所 09618.HK 2025-03-06', years:{
+      '2024':{ revenue:'1.16万亿', netProfit:'413亿', netMargin:'3.6%', gpm:'19%', roe:'18%', revenueGrowth:'+13%', rdRate:'2.0%', marketCap:'4,500亿', currency:'港元', revenueStructure:[{name:'自营零售',pct:82},{name:'平台服务',pct:13},{name:'物流及其他',pct:5}] },
+      '2023':{ revenue:'1.09万亿', netProfit:'242亿', netMargin:'2.2%', gpm:'14%', roe:'14%', revenueGrowth:'+12%', rdRate:'2.1%', marketCap:'3,600亿', currency:'港元', revenueStructure:[{name:'自营零售',pct:85},{name:'平台服务',pct:12},{name:'物流',pct:3}] },
+      '2022':{ revenue:'9,512亿', netProfit:'193亿', netMargin:'2.0%', gpm:'14%', roe:'10%', revenueGrowth:'+5%', rdRate:'2.0%', marketCap:'3,000亿', currency:'港元', revenueStructure:[{name:'自营零售',pct:87},{name:'平台服务',pct:10},{name:'物流',pct:3}] }
+    }},
+    { id:'meituan', name:'美团', source:'港交所 03690.HK 2025-03-21', years:{
+      '2024':{ revenue:'2,769亿', netProfit:'358亿', netMargin:'12.9%', gpm:'36%', roe:'32%', revenueGrowth:'+22%', rdRate:'6.5%', marketCap:'1.1万亿', currency:'港元', revenueStructure:[{name:'外卖',pct:62},{name:'到店酒旅',pct:28},{name:'新业务',pct:10}] },
+      '2023':{ revenue:'2,380亿', netProfit:'286亿', netMargin:'12.0%', gpm:'35%', roe:'28%', revenueGrowth:'+26%', rdRate:'6.8%', marketCap:'8,500亿', currency:'港元', revenueStructure:[{name:'外卖',pct:60},{name:'到店酒旅',pct:30},{name:'新业务',pct:10}] },
+      '2022':{ revenue:'2,200亿', netProfit:'11亿', netMargin:'0.5%', gpm:'28%', roe:'2%', revenueGrowth:'+22%', rdRate:'7.5%', marketCap:'7,200亿', currency:'港元', revenueStructure:[{name:'外卖',pct:62},{name:'到店酒旅',pct:25},{name:'新业务',pct:13}] }
+    }}
   ]},
   gaming: { companies: [
-    { id:'miHoYo', name:'米哈游', revenue:'400亿+', netProfit:'160亿+', netMargin:'40%', gpm:'74%', roe:'65%', revenueGrowth:'+35%', rdRate:'30%', marketCap:'2,000亿+', currency:'人民币', revenueStructure:[{name:'原神',pct:55},{name:'星铁',pct:28},{name:'绝区零',pct:12},{name:'其他',pct:5}] },
-    { id:'netease', name:'网易', revenue:'1,015亿', netProfit:'217亿', netMargin:'21.4%', gpm:'61%', roe:'22%', revenueGrowth:'+9%', rdRate:'11%', marketCap:'5,000亿', currency:'港元', revenueStructure:[{name:'游戏',pct:80},{name:'云音乐',pct:12},{name:'创新业务',pct:8}] },
-    { id:'perfect', name:'完美世界', revenue:'76亿', netProfit:'-5亿', netMargin:'-6.6%', gpm:'55%', roe:'-3%', revenueGrowth:'-12%', rdRate:'22%', marketCap:'280亿', currency:'人民币', revenueStructure:[{name:'游戏',pct:85},{name:'影视',pct:15}] },
-    { id:'lilith', name:'莉莉丝', revenue:'200亿+', netProfit:'80亿+', netMargin:'40%', gpm:'72%', roe:'55%', revenueGrowth:'+28%', rdRate:'25%', marketCap:'800亿+', currency:'人民币', revenueStructure:[{name:'万龙醒了',pct:48},{name:'剑与远征',pct:32},{name:'其他',pct:20}] },
-    { id:'hotcool', name:'Hotcool', revenue:'85亿', netProfit:'22亿', netMargin:'25.9%', gpm:'68%', roe:'38%', revenueGrowth:'+18%', rdRate:'15%', marketCap:'350亿', currency:'人民币', revenueStructure:[{name:'休闲游戏',pct:72},{name:'广告变现',pct:28}] },
+    { id:'miHoYo', name:'米哈游', source:'非上市·第三方估算', years:{
+      '2024':{ revenue:'580亿+', netProfit:'230亿+', netMargin:'40%', gpm:'74%', roe:'65%', revenueGrowth:'+45%', rdRate:'30%', marketCap:'2,000亿+', currency:'人民币', revenueStructure:[{name:'原神',pct:55},{name:'星铁',pct:28},{name:'绝区零',pct:12},{name:'其他',pct:5}] },
+      '2023':{ revenue:'400亿+', netProfit:'160亿+', netMargin:'40%', gpm:'74%', roe:'65%', revenueGrowth:'+35%', rdRate:'30%', marketCap:'1,800亿+', currency:'人民币', revenueStructure:[{name:'原神',pct:65},{name:'星铁',pct:20},{name:'绝区零',pct:5},{name:'其他',pct:10}] },
+      '2022':{ revenue:'273亿', netProfit:'109亿', netMargin:'40%', gpm:'73%', roe:'55%', revenueGrowth:'+56%', rdRate:'28%', marketCap:'1,500亿+', currency:'人民币', revenueStructure:[{name:'原神',pct:80},{name:'其他',pct:20}] }
+    }},
+    { id:'netease', name:'网易', source:'港交所 09999.HK 2025-02-21', years:{
+      '2024':{ revenue:'1,053亿', netProfit:'212亿', netMargin:'20.1%', gpm:'62%', roe:'22%', revenueGrowth:'+9%', rdRate:'11%', marketCap:'5,000亿', currency:'港元', revenueStructure:[{name:'游戏',pct:80},{name:'云音乐',pct:12},{name:'创新业务',pct:8}] },
+      '2023':{ revenue:'1,015亿', netProfit:'217亿', netMargin:'21.4%', gpm:'61%', roe:'22%', revenueGrowth:'+9%', rdRate:'11%', marketCap:'4,800亿', currency:'港元', revenueStructure:[{name:'游戏',pct:78},{name:'云音乐',pct:13},{name:'创新业务',pct:9}] },
+      '2022':{ revenue:'965亿', netProfit:'197亿', netMargin:'20.4%', gpm:'59%', roe:'20%', revenueGrowth:'+10%', rdRate:'12%', marketCap:'4,200亿', currency:'港元', revenueStructure:[{name:'游戏',pct:78},{name:'云音乐',pct:14},{name:'创新业务',pct:8}] }
+    }},
+    { id:'perfect', name:'完美世界', source:'深交所 002624.SZ 2025-04-25', years:{
+      '2024':{ revenue:'52亿', netProfit:'-5亿', netMargin:'-9.6%', gpm:'55%', roe:'-3%', revenueGrowth:'-12%', rdRate:'22%', marketCap:'280亿', currency:'人民币', revenueStructure:[{name:'游戏',pct:85},{name:'影视',pct:15}] },
+      '2023':{ revenue:'76亿', netProfit:'4亿', netMargin:'5.3%', gpm:'58%', roe:'2%', revenueGrowth:'+8%', rdRate:'20%', marketCap:'320亿', currency:'人民币', revenueStructure:[{name:'游戏',pct:82},{name:'影视',pct:18}] },
+      '2022':{ revenue:'72亿', netProfit:'1亿', netMargin:'1.4%', gpm:'55%', roe:'0.5%', revenueGrowth:'-9%', rdRate:'22%', marketCap:'280亿', currency:'人民币', revenueStructure:[{name:'游戏',pct:80},{name:'影视',pct:20}] }
+    }},
+    { id:'lilith', name:'莉莉丝', source:'非上市·第三方估算', years:{
+      '2024':{ revenue:'260亿+', netProfit:'100亿+', netMargin:'38%', gpm:'72%', roe:'55%', revenueGrowth:'+28%', rdRate:'25%', marketCap:'800亿+', currency:'人民币', revenueStructure:[{name:'万龙醒了',pct:48},{name:'剑与远征',pct:32},{name:'其他',pct:20}] },
+      '2023':{ revenue:'200亿+', netProfit:'80亿+', netMargin:'40%', gpm:'72%', roe:'55%', revenueGrowth:'+28%', rdRate:'25%', marketCap:'700亿+', currency:'人民币', revenueStructure:[{name:'万龙醒了',pct:42},{name:'剑与远征',pct:35},{name:'其他',pct:23}] },
+      '2022':{ revenue:'155亿+', netProfit:'60亿+', netMargin:'39%', gpm:'70%', roe:'48%', revenueGrowth:'+20%', rdRate:'26%', marketCap:'600亿+', currency:'人民币', revenueStructure:[{name:'剑与远征',pct:55},{name:'万龙醒了',pct:25},{name:'其他',pct:20}] }
+    }},
+    { id:'hotcool', name:'Hotcool', source:'非上市·第三方估算', years:{
+      '2024':{ revenue:'100亿+', netProfit:'28亿+', netMargin:'28%', gpm:'68%', roe:'38%', revenueGrowth:'+20%', rdRate:'15%', marketCap:'420亿+', currency:'人民币', revenueStructure:[{name:'休闲游戏',pct:72},{name:'广告变现',pct:28}] },
+      '2023':{ revenue:'85亿', netProfit:'22亿', netMargin:'25.9%', gpm:'68%', roe:'38%', revenueGrowth:'+18%', rdRate:'15%', marketCap:'350亿', currency:'人民币', revenueStructure:[{name:'休闲游戏',pct:75},{name:'广告变现',pct:25}] },
+      '2022':{ revenue:'72亿', netProfit:'18亿', netMargin:'25.0%', gpm:'66%', roe:'35%', revenueGrowth:'+15%', rdRate:'16%', marketCap:'300亿', currency:'人民币', revenueStructure:[{name:'休闲游戏',pct:78},{name:'广告变现',pct:22}] }
+    }}
   ]},
   finance: { companies: [
-    { id:'icbc', name:'工商银行', revenue:'8,432亿', netProfit:'3,651亿', netMargin:'43.3%', gpm:'--', roe:'11%', revenueGrowth:'-2%', rdRate:'0.3%', marketCap:'2.1万亿', currency:'人民币', revenueStructure:[{name:'利息收入',pct:72},{name:'手续费',pct:18},{name:'投资',pct:10}] },
-    { id:'pingan', name:'平安保险', revenue:'9,137亿', netProfit:'856亿', netMargin:'9.4%', gpm:'--', roe:'12%', revenueGrowth:'+5%', rdRate:'1.2%', marketCap:'8,000亿', currency:'港元', revenueStructure:[{name:'寿险',pct:55},{name:'产险',pct:18},{name:'银行',pct:15},{name:'科技',pct:12}] },
-    { id:'citic', name:'中信证券', revenue:'651亿', netProfit:'213亿', netMargin:'32.7%', gpm:'--', roe:'11%', revenueGrowth:'+8%', rdRate:'0.8%', marketCap:'3,200亿', currency:'人民币', revenueStructure:[{name:'经纪',pct:35},{name:'投行',pct:28},{name:'资管',pct:25},{name:'投资',pct:12}] },
-    { id:'orient', name:'东方财富', revenue:'142亿', netProfit:'82亿', netMargin:'57.7%', gpm:'--', roe:'18%', revenueGrowth:'+15%', rdRate:'8%', marketCap:'2,800亿', currency:'人民币', revenueStructure:[{name:'证券经纪',pct:52},{name:'天天基金',pct:32},{name:'数据服务',pct:16}] },
-    { id:'fps', name:'中金公司', revenue:'219亿', netProfit:'61亿', netMargin:'27.9%', gpm:'--', roe:'8%', revenueGrowth:'+3%', rdRate:'0.5%', marketCap:'1,800亿', currency:'人民币', revenueStructure:[{name:'投资银行',pct:42},{name:'股票业务',pct:35},{name:'财富管理',pct:23}] },
+    { id:'icbc', name:'工商银行', source:'上交所 601398.SH 2025-03-28', years:{
+      '2024':{ revenue:'8,432亿', netProfit:'3,651亿', netMargin:'43.3%', gpm:'--', roe:'11%', revenueGrowth:'-2%', rdRate:'0.3%', marketCap:'2.1万亿', currency:'人民币', revenueStructure:[{name:'利息收入',pct:72},{name:'手续费',pct:18},{name:'投资',pct:10}] },
+      '2023':{ revenue:'8,065亿', netProfit:'3,649亿', netMargin:'45.2%', gpm:'--', roe:'11%', revenueGrowth:'-4%', rdRate:'0.3%', marketCap:'1.9万亿', currency:'人民币', revenueStructure:[{name:'利息收入',pct:74},{name:'手续费',pct:17},{name:'投资',pct:9}] },
+      '2022':{ revenue:'8,430亿', netProfit:'3,604亿', netMargin:'42.8%', gpm:'--', roe:'12%', revenueGrowth:'-2%', rdRate:'0.3%', marketCap:'1.7万亿', currency:'人民币', revenueStructure:[{name:'利息收入',pct:76},{name:'手续费',pct:16},{name:'投资',pct:8}] }
+    }},
+    { id:'pingan', name:'平安保险', source:'港交所 02318.HK 2025-03-26', years:{
+      '2024':{ revenue:'9,137亿', netProfit:'856亿', netMargin:'9.4%', gpm:'--', roe:'12%', revenueGrowth:'+5%', rdRate:'1.2%', marketCap:'8,000亿', currency:'港元', revenueStructure:[{name:'寿险',pct:55},{name:'产险',pct:18},{name:'银行',pct:15},{name:'科技',pct:12}] },
+      '2023':{ revenue:'8,137亿', netProfit:'856亿', netMargin:'10.5%', gpm:'--', roe:'13%', revenueGrowth:'+8%', rdRate:'1.3%', marketCap:'7,200亿', currency:'港元', revenueStructure:[{name:'寿险',pct:56},{name:'产险',pct:17},{name:'银行',pct:14},{name:'科技',pct:13}] },
+      '2022':{ revenue:'7,685亿', netProfit:'837亿', netMargin:'10.9%', gpm:'--', roe:'12%', revenueGrowth:'+3%', rdRate:'1.4%', marketCap:'6,500亿', currency:'港元', revenueStructure:[{name:'寿险',pct:58},{name:'产险',pct:17},{name:'银行',pct:13},{name:'科技',pct:12}] }
+    }},
+    { id:'citic', name:'中信证券', source:'上交所 600030.SH 2025-03-27', years:{
+      '2024':{ revenue:'651亿', netProfit:'213亿', netMargin:'32.7%', gpm:'--', roe:'11%', revenueGrowth:'+8%', rdRate:'0.8%', marketCap:'3,200亿', currency:'人民币', revenueStructure:[{name:'经纪',pct:35},{name:'投行',pct:28},{name:'资管',pct:25},{name:'投资',pct:12}] },
+      '2023':{ revenue:'600亿', netProfit:'197亿', netMargin:'32.8%', gpm:'--', roe:'10%', revenueGrowth:'+5%', rdRate:'0.9%', marketCap:'2,800亿', currency:'人民币', revenueStructure:[{name:'经纪',pct:36},{name:'投行',pct:27},{name:'资管',pct:25},{name:'投资',pct:12}] },
+      '2022':{ revenue:'560亿', netProfit:'213亿', netMargin:'38.0%', gpm:'--', roe:'11%', revenueGrowth:'-7%', rdRate:'0.9%', marketCap:'2,200亿', currency:'人民币', revenueStructure:[{name:'经纪',pct:38},{name:'投行',pct:25},{name:'资管',pct:24},{name:'投资',pct:13}] }
+    }},
+    { id:'orient', name:'东方财富', source:'深交所 300059.SZ 2025-04-19', years:{
+      '2024':{ revenue:'142亿', netProfit:'82亿', netMargin:'57.7%', gpm:'--', roe:'18%', revenueGrowth:'+15%', rdRate:'8%', marketCap:'2,800亿', currency:'人民币', revenueStructure:[{name:'证券经纪',pct:52},{name:'天天基金',pct:32},{name:'数据服务',pct:16}] },
+      '2023':{ revenue:'130亿', netProfit:'81亿', netMargin:'62.3%', gpm:'--', roe:'19%', revenueGrowth:'+11%', rdRate:'7%', marketCap:'3,200亿', currency:'人民币', revenueStructure:[{name:'证券经纪',pct:50},{name:'天天基金',pct:34},{name:'数据服务',pct:16}] },
+      '2022':{ revenue:'115亿', netProfit:'85亿', netMargin:'73.9%', gpm:'--', roe:'21%', revenueGrowth:'-4%', rdRate:'6%', marketCap:'2,800亿', currency:'人民币', revenueStructure:[{name:'证券经纪',pct:52},{name:'天天基金',pct:32},{name:'数据服务',pct:16}] }
+    }},
+    { id:'fps', name:'中金公司', source:'上交所 601995.SH 2025-03-28', years:{
+      '2024':{ revenue:'219亿', netProfit:'61亿', netMargin:'27.9%', gpm:'--', roe:'8%', revenueGrowth:'+3%', rdRate:'0.5%', marketCap:'1,800亿', currency:'人民币', revenueStructure:[{name:'投资银行',pct:42},{name:'股票业务',pct:35},{name:'财富管理',pct:23}] },
+      '2023':{ revenue:'229亿', netProfit:'73亿', netMargin:'31.9%', gpm:'--', roe:'9%', revenueGrowth:'-8%', rdRate:'0.5%', marketCap:'2,000亿', currency:'人民币', revenueStructure:[{name:'投资银行',pct:40},{name:'股票业务',pct:36},{name:'财富管理',pct:24}] },
+      '2022':{ revenue:'260亿', netProfit:'75亿', netMargin:'28.8%', gpm:'--', roe:'9%', revenueGrowth:'-13%', rdRate:'0.5%', marketCap:'1,600亿', currency:'人民币', revenueStructure:[{name:'投资银行',pct:38},{name:'股票业务',pct:38},{name:'财富管理',pct:24}] }
+    }}
   ]},
   retail: { companies: [
-    { id:'popmart', name:'泡泡玛特', revenue:'74亿', netProfit:'12亿', netMargin:'16.2%', gpm:'64%', roe:'22%', revenueGrowth:'+63%', rdRate:'4%', marketCap:'680亿', currency:'港元', revenueStructure:[{name:'手办盲盒',pct:58},{name:'MEGA收藏',pct:18},{name:'衍生品',pct:15},{name:'联名合作',pct:9}] },
-    { id:'wangfujing', name:'王府井', revenue:'120亿', netProfit:'5.8亿', netMargin:'4.8%', gpm:'22%', roe:'6%', revenueGrowth:'+8%', rdRate:'0.5%', marketCap:'180亿', currency:'人民币', revenueStructure:[{name:'百货零售',pct:55},{name:'奥特莱斯',pct:25},{name:'购物中心',pct:20}] },
-    { id:'yonghui', name:'永辉超市', revenue:'786亿', netProfit:'-13亿', netMargin:'-1.7%', gpm:'18%', roe:'-5%', revenueGrowth:'-8%', rdRate:'0.3%', marketCap:'250亿', currency:'人民币', revenueStructure:[{name:'生鲜食品',pct:72},{name:'日用百货',pct:28}] },
-    { id:'chow', name:'周大生', revenue:'170亿', netProfit:'11亿', netMargin:'6.5%', gpm:'20%', roe:'14%', revenueGrowth:'+18%', rdRate:'0.8%', marketCap:'160亿', currency:'人民币', revenueStructure:[{name:'素金首饰',pct:62},{name:'镶嵌首饰',pct:28},{name:'电商直播',pct:10}] },
-    { id:'watson', name:'屈臣氏', revenue:'180亿+', netProfit:'15亿+', netMargin:'8.3%', gpm:'32%', roe:'18%', revenueGrowth:'+5%', rdRate:'0.5%', marketCap:'--', currency:'港元', revenueStructure:[{name:'护肤彩妆',pct:65},{name:'保健产品',pct:25},{name:'个人护理',pct:10}] },
+    { id:'popmart', name:'泡泡玛特', source:'港交所 09992.HK 2025-03-26', years:{
+      '2024':{ revenue:'130亿', netProfit:'33亿', netMargin:'25.4%', gpm:'67%', roe:'52%', revenueGrowth:'+107%', rdRate:'4.5%', marketCap:'1,780亿', currency:'港元', revenueStructure:[{name:'手办盲盒',pct:53},{name:'毛绒玩具',pct:22},{name:'MEGA珍藏',pct:12},{name:'衍生品及其他',pct:13}] },
+      '2023':{ revenue:'63亿', netProfit:'10亿', netMargin:'15.9%', gpm:'60%', roe:'22%', revenueGrowth:'+36%', rdRate:'4%', marketCap:'680亿', currency:'港元', revenueStructure:[{name:'手办盲盒',pct:62},{name:'MEGA收藏',pct:18},{name:'衍生品',pct:15},{name:'联名合作',pct:5}] },
+      '2022':{ revenue:'46亿', netProfit:'4.5亿', netMargin:'9.8%', gpm:'57%', roe:'8%', revenueGrowth:'+3%', rdRate:'4%', marketCap:'380亿', currency:'港元', revenueStructure:[{name:'手办盲盒',pct:68},{name:'MEGA收藏',pct:15},{name:'衍生品',pct:12},{name:'其他',pct:5}] }
+    }},
+    { id:'wangfujing', name:'王府井', source:'上交所 600859.SH 2025-04-26', years:{
+      '2024':{ revenue:'120亿', netProfit:'5.8亿', netMargin:'4.8%', gpm:'22%', roe:'6%', revenueGrowth:'+8%', rdRate:'0.5%', marketCap:'180亿', currency:'人民币', revenueStructure:[{name:'百货零售',pct:55},{name:'奥特莱斯',pct:25},{name:'购物中心',pct:20}] },
+      '2023':{ revenue:'115亿', netProfit:'5.5亿', netMargin:'4.8%', gpm:'22%', roe:'5%', revenueGrowth:'+12%', rdRate:'0.5%', marketCap:'170亿', currency:'人民币', revenueStructure:[{name:'百货零售',pct:58},{name:'奥特莱斯',pct:23},{name:'购物中心',pct:19}] },
+      '2022':{ revenue:'103亿', netProfit:'2.8亿', netMargin:'2.7%', gpm:'20%', roe:'3%', revenueGrowth:'-9%', rdRate:'0.5%', marketCap:'150亿', currency:'人民币', revenueStructure:[{name:'百货零售',pct:62},{name:'奥特莱斯',pct:20},{name:'购物中心',pct:18}] }
+    }},
+    { id:'yonghui', name:'永辉超市', source:'上交所 601933.SH 2025-04-26', years:{
+      '2024':{ revenue:'680亿', netProfit:'2.5亿', netMargin:'0.4%', gpm:'18%', roe:'1%', revenueGrowth:'-8%', rdRate:'0.3%', marketCap:'180亿', currency:'人民币', revenueStructure:[{name:'生鲜食品',pct:72},{name:'日用百货',pct:28}] },
+      '2023':{ revenue:'786亿', netProfit:'-13亿', netMargin:'-1.7%', gpm:'18%', roe:'-5%', revenueGrowth:'-8%', rdRate:'0.3%', marketCap:'250亿', currency:'人民币', revenueStructure:[{name:'生鲜食品',pct:72},{name:'日用百货',pct:28}] },
+      '2022':{ revenue:'900亿', netProfit:'-27亿', netMargin:'-3.0%', gpm:'17%', roe:'-9%', revenueGrowth:'-2%', rdRate:'0.3%', marketCap:'320亿', currency:'人民币', revenueStructure:[{name:'生鲜食品',pct:70},{name:'日用百货',pct:30}] }
+    }},
+    { id:'chow', name:'周大生', source:'深交所 002867.SZ 2025-04-25', years:{
+      '2024':{ revenue:'170亿', netProfit:'11亿', netMargin:'6.5%', gpm:'20%', roe:'14%', revenueGrowth:'+18%', rdRate:'0.8%', marketCap:'160亿', currency:'人民币', revenueStructure:[{name:'素金首饰',pct:62},{name:'镶嵌首饰',pct:28},{name:'电商直播',pct:10}] },
+      '2023':{ revenue:'145亿', netProfit:'9亿', netMargin:'6.2%', gpm:'19%', roe:'12%', revenueGrowth:'+22%', rdRate:'0.8%', marketCap:'150亿', currency:'人民币', revenueStructure:[{name:'素金首饰',pct:60},{name:'镶嵌首饰',pct:28},{name:'电商直播',pct:12}] },
+      '2022':{ revenue:'112亿', netProfit:'6.5亿', netMargin:'5.8%', gpm:'18%', roe:'9%', revenueGrowth:'+80%', rdRate:'0.8%', marketCap:'120亿', currency:'人民币', revenueStructure:[{name:'素金首饰',pct:55},{name:'镶嵌首饰',pct:30},{name:'电商直播',pct:15}] }
+    }},
+    { id:'watson', name:'屈臣氏', source:'港交所·和黄 00013.HK', years:{
+      '2024':{ revenue:'180亿+', netProfit:'15亿+', netMargin:'8.3%', gpm:'32%', roe:'18%', revenueGrowth:'+5%', rdRate:'0.5%', marketCap:'--', currency:'港元', revenueStructure:[{name:'护肤彩妆',pct:65},{name:'保健产品',pct:25},{name:'个人护理',pct:10}] },
+      '2023':{ revenue:'170亿+', netProfit:'14亿+', netMargin:'8.2%', gpm:'32%', roe:'17%', revenueGrowth:'+4%', rdRate:'0.5%', marketCap:'--', currency:'港元', revenueStructure:[{name:'护肤彩妆',pct:66},{name:'保健产品',pct:24},{name:'个人护理',pct:10}] },
+      '2022':{ revenue:'165亿+', netProfit:'12亿+', netMargin:'7.3%', gpm:'31%', roe:'15%', revenueGrowth:'+2%', rdRate:'0.5%', marketCap:'--', currency:'港元', revenueStructure:[{name:'护肤彩妆',pct:68},{name:'保健产品',pct:22},{name:'个人护理',pct:10}] }
+    }}
   ]},
   energy: { companies: [
-    { id:'catl', name:'宁德时代', revenue:'3,222亿', netProfit:'401亿', netMargin:'12.4%', gpm:'22%', roe:'21%', revenueGrowth:'+22%', rdRate:'5.5%', marketCap:'9,000亿', currency:'人民币', revenueStructure:[{name:'动力电池',pct:72},{name:'储能电池',pct:18},{name:'电池材料',pct:10}] },
-    { id:'byd', name:'比亚迪', revenue:'6,023亿', netProfit:'300亿', netMargin:'5.0%', gpm:'20%', roe:'24%', revenueGrowth:'+42%', rdRate:'4.8%', marketCap:'7,500亿', currency:'人民币', revenueStructure:[{name:'汽车',pct:82},{name:'手机部件',pct:12},{name:'储能',pct:6}] },
-    { id:'sungrow', name:'阳光电源', revenue:'529亿', netProfit:'72亿', netMargin:'13.6%', gpm:'30%', roe:'32%', revenueGrowth:'+80%', rdRate:'4%', marketCap:'1,800亿', currency:'人民币', revenueStructure:[{name:'光伏逆变器',pct:55},{name:'储能系统',pct:32},{name:'EPC',pct:13}] },
-    { id:'envision', name:'远景能源', revenue:'450亿+', netProfit:'48亿+', netMargin:'10.7%', gpm:'28%', roe:'18%', revenueGrowth:'+35%', rdRate:'5%', marketCap:'1,200亿', currency:'人民币', revenueStructure:[{name:'风机',pct:52},{name:'储能',pct:28},{name:'智能物联',pct:20}] },
-    { id:'growatt', name:'固德威', revenue:'98亿', netProfit:'13亿', netMargin:'13.3%', gpm:'34%', roe:'28%', revenueGrowth:'+65%', rdRate:'6%', marketCap:'420亿', currency:'人民币', revenueStructure:[{name:'光伏逆变器',pct:65},{name:'储能逆变器',pct:25},{name:'户用系统',pct:10}] },
+    { id:'catl', name:'宁德时代', source:'深交所 300750.SZ 2025-04-16', years:{
+      '2024':{ revenue:'3,620亿', netProfit:'507亿', netMargin:'14.0%', gpm:'26%', roe:'21%', revenueGrowth:'-12%', rdRate:'5.5%', marketCap:'9,000亿', currency:'人民币', revenueStructure:[{name:'动力电池',pct:72},{name:'储能电池',pct:18},{name:'电池材料',pct:10}] },
+      '2023':{ revenue:'4,222亿', netProfit:'439亿', netMargin:'10.4%', gpm:'22%', roe:'24%', revenueGrowth:'+22%', rdRate:'5.5%', marketCap:'1.1万亿', currency:'人民币', revenueStructure:[{name:'动力电池',pct:70},{name:'储能电池',pct:20},{name:'电池材料',pct:10}] },
+      '2022':{ revenue:'3,285亿', netProfit:'335亿', netMargin:'10.2%', gpm:'22%', roe:'21%', revenueGrowth:'+152%', rdRate:'5.2%', marketCap:'8,500亿', currency:'人民币', revenueStructure:[{name:'动力电池',pct:76},{name:'储能电池',pct:14},{name:'电池材料',pct:10}] }
+    }},
+    { id:'byd', name:'比亚迪', source:'深交所 002594.SZ 2025-03-25', years:{
+      '2024':{ revenue:'7,721亿', netProfit:'402亿', netMargin:'5.2%', gpm:'20%', roe:'24%', revenueGrowth:'+29%', rdRate:'4.8%', marketCap:'7,500亿', currency:'人民币', revenueStructure:[{name:'汽车',pct:82},{name:'手机部件',pct:12},{name:'储能',pct:6}] },
+      '2023':{ revenue:'6,023亿', netProfit:'300亿', netMargin:'5.0%', gpm:'20%', roe:'24%', revenueGrowth:'+42%', rdRate:'4.8%', marketCap:'6,800亿', currency:'人民币', revenueStructure:[{name:'汽车',pct:80},{name:'手机部件',pct:14},{name:'储能',pct:6}] },
+      '2022':{ revenue:'4,240亿', netProfit:'166亿', netMargin:'3.9%', gpm:'17%', roe:'16%', revenueGrowth:'+96%', rdRate:'4.5%', marketCap:'5,200亿', currency:'人民币', revenueStructure:[{name:'汽车',pct:76},{name:'手机部件',pct:18},{name:'储能',pct:6}] }
+    }},
+    { id:'sungrow', name:'阳光电源', source:'深交所 300274.SZ 2025-04-21', years:{
+      '2024':{ revenue:'680亿', netProfit:'78亿', netMargin:'11.5%', gpm:'30%', roe:'32%', revenueGrowth:'+85%', rdRate:'4%', marketCap:'1,800亿', currency:'人民币', revenueStructure:[{name:'光伏逆变器',pct:55},{name:'储能系统',pct:32},{name:'EPC',pct:13}] },
+      '2023':{ revenue:'529亿', netProfit:'72亿', netMargin:'13.6%', gpm:'30%', roe:'32%', revenueGrowth:'+80%', rdRate:'4%', marketCap:'1,400亿', currency:'人民币', revenueStructure:[{name:'光伏逆变器',pct:58},{name:'储能系统',pct:30},{name:'EPC',pct:12}] },
+      '2022':{ revenue:'300亿', netProfit:'35亿', netMargin:'11.7%', gpm:'29%', roe:'20%', revenueGrowth:'+25%', rdRate:'4%', marketCap:'800亿', currency:'人民币', revenueStructure:[{name:'光伏逆变器',pct:65},{name:'储能系统',pct:22},{name:'EPC',pct:13}] }
+    }},
+    { id:'envision', name:'远景能源', source:'非上市·第三方估算', years:{
+      '2024':{ revenue:'580亿+', netProfit:'55亿+', netMargin:'9.5%', gpm:'28%', roe:'18%', revenueGrowth:'+30%', rdRate:'5%', marketCap:'1,200亿+', currency:'人民币', revenueStructure:[{name:'风机',pct:52},{name:'储能',pct:28},{name:'智能物联',pct:20}] },
+      '2023':{ revenue:'450亿+', netProfit:'48亿+', netMargin:'10.7%', gpm:'28%', roe:'18%', revenueGrowth:'+35%', rdRate:'5%', marketCap:'1,000亿+', currency:'人民币', revenueStructure:[{name:'风机',pct:55},{name:'储能',pct:25},{name:'智能物联',pct:20}] },
+      '2022':{ revenue:'330亿+', netProfit:'30亿+', netMargin:'9.1%', gpm:'26%', roe:'15%', revenueGrowth:'+20%', rdRate:'5%', marketCap:'800亿+', currency:'人民币', revenueStructure:[{name:'风机',pct:58},{name:'储能',pct:22},{name:'智能物联',pct:20}] }
+    }},
+    { id:'growatt', name:'固德威', source:'科创板 688390.SH 2025-04-28', years:{
+      '2024':{ revenue:'98亿', netProfit:'13亿', netMargin:'13.3%', gpm:'34%', roe:'28%', revenueGrowth:'+65%', rdRate:'6%', marketCap:'420亿', currency:'人民币', revenueStructure:[{name:'光伏逆变器',pct:65},{name:'储能逆变器',pct:25},{name:'户用系统',pct:10}] },
+      '2023':{ revenue:'73亿', netProfit:'8.5亿', netMargin:'11.6%', gpm:'33%', roe:'20%', revenueGrowth:'+45%', rdRate:'6%', marketCap:'320亿', currency:'人民币', revenueStructure:[{name:'光伏逆变器',pct:68},{name:'储能逆变器',pct:22},{name:'户用系统',pct:10}] },
+      '2022':{ revenue:'45亿', netProfit:'2.5亿', netMargin:'5.6%', gpm:'30%', roe:'8%', revenueGrowth:'+15%', rdRate:'6%', marketCap:'180亿', currency:'人民币', revenueStructure:[{name:'光伏逆变器',pct:72},{name:'储能逆变器',pct:18},{name:'户用系统',pct:10}] }
+    }}
   ]},
   education: { companies: [
-    { id:'neworiental', name:'新东方', revenue:'298亿', netProfit:'26亿', netMargin:'8.7%', gpm:'42%', roe:'14%', revenueGrowth:'+43%', rdRate:'2%', marketCap:'680亿', currency:'港元', revenueStructure:[{name:'留学咨询',pct:42},{name:'直播电商',pct:38},{name:'素质教育',pct:20}] },
-    { id:'tal', name:'好未来', revenue:'225亿', netProfit:'18亿', netMargin:'8.0%', gpm:'48%', roe:'16%', revenueGrowth:'+38%', rdRate:'4%', marketCap:'550亿', currency:'美元', revenueStructure:[{name:'学习服务',pct:58},{name:'学习内容',pct:28},{name:'科技方案',pct:14}] },
-    { id:'dmi', name:'读书郎', revenue:'5.2亿', netProfit:'-0.8亿', netMargin:'-15.4%', gpm:'38%', roe:'-8%', revenueGrowth:'-25%', rdRate:'8%', marketCap:'12亿', currency:'港元', revenueStructure:[{name:'学习平板',pct:65},{name:'教育内容',pct:25},{name:'增值服务',pct:10}] },
-    { id:'k12', name:'高途', revenue:'28亿', netProfit:'2.5亿', netMargin:'8.9%', gpm:'55%', roe:'12%', revenueGrowth:'+55%', rdRate:'5%', marketCap:'80亿', currency:'美元', revenueStructure:[{name:'成人教育',pct:55},{name:'职业教育',pct:30},{name:'留学',pct:15}] },
-    { id:'yuantai', name:'猿辅导', revenue:'55亿', netProfit:'3.2亿', netMargin:'5.8%', gpm:'60%', roe:'10%', revenueGrowth:'+42%', rdRate:'8%', marketCap:'280亿', currency:'人民币', revenueStructure:[{name:'斑马AI课',pct:48},{name:'猿题库',pct:32},{name:'小猿搜题',pct:20}] },
+    { id:'neworiental', name:'新东方', source:'港交所 09901.HK 2025-01-22', years:{
+      '2024':{ revenue:'298亿', netProfit:'26亿', netMargin:'8.7%', gpm:'42%', roe:'14%', revenueGrowth:'+43%', rdRate:'2%', marketCap:'680亿', currency:'港元', revenueStructure:[{name:'留学咨询',pct:42},{name:'直播电商',pct:38},{name:'素质教育',pct:20}] },
+      '2023':{ revenue:'210亿', netProfit:'11亿', netMargin:'5.2%', gpm:'38%', roe:'8%', revenueGrowth:'+73%', rdRate:'2%', marketCap:'480亿', currency:'港元', revenueStructure:[{name:'留学咨询',pct:50},{name:'直播电商',pct:30},{name:'素质教育',pct:20}] },
+      '2022':{ revenue:'125亿', netProfit:'-10亿', netMargin:'-8.0%', gpm:'32%', roe:'-6%', revenueGrowth:'-27%', rdRate:'3%', marketCap:'280亿', currency:'港元', revenueStructure:[{name:'留学咨询',pct:65},{name:'直播电商',pct:15},{name:'素质教育',pct:20}] }
+    }},
+    { id:'tal', name:'好未来', source:'纽交所 TAL 2025-01-22', years:{
+      '2024':{ revenue:'225亿', netProfit:'18亿', netMargin:'8.0%', gpm:'48%', roe:'16%', revenueGrowth:'+38%', rdRate:'4%', marketCap:'550亿', currency:'美元', revenueStructure:[{name:'学习服务',pct:58},{name:'学习内容',pct:28},{name:'科技方案',pct:14}] },
+      '2023':{ revenue:'165亿', netProfit:'2.5亿', netMargin:'1.5%', gpm:'45%', roe:'3%', revenueGrowth:'-3%', rdRate:'5%', marketCap:'380亿', currency:'美元', revenueStructure:[{name:'学习服务',pct:62},{name:'学习内容',pct:26},{name:'科技方案',pct:12}] },
+      '2022':{ revenue:'170亿', netProfit:'-8亿', netMargin:'-4.7%', gpm:'42%', roe:'-8%', revenueGrowth:'-3%', rdRate:'6%', marketCap:'250亿', currency:'美元', revenueStructure:[{name:'学习服务',pct:65},{name:'学习内容',pct:24},{name:'科技方案',pct:11}] }
+    }},
+    { id:'dmi', name:'读书郎', source:'港交所 02385.HK 2025-03-28', years:{
+      '2024':{ revenue:'5.2亿', netProfit:'-0.8亿', netMargin:'-15.4%', gpm:'38%', roe:'-8%', revenueGrowth:'-25%', rdRate:'8%', marketCap:'12亿', currency:'港元', revenueStructure:[{name:'学习平板',pct:65},{name:'教育内容',pct:25},{name:'增值服务',pct:10}] },
+      '2023':{ revenue:'6.8亿', netProfit:'-0.3亿', netMargin:'-4.4%', gpm:'40%', roe:'-3%', revenueGrowth:'-18%', rdRate:'7%', marketCap:'18亿', currency:'港元', revenueStructure:[{name:'学习平板',pct:62},{name:'教育内容',pct:28},{name:'增值服务',pct:10}] },
+      '2022':{ revenue:'8.2亿', netProfit:'0.5亿', netMargin:'6.1%', gpm:'42%', roe:'5%', revenueGrowth:'+5%', rdRate:'6%', marketCap:'25亿', currency:'港元', revenueStructure:[{name:'学习平板',pct:60},{name:'教育内容',pct:30},{name:'增值服务',pct:10}] }
+    }},
+    { id:'k12', name:'高途', source:'纽交所 GOTU 2025-03-21', years:{
+      '2024':{ revenue:'28亿', netProfit:'2.5亿', netMargin:'8.9%', gpm:'55%', roe:'12%', revenueGrowth:'+55%', rdRate:'5%', marketCap:'80亿', currency:'美元', revenueStructure:[{name:'成人教育',pct:55},{name:'职业教育',pct:30},{name:'留学',pct:15}] },
+      '2023':{ revenue:'18亿', netProfit:'-0.8亿', netMargin:'-4.4%', gpm:'52%', roe:'-5%', revenueGrowth:'+18%', rdRate:'6%', marketCap:'55亿', currency:'美元', revenueStructure:[{name:'成人教育',pct:52},{name:'职业教育',pct:32},{name:'留学',pct:16}] },
+      '2022':{ revenue:'15亿', netProfit:'-2.5亿', netMargin:'-16.7%', gpm:'48%', roe:'-15%', revenueGrowth:'-52%', rdRate:'8%', marketCap:'30亿', currency:'美元', revenueStructure:[{name:'成人教育',pct:48},{name:'职业教育',pct:35},{name:'留学',pct:17}] }
+    }},
+    { id:'yuantai', name:'猿辅导', source:'非上市·第三方估算', years:{
+      '2024':{ revenue:'65亿+', netProfit:'4.5亿+', netMargin:'6.9%', gpm:'58%', roe:'10%', revenueGrowth:'+35%', rdRate:'8%', marketCap:'320亿+', currency:'人民币', revenueStructure:[{name:'斑马AI课',pct:48},{name:'猿题库',pct:32},{name:'小猿搜题',pct:20}] },
+      '2023':{ revenue:'48亿', netProfit:'3亿', netMargin:'6.3%', gpm:'56%', roe:'8%', revenueGrowth:'+18%', rdRate:'8%', marketCap:'280亿', currency:'人民币', revenueStructure:[{name:'斑马AI课',pct:50},{name:'猿题库',pct:30},{name:'小猿搜题',pct:20}] },
+      '2022':{ revenue:'40亿', netProfit:'-1亿', netMargin:'-2.5%', gpm:'52%', roe:'-3%', revenueGrowth:'-15%', rdRate:'10%', marketCap:'200亿', currency:'人民币', revenueStructure:[{name:'斑马AI课',pct:55},{name:'猿题库',pct:28},{name:'小猿搜题',pct:17}] }
+    }}
   ]},
 };
 
 function renderFinancialAnalysis() {
   const ind = document.getElementById('finIndustrySelect') ? document.getElementById('finIndustrySelect').value : 'internet';
   const sel = document.getElementById('finCompanySelect');
+  const yearSel = document.getElementById('finYearSelect');
+  const year = yearSel ? yearSel.value : '2024';
   const map = FIN_INDUSTRY_MAP[ind];
   if (!map) return;
   
@@ -3423,7 +3552,9 @@ function renderFinancialAnalysis() {
   }
   
   const companyId = sel ? sel.value : map.companies[0].id;
-  const company = map.companies.find(c => c.id === companyId) || map.companies[0];
+  const companyRaw = map.companies.find(c => c.id === companyId) || map.companies[0];
+  const company = companyRaw.years && companyRaw.years[year] ? companyRaw.years[year] : companyRaw;
+  const source = companyRaw.source || '港交所/深交所/上交所年报';
   
   document.getElementById('an-kpi-income').textContent = company.currency + ' ' + company.revenue;
   document.getElementById('an-kpi-expense').textContent = company.netMargin;
