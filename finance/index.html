@@ -3533,14 +3533,25 @@ function renderFinancialAnalysis() {
   
   // 填充公司下拉（行业切换时也重填）
   if (sel) {
+    const currentVal = sel.value; // 保存当前选择
     sel.innerHTML = '';
     map.companies.forEach(c => { const opt = document.createElement('option'); opt.value = c.id; opt.textContent = (c.isPublic ? '' : '⚠️ ') + c.name; sel.appendChild(opt); });
-    sel.value = map.companies[0].id; // 切行业后默认选第一个
+    // 优先保持当前选择（如果新行业有这家公司），否则选第一个
+    if (currentVal && map.companies.some(c => c.id === currentVal)) {
+      sel.value = currentVal;
+    } else {
+      sel.value = map.companies[0].id;
+    }
   }
   
+  // 确保获取到正确的公司数据
   const companyId = sel ? sel.value : map.companies[0].id;
-  const companyRaw = map.companies.find(c => c.id === companyId) || map.companies[0];
-  const company = companyRaw.years[year] || companyRaw.years['2024']; // fallback to 2024
+  const companyRaw = map.companies.find(c => c.id === companyId);
+  if (!companyRaw) {
+    console.warn('未找到公司ID:', companyId, '使用第一个公司:', map.companies[0].name);
+  }
+  const company = companyRaw ? (companyRaw.years[year] || companyRaw.years['2024']) : (map.companies[0].years[year] || map.companies[0].years['2024']);
+  const source = companyRaw ? companyRaw.source : map.companies[0].source;
   const source = companyRaw.source || '';
   
   // 数据来源标签
