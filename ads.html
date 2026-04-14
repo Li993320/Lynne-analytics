@@ -3366,46 +3366,46 @@ function getUserMetrics() {
 // ==================== FINANCIAL ANALYSIS DATA ====================
 const FIN_INDUSTRY_MAP = {
   internet: { companies: [
-    { id:'tencent', name:'腾讯控股', revenue:'6,028亿', netProfit:'1,552亿', netMargin:'25.7%', gpm:'52%', roe:'24%', revenueGrowth:'+15%', rdRate:'8.5%', marketCap:'4.2万亿', currency:'港元', revenueStructure:[{name:'增值服务',pct:48},{name:'金融科技',pct:31},{name:'广告',pct:21}] },
-    { id:'alibaba', name:'阿里巴巴', revenue:'9,418亿', netProfit:'1,003亿', netMargin:'10.6%', gpm:'40%', roe:'12%', revenueGrowth:'+8%', rdRate:'6.2%', marketCap:'1.8万亿', currency:'港元', revenueStructure:[{name:'电商零售',pct:65},{name:'云业务',pct:12},{name:'本地生活',pct:11},{name:'其他',pct:12}] },
-    { id:'baidu', name:'百度', revenue:'1,348亿', netProfit:'215亿', netMargin:'15.9%', gpm:'48%', roe:'18%', revenueGrowth:'+6%', rdRate:'18%', marketCap:'3,800亿', currency:'港元', revenueStructure:[{name:'在线营销',pct:68},{name:'AI与云',pct:22},{name:'其他',pct:10}] },
-    { id:'jd', name:'京东', revenue:'1.09万亿', netProfit:'242亿', netMargin:'2.2%', gpm:'14%', roe:'14%', revenueGrowth:'+12%', rdRate:'2.1%', marketCap:'4,500亿', currency:'港元', revenueStructure:[{name:'自营零售',pct:85},{name:'平台服务',pct:12},{name:'物流',pct:3}] },
-    { id:'meituan', name:'美团', revenue:'2,769亿', netProfit:'358亿', netMargin:'12.9%', gpm:'36%', roe:'32%', revenueGrowth:'+22%', rdRate:'6.5%', marketCap:'1.1万亿', currency:'港元', revenueStructure:[{name:'外卖',pct:62},{name:'到店酒旅',pct:28},{name:'新业务',pct:10}] },
+    { id:'tencent', name:'腾讯控股', revenue:'6,028亿', netProfit:'1,552亿', netMargin:'25.7%', gpm:'52%', roe:'24%', revenueGrowth:'+15%', rdRate:'8.5%', marketCap:'4.2万亿', currency:'港元', revenueStructure:[{name:'增值服务',pct:48},{name:'金融科技',pct:31},{name:'广告',pct:21}], costStructure:[{name:'营业成本',pct:48},{name:'研发费用',pct:9},{name:'市场营销费',pct:12},{name:'渠道分成',pct:8},{name:'人力成本',pct:18}], costTrend:{rd:[85,88,90,92,95,98],mkt:[110,115,118,122,128,135],channel:[75,78,80,82,85,88],hr:[165,170,175,180,185,190]} },
+    { id:'alibaba', name:'阿里巴巴', revenue:'9,418亿', netProfit:'1,003亿', netMargin:'10.6%', gpm:'40%', roe:'12%', revenueGrowth:'+8%', rdRate:'6.2%', marketCap:'1.8万亿', currency:'港元', revenueStructure:[{name:'电商零售',pct:65},{name:'云业务',pct:12},{name:'本地生活',pct:11},{name:'其他',pct:12}], costStructure:[{name:'营业成本',pct:60},{name:'研发费用',pct:7},{name:'市场营销费',pct:15},{name:'渠道分成',pct:5},{name:'人力成本',pct:10}], costTrend:{rd:[120,125,130,132,135,138],mkt:[280,295,310,325,340,355],channel:[90,92,95,98,100,105],hr:[200,205,210,215,220,228]} },
+    { id:'baidu', name:'百度', revenue:'1,348亿', netProfit:'215亿', netMargin:'15.9%', gpm:'48%', roe:'18%', revenueGrowth:'+6%', rdRate:'18%', marketCap:'3,800亿', currency:'港元', revenueStructure:[{name:'在线营销',pct:68},{name:'AI与云',pct:22},{name:'其他',pct:10}], costStructure:[{name:'营业成本',pct:52},{name:'研发费用',pct:20},{name:'市场营销费',pct:12},{name:'渠道分成',pct:3},{name:'人力成本',pct:12}], costTrend:{rd:[48,50,52,55,58,62],mkt:[28,30,32,33,35,38],channel:[8,8,9,9,10,10],hr:[32,34,35,36,38,40]} },
+    { id:'jd', name:'京东', revenue:'1.09万亿', netProfit:'242亿', netMargin:'2.2%', gpm:'14%', roe:'14%', revenueGrowth:'+12%', rdRate:'2.1%', marketCap:'4,500亿', currency:'港元', revenueStructure:[{name:'自营零售',pct:85},{name:'平台服务',pct:12},{name:'物流',pct:3}], costStructure:[{name:'营业成本',pct:86},{name:'研发费用',pct:2.5},{name:'市场营销费',pct:4},{name:'渠道分成',pct:1},{name:'人力成本',pct:5}], costTrend:{rd:[35,36,38,40,42,45],mkt:[55,58,62,65,70,75],channel:[12,13,14,15,16,18],hr:[68,70,72,75,78,82]} },
+    { id:'meituan', name:'美团', revenue:'2,769亿', netProfit:'358亿', netMargin:'12.9%', gpm:'36%', roe:'32%', revenueGrowth:'+22%', rdRate:'6.5%', marketCap:'1.1万亿', currency:'港元', revenueStructure:[{name:'外卖',pct:62},{name:'到店酒旅',pct:28},{name:'新业务',pct:10}], costStructure:[{name:'营业成本',pct:64},{name:'研发费用',pct:7},{name:'市场营销费',pct:18},{name:'渠道分成',pct:4},{name:'人力成本',pct:6}], costTrend:{rd:[38,40,42,45,48,52],mkt:[95,102,110,120,130,142],channel:[22,24,25,27,29,32],hr:[35,38,40,42,45,50]} },
   ]},
   gaming: { companies: [
-    { id:'miHoYo', name:'米哈游', revenue:'400亿+', netProfit:'160亿+', netMargin:'40%', gpm:'74%', roe:'65%', revenueGrowth:'+35%', rdRate:'30%', marketCap:'2,000亿+', currency:'人民币', revenueStructure:[{name:'原神',pct:55},{name:'星铁',pct:28},{name:'绝区零',pct:12},{name:'其他',pct:5}] },
-    { id:'netease', name:'网易', revenue:'1,015亿', netProfit:'217亿', netMargin:'21.4%', gpm:'61%', roe:'22%', revenueGrowth:'+9%', rdRate:'11%', marketCap:'5,000亿', currency:'港元', revenueStructure:[{name:'游戏',pct:80},{name:'云音乐',pct:12},{name:'创新业务',pct:8}] },
-    { id:'perfect', name:'完美世界', revenue:'76亿', netProfit:'-5亿', netMargin:'-6.6%', gpm:'55%', roe:'-3%', revenueGrowth:'-12%', rdRate:'22%', marketCap:'280亿', currency:'人民币', revenueStructure:[{name:'游戏',pct:85},{name:'影视',pct:15}] },
-    { id:'lilith', name:'莉莉丝', revenue:'200亿+', netProfit:'80亿+', netMargin:'40%', gpm:'72%', roe:'55%', revenueGrowth:'+28%', rdRate:'25%', marketCap:'800亿+', currency:'人民币', revenueStructure:[{name:'万龙醒了',pct:48},{name:'剑与远征',pct:32},{name:'其他',pct:20}] },
-    { id:'hotcool', name:'Hotcool', revenue:'85亿', netProfit:'22亿', netMargin:'25.9%', gpm:'68%', roe:'38%', revenueGrowth:'+18%', rdRate:'15%', marketCap:'350亿', currency:'人民币', revenueStructure:[{name:'休闲游戏',pct:72},{name:'广告变现',pct:28}] },
+    { id:'miHoYo', name:'米哈游', revenue:'400亿+', netProfit:'160亿+', netMargin:'40%', gpm:'74%', roe:'65%', revenueGrowth:'+35%', rdRate:'30%', marketCap:'2,000亿+', currency:'人民币', revenueStructure:[{name:'原神',pct:55},{name:'星铁',pct:28},{name:'绝区零',pct:12},{name:'其他',pct:5}], costStructure:[{name:'营业成本',pct:26},{name:'研发费用',pct:32},{name:'市场营销费',pct:18},{name:'渠道分成',pct:15},{name:'人力成本',pct:8}], costTrend:{rd:[18,20,22,25,28,32],mkt:[12,14,16,18,20,22],channel:[10,11,12,13,14,15],hr:[5,6,7,8,9,10]} },
+    { id:'netease', name:'网易', revenue:'1,015亿', netProfit:'217亿', netMargin:'21.4%', gpm:'61%', roe:'22%', revenueGrowth:'+9%', rdRate:'11%', marketCap:'5,000亿', currency:'港元', revenueStructure:[{name:'游戏',pct:80},{name:'云音乐',pct:12},{name:'创新业务',pct:8}], costStructure:[{name:'营业成本',pct:39},{name:'研发费用',pct:14},{name:'市场营销费',pct:18},{name:'渠道分成',pct:12},{name:'人力成本',pct:14}], costTrend:{rd:[25,26,28,30,32,34],mkt:[32,34,36,38,40,42],channel:[22,23,24,25,26,27],hr:[28,29,30,31,32,33]} },
+    { id:'perfect', name:'完美世界', revenue:'76亿', netProfit:'-5亿', netMargin:'-6.6%', gpm:'55%', roe:'-3%', revenueGrowth:'-12%', rdRate:'22%', marketCap:'280亿', currency:'人民币', revenueStructure:[{name:'游戏',pct:85},{name:'影视',pct:15}], costStructure:[{name:'营业成本',pct:45},{name:'研发费用',pct:24},{name:'市场营销费',pct:20},{name:'渠道分成',pct:5},{name:'人力成本',pct:5}], costTrend:{rd:[8,9,10,11,12,13],mkt:[7,8,9,10,11,12],channel:[3,3,3,4,4,4],hr:[4,4,4,5,5,5]} },
+    { id:'lilith', name:'莉莉丝', revenue:'200亿+', netProfit:'80亿+', netMargin:'40%', gpm:'72%', roe:'55%', revenueGrowth:'+28%', rdRate:'25%', marketCap:'800亿+', currency:'人民币', revenueStructure:[{name:'万龙醒了',pct:48},{name:'剑与远征',pct:32},{name:'其他',pct:20}], costStructure:[{name:'营业成本',pct:28},{name:'研发费用',pct:28},{name:'市场营销费',pct:22},{name:'渠道分成',pct:12},{name:'人力成本',pct:8}], costTrend:{rd:[10,12,14,16,18,20],mkt:[8,10,12,14,16,18],channel:[5,6,7,8,9,10],hr:[3,4,5,6,7,8]} },
+    { id:'hotcool', name:'Hotcool', revenue:'85亿', netProfit:'22亿', netMargin:'25.9%', gpm:'68%', roe:'38%', revenueGrowth:'+18%', rdRate:'15%', marketCap:'350亿', currency:'人民币', revenueStructure:[{name:'休闲游戏',pct:72},{name:'广告变现',pct:28}], costStructure:[{name:'营业成本',pct:32},{name:'研发费用',pct:16},{name:'市场营销费',pct:25},{name:'渠道分成',pct:18},{name:'人力成本',pct:8}], costTrend:{rd:[3,3.5,4,4.5,5,5.5],mkt:[4,5,5.5,6,6.5,7],channel:[3,3.5,4,4.5,5,5.5],hr:[2,2,2.5,2.5,3,3.5]} },
   ]},
   finance: { companies: [
-    { id:'icbc', name:'工商银行', revenue:'8,432亿', netProfit:'3,651亿', netMargin:'43.3%', gpm:'--', roe:'11%', revenueGrowth:'-2%', rdRate:'0.3%', marketCap:'2.1万亿', currency:'人民币', revenueStructure:[{name:'利息收入',pct:72},{name:'手续费',pct:18},{name:'投资',pct:10}] },
-    { id:'pingan', name:'平安保险', revenue:'9,137亿', netProfit:'856亿', netMargin:'9.4%', gpm:'--', roe:'12%', revenueGrowth:'+5%', rdRate:'1.2%', marketCap:'8,000亿', currency:'港元', revenueStructure:[{name:'寿险',pct:55},{name:'产险',pct:18},{name:'银行',pct:15},{name:'科技',pct:12}] },
-    { id:'citic', name:'中信证券', revenue:'651亿', netProfit:'213亿', netMargin:'32.7%', gpm:'--', roe:'11%', revenueGrowth:'+8%', rdRate:'0.8%', marketCap:'3,200亿', currency:'人民币', revenueStructure:[{name:'经纪',pct:35},{name:'投行',pct:28},{name:'资管',pct:25},{name:'投资',pct:12}] },
-    { id:'orient', name:'东方财富', revenue:'142亿', netProfit:'82亿', netMargin:'57.7%', gpm:'--', roe:'18%', revenueGrowth:'+15%', rdRate:'8%', marketCap:'2,800亿', currency:'人民币', revenueStructure:[{name:'证券经纪',pct:52},{name:'天天基金',pct:32},{name:'数据服务',pct:16}] },
-    { id:'fps', name:'中金公司', revenue:'219亿', netProfit:'61亿', netMargin:'27.9%', gpm:'--', roe:'8%', revenueGrowth:'+3%', rdRate:'0.5%', marketCap:'1,800亿', currency:'人民币', revenueStructure:[{name:'投资银行',pct:42},{name:'股票业务',pct:35},{name:'财富管理',pct:23}] },
+    { id:'icbc', name:'工商银行', revenue:'8,432亿', netProfit:'3,651亿', netMargin:'43.3%', gpm:'--', roe:'11%', revenueGrowth:'-2%', rdRate:'0.3%', marketCap:'2.1万亿', currency:'人民币', revenueStructure:[{name:'利息收入',pct:72},{name:'手续费',pct:18},{name:'投资',pct:10}], costStructure:[{name:'营业成本',pct:48},{name:'研发费用',pct:0.5},{name:'市场营销费',pct:2},{name:'渠道分成',pct:0},{name:'人力成本',pct:42}], costTrend:{rd:[8,8,8.5,8.5,9,9],mkt:[45,46,48,50,52,55],channel:[0,0,0,0,0,0],hr:[820,825,830,835,840,850]} },
+    { id:'pingan', name:'平安保险', revenue:'9,137亿', netProfit:'856亿', netMargin:'9.4%', gpm:'--', roe:'12%', revenueGrowth:'+5%', rdRate:'1.2%', marketCap:'8,000亿', currency:'港元', revenueStructure:[{name:'寿险',pct:55},{name:'产险',pct:18},{name:'银行',pct:15},{name:'科技',pct:12}], costStructure:[{name:'营业成本',pct:55},{name:'研发费用',pct:1.5},{name:'市场营销费',pct:8},{name:'渠道分成',pct:12},{name:'人力成本',pct:20}], costTrend:{rd:[25,26,28,30,32,34],mkt:[150,155,160,165,170,175],channel:[220,225,230,235,240,245],hr:[380,385,390,395,400,408]} },
+    { id:'citic', name:'中信证券', revenue:'651亿', netProfit:'213亿', netMargin:'32.7%', gpm:'--', roe:'11%', revenueGrowth:'+8%', rdRate:'0.8%', marketCap:'3,200亿', currency:'人民币', revenueStructure:[{name:'经纪',pct:35},{name:'投行',pct:28},{name:'资管',pct:25},{name:'投资',pct:12}], costStructure:[{name:'营业成本',pct:55},{name:'研发费用',pct:1},{name:'市场营销费',pct:3},{name:'渠道分成',pct:5},{name:'人力成本',pct:32}], costTrend:{rd:[1.2,1.3,1.4,1.5,1.6,1.8],mkt:[4,4.5,5,5.5,6,6.5],channel:[8,8,9,9,10,10],hr:[48,50,52,54,56,58]} },
+    { id:'orient', name:'东方财富', revenue:'142亿', netProfit:'82亿', netMargin:'57.7%', gpm:'--', roe:'18%', revenueGrowth:'+15%', rdRate:'8%', marketCap:'2,800亿', currency:'人民币', revenueStructure:[{name:'证券经纪',pct:52},{name:'天天基金',pct:32},{name:'数据服务',pct:16}], costStructure:[{name:'营业成本',pct:38},{name:'研发费用',pct:10},{name:'市场营销费',pct:8},{name:'渠道分成',pct:15},{name:'人力成本',pct:22}], costTrend:{rd:[2,2.2,2.5,2.8,3,3.5],mkt:[1.8,2,2.2,2.5,2.8,3.2],channel:[3,3.5,4,4.5,5,5.5],hr:[5,5.5,6,6.5,7,7.5]} },
+    { id:'fps', name:'中金公司', revenue:'219亿', netProfit:'61亿', netMargin:'27.9%', gpm:'--', roe:'8%', revenueGrowth:'+3%', rdRate:'0.5%', marketCap:'1,800亿', currency:'人民币', revenueStructure:[{name:'投资银行',pct:42},{name:'股票业务',pct:35},{name:'财富管理',pct:23}], costStructure:[{name:'营业成本',pct:58},{name:'研发费用',pct:0.8},{name:'市场营销费',pct:2},{name:'渠道分成',pct:3},{name:'人力成本',pct:32}], costTrend:{rd:[0.4,0.4,0.5,0.5,0.6,0.6],mkt:[1,1.1,1.2,1.3,1.4,1.5],channel:[1.5,1.6,1.7,1.8,1.9,2],hr:[16,16.5,17,17.5,18,18.5]} },
   ]},
   retail: { companies: [
-    { id:'popmart', name:'泡泡玛特', revenue:'74亿', netProfit:'12亿', netMargin:'16.2%', gpm:'64%', roe:'22%', revenueGrowth:'+63%', rdRate:'4%', marketCap:'680亿', currency:'港元', revenueStructure:[{name:'手办盲盒',pct:58},{name:'MEGA收藏',pct:18},{name:'衍生品',pct:15},{name:'联名合作',pct:9}] },
-    { id:'wangfujing', name:'王府井', revenue:'120亿', netProfit:'5.8亿', netMargin:'4.8%', gpm:'22%', roe:'6%', revenueGrowth:'+8%', rdRate:'0.5%', marketCap:'180亿', currency:'人民币', revenueStructure:[{name:'百货零售',pct:55},{name:'奥特莱斯',pct:25},{name:'购物中心',pct:20}] },
-    { id:'yonghui', name:'永辉超市', revenue:'786亿', netProfit:'-13亿', netMargin:'-1.7%', gpm:'18%', roe:'-5%', revenueGrowth:'-8%', rdRate:'0.3%', marketCap:'250亿', currency:'人民币', revenueStructure:[{name:'生鲜食品',pct:72},{name:'日用百货',pct:28}] },
-    { id:'chow', name:'周大生', revenue:'170亿', netProfit:'11亿', netMargin:'6.5%', gpm:'20%', roe:'14%', revenueGrowth:'+18%', rdRate:'0.8%', marketCap:'160亿', currency:'人民币', revenueStructure:[{name:'素金首饰',pct:62},{name:'镶嵌首饰',pct:28},{name:'电商直播',pct:10}] },
-    { id:'watson', name:'屈臣氏', revenue:'180亿+', netProfit:'15亿+', netMargin:'8.3%', gpm:'32%', roe:'18%', revenueGrowth:'+5%', rdRate:'0.5%', marketCap:'--', currency:'港元', revenueStructure:[{name:'护肤彩妆',pct:65},{name:'保健产品',pct:25},{name:'个人护理',pct:10}] },
+    { id:'popmart', name:'泡泡玛特', revenue:'74亿', netProfit:'12亿', netMargin:'16.2%', gpm:'64%', roe:'22%', revenueGrowth:'+63%', rdRate:'4%', marketCap:'680亿', currency:'港元', revenueStructure:[{name:'手办盲盒',pct:58},{name:'MEGA收藏',pct:18},{name:'衍生品',pct:15},{name:'联名合作',pct:9}], costStructure:[{name:'营业成本',pct:36},{name:'研发费用',pct:5},{name:'市场营销费',pct:22},{name:'渠道分成',pct:18},{name:'人力成本',pct:16}], costTrend:{rd:[0.6,0.7,0.8,0.9,1,1.2],mkt:[3,3.5,4,4.5,5,6],channel:[2.5,3,3.5,4,4.5,5],hr:[2,2.2,2.5,2.8,3,3.5]} },
+    { id:'wangfujing', name:'王府井', revenue:'120亿', netProfit:'5.8亿', netMargin:'4.8%', gpm:'22%', roe:'6%', revenueGrowth:'+8%', rdRate:'0.5%', marketCap:'180亿', currency:'人民币', revenueStructure:[{name:'百货零售',pct:55},{name:'奥特莱斯',pct:25},{name:'购物中心',pct:20}], costStructure:[{name:'营业成本',pct:78},{name:'研发费用',pct:0.6},{name:'市场营销费',pct:4},{name:'渠道分成',pct:3},{name:'人力成本',pct:12}], costTrend:{rd:[0.15,0.16,0.17,0.18,0.19,0.2],mkt:[1,1.1,1.2,1.3,1.4,1.5],channel:[0.8,0.85,0.9,0.95,1,1.1],hr:[3.2,3.3,3.4,3.5,3.6,3.8]} },
+    { id:'yonghui', name:'永辉超市', revenue:'786亿', netProfit:'-13亿', netMargin:'-1.7%', gpm:'18%', roe:'-5%', revenueGrowth:'-8%', rdRate:'0.3%', marketCap:'250亿', currency:'人民币', revenueStructure:[{name:'生鲜食品',pct:72},{name:'日用百货',pct:28}], costStructure:[{name:'营业成本',pct:82},{name:'研发费用',pct:0.4},{name:'市场营销费',pct:2},{name:'渠道分成',pct:2},{name:'人力成本',pct:12}], costTrend:{rd:[0.6,0.6,0.65,0.65,0.7,0.7],mkt:[3,3.2,3.3,3.5,3.6,3.8],channel:[3,3.2,3.3,3.5,3.6,3.8],hr:[20,20.5,21,21.5,22,22.5]} },
+    { id:'chow', name:'周大生', revenue:'170亿', netProfit:'11亿', netMargin:'6.5%', gpm:'20%', roe:'14%', revenueGrowth:'+18%', rdRate:'0.8%', marketCap:'160亿', currency:'人民币', revenueStructure:[{name:'素金首饰',pct:62},{name:'镶嵌首饰',pct:28},{name:'电商直播',pct:10}], costStructure:[{name:'营业成本',pct:80},{name:'研发费用',pct:1},{name:'市场营销费',pct:6},{name:'渠道分成',pct:5},{name:'人力成本',pct:6}], costTrend:{rd:[0.3,0.35,0.4,0.45,0.5,0.6],mkt:[1.8,2,2.2,2.5,2.8,3.2],channel:[1.5,1.6,1.8,2,2.2,2.5],hr:[1.8,1.9,2,2.1,2.2,2.4]} },
+    { id:'watson', name:'屈臣氏', revenue:'180亿+', netProfit:'15亿+', netMargin:'8.3%', gpm:'32%', roe:'18%', revenueGrowth:'+5%', rdRate:'0.5%', marketCap:'--', currency:'港元', revenueStructure:[{name:'护肤彩妆',pct:65},{name:'保健产品',pct:25},{name:'个人护理',pct:10}], costStructure:[{name:'营业成本',pct:68},{name:'研发费用',pct:0.6},{name:'市场营销费',pct:10},{name:'渠道分成',pct:8},{name:'人力成本',pct:12}], costTrend:{rd:[0.2,0.2,0.25,0.25,0.3,0.3],mkt:[3.5,3.8,4,4.2,4.5,5],channel:[2.8,3,3.2,3.4,3.6,4],hr:[4.5,4.6,4.8,5,5.2,5.5]} },
   ]},
   energy: { companies: [
-    { id:'catl', name:'宁德时代', revenue:'3,222亿', netProfit:'401亿', netMargin:'12.4%', gpm:'22%', roe:'21%', revenueGrowth:'+22%', rdRate:'5.5%', marketCap:'9,000亿', currency:'人民币', revenueStructure:[{name:'动力电池',pct:72},{name:'储能电池',pct:18},{name:'电池材料',pct:10}] },
-    { id:'byd', name:'比亚迪', revenue:'6,023亿', netProfit:'300亿', netMargin:'5.0%', gpm:'20%', roe:'24%', revenueGrowth:'+42%', rdRate:'4.8%', marketCap:'7,500亿', currency:'人民币', revenueStructure:[{name:'汽车',pct:82},{name:'手机部件',pct:12},{name:'储能',pct:6}] },
-    { id:'sungrow', name:'阳光电源', revenue:'529亿', netProfit:'72亿', netMargin:'13.6%', gpm:'30%', roe:'32%', revenueGrowth:'+80%', rdRate:'4%', marketCap:'1,800亿', currency:'人民币', revenueStructure:[{name:'光伏逆变器',pct:55},{name:'储能系统',pct:32},{name:'EPC',pct:13}] },
-    { id:'envision', name:'远景能源', revenue:'450亿+', netProfit:'48亿+', netMargin:'10.7%', gpm:'28%', roe:'18%', revenueGrowth:'+35%', rdRate:'5%', marketCap:'1,200亿', currency:'人民币', revenueStructure:[{name:'风机',pct:52},{name:'储能',pct:28},{name:'智能物联',pct:20}] },
-    { id:'growatt', name:'固德威', revenue:'98亿', netProfit:'13亿', netMargin:'13.3%', gpm:'34%', roe:'28%', revenueGrowth:'+65%', rdRate:'6%', marketCap:'420亿', currency:'人民币', revenueStructure:[{name:'光伏逆变器',pct:65},{name:'储能逆变器',pct:25},{name:'户用系统',pct:10}] },
+    { id:'catl', name:'宁德时代', revenue:'3,222亿', netProfit:'401亿', netMargin:'12.4%', gpm:'22%', roe:'21%', revenueGrowth:'+22%', rdRate:'5.5%', marketCap:'9,000亿', currency:'人民币', revenueStructure:[{name:'动力电池',pct:72},{name:'储能电池',pct:18},{name:'电池材料',pct:10}], costStructure:[{name:'营业成本',pct:78},{name:'研发费用',pct:6},{name:'市场营销费',pct:3},{name:'渠道分成',pct:1},{name:'人力成本',pct:10}], costTrend:{rd:[38,40,42,45,48,52],mkt:[18,20,22,24,26,28],channel:[6,7,7,8,8,9],hr:[65,68,70,72,75,78]} },
+    { id:'byd', name:'比亚迪', revenue:'6,023亿', netProfit:'300亿', netMargin:'5.0%', gpm:'20%', roe:'24%', revenueGrowth:'+42%', rdRate:'4.8%', marketCap:'7,500亿', currency:'人民币', revenueStructure:[{name:'汽车',pct:82},{name:'手机部件',pct:12},{name:'储能',pct:6}], costStructure:[{name:'营业成本',pct:80},{name:'研发费用',pct:5.5},{name:'市场营销费',pct:6},{name:'渠道分成',pct:1},{name:'人力成本',pct:6}], costTrend:{rd:[65,72,80,90,100,112],mkt:[28,32,36,42,48,55],channel:[1,1.5,2,2.5,3,3.5],hr:[90,98,105,112,120,130]} },
+    { id:'sungrow', name:'阳光电源', revenue:'529亿', netProfit:'72亿', netMargin:'13.6%', gpm:'30%', roe:'32%', revenueGrowth:'+80%', rdRate:'4%', marketCap:'1,800亿', currency:'人民币', revenueStructure:[{name:'光伏逆变器',pct:55},{name:'储能系统',pct:32},{name:'EPC',pct:13}], costStructure:[{name:'营业成本',pct:70},{name:'研发费用',pct:5},{name:'市场营销费',pct:8},{name:'渠道分成',pct:2},{name:'人力成本',pct:13}], costTrend:{rd:[4,4.5,5,5.5,6,7],mkt:[8,9,10,11,12,14],channel:[1.8,2,2.2,2.5,2.8,3.2],hr:[12,13,14,15,16,18]} },
+    { id:'envision', name:'远景能源', revenue:'450亿+', netProfit:'48亿+', netMargin:'10.7%', gpm:'28%', roe:'18%', revenueGrowth:'+35%', rdRate:'5%', marketCap:'1,200亿', currency:'人民币', revenueStructure:[{name:'风机',pct:52},{name:'储能',pct:28},{name:'智能物联',pct:20}], costStructure:[{name:'营业成本',pct:72},{name:'研发费用',pct:6},{name:'市场营销费',pct:5},{name:'渠道分成',pct:2},{name:'人力成本',pct:12}], costTrend:{rd:[5,5.5,6,6.5,7,8],mkt:[4,4.5,5,5.5,6,7],channel:[1.5,1.8,2,2.2,2.5,3],hr:[10,11,12,13,14,16]} },
+    { id:'growatt', name:'固德威', revenue:'98亿', netProfit:'13亿', netMargin:'13.3%', gpm:'34%', roe:'28%', revenueGrowth:'+65%', rdRate:'6%', marketCap:'420亿', currency:'人民币', revenueStructure:[{name:'光伏逆变器',pct:65},{name:'储能逆变器',pct:25},{name:'户用系统',pct:10}], costStructure:[{name:'营业成本',pct:66},{name:'研发费用',pct:7},{name:'市场营销费',pct:10},{name:'渠道分成',pct:3},{name:'人力成本',pct:12}], costTrend:{rd:[1.2,1.4,1.6,1.8,2,2.5],mkt:[1.8,2,2.2,2.5,2.8,3.2],channel:[0.5,0.6,0.7,0.8,0.9,1],hr:[2,2.2,2.4,2.6,2.8,3.2]} },
   ]},
   education: { companies: [
-    { id:'neworiental', name:'新东方', revenue:'298亿', netProfit:'26亿', netMargin:'8.7%', gpm:'42%', roe:'14%', revenueGrowth:'+43%', rdRate:'2%', marketCap:'680亿', currency:'港元', revenueStructure:[{name:'留学咨询',pct:42},{name:'直播电商',pct:38},{name:'素质教育',pct:20}] },
-    { id:'tal', name:'好未来', revenue:'225亿', netProfit:'18亿', netMargin:'8.0%', gpm:'48%', roe:'16%', revenueGrowth:'+38%', rdRate:'4%', marketCap:'550亿', currency:'美元', revenueStructure:[{name:'学习服务',pct:58},{name:'学习内容',pct:28},{name:'科技方案',pct:14}] },
-    { id:'dmi', name:'读书郎', revenue:'5.2亿', netProfit:'-0.8亿', netMargin:'-15.4%', gpm:'38%', roe:'-8%', revenueGrowth:'-25%', rdRate:'8%', marketCap:'12亿', currency:'港元', revenueStructure:[{name:'学习平板',pct:65},{name:'教育内容',pct:25},{name:'增值服务',pct:10}] },
-    { id:'k12', name:'高途', revenue:'28亿', netProfit:'2.5亿', netMargin:'8.9%', gpm:'55%', roe:'12%', revenueGrowth:'+55%', rdRate:'5%', marketCap:'80亿', currency:'美元', revenueStructure:[{name:'成人教育',pct:55},{name:'职业教育',pct:30},{name:'留学',pct:15}] },
-    { id:'yuantai', name:'猿辅导', revenue:'55亿', netProfit:'3.2亿', netMargin:'5.8%', gpm:'60%', roe:'10%', revenueGrowth:'+42%', rdRate:'8%', marketCap:'280亿', currency:'人民币', revenueStructure:[{name:'斑马AI课',pct:48},{name:'猿题库',pct:32},{name:'小猿搜题',pct:20}] },
+    { id:'neworiental', name:'新东方', revenue:'298亿', netProfit:'26亿', netMargin:'8.7%', gpm:'42%', roe:'14%', revenueGrowth:'+43%', rdRate:'2%', marketCap:'680亿', currency:'港元', revenueStructure:[{name:'留学咨询',pct:42},{name:'直播电商',pct:38},{name:'素质教育',pct:20}], costStructure:[{name:'营业成本',pct:58},{name:'研发费用',pct:3},{name:'市场营销费',pct:15},{name:'渠道分成',pct:3},{name:'人力成本',pct:18}], costTrend:{rd:[1.2,1.3,1.4,1.5,1.6,1.8],mkt:[8,9,10,11,12,14],channel:[1.5,1.6,1.8,2,2.2,2.5],hr:[9,10,11,12,13,15]} },
+    { id:'tal', name:'好未来', revenue:'225亿', netProfit:'18亿', netMargin:'8.0%', gpm:'48%', roe:'16%', revenueGrowth:'+38%', rdRate:'4%', marketCap:'550亿', currency:'美元', revenueStructure:[{name:'学习服务',pct:58},{name:'学习内容',pct:28},{name:'科技方案',pct:14}], costStructure:[{name:'营业成本',pct:52},{name:'研发费用',pct:5},{name:'市场营销费',pct:18},{name:'渠道分成',pct:5},{name:'人力成本',pct:17}], costTrend:{rd:[1.5,1.7,1.9,2.1,2.3,2.6],mkt:[6,7,8,9,10,12],channel:[1.5,1.7,1.9,2.1,2.3,2.6],hr:[6,6.5,7,7.5,8,9]} },
+    { id:'dmi', name:'读书郎', revenue:'5.2亿', netProfit:'-0.8亿', netMargin:'-15.4%', gpm:'38%', roe:'-8%', revenueGrowth:'-25%', rdRate:'8%', marketCap:'12亿', currency:'港元', revenueStructure:[{name:'学习平板',pct:65},{name:'教育内容',pct:25},{name:'增值服务',pct:10}], costStructure:[{name:'营业成本',pct:62},{name:'研发费用',pct:10},{name:'市场营销费',pct:12},{name:'渠道分成',pct:5},{name:'人力成本',pct:8}], costTrend:{rd:[0.15,0.16,0.17,0.18,0.19,0.2],mkt:[0.12,0.13,0.14,0.15,0.16,0.18],channel:[0.05,0.05,0.06,0.06,0.07,0.08],hr:[0.1,0.1,0.1,0.11,0.11,0.12]} },
+    { id:'k12', name:'高途', revenue:'28亿', netProfit:'2.5亿', netMargin:'8.9%', gpm:'55%', roe:'12%', revenueGrowth:'+55%', rdRate:'5%', marketCap:'80亿', currency:'美元', revenueStructure:[{name:'成人教育',pct:55},{name:'职业教育',pct:30},{name:'留学',pct:15}], costStructure:[{name:'营业成本',pct:45},{name:'研发费用',pct:6},{name:'市场营销费',pct:22},{name:'渠道分成',pct:4},{name:'人力成本',pct:20}], costTrend:{rd:[0.3,0.35,0.4,0.45,0.5,0.6],mkt:[1.2,1.5,1.8,2,2.2,2.5],channel:[0.2,0.22,0.25,0.28,0.3,0.35],hr:[0.9,1,1.1,1.2,1.3,1.5]} },
+    { id:'yuantai', name:'猿辅导', revenue:'55亿', netProfit:'3.2亿', netMargin:'5.8%', gpm:'60%', roe:'10%', revenueGrowth:'+42%', rdRate:'8%', marketCap:'280亿', currency:'人民币', revenueStructure:[{name:'斑马AI课',pct:48},{name:'猿题库',pct:32},{name:'小猿搜题',pct:20}], costStructure:[{name:'营业成本',pct:40},{name:'研发费用',pct:10},{name:'市场营销费',pct:25},{name:'渠道分成',pct:8},{name:'人力成本',pct:15}], costTrend:{rd:[0.8,1,1.2,1.4,1.6,1.8],mkt:[2.5,3,3.5,4,4.5,5],channel:[0.8,1,1.2,1.4,1.6,1.8],hr:[1.5,1.7,1.9,2.1,2.3,2.6]} },
   ]},
 };
 
@@ -3459,6 +3459,75 @@ function renderFinancialAnalysis() {
     { label: '行业中位数', data: [gpm*0.85, npm*0.9, roe*0.88], backgroundColor: '#94a3b8', borderRadius: 6 },
   ];
   charts['compareChart'].update();
+  
+  // ===================== 成本费用趋势图 =====================
+  const trendMonths = ['10月','11月','12月','1月','2月','3月'];
+  const ct = company.costTrend || { rd:[10,12,14,16,18,20], mkt:[15,17,19,21,23,25], channel:[8,9,10,11,12,13], hr:[20,22,24,26,28,30] };
+  destroyChart('expenseTrendChart');
+  charts['expenseTrendChart'] = new Chart(document.getElementById('expenseTrendChart'), {
+    type: 'line',
+    data: {
+      labels: trendMonths,
+      datasets: [
+        { label: '研发费用', data: ct.rd, borderColor: '#ff6b6b', backgroundColor: 'rgba(255,107,107,0.1)', fill: true, tension: 0.4, pointRadius: 4 },
+        { label: '营销费用', data: ct.mkt, borderColor: '#ffd93d', backgroundColor: 'rgba(255,217,61,0.1)', fill: true, tension: 0.4, pointRadius: 4 },
+        { label: '渠道分成', data: ct.channel, borderColor: '#a855f7', backgroundColor: 'rgba(168,85,247,0.1)', fill: true, tension: 0.4, pointRadius: 4 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', font: { size: 11 } } },
+      scales: { y: { beginAtZero: true, ticks: { callback: v => v + '%' } } }
+    }
+  });
+  
+  // ===================== 成本结构占比饼图 =====================
+  const cs = company.costStructure || [];
+  destroyChart('costPieChart');
+  const pieColors = ['#ef4444','#3b82f6','#f59e0b','#a855f7','#22c55e'];
+  if (cs.length) {
+    charts['costPieChart'] = new Chart(document.getElementById('costPieChart'), {
+      type: 'doughnut',
+      data: {
+        labels: cs.map(s => s.name + ' ' + s.pct + '%'),
+        datasets: [{ data: cs.map(s => s.pct), backgroundColor: cs.map((_, i) => pieColors[i % pieColors.length]), borderWidth: 2, borderColor: '#fff', hoverOffset: 8 }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', font: { size: 11 } } } }
+    });
+  }
+  
+  // ===================== 毛利率/净利率趋势 =====================
+  const gpmVal = parseFloat(company.gpm) || 0;
+  const npmVal = parseFloat(company.netMargin) || 0;
+  // 模拟历史趋势
+  const gpmTrend = trendMonths.map((_, i) => +(gpmVal * (0.88 + i * 0.025)).toFixed(1));
+  const npmTrend = trendMonths.map((_, i) => +(npmVal * (0.75 + i * 0.055)).toFixed(1));
+  destroyChart('savingsChart');
+  charts['savingsChart'] = new Chart(document.getElementById('savingsChart'), {
+    type: 'line',
+    data: {
+      labels: trendMonths,
+      datasets: [
+        { label: '毛利率', data: gpmTrend, borderColor: '#00d4aa', backgroundColor: 'rgba(0,212,170,0.1)', fill: true, tension: 0.4, pointRadius: 4 },
+        { label: '净利率', data: npmTrend, borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.1)', fill: true, tension: 0.4, pointRadius: 4 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', font: { size: 11 } } },
+      scales: { y: { beginAtZero: true, ticks: { callback: v => v + '%' } } }
+    }
+  });
+  
+  // ===================== 费用率分析 KPI =====================
+  document.getElementById('exp-rd').textContent = company.rdRate || '--%';
+  const rdVal = parseFloat(company.rdRate) || 0;
+  const mktVal = cs.find(s => s.name === '市场营销费')?.pct || 0;
+  const channelVal = cs.find(s => s.name === '渠道分成')?.pct || 0;
+  const hrVal = cs.find(s => s.name === '人力成本')?.pct || 0;
+  document.getElementById('exp-mkt').textContent = mktVal + '%';
+  document.getElementById('exp-channel').textContent = channelVal + '%';
+  document.getElementById('exp-hr').textContent = hrVal + '%';
 }
 
 function renderAdIndustryPage() {
