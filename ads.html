@@ -3563,11 +3563,11 @@ function renderFinancialAnalysis() {
   document.getElementById('an-kpi-expense').textContent = company.netMargin;
   document.getElementById('an-kpi-net').textContent = company.netProfit;
   document.getElementById('an-kpi-net-change').innerHTML = '净利率 ' + company.netMargin + '　' + srcLabel;
-  // 广告投放：只显示有真实数据的公司，否则显示"--"
+  // 广告投放：显示市值（有数据就显示，否则"--"）
   const adsEl = document.getElementById('an-kpi-ads');
-  const adsVal = company.adsSpend;
-  if (adsVal && adsVal !== '--') {
-    adsEl.textContent = company.currency + ' ' + adsVal;
+  const mcapVal = company.marketCap;
+  if (mcapVal && mcapVal !== '--' && mcapVal !== '-') {
+    adsEl.textContent = company.currency + ' ' + mcapVal;
     adsEl.className = 'kpi-value neutral';
   } else {
     adsEl.textContent = '--';
