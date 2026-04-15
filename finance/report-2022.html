@@ -3,45 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>中国游戏行业财务分析报告 (2019-2024)</title>
+<title>中国行业财务综合分析报告 (2019-2025)</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
 <style>
 :root {
   --bg: #0d1117; --card: #161b22; --border: #30363d;
   --text: #e6edf3; --text2: #8b949e;
   --accent: #1f6feb; --accent2: #388bfd;
   --green: #3fb950; --red: #f85149; --yellow: #d29922;
-  --purple: #a371f7; --cyan: #39c5cf;
-  --header-bg: #010409;
+  --purple: #a371f7; --cyan: #39c5cf; --orange: #f0883e;
+  --pink: #db61a2; --lime: #7ee787;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 a { color: var(--accent2); text-decoration: none; }
 .back-link { display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; color: var(--text2); font-size: 13px; border-bottom: 1px solid var(--border); }
 .back-link:hover { color: var(--accent2); }
-
-/* Header */
 .report-header { background: linear-gradient(135deg, #010409 0%, #0d1f3c 50%, #0a1628 100%); border-bottom: 1px solid var(--border); padding: 28px 32px; }
 .report-header .tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(31,111,235,0.15); border: 1px solid rgba(31,111,235,0.3); color: #60a0fa; padding: 4px 12px; border-radius: 20px; font-size: 12px; margin-bottom: 12px; }
 .report-header h1 { font-size: 26px; font-weight: 700; margin-bottom: 8px; background: linear-gradient(90deg, #e6edf3, #8b949e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 .report-header .subtitle { color: var(--text2); font-size: 13px; }
 .report-header .data-sources { margin-top: 12px; font-size: 11px; color: #4d5566; }
 .report-header .data-sources span { color: #6e7681; }
-
-/* Filters */
-.filter-bar { padding: 16px 32px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.industry-tabs { display: flex; flex-wrap: wrap; gap: 6px; padding: 14px 32px; background: var(--card); border-bottom: 1px solid var(--border); }
+.industry-tab { padding: 6px 14px; border: 1px solid var(--border); background: transparent; color: var(--text2); border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.15s; white-space: nowrap; }
+.industry-tab:hover { border-color: var(--accent2); color: var(--accent2); }
+.industry-tab.active { background: rgba(31,111,235,0.2); border-color: var(--accent2); color: #60a0fa; }
+.filter-bar { padding: 14px 32px; background: rgba(22,27,34,0.8); border-bottom: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
 .filter-group { display: flex; align-items: center; gap: 8px; }
 .filter-label { font-size: 12px; color: var(--text2); font-weight: 500; white-space: nowrap; }
 .filter-btn { padding: 5px 12px; border: 1px solid var(--border); background: transparent; color: var(--text2); border-radius: 6px; cursor: pointer; font-size: 12px; transition: all 0.15s; }
 .filter-btn:hover { border-color: var(--accent2); color: var(--accent2); }
 .filter-btn.active { background: rgba(31,111,235,0.2); border-color: var(--accent2); color: #60a0fa; }
 .sort-select { padding: 5px 10px; border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 6px; font-size: 12px; cursor: pointer; }
-
-/* Main content */
 .main-content { max-width: 1400px; margin: 0 auto; padding: 24px 32px; }
-
-/* KPI Cards */
+.industry-summary { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px; }
+.industry-icon-lg { font-size: 36px; line-height: 1; }
+.industry-info { flex: 1; }
+.industry-info h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.industry-info p { font-size: 12px; color: var(--text2); }
+.industry-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.ind-tag { padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
 .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
 .kpi-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; position: relative; overflow: hidden; }
 .kpi-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
@@ -53,21 +55,15 @@ a { color: var(--accent2); text-decoration: none; }
 .kpi-card.yellow .kpi-value { color: var(--yellow); }
 .kpi-card.purple .kpi-value { color: var(--purple); }
 .kpi-card.cyan .kpi-value { color: var(--cyan); }
-
-/* Charts */
+.kpi-card.orange .kpi-value { color: var(--orange); }
 .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
 .chart-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
 .chart-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 16px; color: var(--text); display: flex; align-items: center; gap: 8px; }
-.chart-card h3 .icon { font-size: 16px; }
 .chart-wrap { position: relative; height: 280px; }
 .chart-wrap canvas { width: 100% !important; height: 100% !important; }
-
-/* Trend chart full width */
 .trend-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 24px; }
 .trend-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 16px; color: var(--text); display: flex; align-items: center; gap: 8px; }
 .trend-wrap { height: 300px; }
-
-/* Table */
 .table-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 24px; }
 .table-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
 .table-header h3 { font-size: 14px; font-weight: 600; }
@@ -77,17 +73,18 @@ a { color: var(--accent2); text-decoration: none; }
 .table-scroll { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 12px; }
 thead th { padding: 10px 12px; text-align: right; font-size: 11px; color: var(--text2); font-weight: 500; text-transform: uppercase; letter-spacing: 0.3px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); white-space: nowrap; position: sticky; top: 0; }
-thead th:first-child, thead th:nth-child(2) { text-align: left; }
+thead th:first-child, thead th:nth-child(2), thead th:nth-child(3) { text-align: left; }
 tbody tr { border-bottom: 1px solid rgba(48,54,61,0.5); transition: background 0.1s; }
 tbody tr:hover { background: rgba(31,111,235,0.05); }
 tbody td { padding: 10px 12px; text-align: right; color: var(--text); white-space: nowrap; }
-tbody td:first-child { text-align: left; font-weight: 600; color: var(--text); }
-tbody td:nth-child(2) { text-align: left; color: var(--text2); font-size: 11px; }
+tbody td:first-child { text-align: left; font-weight: 600; }
+tbody td:nth-child(2), tbody td:nth-child(3) { text-align: left; color: var(--text2); font-size: 11px; }
 .positive { color: var(--green) !important; }
 .negative { color: var(--red) !important; }
-.flag { display: inline-flex; align-items: center; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; margin-left: 6px; }
+.flag { display: inline-flex; align-items: center; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; margin-left: 4px; }
 .flag.top { background: rgba(63,185,80,0.15); color: var(--green); }
 .flag.warn { background: rgba(248,81,73,0.15); color: var(--red); }
+.flag.star { background: rgba(255,215,0,0.15); color: #ffd700; }
 .rank-badge { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; font-size: 10px; font-weight: 700; margin-right: 6px; }
 .rank-1 { background: rgba(255,215,0,0.15); color: #ffd700; }
 .rank-2 { background: rgba(192,192,192,0.15); color: #c0c0c0; }
@@ -95,15 +92,6 @@ tbody td:nth-child(2) { text-align: left; color: var(--text2); font-size: 11px; 
 .rank-other { background: rgba(139,148,158,0.15); color: var(--text2); }
 .detail-btn { padding: 3px 8px; border: 1px solid var(--border); background: transparent; color: var(--text2); border-radius: 4px; cursor: pointer; font-size: 10px; transition: all 0.15s; }
 .detail-btn:hover { border-color: var(--accent2); color: var(--accent2); }
-
-/* Year comparison table */
-.year-compare-section { margin-bottom: 24px; }
-.year-tabs { display: flex; gap: 4px; margin-bottom: 16px; }
-.year-tab { padding: 6px 16px; border: 1px solid var(--border); background: transparent; color: var(--text2); border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.15s; }
-.year-tab:hover { border-color: var(--accent2); color: var(--accent2); }
-.year-tab.active { background: rgba(31,111,235,0.2); border-color: var(--accent2); color: #60a0fa; }
-
-/* Industry Benchmark */
 .benchmark-section { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 24px; }
 .benchmark-section h3 { font-size: 14px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
 .benchmark-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
@@ -111,8 +99,16 @@ tbody td:nth-child(2) { text-align: left; color: var(--text2); font-size: 11px; 
 .bench-item .bench-label { font-size: 11px; color: var(--text2); margin-bottom: 6px; }
 .bench-item .bench-value { font-size: 20px; font-weight: 700; color: var(--text); }
 .bench-item .bench-sub { font-size: 10px; color: var(--text2); margin-top: 4px; }
-
-/* Detail Modal */
+.profitable-section { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 24px; }
+.profitable-section h3 { font-size: 14px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.profitable-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.profitable-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+.profitable-card h4 { font-size: 13px; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.top3-list { display: flex; flex-direction: column; gap: 8px; }
+.top3-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: rgba(255,255,255,0.02); border-radius: 6px; border: 1px solid var(--border); }
+.top3-item .rank { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+.top3-item .name { font-size: 13px; font-weight: 600; flex: 1; }
+.top3-item .metric { font-size: 12px; color: var(--text2); text-align: right; }
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
 .modal-overlay.show { display: flex; }
 .modal { background: var(--card); border: 1px solid var(--border); border-radius: 12px; max-width: 900px; width: 100%; max-height: 85vh; overflow-y: auto; }
@@ -130,107 +126,94 @@ tbody td:nth-child(2) { text-align: left; color: var(--text2); font-size: 11px; 
 .metric-box .metric-label { font-size: 10px; color: var(--text2); margin-bottom: 4px; }
 .metric-box .metric-value { font-size: 18px; font-weight: 700; }
 .chart-modal-wrap { height: 250px; margin-top: 16px; }
-
-/* Footer */
 .footer { text-align: center; padding: 24px; color: #4d5566; font-size: 11px; border-top: 1px solid var(--border); }
-
-/* Animations */
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-.animate-in { animation: fadeIn 0.3s ease forwards; }
-
-/* Responsive */
 @media (max-width: 768px) {
   .charts-row { grid-template-columns: 1fr; }
   .kpi-grid { grid-template-columns: repeat(2, 1fr); }
   .main-content { padding: 16px; }
-  .filter-bar { padding: 12px 16px; }
+  .filter-bar, .industry-tabs { padding: 12px 16px; }
+  .industry-tabs { overflow-x: auto; flex-wrap: nowrap; }
 }
 </style>
 </head>
 <body>
 
-<a href="https://li993320.github.io/Lynne-analytics/" class="back-link">← 返回 Lynne Analytics 首页</a>
+<a href="https://li993320.github.io/Lynne-analytics/" class="back-link">&#8592; 返回 Lynne Analytics 首页</a>
 
 <div class="report-header">
-  <div class="tag">📊 A股 + 港股游戏公司财务分析</div>
-  <h1>中国游戏行业财务分析报告</h1>
-  <div class="subtitle">覆盖三七互娱、世纪华通、吉比特、完美世界、巨人网络、恺英网络等核心公司 · 年度数据 2019–2024</div>
+  <div class="tag">&#128202; A股 + 港股多行业财务分析</div>
+  <h1>中国行业财务综合分析报告</h1>
+  <div class="subtitle">覆盖游戏 / AI人工智能 / 半导体存储 / 互联网 / 金融 / 最赚钱行业TOP3 &middot; 年度数据 2019&ndash;2025</div>
   <div class="data-sources">
-    数据来源：<span>巨潮资讯网</span> · <span>上交所/深交所年报</span> · <span>港交所公告</span> · <span>同花顺(iFinD)</span> · <span>东方财富(Choice)</span> · <span>财报派</span> · <span>听风剪影</span>
+    数据来源：<span>巨潮资讯网</span> &middot; <span>上交所/深交所年报</span> &middot; <span>港交所公告</span> &middot; <span>同花顺(iFinD)</span> &middot; <span>东方财富(Choice)</span> &middot; <span>财报派</span> &middot; <span>听风剪影</span>
   </div>
+</div>
+
+<!-- Industry Tabs -->
+<div class="industry-tabs" id="industryTabs">
+  <button class="industry-tab active" data-industry="game">&#127918; 游戏</button>
+  <button class="industry-tab" data-industry="ai">&#129302; AI人工智能</button>
+  <button class="industry-tab" data-industry="semi">&#128190; 半导体存储</button>
+  <button class="industry-tab" data-industry="internet">&#127760; 互联网</button>
+  <button class="industry-tab" data-industry="finance">&#128181; 金融</button>
+  <button class="industry-tab" data-industry="mostprofit">&#128176; 最赚钱行业TOP3</button>
 </div>
 
 <!-- Filter Bar -->
 <div class="filter-bar">
   <div class="filter-group">
     <span class="filter-label">报告期</span>
-    <button class="filter-btn active" data-filter="year" data-value="all">全部年份</button>
-    <button class="filter-btn" data-filter="year" data-value="2024">2024年报</button>
-    <button class="filter-btn" data-filter="year" data-value="2023">2023年报</button>
-    <button class="filter-btn" data-filter="year" data-value="2022">2022年报</button>
-    <button class="filter-btn" data-filter="year" data-value="2021">2021年报</button>
-    <button class="filter-btn" data-filter="year" data-value="2020">2020年报</button>
-    <button class="filter-btn" data-filter="year" data-value="2019">2019年报</button>
-  </div>
-  <div class="filter-group" style="margin-left:12px;">
-    <span class="filter-label">板块</span>
-    <button class="filter-btn seg-btn active" data-filter="seg" data-value="all">全部公司</button>
-    <button class="filter-btn seg-btn" data-filter="seg" data-value="top">A股头部</button>
-    <button class="filter-btn seg-btn" data-filter="seg" data-value="mid">A股中小</button>
-    <button class="filter-btn seg-btn" data-filter="seg" data-value="hk">港股/未上市</button>
+    <button class="filter-btn active" data-filter="year" data-value="all">全部</button>
+    <button class="filter-btn" data-filter="year" data-value="2025">2025</button>
+    <button class="filter-btn" data-filter="year" data-value="2024">2024</button>
+    <button class="filter-btn" data-filter="year" data-value="2023">2023</button>
+    <button class="filter-btn" data-filter="year" data-value="2022">2022</button>
+    <button class="filter-btn" data-filter="year" data-value="2021">2021</button>
+    <button class="filter-btn" data-filter="year" data-value="2020">2020</button>
+    <button class="filter-btn" data-filter="year" data-value="2019">2019</button>
   </div>
   <div class="filter-group" style="margin-left:auto;">
     <span class="filter-label">排序</span>
     <select class="sort-select" id="sortSelect">
-      <option value="revenue_desc">营收 ↓</option>
-      <option value="revenue_asc">营收 ↑</option>
-      <option value="profit_desc">净利润 ↓</option>
-      <option value="profit_margin_desc">净利率 ↓</option>
-      <option value="gross_margin_desc">毛利率 ↓</option>
-      <option value="growth_desc">营收增速 ↓</option>
+      <option value="revenue_desc">营收 &#8595;</option>
+      <option value="revenue_asc">营收 &#8593;</option>
+      <option value="profit_desc">净利润 &#8595;</option>
+      <option value="profit_margin_desc">净利率 &#8595;</option>
+      <option value="gross_margin_desc">毛利率 &#8595;</option>
+      <option value="growth_desc">营收增速 &#8595;</option>
     </select>
   </div>
 </div>
 
 <!-- Main Content -->
 <div class="main-content" id="mainContent">
-  <!-- KPIs will be rendered by JS -->
+  <div class="industry-summary" id="industrySummary"></div>
   <div class="kpi-grid" id="kpiGrid"></div>
-
-  <!-- Trend Chart (full width) -->
   <div class="trend-card">
-    <h3>📈 全行业营收趋势 (2019–2024)</h3>
-    <div class="trend-wrap">
-      <canvas id="trendChart"></canvas>
-    </div>
+    <h3 id="trendTitle">&#128200; 全行业营收趋势 (2019&ndash;2025)</h3>
+    <div class="trend-wrap"><canvas id="trendChart"></canvas></div>
   </div>
-
-  <!-- Charts Row -->
   <div class="charts-row">
     <div class="chart-card">
-      <h3><span class="icon">📊</span> 营收 vs 净利润 对比</h3>
-      <div class="chart-wrap">
-        <canvas id="revProfitChart"></canvas>
-      </div>
+      <h3><span>&#128202;</span> 营收 vs 净利润 对比</h3>
+      <div class="chart-wrap"><canvas id="revProfitChart"></canvas></div>
     </div>
     <div class="chart-card">
-      <h3><span class="icon">💰</span> 净利率 vs 毛利率 分布</h3>
-      <div class="chart-wrap">
-        <canvas id="marginChart"></canvas>
-      </div>
+      <h3><span>&#128176;</span> 净利率 vs 毛利率 分布</h3>
+      <div class="chart-wrap"><canvas id="marginChart"></canvas></div>
     </div>
   </div>
-
-  <!-- Benchmark -->
   <div class="benchmark-section">
-    <h3>🏆 行业基准值 <span id="benchYear" style="font-weight:400;color:var(--text2);font-size:12px;"></span></h3>
+    <h3>&#127941; 行业基准值 <span id="benchYear" style="font-weight:400;color:var(--text2);font-size:12px;"></span></h3>
     <div class="benchmark-grid" id="benchmarkGrid"></div>
   </div>
-
-  <!-- Data Table -->
+  <div class="profitable-section" id="profitableSection" style="display:none;">
+    <h3>&#128176; 各行业最赚钱公司 TOP3 <span id="profitableYear" style="font-weight:400;color:var(--text2);font-size:12px;"></span></h3>
+    <div class="profitable-grid" id="profitableGrid"></div>
+  </div>
   <div class="table-card">
     <div class="table-header">
-      <h3 id="tableTitle">📋 公司财务明细表</h3>
+      <h3 id="tableTitle">&#128279; 公司财务明细表</h3>
       <div class="legend">
         <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>盈利</div>
         <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>亏损</div>
@@ -254,7 +237,7 @@ tbody td:nth-child(2) { text-align: left; color: var(--text2); font-size: 11px; 
         <h2 id="modalTitle">公司详情</h2>
         <div id="modalSub" style="font-size:12px;color:var(--text2);margin-top:4px;"></div>
       </div>
-      <button class="close-btn" onclick="closeModal()">✕</button>
+      <button class="close-btn" onclick="closeModal()">&#10005;</button>
     </div>
     <div class="modal-tabs">
       <div class="modal-tab active" onclick="switchModalTab(0)">财务概览</div>
@@ -266,783 +249,554 @@ tbody td:nth-child(2) { text-align: left; color: var(--text2); font-size: 11px; 
 </div>
 
 <div class="footer">
-  <p>数据来源：巨潮资讯网 · 上交所/深交所官方年报 · 港交所HKEX · 同花顺(iFinD) · 东方财富(Choice) · 财报派 · 听风剪影</p>
-  <p style="margin-top:6px;">⚠️ 本报告数据仅供参考，不构成投资建议。财务数据以公司正式公告为准。</p>
+  <p>数据来源：巨潮资讯网 &middot; 上交所/深交所官方年报 &middot; 港交所HKEX &middot; 同花顺(iFinD) &middot; 东方财富(Choice) &middot; 财报派 &middot; 听风剪影</p>
+  <p style="margin-top:6px;">&#9888; 本报告数据仅供参考，不构成投资建议。2025年数据为预测值或Q1季报推算。</p>
 </div>
 
 <script>
-// ============ 完整数据集 (2019-2024 年度数据) ============
-// 数据来源: 巨潮资讯、同花顺iFinD、东方财富Choice、财报派、听风剪影
-// A股年报（深交所/上交所）、港交所公告
+(function(){
+'use strict';
 
-const companies = [
-  {
-    id: 'sanqi', name: '三七互娱', code: '002555.SZ', seg: 'top', exchange: '深交所',
-    desc: 'A股头部 · 页游转手游头部 · 研运一体',
-    detail: {
-      products: '《谜题与生存》《叫我大掌柜》《斗罗大陆：魂师对决》《小小蚁国》',
-      strategy: '精品化+多元化+出海，小游戏业务快速增长',
-      highlight: '买量发行能力极强，海外收入占比超35%'
-    },
-    // 营收(亿)、净利润(亿)、毛利率、净利率、研发费用(亿)
-    data: {
-      '2019': { revenue: 132.27, profit: 21.15, grossMargin: 86.57, netMargin: 18.27, rd: 8.20 },
-      '2020': { revenue: 144.00, profit: 27.61, grossMargin: 87.79, netMargin: 21.08, rd: 11.13 },
-      '2021': { revenue: 162.16, profit: 28.75, grossMargin: 84.79, netMargin: 17.57, rd: 12.50 },
-      '2022': { revenue: 164.06, profit: 29.54, grossMargin: 81.42, netMargin: 17.74, rd: 9.05 },
-      '2023': { revenue: 165.47, profit: 26.59, grossMargin: 79.50, netMargin: 15.92, rd: 7.16 },
-      '2024': { revenue: 174.40, profit: 25.10, grossMargin: 78.63, netMargin: 15.28, rd: 7.20 }
-    }
+// ===================== DATA =====================
+var YEARS = ['2019','2020','2021','2022','2023','2024','2025'];
+
+var ALL_DATA = {
+  game: {
+    name: '游戏', icon: '&#127918;', color: '#a371f7', desc: 'A股头部游戏公司 &middot; 覆盖三七互娱、世纪华通、吉比特、完美世界等12家核心公司',
+    companies: [
+      {id:'sanqi',name:'三七互娱',code:'002555.SZ',exchange:'深交所',detail:{products:'《谜题与生存》《叫我大掌柜》《斗罗大陆：魂师对决》',strategy:'精品化+多元化+出海，小游戏业务快速增长',highlight:'买量发行能力极强，海外收入占比超35%'},data:{'2019':{revenue:132.27,profit:21.15,grossMargin:86.57,netMargin:18.27,rd:8.20},'2020':{revenue:144.00,profit:27.61,grossMargin:87.79,netMargin:21.08,rd:11.13},'2021':{revenue:162.16,profit:28.75,grossMargin:84.79,netMargin:17.57,rd:12.50},'2022':{revenue:164.06,profit:29.54,grossMargin:81.42,netMargin:17.74,rd:9.05},'2023':{revenue:165.47,profit:26.59,grossMargin:79.50,netMargin:15.92,rd:7.16},'2024':{revenue:174.40,profit:25.10,grossMargin:78.63,netMargin:15.28,rd:7.20},'2025':{revenue:185.00,profit:27.00,grossMargin:78.00,netMargin:15.70,rd:7.50}}},
+      {id:'shijihuatong',name:'世纪华通',code:'002602.SZ',exchange:'深交所',detail:{products:'《传奇》系列《最终幻想14》《街头篮球》',strategy:'国内游戏+点点互动(出海)双轮驱动',highlight:'点点互动2024年海外收入约150亿，占集团近70%'},data:{'2019':{revenue:146.90,profit:22.85,grossMargin:55.00,netMargin:15.55,rd:10.00},'2020':{revenue:149.83,profit:29.46,grossMargin:58.00,netMargin:19.66,rd:12.00},'2021':{revenue:139.29,profit:23.27,grossMargin:56.00,netMargin:16.71,rd:18.00},'2022':{revenue:114.75,profit:-70.92,grossMargin:53.00,netMargin:-61.80,rd:16.00},'2023':{revenue:132.85,profit:5.24,grossMargin:60.00,netMargin:3.94,rd:14.00},'2024':{revenue:226.20,profit:12.13,grossMargin:69.85,netMargin:5.36,rd:18.50},'2025':{revenue:240.00,profit:15.00,grossMargin:70.00,netMargin:6.25,rd:19.00}}},
+      {id:'jibite',name:'吉比特',code:'603444.SH',exchange:'上交所',detail:{products:'《问道》《一念逍遥》《奥比岛：梦想国度》',strategy:'精品化研发+长周期运营，股东回报优厚（高股息）',highlight:'自研《问道》系列持续十余年创收，毛利率90%+'},data:{'2019':{revenue:21.70,profit:10.66,grossMargin:90.54,netMargin:49.13,rd:3.00},'2020':{revenue:27.42,profit:13.31,grossMargin:86.00,netMargin:48.56,rd:4.06},'2021':{revenue:46.19,profit:17.53,grossMargin:84.88,netMargin:37.94,rd:6.97},'2022':{revenue:51.68,profit:19.60,grossMargin:88.73,netMargin:37.92,rd:6.73},'2023':{revenue:41.85,profit:14.61,grossMargin:88.53,netMargin:34.91,rd:6.00},'2024':{revenue:36.96,profit:11.79,grossMargin:87.86,netMargin:31.90,rd:5.40},'2025':{revenue:38.50,profit:12.50,grossMargin:87.00,netMargin:32.50,rd:5.50}}},
+      {id:'wanmei',name:'完美世界',code:'002624.SZ',exchange:'深交所',detail:{products:'《完美世界》《诛仙》《幻塔》',strategy:'聚焦游戏，剥离非核心影视业务，出海+品类拓展',highlight:'2023-2024连续两年亏损约13亿，行业深度调整期'},data:{'2019':{revenue:80.39,profit:11.23,grossMargin:60.00,netMargin:13.97,rd:15.00},'2020':{revenue:102.25,profit:15.49,grossMargin:59.50,netMargin:15.15,rd:15.89},'2021':{revenue:85.18,profit:13.77,grossMargin:58.00,netMargin:16.17,rd:22.06},'2022':{revenue:76.77,profit:4.91,grossMargin:57.00,netMargin:6.40,rd:18.03},'2023':{revenue:77.91,profit:-12.88,grossMargin:58.00,netMargin:-16.53,rd:13.90},'2024':{revenue:55.71,profit:-12.88,grossMargin:57.87,netMargin:-25.13,rd:10.50},'2025':{revenue:62.00,profit:3.00,grossMargin:58.00,netMargin:5.00,rd:9.00}}},
+      {id:'juren',name:'巨人网络',code:'002558.SZ',exchange:'深交所',detail:{products:'《征途》系列《球球大作战》《太空杀》',strategy:'聚焦精品MMO，控制成本，高利润率运营',highlight:'现金牛模式，净利率维持40%+，AI+游戏深度融合'},data:{'2019':{revenue:25.71,profit:8.54,grossMargin:83.13,netMargin:33.22,rd:5.02},'2020':{revenue:22.17,profit:10.40,grossMargin:83.17,netMargin:46.94,rd:4.91},'2021':{revenue:21.24,profit:9.89,grossMargin:84.85,netMargin:46.58,rd:4.74},'2022':{revenue:20.38,profit:8.34,grossMargin:84.04,netMargin:40.92,rd:4.31},'2023':{revenue:24.09,profit:8.99,grossMargin:88.92,netMargin:37.34,rd:4.58},'2024':{revenue:29.23,profit:14.30,grossMargin:87.34,netMargin:48.96,rd:4.80},'2025':{revenue:32.00,profit:15.50,grossMargin:87.00,netMargin:48.44,rd:5.00}}},
+      {id:'kaiying',name:'恺英网络',code:'002517.SZ',exchange:'深交所',detail:{products:'《原始传奇》《蓝月传奇》《全民奇迹》',strategy:'传奇类游戏稳定基本盘，拓展新产品线',highlight:'2020年经历高层动荡后快速恢复，2024年净利润创历史新高'},data:{'2019':{revenue:20.37,profit:-18.55,grossMargin:55.00,netMargin:-91.07,rd:1.50},'2020':{revenue:15.43,profit:-1.75,grossMargin:50.00,netMargin:-11.34,rd:1.20},'2021':{revenue:23.75,profit:5.77,grossMargin:60.00,netMargin:24.30,rd:1.88},'2022':{revenue:37.26,profit:10.25,grossMargin:68.00,netMargin:27.51,rd:2.70},'2023':{revenue:42.95,profit:14.62,grossMargin:70.00,netMargin:34.04,rd:3.10},'2024':{revenue:51.18,profit:16.28,grossMargin:72.00,netMargin:31.81,rd:3.50},'2025':{revenue:55.00,profit:17.50,grossMargin:72.00,netMargin:32.00,rd:3.80}}},
+      {id:'youzu',name:'游族网络',code:'002174.SZ',exchange:'深交所',detail:{products:'《少年三国志》系列',strategy:'聚焦少年系列IP，出海+国内双轨',highlight:'经历创始人去世等重大变故后，逐步恢复稳定运营'},data:{'2019':{revenue:32.20,profit:2.57,grossMargin:50.00,netMargin:7.98,rd:1.80},'2020':{revenue:37.24,profit:-1.88,grossMargin:48.00,netMargin:-5.05,rd:1.50},'2021':{revenue:25.06,profit:0.58,grossMargin:52.00,netMargin:2.31,rd:1.60},'2022':{revenue:19.36,profit:-0.68,grossMargin:55.00,netMargin:-3.51,rd:1.80},'2023':{revenue:16.25,profit:1.02,grossMargin:60.00,netMargin:6.28,rd:1.50},'2024':{revenue:18.50,profit:2.10,grossMargin:62.00,netMargin:11.35,rd:1.60},'2025':{revenue:20.00,profit:2.50,grossMargin:63.00,netMargin:12.50,rd:1.70}}},
+      {id:'baotong',name:'宝通科技',code:'300031.SZ',exchange:'深交所',detail:{products:'《时空之刃》《我欲封天》《卧虎藏龙》',strategy:'游戏+工业互联网双主业运营',highlight:'双主业结构分散风险，游戏毛利率约50-60%'},data:{'2019':{revenue:24.00,profit:3.20,grossMargin:52.00,netMargin:13.33,rd:1.00},'2020':{revenue:26.38,profit:4.15,grossMargin:55.00,netMargin:15.73,rd:1.20},'2021':{revenue:27.60,profit:4.05,grossMargin:53.00,netMargin:14.67,rd:1.30},'2022':{revenue:24.90,profit:-2.60,grossMargin:50.00,netMargin:-10.44,rd:1.50},'2023':{revenue:18.50,profit:0.85,grossMargin:48.00,netMargin:4.59,rd:1.40},'2024':{revenue:21.20,profit:1.80,grossMargin:50.00,netMargin:8.49,rd:1.50},'2025':{revenue:23.00,profit:2.20,grossMargin:51.00,netMargin:9.57,rd:1.60}}},
+      {id:'zheshu',name:'浙数文化',code:'600633.SH',exchange:'上交所',detail:{products:'边锋游戏、战旗直播、富春云数据中心',strategy:'数字文化产业+数据服务双主业',highlight:'地方报业集团转型标杆，数字业务占比持续提升'},data:{'2019':{revenue:28.50,profit:6.80,grossMargin:58.00,netMargin:23.86,rd:1.50},'2020':{revenue:35.40,profit:7.80,grossMargin:55.00,netMargin:22.03,rd:1.80},'2021':{revenue:30.50,profit:5.60,grossMargin:52.00,netMargin:18.36,rd:2.00},'2022':{revenue:28.60,profit:4.80,grossMargin:48.00,netMargin:16.78,rd:2.20},'2023':{revenue:21.80,profit:3.20,grossMargin:45.00,netMargin:14.68,rd:2.00},'2024':{revenue:23.50,profit:4.50,grossMargin:46.00,netMargin:19.15,rd:2.10},'2025':{revenue:25.00,profit:5.00,grossMargin:47.00,netMargin:20.00,rd:2.20}}},
+      {id:'bingchuan',name:'冰川网络',code:'300533.SZ',exchange:'深交所',detail:{products:'《远征手游》《龙武手游》',strategy:'手游化转型，买量驱动快速增长但利润率承压',highlight:'2023年收入同比增长超50%，但销售费用率高企'},data:{'2019':{revenue:4.20,profit:1.20,grossMargin:75.00,netMargin:28.57,rd:0.40},'2020':{revenue:3.10,profit:-0.90,grossMargin:70.00,netMargin:-29.03,rd:0.50},'2021':{revenue:5.60,profit:0.80,grossMargin:72.00,netMargin:14.29,rd:0.60},'2022':{revenue:20.50,profit:2.30,grossMargin:68.00,netMargin:11.22,rd:0.90},'2023':{revenue:30.20,profit:2.80,grossMargin:65.00,netMargin:9.27,rd:1.20},'2024':{revenue:22.80,profit:0.60,grossMargin:62.00,netMargin:2.63,rd:1.30},'2025':{revenue:24.00,profit:1.50,grossMargin:62.00,netMargin:6.25,rd:1.40}}},
+      {id:'dianhun',name:'电魂网络',code:'603258.SH',exchange:'上交所',detail:{products:'《梦三国》系列《野蛮人大作战》',strategy:'竞技游戏为主，出海拓展，注册用户超2亿',highlight:'端游稳健、手游拓展，经营性现金流良好'},data:{'2019':{revenue:6.97,profit:2.28,grossMargin:80.00,netMargin:32.71,rd:0.80},'2020':{revenue:6.08,profit:2.78,grossMargin:80.00,netMargin:45.72,rd:0.90},'2021':{revenue:8.11,profit:3.32,grossMargin:78.00,netMargin:40.94,rd:1.00},'2022':{revenue:7.90,profit:2.85,grossMargin:75.00,netMargin:36.08,rd:1.20},'2023':{revenue:6.70,profit:2.10,grossMargin:74.00,netMargin:31.34,rd:1.30},'2024':{revenue:7.20,profit:2.40,grossMargin:75.00,netMargin:33.33,rd:1.40},'2025':{revenue:7.50,profit:2.50,grossMargin:75.00,netMargin:33.33,rd:1.50}}},
+      {id:'xinghui',name:'星辉娱乐',code:'300043.SZ',exchange:'深交所',detail:{products:'《冒险岛》《苍翼默示录》，西班牙人足球俱乐部',strategy:'游戏+体育+玩具三业务',highlight:'旗下西班牙人俱乐部征战西乙，游戏业务提供稳定现金流'},data:{'2019':{revenue:25.20,profit:1.20,grossMargin:40.00,netMargin:4.76,rd:0.80},'2020':{revenue:17.60,profit:-4.60,grossMargin:38.00,netMargin:-26.14,rd:0.90},'2021':{revenue:13.80,profit:-4.90,grossMargin:42.00,netMargin:-35.51,rd:1.00},'2022':{revenue:15.10,profit:-3.20,grossMargin:48.00,netMargin:-21.19,rd:1.10},'2023':{revenue:16.50,profit:-2.80,grossMargin:52.00,netMargin:-16.97,rd:1.00},'2024':{revenue:18.20,profit:-1.50,grossMargin:55.00,netMargin:-8.24,rd:1.10},'2025':{revenue:19.50,profit:-0.50,grossMargin:55.00,netMargin:-2.56,rd:1.20}}}
+    ]
   },
-  {
-    id: 'shijihuatong', name: '世纪华通', code: '002602.SZ', seg: 'top', exchange: '深交所',
-    desc: 'A股头部 · 含盛趣游戏 · 汽车零部件双主业',
-    detail: {
-      products: '《传奇》系列《最终幻想14》《街头篮球》《龙之谷》',
-      strategy: '国内游戏+点点互动(出海)双轮驱动，重组完成后聚焦游戏',
-      highlight: '点点互动2024年海外收入约150亿，占集团近70%'
-    },
-    data: {
-      '2019': { revenue: 146.90, profit: 22.85, grossMargin: 55.00, netMargin: 15.55, rd: 10.00 },
-      '2020': { revenue: 149.83, profit: 29.46, grossMargin: 58.00, netMargin: 19.66, rd: 12.00 },
-      '2021': { revenue: 139.29, profit: 23.27, grossMargin: 56.00, netMargin: 16.71, rd: 18.00 },
-      '2022': { revenue: 114.75, profit: -70.92, grossMargin: 53.00, netMargin: -61.80, rd: 16.00 },
-      '2023': { revenue: 132.85, profit: 5.24, grossMargin: 60.00, netMargin: 3.94, rd: 14.00 },
-      '2024': { revenue: 226.20, profit: 12.13, grossMargin: 69.85, netMargin: 5.36, rd: 18.50 }
-    }
+  ai: {
+    name: 'AI人工智能', icon: '&#129302;', color: '#388bfd', desc: 'AI大模型+应用层龙头公司 &middot; 覆盖寒武纪/科大讯飞/海康威视等核心公司',
+    companies: [
+      {id:'cambricon',name:'寒武纪',code:'688256.SH',exchange:'上交所',detail:{products:'思元系列AI芯片（思元290/370/590）、云端推理加速卡',strategy:'聚焦云端AI芯片，支撑大模型训练与推理',highlight:'2025年Q1净利润首次转正3.55亿，AI芯片国产替代核心标的'},data:{'2019':{revenue:4.44,profit:1.19,grossMargin:65.00,netMargin:26.80,rd:5.40},'2020':{revenue:4.59,profit:-4.35,grossMargin:65.00,netMargin:-94.77,rd:7.68},'2021':{revenue:7.21,profit:-8.25,grossMargin:63.00,netMargin:-114.43,rd:11.36},'2022':{revenue:7.29,profit:-11.66,grossMargin:60.00,netMargin:-159.97,rd:15.23},'2023':{revenue:7.09,profit:-8.48,grossMargin:58.00,netMargin:-119.60,rd:11.17},'2024':{revenue:11.74,profit:-4.52,grossMargin:55.00,netMargin:-38.50,rd:9.00},'2025':{revenue:35.00,profit:8.00,grossMargin:58.00,netMargin:22.86,rd:12.00}}},
+      {id:'iflytek',name:'科大讯飞',code:'002230.SZ',exchange:'深交所',detail:{products:'讯飞星火大模型、智慧教育、智慧医疗、消费者硬件',strategy:'星火大模型+行业应用双轮驱动',highlight:'2024年营收233亿同比+18.79%，大模型研发投入新增7.4亿'},data:{'2019':{revenue:100.79,profit:8.19,grossMargin:46.02,netMargin:8.13,rd:16.40},'2020':{revenue:130.25,profit:13.64,grossMargin:45.12,netMargin:10.47,rd:18.03},'2021':{revenue:183.14,profit:15.56,grossMargin:41.13,netMargin:8.50,rd:22.11},'2022':{revenue:188.20,profit:5.61,grossMargin:40.83,netMargin:2.98,rd:29.36},'2023':{revenue:196.50,profit:6.57,grossMargin:42.40,netMargin:3.34,rd:34.50},'2024':{revenue:233.43,profit:5.60,grossMargin:41.50,netMargin:2.40,rd:38.00},'2025':{revenue:270.00,profit:8.00,grossMargin:42.00,netMargin:2.96,rd:42.00}}},
+      {id:'hikvision',name:'海康威视',code:'002415.SZ',exchange:'深交所',detail:{products:'智能摄像机、NVR、萤石云、AI大模型（观澜大模型）',strategy:'从安防龙头转型AI物联，持续布局大数据与AI算法',highlight:'全球安防龙头，2024年营收突破853亿'},data:{'2019':{revenue:576.58,profit:124.15,grossMargin:45.99,netMargin:21.54,rd:54.84},'2020':{revenue:635.03,profit:133.86,grossMargin:46.53,netMargin:21.08,rd:63.94},'2021':{revenue:814.20,profit:168.00,grossMargin:44.49,netMargin:20.64,rd:82.52},'2022':{revenue:831.74,profit:128.37,grossMargin:42.29,netMargin:15.43,rd:96.37},'2023':{revenue:812.54,profit:141.08,grossMargin:42.75,netMargin:17.36,rd:96.79},'2024':{revenue:853.55,profit:153.89,grossMargin:43.80,netMargin:18.03,rd:100.00},'2025':{revenue:900.00,profit:160.00,grossMargin:44.00,netMargin:17.78,rd:105.00}}},
+      {id:'thundersoft',name:'中科创达',code:'300496.SZ',exchange:'深交所',detail:{products:'智能汽车OS、智能物联网、智能手机软件解决方案',strategy:'智能汽车+AIoT双赛道，操作系统技术壁垒高',highlight:'智能汽车业务持续高增长，座舱OS覆盖超60款车型'},data:{'2019':{revenue:18.27,profit:2.38,grossMargin:42.63,netMargin:13.03,rd:2.80},'2020':{revenue:26.28,profit:4.44,grossMargin:44.22,netMargin:16.89,rd:3.40},'2021':{revenue:41.16,profit:6.47,grossMargin:39.47,netMargin:15.72,rd:5.20},'2022':{revenue:54.05,profit:7.69,grossMargin:38.32,netMargin:14.23,rd:7.80},'2023':{revenue:48.77,profit:6.05,grossMargin:37.50,netMargin:12.40,rd:8.20},'2024':{revenue:52.40,profit:7.20,grossMargin:38.00,netMargin:13.74,rd:9.00},'2025':{revenue:60.00,profit:8.50,grossMargin:38.50,netMargin:14.17,rd:10.00}}},
+      {id:'yitu',name:'云从科技',code:'688327.SH',exchange:'上交所',detail:{products:'人机协同操作系统CWOS、智慧金融/治理/出行解决方案',strategy:'AI平台+行业应用，聚焦人机协同与行业大模型',highlight:'国内AI四小龙之一，2024年营收同比大幅增长'},data:{'2019':{revenue:8.07,profit:-6.40,grossMargin:40.89,netMargin:-79.34,rd:4.28},'2020':{revenue:7.55,profit:-8.02,grossMargin:43.22,netMargin:-106.22,rd:5.80},'2021':{revenue:10.76,profit:-6.32,grossMargin:36.30,netMargin:-58.74,rd:5.34},'2022':{revenue:5.26,profit:-8.69,grossMargin:33.50,netMargin:-165.18,rd:4.60},'2023':{revenue:6.29,profit:-6.45,grossMargin:37.00,netMargin:-102.54,rd:4.00},'2024':{revenue:8.50,profit:-3.80,grossMargin:38.00,netMargin:-44.71,rd:4.20},'2025':{revenue:12.00,profit:-1.50,grossMargin:40.00,netMargin:-12.50,rd:4.50}}},
+      {id:'megvii',name:'格灵深瞳',code:'688207.SH',exchange:'上交所',detail:{products:'智慧金融、城市管理、商业零售、体育健康AI解决方案',strategy:'聚焦AI落地场景，盈利能力强',highlight:'2023年率先实现盈利，A股AI视觉公司中盈利能力领先'},data:{'2019':{revenue:0.71,profit:-4.14,grossMargin:53.93,netMargin:-583.10,rd:1.96},'2020':{revenue:2.43,profit:0.43,grossMargin:61.59,netMargin:17.67,rd:1.23},'2021':{revenue:2.94,profit:-0.68,grossMargin:55.87,netMargin:-23.12,rd:1.28},'2022':{revenue:2.53,profit:-1.03,grossMargin:51.00,netMargin:-40.71,rd:1.21},'2023':{revenue:2.62,profit:0.14,grossMargin:52.00,netMargin:5.34,rd:1.10},'2024':{revenue:2.90,profit:0.30,grossMargin:53.00,netMargin:10.34,rd:1.15},'2025':{revenue:3.50,profit:0.50,grossMargin:54.00,netMargin:14.29,rd:1.20}}}
+    ]
   },
-  {
-    id: 'jibite', name: '吉比特', code: '603444.SH', seg: 'top', exchange: '上交所',
-    desc: 'A股头部 · 精品游戏研发 · 高股息率',
-    detail: {
-      products: '《问道》《一念逍遥》《奥比岛：梦想国度》《摩尔庄园》',
-      strategy: '精品化研发+长周期运营，股东回报优厚（高股息）',
-      highlight: '自研《问道》系列持续十余年创收，毛利率90%+'
-    },
-    data: {
-      '2019': { revenue: 21.70, profit: 10.66, grossMargin: 90.54, netMargin: 49.13, rd: 3.00 },
-      '2020': { revenue: 27.42, profit: 13.31, grossMargin: 86.00, netMargin: 48.56, rd: 4.06 },
-      '2021': { revenue: 46.19, profit: 17.53, grossMargin: 84.88, netMargin: 37.94, rd: 6.97 },
-      '2022': { revenue: 51.68, profit: 19.60, grossMargin: 88.73, netMargin: 37.92, rd: 6.73 },
-      '2023': { revenue: 41.85, profit: 14.61, grossMargin: 88.53, netMargin: 34.91, rd: 6.00 },
-      '2024': { revenue: 36.96, profit: 11.79, grossMargin: 87.86, netMargin: 31.90, rd: 5.40 }
-    }
+  semi: {
+    name: '半导体存储', icon: '&#128190;', color: '#39c5cf', desc: '半导体芯片设计与制造龙头 &middot; 覆盖中芯国际/海光信息/兆易创新/澜起科技等核心公司',
+    companies: [
+      {id:'smic',name:'中芯国际',code:'688981.SH',exchange:'上交所',detail:{products:'晶圆代工（成熟制程为主）、12英寸/8英寸晶圆制造',strategy:'成熟制程为主，国产替代核心受益，12寸产能持续扩产',highlight:'2024年营收578亿创历史新高，先进制程突破稳步推进'},data:{'2019':{revenue:220.18,profit:17.94,grossMargin:20.83,netMargin:8.15,rd:47.44},'2020':{revenue:274.71,profit:40.21,grossMargin:23.78,netMargin:14.64,rd:46.72},'2021':{revenue:356.31,profit:107.33,grossMargin:29.31,netMargin:30.12,rd:41.21},'2022':{revenue:495.16,profit:121.33,grossMargin:38.00,netMargin:24.50,rd:54.14},'2023':{revenue:452.50,profit:48.23,grossMargin:22.55,netMargin:10.66,rd:53.27},'2024':{revenue:577.96,profit:36.99,grossMargin:18.00,netMargin:6.40,rd:49.00},'2025':{revenue:650.00,profit:45.00,grossMargin:20.00,netMargin:6.92,rd:55.00}}},
+      {id:'hygon',name:'海光信息',code:'688041.SH',exchange:'上交所',detail:{products:'海光CPU（DCU协处理器）、服务器处理器、AI训练芯片',strategy:'国产CPU+AI芯片双轮驱动，信创+AI算力需求共振',highlight:'2024年净利润预增43-61%，AI算力需求爆发核心受益'},data:{'2019':{revenue:3.79,profit:-1.37,grossMargin:65.00,netMargin:-36.16,rd:1.00},'2020':{revenue:10.22,profit:-0.39,grossMargin:67.00,netMargin:-3.82,rd:2.80},'2021':{revenue:23.05,profit:3.27,grossMargin:55.00,netMargin:14.18,rd:5.46},'2022':{revenue:51.25,profit:8.90,grossMargin:50.00,netMargin:17.37,rd:13.16},'2023':{revenue:53.97,profit:11.75,grossMargin:54.00,netMargin:21.77,rd:18.67},'2024':{revenue:80.12,profit:18.00,grossMargin:55.00,netMargin:22.47,rd:22.00},'2025':{revenue:110.00,profit:28.00,grossMargin:57.00,netMargin:25.45,rd:28.00}}},
+      {id:'gigadevice',name:'兆易创新',code:'603986.SH',exchange:'上交所',detail:{products:'NOR Flash、NAND Flash、MCU、DRAM利基市场',strategy:'存储+MCU双龙头，受益存储周期上行与国产替代',highlight:'存储周期复苏，2025年Q3净利润同比+61.1%，毛利率至40.7%'},data:{'2019':{revenue:32.03,profit:6.07,grossMargin:40.52,netMargin:18.95,rd:3.30},'2020':{revenue:44.97,profit:8.31,grossMargin:37.38,netMargin:18.48,rd:3.63},'2021':{revenue:85.10,profit:23.37,grossMargin:46.54,netMargin:27.46,rd:4.20},'2022':{revenue:81.30,profit:20.37,grossMargin:47.66,netMargin:25.06,rd:5.40},'2023':{revenue:57.47,profit:7.50,grossMargin:35.77,netMargin:13.05,rd:6.07},'2024':{revenue:65.00,profit:10.00,grossMargin:38.00,netMargin:15.38,rd:7.00},'2025':{revenue:80.00,profit:14.00,grossMargin:41.00,netMargin:17.50,rd:8.00}}},
+      {id:'montage',name:'澜起科技',code:'688008.SH',exchange:'上交所',detail:{products:'内存接口芯片、PCIe Retimer芯片、AI高性能互联芯片',strategy:'内存接口芯片全球前三，AI互联芯片打开新成长空间',highlight:'DDR5渗透率提升+津逮服务器CPU，研发费率领先行业'},data:{'2019':{revenue:17.38,profit:9.35,grossMargin:73.96,netMargin:53.80,rd:2.67},'2020':{revenue:18.24,profit:11.04,grossMargin:72.27,netMargin:60.53,rd:3.19},'2021':{revenue:25.62,profit:8.29,grossMargin:67.85,netMargin:32.37,rd:4.03},'2022':{revenue:36.72,profit:12.99,grossMargin:56.72,netMargin:35.38,rd:5.87},'2023':{revenue:22.86,profit:4.52,grossMargin:60.00,netMargin:19.77,rd:6.84},'2024':{revenue:29.00,profit:9.50,grossMargin:62.00,netMargin:32.76,rd:8.00},'2025':{revenue:38.00,profit:14.00,grossMargin:65.00,netMargin:36.84,rd:10.00}}},
+      {id:'will',name:'韦尔股份',code:'603501.SH',exchange:'上交所',detail:{products:'CMOS图像传感器、模拟芯片、射频芯片',strategy:'CIS全球前三，手机+汽车+安防多场景布局',highlight:'手机CIS去库存尾声，汽车CIS持续放量，2024年利润大幅增长'},data:{'2019':{revenue:136.32,profit:4.66,grossMargin:27.39,netMargin:3.42,rd:12.43},'2020':{revenue:198.24,profit:27.06,grossMargin:29.67,netMargin:13.65,rd:14.99},'2021':{revenue:241.04,profit:44.76,grossMargin:33.75,netMargin:18.57,rd:21.58},'2022':{revenue:200.78,profit:9.79,grossMargin:29.48,netMargin:4.87,rd:24.17},'2023':{revenue:197.17,profit:5.18,grossMargin:27.00,netMargin:2.63,rd:22.08},'2024':{revenue:210.00,profit:25.00,grossMargin:30.00,netMargin:11.90,rd:24.00},'2025':{revenue:240.00,profit:32.00,grossMargin:32.00,netMargin:13.33,rd:26.00}}},
+      {id:'unic',name:'紫光国微',code:'002049.SZ',exchange:'深交所',detail:{products:'特种IC、智能安全芯片、FPGA、晶体器件',strategy:'特种IC高壁垒龙头，国产替代+特种装备需求双轮驱动',highlight:'2023年净利润率超35%，特种芯片盈利能力极强'},data:{'2019':{revenue:34.30,profit:4.06,grossMargin:36.10,netMargin:11.84,rd:2.88},'2020':{revenue:32.70,profit:8.06,grossMargin:39.46,netMargin:24.65,rd:3.35},'2021':{revenue:53.42,profit:19.84,grossMargin:52.99,netMargin:37.14,rd:4.32},'2022':{revenue:71.20,profit:26.32,grossMargin:63.80,netMargin:36.97,rd:6.27},'2023':{revenue:75.65,profit:25.31,grossMargin:62.00,netMargin:33.46,rd:8.31},'2024':{revenue:55.00,profit:18.00,grossMargin:58.00,netMargin:32.73,rd:8.00},'2025':{revenue:60.00,profit:20.00,grossMargin:60.00,netMargin:33.33,rd:8.50}}}
+    ]
   },
-  {
-    id: 'wanmei', name: '完美世界', code: '002624.SZ', seg: 'top', exchange: '深交所',
-    desc: 'A股头部 · 游戏+影视双主业 · 经历转型阵痛',
-    detail: {
-      products: '《完美世界》《诛仙》《幻塔》《DOTA2》《CS:GO》',
-      strategy: '聚焦游戏，剥离非核心影视业务，出海+品类拓展',
-      highlight: '2023-2024连续两年亏损约13亿，行业深度调整期'
-    },
-    data: {
-      '2019': { revenue: 80.39, profit: 11.23, grossMargin: 60.00, netMargin: 13.97, rd: 15.00 },
-      '2020': { revenue: 102.25, profit: 15.49, grossMargin: 59.50, netMargin: 15.15, rd: 15.89 },
-      '2021': { revenue: 85.18, profit: 13.77, grossMargin: 58.00, netMargin: 16.17, rd: 22.06 },
-      '2022': { revenue: 76.77, profit: 4.91, grossMargin: 57.00, netMargin: 6.40, rd: 18.03 },
-      '2023': { revenue: 77.91, profit: -12.88, grossMargin: 58.00, netMargin: -16.53, rd: 13.90 },
-      '2024': { revenue: 55.71, profit: -12.88, grossMargin: 57.87, netMargin: -25.13, rd: 10.50 }
-    }
+  internet: {
+    name: '互联网', icon: '&#127760;', color: '#f0883e', desc: '中国互联网巨头 &middot; 覆盖腾讯/阿里/京东/拼多多/美团等港美股核心公司',
+    companies: [
+      {id:'tencent',name:'腾讯控股',code:'00700.HK',exchange:'港交所',detail:{products:'微信/QQ社交、腾讯云、游戏、广告、金融科技',strategy:'社交+游戏+金融科技+企业服务四轮驱动，AI赋能全业务线',highlight:'2025年Q1营收1800亿创历史新高，调整后净利同比+30%'},data:{'2019':{revenue:3772.89,profit:933.10,grossMargin:44.42,netMargin:24.74,rd:303.87},'2020':{revenue:4820.64,profit:1598.47,grossMargin:45.96,netMargin:33.16,rd:389.72},'2021':{revenue:5601.18,profit:2278.10,grossMargin:43.91,netMargin:40.67,rd:518.80},'2022':{revenue:5545.52,profit:1887.09,grossMargin:43.14,netMargin:34.03,rd:614.04},'2023':{revenue:6090.15,profit:1152.16,grossMargin:44.22,netMargin:18.92,rd:667.06},'2024':{revenue:6602.57,profit:1940.73,grossMargin:49.45,netMargin:29.39,rd:700.00},'2025':{revenue:7200.00,profit:2400.00,grossMargin:50.00,netMargin:33.33,rd:750.00}}},
+      {id:'alibaba',name:'阿里巴巴',code:'09988.HK',exchange:'港交所',detail:{products:'淘宝/天猫电商、阿里云、菜鸟物流、本地生活',strategy:'电商+云计算双核心，AI驱动业务升级',highlight:'2024财年净利润1575亿，AI云业务增速超40%'},data:{'2019':{revenue:3768.44,profit:876.24,grossMargin:45.00,netMargin:23.26,rd:374.01},'2020':{revenue:5097.11,profit:1403.50,grossMargin:41.00,netMargin:27.54,rd:430.80},'2021':{revenue:7172.89,profit:1505.78,grossMargin:41.28,netMargin:20.99,rd:572.36},'2022':{revenue:8530.62,profit:625.59,grossMargin:37.77,netMargin:7.33,rd:554.65},'2023':{revenue:8686.87,profit:655.73,grossMargin:38.74,netMargin:7.55,rd:567.44},'2024':{revenue:9411.68,profit:1575.00,grossMargin:40.00,netMargin:16.74,rd:600.00},'2025':{revenue:10000.00,profit:1800.00,grossMargin:41.00,netMargin:18.00,rd:650.00}}},
+      {id:'pinduoduo',name:'拼多多',code:'PDD.O',exchange:'纳斯达克',detail:{products:'拼多多电商平台、Temu跨境电商、多多买菜',strategy:'低价电商+跨境Temu高速扩张，用户规模超越淘宝',highlight:'2025年Q1净利润同比两位数增长，Temu成为全球下载量最高APP'},data:{'2019':{revenue:301.42,profit:-69.68,grossMargin:79.00,netMargin:-23.12,rd:38.50},'2020':{revenue:594.92,profit:-71.75,grossMargin:76.86,netMargin:-12.06,rd:68.75},'2021':{revenue:939.35,profit:77.63,grossMargin:66.24,netMargin:8.26,rd:90.06},'2022':{revenue:1305.58,profit:315.06,grossMargin:67.19,netMargin:24.13,rd:103.85},'2023':{revenue:1806.00,profit:600.00,grossMargin:69.00,netMargin:33.22,rd:120.00},'2024':{revenue:3933.00,profit:1124.00,grossMargin:72.00,netMargin:28.58,rd:150.00},'2025':{revenue:4400.00,profit:1300.00,grossMargin:73.00,netMargin:29.55,rd:180.00}}},
+      {id:'jd',name:'京东集团',code:'09618.HK',exchange:'港交所',detail:{products:'京东商城、京东物流、京东健康、京东科技',strategy:'自营电商+物流一体化，即时零售持续扩张',highlight:'2024年营收11588亿，净利润414亿，物流业务成新增长极'},data:{'2019':{revenue:5768.88,profit:121.84,grossMargin:14.63,netMargin:2.11,rd:146.19},'2020':{revenue:7458.02,profit:493.71,grossMargin:14.63,netMargin:6.62,rd:161.47},'2021':{revenue:9515.92,profit:-35.59,grossMargin:13.56,netMargin:-0.37,rd:163.35},'2022':{revenue:10462.35,profit:104.38,grossMargin:14.09,netMargin:1.00,rd:168.35},'2023':{revenue:10847.00,profit:207.00,grossMargin:14.20,netMargin:1.91,rd:180.00},'2024':{revenue:11588.00,profit:414.00,grossMargin:14.50,netMargin:3.57,rd:185.00},'2025':{revenue:12000.00,profit:480.00,grossMargin:15.00,netMargin:4.00,rd:200.00}}},
+      {id:'meituan',name:'美团',code:'03690.HK',exchange:'港交所',detail:{products:'美团外卖、大众点评、美团闪购、美团单车',strategy:'本地生活核心平台，外卖+到店双轮驱动',highlight:'2024年首次实现年度盈利，即时配送订单量持续增长'},data:{'2019':{revenue:975.29,profit:22.36,grossMargin:32.62,netMargin:2.29,rd:84.46},'2020':{revenue:1147.95,profit:47.08,grossMargin:30.05,netMargin:4.10,rd:108.55},'2021':{revenue:1791.28,profit:-235.38,grossMargin:24.15,netMargin:-13.14,rd:167.39},'2022':{revenue:2199.55,profit:-66.86,grossMargin:27.89,netMargin:-3.04,rd:207.17},'2023':{revenue:2767.00,profit:138.00,grossMargin:36.00,netMargin:4.99,rd:215.00},'2024':{revenue:3376.00,profit:358.00,grossMargin:38.00,netMargin:10.60,rd:230.00},'2025':{revenue:3800.00,profit:420.00,grossMargin:39.00,netMargin:11.05,rd:250.00}}},
+      {id:'baidu',name:'百度',code:'9888.HK',exchange:'港交所',detail:{products:'百度搜索、文心一言大模型、百度智能云、萝卜快跑',strategy:'AI+搜索双核心，智能云高速增长',highlight:'2024年智能云营收同比+42%，文心一言用户规模国内领先'},data:{'2019':{revenue:1074.13,profit:225.60,grossMargin:48.15,netMargin:21.00,rd:183.46},'2020':{revenue:1073.65,profit:224.72,grossMargin:46.96,netMargin:20.93,rd:195.12},'2021':{revenue:1245.93,profit:102.26,grossMargin:47.13,netMargin:8.21,rd:249.38},'2022':{revenue:1236.75,profit:75.33,grossMargin:48.20,netMargin:6.09,rd:233.16},'2023':{revenue:1345.98,profit:203.65,grossMargin:49.00,netMargin:15.13,rd:241.92},'2024':{revenue:1418.00,profit:230.00,grossMargin:50.00,netMargin:16.22,rd:250.00},'2025':{revenue:1500.00,profit:260.00,grossMargin:51.00,netMargin:17.33,rd:270.00}}}
+    ]
   },
-  {
-    id: 'juren', name: '巨人网络', code: '002558.SZ', seg: 'top', exchange: '深交所',
-    desc: 'A股头部 · 经典MMO · 现金牛模式',
-    detail: {
-      products: '《征途》系列《球球大作战》《太空杀》《原始征途》',
-      strategy: '聚焦精品MMO，控制成本，高利润率运营',
-      highlight: '现金牛模式，净利率维持40%+，AI+游戏深度融合'
-    },
-    data: {
-      '2019': { revenue: 25.71, profit: 8.54, grossMargin: 83.13, netMargin: 33.22, rd: 5.02 },
-      '2020': { revenue: 22.17, profit: 10.40, grossMargin: 83.17, netMargin: 46.94, rd: 4.91 },
-      '2021': { revenue: 21.24, profit: 9.89, grossMargin: 84.85, netMargin: 46.58, rd: 4.74 },
-      '2022': { revenue: 20.38, profit: 8.34, grossMargin: 84.04, netMargin: 40.92, rd: 4.31 },
-      '2023': { revenue: 24.09, profit: 8.99, grossMargin: 88.92, netMargin: 37.34, rd: 4.58 },
-      '2024': { revenue: 29.23, profit: 14.30, grossMargin: 87.34, netMargin: 48.96, rd: 4.80 }
-    }
-  },
-  {
-    id: 'kaiying', name: '恺英网络', code: '002517.SZ', seg: 'mid', exchange: '深交所',
-    desc: 'A股中小 · 传奇类游戏 · 业绩快速反弹',
-    detail: {
-      products: '《原始传奇》《蓝月传奇》《全民奇迹》《天使之战》',
-      strategy: '传奇类游戏稳定基本盘，拓展新产品线，投资布局',
-      highlight: '2020年经历高层动荡后快速恢复，2024年净利润创历史新高'
-    },
-    data: {
-      '2019': { revenue: 20.37, profit: -18.55, grossMargin: 55.00, netMargin: -91.07, rd: 1.50 },
-      '2020': { revenue: 15.43, profit: -1.75, grossMargin: 50.00, netMargin: -11.34, rd: 1.20 },
-      '2021': { revenue: 23.75, profit: 5.77, grossMargin: 60.00, netMargin: 24.30, rd: 1.88 },
-      '2022': { revenue: 37.26, profit: 10.25, grossMargin: 68.00, netMargin: 27.51, rd: 2.70 },
-      '2023': { revenue: 42.95, profit: 14.62, grossMargin: 70.00, netMargin: 34.04, rd: 3.10 },
-      '2024': { revenue: 51.18, profit: 16.28, grossMargin: 72.00, netMargin: 31.81, rd: 3.50 }
-    }
-  },
-  {
-    id: 'youzu', name: '游族网络', code: '002174.SZ', seg: 'mid', exchange: '深交所',
-    desc: 'A股中小 · 互联网游戏 · 经历债务风波',
-    detail: {
-      products: '《少年三国志》系列《权力的游戏》《Game of Thrones》',
-      strategy: '聚焦少年系列IP，出海+国内双轨，引入战略投资者',
-      highlight: '经历创始人去世等重大变故后，逐步恢复稳定运营'
-    },
-    data: {
-      '2019': { revenue: 32.20, profit: 2.57, grossMargin: 50.00, netMargin: 7.98, rd: 1.80 },
-      '2020': { revenue: 37.24, profit: -1.88, grossMargin: 48.00, netMargin: -5.05, rd: 1.50 },
-      '2021': { revenue: 25.06, profit: 0.58, grossMargin: 52.00, netMargin: 2.31, rd: 1.60 },
-      '2022': { revenue: 19.36, profit: -0.68, grossMargin: 55.00, netMargin: -3.51, rd: 1.80 },
-      '2023': { revenue: 16.25, profit: 1.02, grossMargin: 60.00, netMargin: 6.28, rd: 1.50 },
-      '2024': { revenue: 18.50, profit: 2.10, grossMargin: 62.00, netMargin: 11.35, rd: 1.60 }
-    }
-  },
-  {
-    id: 'baotong', name: '宝通科技', code:  '300031.SZ', seg: 'mid', exchange: '深交所',
-    desc: 'A股中小 · 游戏+工业输送双主业',
-    detail: {
-      products: '《时空之刃》《我欲封天》《<header>》《卧虎藏龙》',
-      strategy: '游戏+工业互联网双主业运营，海外发行布局',
-      highlight: '双主业结构分散风险，游戏毛利率约50-60%'
-    },
-    data: {
-      '2019': { revenue: 24.00, profit: 3.20, grossMargin: 52.00, netMargin: 13.33, rd: 1.00 },
-      '2020': { revenue: 26.38, profit: 4.15, grossMargin: 55.00, netMargin: 15.73, rd: 1.20 },
-      '2021': { revenue: 27.60, profit: 4.05, grossMargin: 53.00, netMargin: 14.67, rd: 1.30 },
-      '2022': { revenue: 24.90, profit: -2.60, grossMargin: 50.00, netMargin: -10.44, rd: 1.50 },
-      '2023': { revenue: 18.50, profit: 0.85, grossMargin: 48.00, netMargin: 4.59, rd: 1.40 },
-      '2024': { revenue: 21.20, profit: 1.80, grossMargin: 50.00, netMargin: 8.49, rd: 1.50 }
-    }
-  },
-  {
-    id: 'zheshu', name: '浙数文化', code: '600633.SH', seg: 'mid', exchange: '上交所',
-    desc: 'A股中小 · 数字文化+数据中心',
-    detail: {
-      products: '边锋游戏、战旗直播、富春云数据中心',
-      strategy: '数字文化产业+数据服务双主业，剥离纸媒资产',
-      highlight: '地方报业集团转型标杆，数字业务占比持续提升'
-    },
-    data: {
-      '2019': { revenue: 28.50, profit: 6.80, grossMargin: 58.00, netMargin: 23.86, rd: 1.50 },
-      '2020': { revenue: 35.40, profit: 7.80, grossMargin: 55.00, netMargin: 22.03, rd: 1.80 },
-      '2021': { revenue: 30.50, profit: 5.60, grossMargin: 52.00, netMargin: 18.36, rd: 2.00 },
-      '2022': { revenue: 28.60, profit: 4.80, grossMargin: 48.00, netMargin: 16.78, rd: 2.20 },
-      '2023': { revenue: 21.80, profit: 3.20, grossMargin: 45.00, netMargin: 14.68, rd: 2.00 },
-      '2024': { revenue: 23.50, profit: 4.50, grossMargin: 46.00, netMargin: 19.15, rd: 2.10 }
-    }
-  },
-  {
-    id: 'bingchuan', name: '冰川网络', code: '300533.SZ', seg: 'mid', exchange: '深交所',
-    desc: 'A股中小 · 移动游戏 · 买量驱动',
-    detail: {
-      products: '《远征手游》《龙武手游》《位面战争》',
-      strategy: '手游化转型，买量驱动快速增长但利润率承压',
-      highlight: '2023年收入同比增长超50%，但销售费用率高企'
-    },
-    data: {
-      '2019': { revenue: 4.20, profit: 1.20, grossMargin: 75.00, netMargin: 28.57, rd: 0.40 },
-      '2020': { revenue: 3.10, profit: -0.90, grossMargin: 70.00, netMargin: -29.03, rd: 0.50 },
-      '2021': { revenue: 5.60, profit: 0.80, grossMargin: 72.00, netMargin: 14.29, rd: 0.60 },
-      '2022': { revenue: 20.50, profit: 2.30, grossMargin: 68.00, netMargin: 11.22, rd: 0.90 },
-      '2023': { revenue: 30.20, profit: 2.80, grossMargin: 65.00, netMargin: 9.27, rd: 1.20 },
-      '2024': { revenue: 22.80, profit: 0.60, grossMargin: 62.00, netMargin: 2.63, rd: 1.30 }
-    }
-  },
-  {
-    id: 'dianhun', name: '电魂网络', code: '603258.SH', seg: 'mid', exchange: '上交所',
-    desc: 'A股中小 · 竞技端游 · 现金流稳健',
-    detail: {
-      products: '《梦三国》系列《野蛮人大作战》《解神者》',
-      strategy: '竞技游戏为主，出海拓展，注册用户超2亿',
-      highlight: '端游稳健、手游拓展，经营性现金流良好'
-    },
-    data: {
-      '2019': { revenue: 6.97, profit: 2.28, grossMargin: 80.00, netMargin: 32.71, rd: 0.80 },
-      '2020': { revenue: 6.08, profit: 2.78, grossMargin: 80.00, netMargin: 45.72, rd: 0.90 },
-      '2021': { revenue: 8.11, profit: 3.32, grossMargin: 78.00, netMargin: 40.94, rd: 1.00 },
-      '2022': { revenue: 7.90, profit: 2.85, grossMargin: 75.00, netMargin: 36.08, rd: 1.20 },
-      '2023': { revenue: 6.70, profit: 2.10, grossMargin: 74.00, netMargin: 31.34, rd: 1.30 },
-      '2024': { revenue: 7.20, profit: 2.40, grossMargin: 75.00, netMargin: 33.33, rd: 1.40 }
-    }
-  },
-  {
-    id: 'xinghui', name: '星辉娱乐', code: '300043.SZ', seg: 'mid', exchange: '深交所',
-    desc: 'A股中小 · 游戏+足球俱乐部+玩具',
-    detail: {
-      products: '《冒险岛》《苍翼默示录》《幻灵仙境》，西班牙人足球俱乐部',
-      strategy: '游戏+体育+玩具三业务，游戏提供主要利润',
-      highlight: '旗下西班牙人俱乐部征战西乙，游戏业务提供稳定现金流'
-    },
-    data: {
-      '2019': { revenue: 25.20, profit: 1.20, grossMargin: 40.00, netMargin: 4.76, rd: 0.80 },
-      '2020': { revenue: 17.60, profit: -4.60, grossMargin: 38.00, netMargin: -26.14, rd: 0.90 },
-      '2021': { revenue: 13.80, profit: -4.90, grossMargin: 42.00, netMargin: -35.51, rd: 1.00 },
-      '2022': { revenue: 15.10, profit: -3.20, grossMargin: 48.00, netMargin: -21.19, rd: 1.10 },
-      '2023': { revenue: 16.50, profit: -2.80, grossMargin: 52.00, netMargin: -16.97, rd: 1.00 },
-      '2024': { revenue: 18.20, profit: -1.50, grossMargin: 55.00, netMargin: -8.24, rd: 1.10 }
-    }
+  finance: {
+    name: '金融', icon: '&#128181;', color: '#3fb950', desc: '银行+保险+证券龙头 &middot; 覆盖工商银行/招商银行/中国平安等核心公司',
+    companies: [
+      {id:'icbc',name:'中国工商银行',code:'601398.SH',exchange:'上交所',detail:{products:'商业银行存贷款业务、理财业务、金融市场业务',strategy:'全球资产规模最大银行，稳字当头，数字化转型提速',highlight:'2024年净利润3659亿，资产规模48.82万亿，不良率1.36%'},data:{'2019':{revenue:8551.64,profit:3122.24,grossMargin:null,netMargin:36.50,rd:0},'2020':{revenue:8001.00,profit:3176.85,grossMargin:null,netMargin:39.70,rd:0},'2021':{revenue:8609.00,profit:3483.38,grossMargin:null,netMargin:40.47,rd:0},'2022':{revenue:8422.00,profit:3604.83,grossMargin:null,netMargin:42.80,rd:0},'2023':{revenue:8054.65,profit:3640.43,grossMargin:null,netMargin:45.20,rd:0},'2024':{revenue:8218.03,profit:3658.63,grossMargin:null,netMargin:44.52,rd:0},'2025':{revenue:8300.00,profit:3700.00,grossMargin:null,netMargin:44.58,rd:0}}},
+      {id:'cmb',name:'招商银行',code:'600036.SH',exchange:'上交所',detail:{products:'零售银行业务、信用卡、财富管理、私人银行',strategy:'零售银行标杆，财富管理+金融科技双轮驱动',highlight:'2024年ROE16.34%，信用卡发卡量全国第一'},data:{'2019':{revenue:2697.03,profit:928.67,grossMargin:null,netMargin:34.43,rd:0},'2020':{revenue:2904.82,profit:973.42,grossMargin:null,netMargin:33.51,rd:0},'2021':{revenue:3312.53,profit:1199.22,grossMargin:null,netMargin:36.19,rd:0},'2022':{revenue:3447.38,profit:1380.12,grossMargin:null,netMargin:40.03,rd:0},'2023':{revenue:3391.78,profit:1466.02,grossMargin:null,netMargin:43.22,rd:0},'2024':{revenue:3375.37,profit:1483.50,grossMargin:null,netMargin:43.95,rd:0},'2025':{revenue:3400.00,profit:1520.00,grossMargin:null,netMargin:44.71,rd:0}}},
+      {id:'pingan',name:'中国平安',code:'601318.SH',exchange:'上交所',detail:{products:'寿险/产险、银行、投资、科技（陆金所/金融壹账通）',strategy:'综合金融+医疗健康战略，寿险改革深化',highlight:'2024年归母净利润约900亿，寿险新业务价值增长强劲'},data:{'2019':{revenue:11688.67,profit:1494.07,grossMargin:null,netMargin:12.78,rd:0},'2020':{revenue:12183.15,profit:1430.99,grossMargin:null,netMargin:11.75,rd:0},'2021':{revenue:11804.44,profit:1016.18,grossMargin:null,netMargin:8.61,rd:0},'2022':{revenue:11105.68,profit:837.61,grossMargin:null,netMargin:7.54,rd:0},'2023':{revenue:9137.80,profit:856.65,grossMargin:null,netMargin:9.37,rd:0},'2024':{revenue:9500.00,profit:900.00,grossMargin:null,netMargin:9.47,rd:0},'2025':{revenue:10000.00,profit:950.00,grossMargin:null,netMargin:9.50,rd:0}}},
+      {id:'citicsec',name:'中信证券',code:'600030.SH',exchange:'上交所',detail:{products:'证券经纪、投行、资产管理、固收、FICC',strategy:'券商龙头，财富管理+机构业务双驱动',highlight:'2024年净利润约210亿，股票交易额市占率保持行业第一'},data:{'2019':{revenue:431.40,profit:122.29,grossMargin:null,netMargin:28.35,rd:0},'2020':{revenue:543.83,profit:149.02,grossMargin:null,netMargin:27.40,rd:0},'2021':{revenue:765.24,profit:231.00,grossMargin:null,netMargin:30.19,rd:0},'2022':{revenue:651.09,profit:213.17,grossMargin:null,netMargin:32.74,rd:0},'2023':{revenue:600.68,profit:197.00,grossMargin:null,netMargin:32.80,rd:0},'2024':{revenue:650.00,profit:210.00,grossMargin:null,netMargin:32.31,rd:0},'2025':{revenue:700.00,profit:230.00,grossMargin:null,netMargin:32.86,rd:0}}},
+      {id:'eastmoney',name:'东方财富',code:'300059.SZ',exchange:'深交所',detail:{products:'东方财富网、天天基金网、证券经纪、基金代销',strategy:'互联网财富管理平台，流量优势显著',highlight:'2024年净利润约92亿，天天基金代销规模行业领先'},data:{'2019':{revenue:42.32,profit:18.31,grossMargin:70.00,netMargin:43.27,rd:2.50},'2020':{revenue:82.39,profit:47.78,grossMargin:72.00,netMargin:57.99,rd:3.40},'2021':{revenue:130.94,profit:85.53,grossMargin:68.00,netMargin:65.32,rd:4.50},'2022':{revenue:124.86,profit:85.10,grossMargin:64.00,netMargin:68.16,rd:5.80},'2023':{revenue:110.20,profit:81.00,grossMargin:63.00,netMargin:73.50,rd:6.80},'2024':{revenue:108.00,profit:92.00,grossMargin:65.00,netMargin:85.19,rd:7.50},'2025':{revenue:120.00,profit:100.00,grossMargin:66.00,netMargin:83.33,rd:8.20}}},
+      {id:'hundsun',name:'恒生电子',code:'600570.SH',exchange:'上交所',detail:{products:'金融IT系统（经纪业务/资产管理/银行/保险）、金融AI解决方案',strategy:'金融科技龙头，证券+银行+基金IT系统覆盖率超90%',highlight:'2024年净利润同比+159%，Q3单季净利润4.16亿'},data:{'2019':{revenue:38.72,profit:14.16,grossMargin:96.00,netMargin:36.57,rd:15.24},'2020':{revenue:41.73,profit:13.22,grossMargin:96.00,netMargin:31.68,rd:15.63},'2021':{revenue:54.97,profit:14.64,grossMargin:77.00,netMargin:26.63,rd:17.01},'2022':{revenue:65.02,profit:10.91,grossMargin:74.00,netMargin:16.78,rd:19.36},'2023':{revenue:72.00,profit:13.00,grossMargin:75.00,netMargin:18.06,rd:20.00},'2024':{revenue:75.00,profit:18.00,grossMargin:76.00,netMargin:24.00,rd:22.00},'2025':{revenue:85.00,profit:22.00,grossMargin:77.00,netMargin:25.88,rd:25.00}}}
+    ]
   }
-];
+};
 
-// ============ Global State ============
-let currentYear = 'all';
-let currentSeg = 'all';
-let currentSort = 'revenue_desc';
-let trendChart, revProfitChart, marginChart;
+// Most profitable industries
+var MOST_PROFIT = {
+  baijiu: {
+    name: '白酒', icon: '&#127870;', color: '#d29922',
+    companies: [
+      {id:'maotai',name:'贵州茅台',code:'600519.SH',exchange:'上交所',detail:{products:'茅台酒（飞天/五星）、茅台系列酒、茅台冰淇淋',strategy:'高端白酒绝对龙头，品牌溢价+稀缺性',highlight:'2024年营收1741亿，净利润862亿，净利率49.5%，全球烈酒之最'},data:{'2019':{revenue:888.54,profit:412.06,grossMargin:91.30,netMargin:46.38,rd:0},'2020':{revenue:979.93,profit:466.97,grossMargin:91.68,netMargin:47.65,rd:0},'2021':{revenue:1094.64,profit:557.04,grossMargin:92.37,netMargin:50.90,rd:0},'2022':{revenue:1240.99,profit:627.16,grossMargin:92.11,netMargin:50.54,rd:0},'2023':{revenue:1476.19,profit:747.53,grossMargin:91.96,netMargin:50.60,rd:0},'2024':{revenue:1741.44,profit:862.28,grossMargin:91.97,netMargin:49.52,rd:0},'2025':{revenue:1850.00,profit:920.00,grossMargin:92.00,netMargin:49.73,rd:0}}},
+      {id:'wuliangye',name:'五粮液',code:'000858.SZ',exchange:'深交所',detail:{products:'五粮液主品牌（普五/1618）、五粮醇、五粮春系列',strategy:'浓香白酒龙头，多品牌矩阵',highlight:'2024年营收892亿，净利润319亿，白酒行业第二'},data:{'2019':{revenue:501.18,profit:174.02,grossMargin:74.46,netMargin:34.72,rd:0},'2020':{revenue:573.21,profit:209.13,grossMargin:74.16,netMargin:36.48,rd:0},'2021':{revenue:662.09,profit:233.77,grossMargin:75.26,netMargin:35.31,rd:0},'2022':{revenue:739.69,profit:266.91,grossMargin:75.42,netMargin:36.08,rd:0},'2023':{revenue:832.72,profit:302.11,grossMargin:75.78,netMargin:36.27,rd:0},'2024':{revenue:891.75,profit:318.53,grossMargin:75.77,netMargin:35.72,rd:0},'2025':{revenue:950.00,profit:340.00,grossMargin:75.80,netMargin:35.79,rd:0}}},
+      {id:'fenjiu',name:'山西汾酒',code:'600809.SH',exchange:'上交所',detail:{products:'青花汾、老白汾、竹叶青、玻汾',strategy:'清香型白酒龙头，全国化扩张，高端化升级',highlight:'2024年营收360亿，净利润122亿，增速领跑头部酒企'},data:{'2019':{revenue:118.80,profit:19.39,grossMargin:62.57,netMargin:16.32,rd:0},'2020':{revenue:139.90,profit:30.79,grossMargin:65.60,netMargin:22.01,rd:0},'2021':{revenue:199.71,profit:53.14,grossMargin:74.93,netMargin:26.61,rd:0},'2022':{revenue:262.14,profit:80.96,grossMargin:75.36,netMargin:30.88,rd:0},'2023':{revenue:319.28,profit:104.13,grossMargin:75.86,netMargin:32.61,rd:0},'2024':{revenue:360.11,profit:122.42,grossMargin:76.00,netMargin:33.99,rd:0},'2025':{revenue:400.00,profit:138.00,grossMargin:76.20,netMargin:34.50,rd:0}}}
+    ]
+  },
+  bank: {
+    name: '银行', icon: '&#128181;', color: '#3fb950',
+    companies: [
+      {id:'icbc2',name:'中国工商银行',code:'601398.SH',exchange:'上交所',detail:{products:'商业银行存贷款、理财、金融市场',strategy:'全球资产规模第一，稳健经营',highlight:'2024年净利润3659亿，资产规模48.82万亿'},data:{'2019':{revenue:8551.64,profit:3122.24,grossMargin:null,netMargin:36.50,rd:0},'2020':{revenue:8001.00,profit:3176.85,grossMargin:null,netMargin:39.70,rd:0},'2021':{revenue:8609.00,profit:3483.38,grossMargin:null,netMargin:40.47,rd:0},'2022':{revenue:8422.00,profit:3604.83,grossMargin:null,netMargin:42.80,rd:0},'2023':{revenue:8054.65,profit:3640.43,grossMargin:null,netMargin:45.20,rd:0},'2024':{revenue:8218.03,profit:3658.63,grossMargin:null,netMargin:44.52,rd:0},'2025':{revenue:8300.00,profit:3700.00,grossMargin:null,netMargin:44.58,rd:0}}},
+      {id:'ccb',name:'建设银行',code:'601939.SH',exchange:'上交所',detail:{products:'商业银行存贷款、住房金融',strategy:'住房金融领先，数字化转型提速',highlight:'2024年净利润约3300亿，资产规模超40万亿'},data:{'2019':{revenue:7056.29,profit:2667.33,grossMargin:null,netMargin:37.80,rd:0},'2020':{revenue:7558.57,profit:2710.50,grossMargin:null,netMargin:35.86,rd:0},'2021':{revenue:8242.46,profit:3025.13,grossMargin:null,netMargin:36.70,rd:0},'2022':{revenue:8224.73,profit:3019.04,grossMargin:null,netMargin:36.70,rd:0},'2023':{revenue:7697.00,profit:3045.56,grossMargin:null,netMargin:39.56,rd:0},'2024':{revenue:7858.00,profit:3300.00,grossMargin:null,netMargin:42.00,rd:0},'2025':{revenue:8000.00,profit:3380.00,grossMargin:null,netMargin:42.25,rd:0}}},
+      {id:'cmb2',name:'招商银行',code:'600036.SH',exchange:'上交所',detail:{products:'零售银行、信用卡、财富管理、私人银行',strategy:'零售银行标杆，ROE领先行业',highlight:'2024年净利润1484亿，ROE16.34%'},data:{'2019':{revenue:2697.03,profit:928.67,grossMargin:null,netMargin:34.43,rd:0},'2020':{revenue:2904.82,profit:973.42,grossMargin:null,netMargin:33.51,rd:0},'2021':{revenue:3312.53,profit:1199.22,grossMargin:null,netMargin:36.19,rd:0},'2022':{revenue:3447.38,profit:1380.12,grossMargin:null,netMargin:40.03,rd:0},'2023':{revenue:3391.78,profit:1466.02,grossMargin:null,netMargin:43.22,rd:0},'2024':{revenue:3375.37,profit:1483.50,grossMargin:null,netMargin:43.95,rd:0},'2025':{revenue:3400.00,profit:1520.00,grossMargin:null,netMargin:44.71,rd:0}}}
+    ]
+  },
+  internet_mp: {
+    name: '互联网', icon: '&#127760;', color: '#f0883e',
+    companies: [
+      {id:'tencent2',name:'腾讯控股',code:'00700.HK',exchange:'港交所',detail:{products:'微信/QQ、游戏、广告、金融科技、企业服务',strategy:'社交+游戏+金融科技四轮驱动',highlight:'2025年Q1营收1800亿，调整后净利同比+30%'},data:{'2019':{revenue:3772.89,profit:933.10,grossMargin:44.42,netMargin:24.74,rd:303.87},'2020':{revenue:4820.64,profit:1598.47,grossMargin:45.96,netMargin:33.16,rd:389.72},'2021':{revenue:5601.18,profit:2278.10,grossMargin:43.91,netMargin:40.67,rd:518.80},'2022':{revenue:5545.52,profit:1887.09,grossMargin:43.14,netMargin:34.03,rd:614.04},'2023':{revenue:6090.15,profit:1152.16,grossMargin:44.22,netMargin:18.92,rd:667.06},'2024':{revenue:6602.57,profit:1940.73,grossMargin:49.45,netMargin:29.39,rd:700.00},'2025':{revenue:7200.00,profit:2400.00,grossMargin:50.00,netMargin:33.33,rd:750.00}}},
+      {id:'alibaba2',name:'阿里巴巴',code:'09988.HK',exchange:'港交所',detail:{products:'淘宝/天猫电商、阿里云、菜鸟物流',strategy:'电商+云计算双核心',highlight:'2024财年净利润1575亿，AI云增速超40%'},data:{'2019':{revenue:3768.44,profit:876.24,grossMargin:45.00,netMargin:23.26,rd:374.01},'2020':{revenue:5097.11,profit:1403.50,grossMargin:41.00,netMargin:27.54,rd:430.80},'2021':{revenue:7172.89,profit:1505.78,grossMargin:41.28,netMargin:20.99,rd:572.36},'2022':{revenue:8530.62,profit:625.59,grossMargin:37.77,netMargin:7.33,rd:554.65},'2023':{revenue:8686.87,profit:655.73,grossMargin:38.74,netMargin:7.55,rd:567.44},'2024':{revenue:9411.68,profit:1575.00,grossMargin:40.00,netMargin:16.74,rd:600.00},'2025':{revenue:10000.00,profit:1800.00,grossMargin:41.00,netMargin:18.00,rd:650.00}}},
+      {id:'pinduoduo2',name:'拼多多',code:'PDD.O',exchange:'纳斯达克',detail:{products:'拼多多电商、Temu跨境电商',strategy:'低价电商+跨境高速扩张',highlight:'2025年Q1净利润同比两位数增长，Temu全球下载量第一'},data:{'2019':{revenue:301.42,profit:-69.68,grossMargin:79.00,netMargin:-23.12,rd:38.50},'2020':{revenue:594.92,profit:-71.75,grossMargin:76.86,netMargin:-12.06,rd:68.75},'2021':{revenue:939.35,profit:77.63,grossMargin:66.24,netMargin:8.26,rd:90.06},'2022':{revenue:1305.58,profit:315.06,grossMargin:67.19,netMargin:24.13,rd:103.85},'2023':{revenue:1806.00,profit:600.00,grossMargin:69.00,netMargin:33.22,rd:120.00},'2024':{revenue:3933.00,profit:1124.00,grossMargin:72.00,netMargin:28.58,rd:150.00},'2025':{revenue:4400.00,profit:1300.00,grossMargin:73.00,netMargin:29.55,rd:180.00}}}
+    ]
+  }
+};
 
-// ============ Init ============
-document.addEventListener('DOMContentLoaded', () => {
+// ===================== STATE =====================
+var currentIndustry = 'game';
+var currentYear = 'all';
+var currentSort = 'revenue_desc';
+var trendChart, revProfitChart, marginChart;
+
+// ===================== UTILS =====================
+function fmt(v) {
+  if (v === null || v === undefined) return '-';
+  if (Math.abs(v) >= 10000) return (v / 10000).toFixed(2) + '万亿';
+  return v.toFixed(1) + '亿';
+}
+
+// ===================== INIT =====================
+document.addEventListener('DOMContentLoaded', function() {
+  setupIndustryTabs();
   setupFilters();
   setupSort();
   render();
 });
 
-function setupFilters() {
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const filter = btn.dataset.filter;
-      const value = btn.dataset.value;
+function setupIndustryTabs() {
+  document.querySelectorAll('.industry-tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('.industry-tab').forEach(function(t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      currentIndustry = tab.dataset.industry;
+      currentYear = 'all';
+      document.querySelectorAll('[data-filter="year"]').forEach(function(b) {
+        b.classList.toggle('active', b.dataset.value === 'all');
+      });
+      render();
+    });
+  });
+}
 
-      if (filter === 'year') {
-        document.querySelectorAll('[data-filter="year"]').forEach(b => b.classList.remove('active'));
-        currentYear = value;
-      } else if (filter === 'seg') {
-        document.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
-        currentSeg = value;
-      }
+function setupFilters() {
+  document.querySelectorAll('.filter-btn[data-filter="year"]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('[data-filter="year"]').forEach(function(b) { b.classList.remove('active'); });
       btn.classList.add('active');
+      currentYear = btn.dataset.value;
       render();
     });
   });
 }
 
 function setupSort() {
-  document.getElementById('sortSelect').addEventListener('change', (e) => {
+  document.getElementById('sortSelect').addEventListener('change', function(e) {
     currentSort = e.target.value;
     render();
   });
 }
 
-// ============ Filter ============
-function getFilteredCompanies() {
-  let list = companies;
-  if (currentSeg === 'top') list = list.filter(c => c.seg === 'top');
-  else if (currentSeg === 'mid') list = list.filter(c => c.seg === 'mid');
-  else if (currentSeg === 'hk') list = list.filter(c => c.seg === 'hk');
-
-  if (currentYear !== 'all') {
-    list = list.filter(c => c.data[currentYear]);
-  }
-  return list;
-}
-
-function getYearRange() {
-  if (currentYear !== 'all') return [currentYear];
-  return ['2019', '2020', '2021', '2022', '2023', '2024'];
-}
-
-// ============ KPI ============
-function calcKPIs(filtered) {
-  const years = getYearRange();
-  const hasMultiYear = years.length > 1;
-
-  if (currentYear === 'all') {
-    // Show latest year summary
-    const latest = '2024';
-    const companies2024 = companies.filter(c => c.data[latest]);
-    const valid2024 = companies2024.filter(c => c.data[latest]);
-
-    const totalRev = valid2024.reduce((s, c) => s + c.data[latest].revenue, 0);
-    const totalProfit = valid2024.reduce((s, c) => s + c.data[latest].profit, 0);
-    const avgNetMargin = valid2024.reduce((s, c) => s + c.data[latest].netMargin, 0) / valid2024.length;
-    const avgGrossMargin = valid2024.reduce((s, c) => s + c.data[latest].grossMargin, 0) / valid2024.length;
-    const profitableCount = valid2024.filter(c => c.data[latest].profit > 0).length;
-
-    return [
-      { label: '覆盖公司数', value: valid2024.length, sub: `2024年全口径`, color: '' },
-      { label: '行业总营收', value: totalRev.toFixed(1) + '亿', sub: '2024年A股+港股', color: 'green' },
-      { label: '行业净利润', value: totalProfit >= 0 ? '+' + totalProfit.toFixed(1) + '亿' : totalProfit.toFixed(1) + '亿', sub: totalProfit >= 0 ? '行业整体盈利' : '行业整体亏损', color: totalProfit >= 0 ? 'green' : 'red' },
-      { label: '平均净利率', value: avgNetMargin.toFixed(1) + '%', sub: '算数平均值', color: avgNetMargin > 10 ? 'purple' : 'yellow' },
-      { label: '平均毛利率', value: avgGrossMargin.toFixed(1) + '%', sub: '算数平均值', color: 'cyan' },
-      { label: '盈利公司数', value: profitableCount + '/' + valid2024.length, sub: '2024年数据', color: 'green' }
-    ];
+// ===================== RENDER =====================
+function render() {
+  // Industry summary
+  var sumEl = document.getElementById('industrySummary');
+  if (currentIndustry === 'mostprofit') {
+    sumEl.style.display = 'none';
   } else {
-    const year = currentYear;
-    const valid = filtered.filter(c => c.data[year]);
+    var d = ALL_DATA[currentIndustry];
+    if (!d) return;
+    sumEl.style.display = 'flex';
+    sumEl.innerHTML = '<div class="industry-icon-lg">' + d.icon + '</div><div class="industry-info"><h3>' + d.name + '行业 &middot; ' + (currentYear === 'all' ? '全周期数据' : currentYear + '年') + '</h3><p>' + d.desc + '</p></div><div class="industry-tags"><span class="ind-tag" style="background:' + d.color + '22;color:' + d.color + ';border:1px solid ' + d.color + '44">' + d.name + '</span><span class="ind-tag" style="background:rgba(163,113,247,0.15);color:var(--purple)">共' + d.companies.length + '家公司</span></div>';
+  }
 
-    const totalRev = valid.reduce((s, c) => s + c.data[year].revenue, 0);
-    const totalProfit = valid.reduce((s, c) => s + c.data[year].profit, 0);
-    const avgNetMargin = valid.reduce((s, c) => s + c.data[year].netMargin, 0) / valid.length;
-    const avgGrossMargin = valid.reduce((s, c) => s + c.data[year].grossMargin, 0) / valid.length;
-    const profitableCount = valid.filter(c => c.data[year].profit > 0).length;
-    const topByRev = [...valid].sort((a, b) => b.data[year].revenue - a.data[year].revenue)[0];
+  // Hide/show sections
+  var isMostProfit = currentIndustry === 'mostprofit';
+  document.querySelector('.trend-card').style.display = isMostProfit ? 'none' : '';
+  document.querySelectorAll('.charts-row').forEach(function(el) { el.style.display = isMostProfit ? 'none' : ''; });
+  document.querySelector('.benchmark-section').style.display = isMostProfit ? 'none' : '';
 
-    // Calculate YoY growth for current year vs prev year
-    const prevYear = String(parseInt(year) - 1);
-    let avgGrowth = 0;
-    if (prevYear >= 2019) {
-      const withPrev = valid.filter(c => c.data[prevYear]);
-      if (withPrev.length > 0) {
-        avgGrowth = withPrev.reduce((s, c) => {
-          const prev = c.data[prevYear].revenue;
-          const curr = c.data[year].revenue;
-          return s + (prev > 0 ? ((curr - prev) / prev * 100) : 0);
-        }, 0) / withPrev.length;
-      }
-    }
+  var profSection = document.getElementById('profitableSection');
+  var profGrid = document.getElementById('profitableGrid');
+  if (isMostProfit) {
+    profSection.style.display = '';
+    var y = currentYear === 'all' ? '2024' : currentYear;
+    document.getElementById('profitableYear').textContent = '（' + (currentYear === 'all' ? '2024' : currentYear) + '年各行业净利润TOP3）';
+    var rankColors = ['#ffd700','#c0c0c0','#cd7f32'];
+    var rankBgColors = ['rgba(255,215,0,0.15)','rgba(192,192,192,0.15)','rgba(205,127,50,0.15)'];
+    profGrid.innerHTML = Object.keys(MOST_PROFIT).map(function(k) {
+      var ind = MOST_PROFIT[k];
+      var sorted = ind.companies.slice().sort(function(a,b) { return (b.data[y] && b.data[y].profit||0) - (a.data[y] && a.data[y].profit||0); });
+      var top3 = sorted.slice(0,3);
+      return '<div class="profitable-card"><h4>' + ind.icon + ' ' + ind.name + '行业 <span style="font-size:11px;color:var(--text2);font-weight:400">(' + ind.companies.length + '家)</span></h4><div class="top3-list">' + top3.map(function(c,i) {
+        var pd = c.data[y];
+        if (!pd) return '';
+        var pv = pd.profit >= 10000 ? (pd.profit/10000).toFixed(2)+'万亿' : pd.profit.toFixed(1)+'亿';
+        return '<div class="top3-item"><div class="rank" style="background:' + rankBgColors[i] + ';color:' + rankColors[i] + '">' + (i+1) + '</div><div class="name">' + c.name + '</div><div class="metric">净利润 <strong style="color:' + (pd.profit>=0?'var(--green)':'var(--red)') + '">' + (pd.profit>=0?'+':'') + pv + '</strong></div></div>';
+      }).join('') + '</div></div>';
+    }).join('');
+  } else {
+    profSection.style.display = 'none';
+  }
 
-    return [
-      { label: '覆盖公司数', value: valid.length, sub: `${year}年报全口径`, color: '' },
-      { label: '行业总营收', value: totalRev.toFixed(1) + '亿', sub: `${year}年度合计`, color: 'green' },
-      { label: '行业净利润', value: totalProfit >= 0 ? '+' + totalProfit.toFixed(1) + '亿' : totalProfit.toFixed(1) + '亿', sub: totalProfit >= 0 ? '行业整体盈利' : '行业整体亏损', color: totalProfit >= 0 ? 'green' : 'red' },
-      { label: '平均净利率', value: avgNetMargin.toFixed(1) + '%', sub: `${year}算数均值`, color: avgNetMargin > 0 ? 'purple' : 'yellow' },
-      { label: '平均毛利率', value: avgGrossMargin.toFixed(1) + '%', sub: `${year}算数均值`, color: 'cyan' },
-      { label: '同比增速', value: (avgGrowth >= 0 ? '+' : '') + avgGrowth.toFixed(1) + '%', sub: `${prevYear}→${year}均速`, color: avgGrowth >= 0 ? 'green' : 'red' }
-    ];
+  // KPIs
+  if (isMostProfit) {
+    document.getElementById('kpiGrid').innerHTML = '';
+  } else {
+    renderKPIs(ALL_DATA[currentIndustry], currentYear);
+  }
+
+  // Table
+  renderTable();
+
+  // Charts (only for non-mostprofit)
+  if (!isMostProfit) {
+    var data = ALL_DATA[currentIndustry];
+    var year = currentYear === 'all' ? '2024' : currentYear;
+    var filtered = data.companies.filter(function(c) { return !currentYear || currentYear === 'all' || c.data[currentYear]; });
+    renderTrendChart(data, filtered);
+    renderBenchmark(data, filtered, year);
+    renderRevProfitChart(filtered, year);
+    renderMarginChart(filtered, year);
   }
 }
 
-function renderKPIs(kpis) {
-  const grid = document.getElementById('kpiGrid');
-  grid.innerHTML = kpis.map(k => `
-    <div class="kpi-card ${k.color}">
-      <div class="kpi-label">${k.label}</div>
-      <div class="kpi-value">${k.value}</div>
-      <div class="kpi-sub">${k.sub}</div>
-    </div>
-  `).join('');
-}
+function renderKPIs(data, year) {
+  var year2 = year === 'all' ? '2024' : year;
+  var filtered = data.companies.filter(function(c) { return c.data[year2]; });
+  var totalRev = filtered.reduce(function(s,c) { return s + (c.data[year2].revenue||0); }, 0);
+  var totalProfit = filtered.reduce(function(s,c) { return s + (c.data[year2].profit||0); }, 0);
+  var avgNet = filtered.reduce(function(s,c) { return s + (c.data[year2].netMargin||0); }, 0) / filtered.length;
+  var grossFiltered = filtered.filter(function(c) { return c.data[year2].grossMargin !== null; });
+  var avgGross = grossFiltered.length ? grossFiltered.reduce(function(s,c) { return s + (c.data[year2].grossMargin||0); }, 0) / grossFiltered.length : 0;
+  var profitableCount = filtered.filter(function(c) { return c.data[year2].profit > 0; }).length;
 
-// ============ Trend Chart ============
-function renderTrendChart() {
-  const years = ['2019', '2020', '2021', '2022', '2023', '2024'];
-  const topCompanies = companies.filter(c => c.seg === 'top');
+  var prevYear = String(parseInt(year2) - 1);
+  var avgGrowth = 0;
+  var withPrev = filtered.filter(function(c) { return c.data[prevYear]; });
+  if (withPrev.length) {
+    avgGrowth = withPrev.reduce(function(s,c) {
+      var p = c.data[prevYear].revenue;
+      var n = c.data[year2].revenue;
+      return s + (p > 0 ? (n - p) / p * 100 : 0);
+    }, 0) / withPrev.length;
+  }
 
-  const datasets = [
-    {
-      label: '三七互娱', data: years.map(y => companies.find(c => c.id === 'sanqi')?.data[y]?.revenue || null),
-      borderColor: '#f85149', backgroundColor: 'rgba(248,81,73,0.1)', tension: 0.4, fill: false, borderWidth: 2, pointRadius: 4
-    },
-    {
-      label: '世纪华通', data: years.map(y => companies.find(c => c.id === 'shijihuatong')?.data[y]?.revenue || null),
-      borderColor: '#388bfd', backgroundColor: 'rgba(56,139,253,0.1)', tension: 0.4, fill: false, borderWidth: 2, pointRadius: 4
-    },
-    {
-      label: '完美世界', data: years.map(y => companies.find(c => c.id === 'wanmei')?.data[y]?.revenue || null),
-      borderColor: '#a371f7', backgroundColor: 'rgba(163,113,247,0.1)', tension: 0.4, fill: false, borderWidth: 2, pointRadius: 4
-    },
-    {
-      label: '吉比特', data: years.map(y => companies.find(c => c.id === 'jibite')?.data[y]?.revenue || null),
-      borderColor: '#3fb950', backgroundColor: 'rgba(63,185,80,0.1)', tension: 0.4, fill: false, borderWidth: 2, pointRadius: 4
-    },
-    {
-      label: '巨人网络', data: years.map(y => companies.find(c => c.id === 'juren')?.data[y]?.revenue || null),
-      borderColor: '#d29922', backgroundColor: 'rgba(210,153,34,0.1)', tension: 0.4, fill: false, borderWidth: 2, pointRadius: 4
-    },
-    {
-      label: '恺英网络', data: years.map(y => companies.find(c => c.id === 'kaiying')?.data[y]?.revenue || null),
-      borderColor: '#39c5cf', backgroundColor: 'rgba(57,197,207,0.1)', tension: 0.4, fill: false, borderWidth: 2, pointRadius: 4
-    }
+  var kpis = year === 'all' ? [
+    {label:'覆盖公司数', value:filtered.length, sub:'2024年全口径', color:''},
+    {label:'行业总营收', value:fmt(totalRev), sub:'2024年合计', color:'green'},
+    {label:'行业净利润', value:(totalProfit>=0?'+':'') + fmt(totalProfit), sub:totalProfit>=0?'行业整体盈利':'行业整体亏损', color:totalProfit>=0?'green':'red'},
+    {label:'平均净利率', value:avgNet.toFixed(1)+'%', sub:'算数平均值', color:avgNet>15?'purple':'yellow'},
+    {label:'平均毛利率', value:avgGross>0?avgGross.toFixed(1)+'%':'-', sub:'算数平均值', color:'cyan'},
+    {label:'盈利公司数', value:profitableCount+'/'+filtered.length, sub:'2024年数据', color:'green'}
+  ] : [
+    {label:'覆盖公司数', value:filtered.length, sub:year2+'年报全口径', color:''},
+    {label:'行业总营收', value:fmt(totalRev), sub:year2+'年度合计', color:'green'},
+    {label:'行业净利润', value:(totalProfit>=0?'+':'') + fmt(totalProfit), sub:totalProfit>=0?'行业整体盈利':'行业整体亏损', color:totalProfit>=0?'green':'red'},
+    {label:'平均净利率', value:avgNet.toFixed(1)+'%', sub:year2+'算数均值', color:avgNet>0?'purple':'yellow'},
+    {label:'平均毛利率', value:avgGross>0?avgGross.toFixed(1)+'%':'-', sub:year2+'算数均值', color:'cyan'},
+    {label:'同比增速', value:(avgGrowth>=0?'+':'')+avgGrowth.toFixed(1)+'%', sub:prevYear+'→'+year2+'均速', color:avgGrowth>=0?'green':'red'}
   ];
 
+  document.getElementById('kpiGrid').innerHTML = kpis.map(function(k) {
+    return '<div class="kpi-card ' + k.color + '"><div class="kpi-label">' + k.label + '</div><div class="kpi-value">' + k.value + '</div><div class="kpi-sub">' + k.sub + '</div></div>';
+  }).join('');
+}
+
+function renderTrendChart(data, filtered) {
+  document.getElementById('trendTitle').innerHTML = '&#128200; ' + data.name + '行业营收趋势 (2019&ndash;2025)';
+  var top6 = filtered.slice().sort(function(a,b) { return (b.data['2024']&&b.data['2024'].revenue||0) - (a.data['2024']&&a.data['2024'].revenue||0); }).slice(0,6);
+  var colors = ['#f85149','#388bfd','#a371f7','#3fb950','#d29922','#39c5cf','#f0883e','#db61a2'];
+  var datasets = top6.map(function(c,i) {
+    return {
+      label: c.name,
+      data: YEARS.map(function(y) { return c.data[y] ? c.data[y].revenue : null; }),
+      borderColor: colors[i % colors.length],
+      backgroundColor: colors[i % colors.length] + '18',
+      tension: 0.4, fill: false, borderWidth: 2, pointRadius: 3
+    };
+  });
   if (trendChart) trendChart.destroy();
-  const ctx = document.getElementById('trendChart').getContext('2d');
+  var ctx = document.getElementById('trendChart').getContext('2d');
   trendChart = new Chart(ctx, {
     type: 'line',
-    data: { labels: years, datasets },
+    data: { labels: YEARS, datasets: datasets },
     options: {
       responsive: true, maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
         legend: { position: 'top', labels: { color: '#8b949e', font: { size: 11 }, boxWidth: 12, padding: 15 } },
         tooltip: { backgroundColor: '#161b22', titleColor: '#e6edf3', bodyColor: '#8b949e', borderColor: '#30363d', borderWidth: 1,
-          callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw !== null ? ctx.raw.toFixed(1) + '亿' : '无数据'}` } },
-        annotation: { annotations: {} }
+          callbacks: { label: function(ctx) { return ctx.dataset.label + ': ' + (ctx.raw !== null ? fmt(ctx.raw) : '无数据'); } } }
       },
       scales: {
         x: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { size: 11 } } },
-        y: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { size: 11 }, callback: v => v + '亿' } }
+        y: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { size: 11 }, callback: function(v) { return fmt(v); } } }
       }
     }
   });
 }
 
-// ============ Revenue vs Profit Chart ============
 function renderRevProfitChart(filtered, year) {
-  const sorted = [...filtered].sort((a, b) => b.data[year].revenue - a.data[year].revenue).slice(0, 10);
-  const labels = sorted.map(c => c.name);
-  const revenues = sorted.map(c => c.data[year].revenue);
-  const profits = sorted.map(c => c.data[year].profit);
-
+  var sorted = filtered.slice().sort(function(a,b) { return (b.data[year]&&b.data[year].revenue||0) - (a.data[year]&&a.data[year].revenue||0); }).slice(0,8);
+  var labels = sorted.map(function(c) { return c.name; });
+  var revenues = sorted.map(function(c) { return c.data[year] ? c.data[year].revenue : 0; });
+  var profits = sorted.map(function(c) { return c.data[year] ? c.data[year].profit : 0; });
   if (revProfitChart) revProfitChart.destroy();
-  const ctx = document.getElementById('revProfitChart').getContext('2d');
+  var ctx = document.getElementById('revProfitChart').getContext('2d');
   revProfitChart = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels,
+      labels: labels,
       datasets: [
-        { label: '营业收入(亿)', data: revenues, backgroundColor: 'rgba(56,139,253,0.7)', borderColor: '#388bfd', borderWidth: 1, borderRadius: 4, borderSkipped: false },
-        { label: '净利润(亿)', data: profits, backgroundColor: profits.map(v => v >= 0 ? 'rgba(63,185,80,0.7)' : 'rgba(248,81,73,0.7)'), borderColor: profits.map(v => v >= 0 ? '#3fb950' : '#f85149'), borderWidth: 1, borderRadius: 4, borderSkipped: false }
+        { label: '营业收入', data: revenues, backgroundColor: 'rgba(56,139,253,0.7)', borderColor: '#388bfd', borderWidth: 1, borderRadius: 4, borderSkipped: false },
+        { label: '净利润', data: profits, backgroundColor: profits.map(function(v) { return v >= 0 ? 'rgba(63,185,80,0.7)' : 'rgba(248,81,73,0.7)'; }), borderColor: profits.map(function(v) { return v >= 0 ? '#3fb950' : '#f85149'; }), borderWidth: 1, borderRadius: 4, borderSkipped: false }
       ]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { position: 'top', labels: { color: '#8b949e', font: { size: 11 }, boxWidth: 12 } },
-        tooltip: { backgroundColor: '#161b22', titleColor: '#e6edf3', bodyColor: '#8b949e', borderColor: '#30363d', borderWidth: 1 }
-      },
+      plugins: { legend: { position: 'top', labels: { color: '#8b949e', font: { size: 11 }, boxWidth: 12 } }, tooltip: { backgroundColor: '#161b22', titleColor: '#e6edf3', bodyColor: '#8b949e', borderColor: '#30363d', borderWidth: 1, callbacks: { label: function(ctx) { return ctx.dataset.label + ': ' + fmt(ctx.raw); } } } },
       scales: {
         x: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { size: 10 }, maxRotation: 30 } },
-        y: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { size: 11 }, callback: v => v + '亿' } }
+        y: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { size: 11 }, callback: function(v) { return fmt(v); } } }
       }
     }
   });
 }
 
-// ============ Margin Chart ============
 function renderMarginChart(filtered, year) {
-  const sorted = [...filtered].sort((a, b) => b.data[year].grossMargin - a.data[year].grossMargin);
-  const labels = sorted.map(c => c.name);
-  const gross = sorted.map(c => c.data[year].grossMargin);
-  const net = sorted.map(c => c.data[year].netMargin);
-
+  var withGross = filtered.filter(function(c) { return c.data[year] && c.data[year].grossMargin !== null; });
+  var sorted = withGross.slice().sort(function(a,b) { return (b.data[year].grossMargin||0) - (a.data[year].grossMargin||0); });
+  var labels = sorted.map(function(c) { return c.name; });
+  var gross = sorted.map(function(c) { return c.data[year].grossMargin || 0; });
+  var net = sorted.map(function(c) { return c.data[year].netMargin || 0; });
   if (marginChart) marginChart.destroy();
-  const ctx = document.getElementById('marginChart').getContext('2d');
+  var ctx = document.getElementById('marginChart').getContext('2d');
   marginChart = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels,
+      labels: labels,
       datasets: [
         { label: '毛利率(%)', data: gross, backgroundColor: 'rgba(163,113,247,0.5)', borderColor: '#a371f7', borderWidth: 1, borderRadius: 4, borderSkipped: false },
-        { label: '净利率(%)', data: net, backgroundColor: net.map(v => v >= 0 ? 'rgba(63,185,80,0.5)' : 'rgba(248,81,73,0.5)'), borderColor: net.map(v => v >= 0 ? '#3fb950' : '#f85149'), borderWidth: 1, borderRadius: 4, borderSkipped: false }
+        { label: '净利率(%)', data: net, backgroundColor: net.map(function(v) { return v >= 0 ? 'rgba(63,185,80,0.5)' : 'rgba(248,81,73,0.5)'; }), borderColor: net.map(function(v) { return v >= 0 ? '#3fb950' : '#f85149'; }), borderWidth: 1, borderRadius: 4, borderSkipped: false }
       ]
     },
     options: {
-      responsive: true, maintainAspectRatio: false,
-      indexAxis: 'y',
-      plugins: {
-        legend: { position: 'top', labels: { color: '#8b949e', font: { size: 11 }, boxWidth: 12 } },
-        tooltip: { backgroundColor: '#161b22', titleColor: '#e6edf3', bodyColor: '#8b949e', borderColor: '#30363d', borderWidth: 1 }
-      },
+      responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+      plugins: { legend: { position: 'top', labels: { color: '#8b949e', font: { size: 11 }, boxWidth: 12 } }, tooltip: { backgroundColor: '#161b22', titleColor: '#e6edf3', bodyColor: '#8b949e', borderColor: '#30363d', borderWidth: 1 } },
       scales: {
-        x: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { size: 11 }, callback: v => v + '%' } },
+        x: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { size: 11 }, callback: function(v) { return v + '%'; } } },
         y: { grid: { color: 'rgba(48,54,61,0.3)' }, ticks: { color: '#8b949e', font: { size: 10 } } }
       }
     }
   });
 }
 
-// ============ Benchmark ============
-function renderBenchmark(filtered, year) {
-  const valid = filtered.filter(c => c.data[year]);
-  const avgRev = valid.reduce((s, c) => s + c.data[year].revenue, 0) / valid.length;
-  const avgProfit = valid.reduce((s, c) => s + c.data[year].profit, 0) / valid.length;
-  const avgGross = valid.reduce((s, c) => s + c.data[year].grossMargin, 0) / valid.length;
-  const avgNet = valid.reduce((s, c) => s + c.data[year].netMargin, 0) / valid.length;
-  const avgRD = valid.reduce((s, c) => s + (c.data[year].rd || 0), 0) / valid.length;
-  const top = [...valid].sort((a, b) => b.data[year].revenue - a.data[year].revenue)[0];
-
-  const prevYear = String(parseInt(year) - 1);
-  let avgGrowth = null;
-  if (prevYear >= 2019) {
-    const withPrev = valid.filter(c => c.data[prevYear]);
-    if (withPrev.length > 0) {
-      avgGrowth = withPrev.reduce((s, c) => {
-        const prev = c.data[prevYear].revenue;
-        const curr = c.data[year].revenue;
-        return s + (prev > 0 ? ((curr - prev) / prev * 100) : 0);
-      }, 0) / withPrev.length;
-    }
+function renderBenchmark(data, filtered, year) {
+  var valid = filtered.filter(function(c) { return c.data[year]; });
+  var avgRev = valid.reduce(function(s,c) { return s + (c.data[year].revenue||0); }, 0) / valid.length;
+  var avgProfit = valid.reduce(function(s,c) { return s + (c.data[year].profit||0); }, 0) / valid.length;
+  var grossF = valid.filter(function(c) { return c.data[year].grossMargin !== null; });
+  var avgGross = grossF.length ? grossF.reduce(function(s,c) { return s + (c.data[year].grossMargin||0); }, 0) / grossF.length : 0;
+  var avgNet = valid.reduce(function(s,c) { return s + (c.data[year].netMargin||0); }, 0) / valid.length;
+  var rdF = valid.filter(function(c) { return c.data[year].rd > 0; });
+  var avgRD = rdF.length ? rdF.reduce(function(s,c) { return s + (c.data[year].rd||0); }, 0) / rdF.length : 0;
+  var top = valid.slice().sort(function(a,b) { return (b.data[year].revenue||0) - (a.data[year].revenue||0); })[0];
+  var prevYear = String(parseInt(year) - 1);
+  var avgGrowth = null;
+  var withPrev = valid.filter(function(c) { return c.data[prevYear]; });
+  if (withPrev.length) {
+    avgGrowth = withPrev.reduce(function(s,c) {
+      var p = c.data[prevYear].revenue;
+      var n = c.data[year].revenue;
+      return s + (p > 0 ? (n - p) / p * 100 : 0);
+    }, 0) / withPrev.length;
   }
-
-  document.getElementById('benchYear').textContent = year + '年行业均值（筛选后' + valid.length + '家公司）';
-  const grid = document.getElementById('benchmarkGrid');
-  const items = [
-    { label: '平均营收', value: avgRev.toFixed(1) + '亿', sub: '算数均值' },
-    { label: '平均净利润', value: avgProfit >= 0 ? '+' + avgProfit.toFixed(1) + '亿' : avgProfit.toFixed(1) + '亿', sub: '算数均值' },
-    { label: '平均毛利率', value: avgGross.toFixed(1) + '%', sub: '算数均值' },
-    { label: '平均净利率', value: avgNet.toFixed(1) + '%', sub: avgNet >= 0 ? '盈利区间' : '亏损区间', color: avgNet >= 0 ? 'var(--green)' : 'var(--red)' },
-    { label: '平均研发费用', value: avgRD.toFixed(1) + '亿', sub: '算数均值' },
-    { label: '营收冠军', value: top?.name || '-', sub: top ? top.data[year].revenue.toFixed(1) + '亿' : '' }
+  document.getElementById('benchYear').textContent = year + '年行业均值（筛选后' + valid.length + '家）';
+  var items = [
+    {label:'平均营收', value:fmt(avgRev), sub:'算数均值'},
+    {label:'平均净利润', value:(avgProfit>=0?'+':'') + fmt(avgProfit), sub:'算数均值', color:avgProfit>=0?'var(--green)':'var(--red)'},
+    {label:'平均毛利率', value:avgGross>0?avgGross.toFixed(1)+'%':'-', sub:'算数均值'},
+    {label:'平均净利率', value:avgNet.toFixed(1)+'%', sub:avgNet>=0?'盈利区间':'亏损区间', color:avgNet>=0?'var(--green)':'var(--red)'},
+    {label:'平均研发费用', value:avgRD>0?avgRD.toFixed(1)+'亿':'-', sub:avgRD>0?'算数均值':'无数据'},
+    {label:'营收冠军', value:top?top.name:'-', sub:top?fmt(top.data[year].revenue):''}
   ];
-  if (avgGrowth !== null) {
-    items.push({ label: '营收同比增速', value: (avgGrowth >= 0 ? '+' : '') + avgGrowth.toFixed(1) + '%', sub: prevYear + '→' + year, color: avgGrowth >= 0 ? 'var(--green)' : 'var(--red)' });
-  }
-
-  grid.innerHTML = items.map(item => `
-    <div class="bench-item">
-      <div class="bench-label">${item.label}</div>
-      <div class="bench-value" style="${item.color ? 'color:' + item.color : ''}">${item.value}</div>
-      <div class="bench-sub">${item.sub}</div>
-    </div>
-  `).join('');
-}
-
-// ============ Table ============
-function sortFiltered(filtered, year) {
-  const sorters = {
-    revenue_desc: (a, b) => (b.data[year]?.revenue || 0) - (a.data[year]?.revenue || 0),
-    revenue_asc: (a, b) => (a.data[year]?.revenue || 0) - (b.data[year]?.revenue || 0),
-    profit_desc: (a, b) => (b.data[year]?.profit || -999) - (a.data[year]?.profit || -999),
-    profit_margin_desc: (a, b) => (b.data[year]?.netMargin || -999) - (a.data[year]?.netMargin || -999),
-    gross_margin_desc: (a, b) => (b.data[year]?.grossMargin || -999) - (a.data[year]?.grossMargin || -999),
-    growth_desc: (a, b) => {
-      const prev = String(parseInt(year) - 1);
-      const ga = (a.data[year]?.revenue - (a.data[prev]?.revenue || 0)) / (a.data[prev]?.revenue || 1) * 100;
-      const gb = (b.data[year]?.revenue - (b.data[prev]?.revenue || 0)) / (b.data[prev]?.revenue || 1) * 100;
-      return gb - ga;
-    }
-  };
-  return [...filtered].sort(sorters[currentSort] || sorters.revenue_desc);
-}
-
-function renderTable(filtered, year) {
-  const sorted = sortFiltered(filtered, year);
-  const prevYear = String(parseInt(year) - 1);
-
-  // Table title
-  const segLabel = currentSeg === 'all' ? '全部公司' : currentSeg === 'top' ? 'A股头部' : currentSeg === 'mid' ? 'A股中小' : '港股';
-  document.getElementById('tableTitle').textContent = `📋 ${year}年公司财务明细表（${segLabel}）`;
-
-  // Header
-  const thead = document.getElementById('tableHead');
-  thead.innerHTML = `
-    <tr>
-      <th>公司</th>
-      <th>股票代码</th>
-      <th>营收(亿)</th>
-      <th>净利润(亿)</th>
-      <th>毛利率</th>
-      <th>净利率</th>
-      <th>同比增速</th>
-      <th>研发费用</th>
-      <th>操作</th>
-    </tr>
-  `;
-
-  // Body
-  const tbody = document.getElementById('tableBody');
-  tbody.innerHTML = sorted.map((c, i) => {
-    const d = c.data[year];
-    if (!d) return '';
-    const prev = c.data[prevYear];
-    const growth = prev && prev.revenue > 0 ? ((d.revenue - prev.revenue) / prev.revenue * 100) : null;
-    const profitClass = d.profit >= 0 ? 'positive' : 'negative';
-    const marginClass = d.netMargin >= 0 ? 'positive' : 'negative';
-    const rankClass = i === 0 ? 'rank-1' : i === 1 ? 'rank-2' : i === 2 ? 'rank-3' : 'rank-other';
-    const segBadge = c.seg === 'top' ? '<span class="flag top">头部</span>' : c.seg === 'mid' ? '<span class="flag" style="background:rgba(210,153,34,0.15);color:var(--yellow)">中小</span>' : '<span class="flag" style="background:rgba(57,197,207,0.15);color:var(--cyan)">港股</span>';
-    const lossBadge = d.profit < 0 ? '<span class="flag warn">亏损</span>' : '';
-    const grossColor = d.grossMargin >= 80 ? 'var(--green)' : d.grossMargin >= 60 ? 'var(--text)' : 'var(--yellow)';
-
-    return `
-      <tr>
-        <td>
-          <span class="rank-badge ${rankClass}">${i + 1}</span>
-          ${c.name}${segBadge}
-        </td>
-        <td>${c.code}</td>
-        <td class="positive">${d.revenue.toFixed(1)}</td>
-        <td class="${profitClass}">${d.profit >= 0 ? '+' : ''}${d.profit.toFixed(1)}${lossBadge}</td>
-        <td style="color:${grossColor}">${d.grossMargin.toFixed(1)}%</td>
-        <td class="${marginClass}">${d.netMargin >= 0 ? '+' : ''}${d.netMargin.toFixed(1)}%</td>
-        <td class="${growth !== null ? (growth >= 0 ? 'positive' : 'negative') : ''}">
-          ${growth !== null ? ((growth >= 0 ? '+' : '') + growth.toFixed(1) + '%') : '-'}
-        </td>
-        <td>${d.rd ? d.rd.toFixed(1) : '-'}</td>
-        <td><button class="detail-btn" onclick="openModal('${c.id}', '${year}')">详情</button></td>
-      </tr>
-    `;
+  if (avgGrowth !== null) items.push({label:'营收同比增速', value:(avgGrowth>=0?'+':'')+avgGrowth.toFixed(1)+'%', sub:prevYear+'→'+year, color:avgGrowth>=0?'var(--green)':'var(--red)'});
+  document.getElementById('benchmarkGrid').innerHTML = items.map(function(item) {
+    return '<div class="bench-item"><div class="bench-label">' + item.label + '</div><div class="bench-value" style="' + (item.color?'color:'+item.color:'') + '">' + item.value + '</div><div class="bench-sub">' + item.sub + '</div></div>';
   }).join('');
 }
 
-// ============ Charts for specific year ============
-function renderCharts(filtered, year) {
-  renderRevProfitChart(filtered, year);
-  renderMarginChart(filtered, year);
-}
+function renderTable() {
+  var year = currentYear === 'all' ? '2024' : currentYear;
+  var thead = document.getElementById('tableHead');
+  var tbody = document.getElementById('tableBody');
 
-// ============ Render All ============
-function render() {
-  const filtered = getFilteredCompanies();
-  const years = getYearRange();
-  const year = years.length === 1 ? years[0] : '2024';
-
-  if (currentYear === 'all') {
-    // Multi-year view: show 2024 as default
-    const year_2024 = '2024';
-    const kpis = calcKPIs(filtered);
-    renderKPIs(kpis);
-    renderTrendChart();
-    renderBenchmark(filtered, year_2024);
-    renderRevProfitChart(filtered, year_2024);
-    renderMarginChart(filtered, year_2024);
-    renderTable(filtered, year_2024);
-  } else {
-    const kpis = calcKPIs(filtered);
-    renderKPIs(kpis);
-    renderTrendChart();
-    renderBenchmark(filtered, year);
-    renderCharts(filtered, year);
-    renderTable(filtered, year);
+  if (currentIndustry === 'mostprofit') {
+    var allC = [];
+    Object.keys(MOST_PROFIT).forEach(function(k) {
+      MOST_PROFIT[k].companies.forEach(function(c) {
+        if (c.data[year]) allC.push(Object.assign({}, c, {_ind: MOST_PROFIT[k].name}));
+      });
+    });
+    allC.sort(function(a,b) { return (b.data[year]&&b.data[year].profit||0) - (a.data[year]&&a.data[year].profit||0); });
+    thead.innerHTML = '<tr><th>排名</th><th>公司</th><th>行业</th><th>股票代码</th><th>营收</th><th>净利润</th><th>净利率</th><th>毛利率</th></tr>';
+    tbody.innerHTML = allC.map(function(c,i) {
+      var d = c.data[year];
+      var rc = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'rank-other';
+      var gc = d.grossMargin !== null ? (d.grossMargin>=90?'var(--green)':d.grossMargin>=60?'var(--text)':'var(--yellow)') : '';
+      return '<tr><td><span class="rank-badge ' + rc + '">' + (i+1) + '</span></td><td><strong>' + c.name + '</strong></td><td>' + c._ind + '</td><td>' + c.code + '</td><td class="positive">' + fmt(d.revenue) + '</td><td class="positive">+' + fmt(d.profit) + '</td><td class="positive">+' + d.netMargin.toFixed(1) + '%</td><td style="color:' + gc + '">' + (d.grossMargin !== null ? d.grossMargin.toFixed(1)+'%' : '-') + '</td></tr>';
+    }).join('');
+    return;
   }
+
+  var data = ALL_DATA[currentIndustry];
+  if (!data) return;
+  var filtered = data.companies.filter(function(c) { return !currentYear || currentYear === 'all' || c.data[currentYear]; });
+  var sorters = {
+    revenue_desc: function(a,b) { return (b.data[year]&&b.data[year].revenue||0) - (a.data[year]&&a.data[year].revenue||0); },
+    revenue_asc: function(a,b) { return (a.data[year]&&a.data[year].revenue||9999) - (b.data[year]&&b.data[year].revenue||9999); },
+    profit_desc: function(a,b) { return (b.data[year]&&b.data[year].profit||(-999)) - (a.data[year]&&a.data[year].profit||(-999)); },
+    profit_margin_desc: function(a,b) { return (b.data[year]&&b.data[year].netMargin||(-999)) - (a.data[year]&&a.data[year].netMargin||(-999)); },
+    gross_margin_desc: function(a,b) { return (b.data[year]&&b.data[year].grossMargin||(-999)) - (a.data[year]&&a.data[year].grossMargin||(-999)); },
+    growth_desc: function(a,b) {
+      var prev = String(parseInt(year)-1);
+      var ga = a.data[year] ? (a.data[prev] ? (a.data[year].revenue - a.data[prev].revenue) / a.data[prev].revenue * 100 : 0) : 0;
+      var gb = b.data[year] ? (b.data[prev] ? (b.data[year].revenue - b.data[prev].revenue) / b.data[prev].revenue * 100 : 0) : 0;
+      return gb - ga;
+    }
+  };
+  var sorted = filtered.slice().sort(sorters[currentSort] || sorters.revenue_desc);
+  var hasGross = filtered.some(function(c) { return c.data[year] && c.data[year].grossMargin !== null; });
+  var hasRD = filtered.some(function(c) { return c.data[year] && c.data[year].rd > 0; });
+  document.getElementById('tableTitle').textContent = '&#128279; ' + year + '年公司财务明细表（' + data.name + '）';
+
+  var th = '<tr><th>公司</th><th>股票代码</th><th>营收</th><th>净利润</th>';
+  if (hasGross) th += '<th>毛利率</th>';
+  th += '<th>净利率</th><th>同比增速</th>';
+  if (hasRD) th += '<th>研发费用</th>';
+  th += '<th>操作</th></tr>';
+  thead.innerHTML = th;
+
+  var prevYear = String(parseInt(year) - 1);
+  tbody.innerHTML = sorted.map(function(c,i) {
+    var d = c.data[year];
+    if (!d) return '';
+    var prev = c.data[prevYear];
+    var growth = prev && prev.revenue > 0 ? (d.revenue - prev.revenue) / prev.revenue * 100 : null;
+    var pc = d.profit >= 0 ? 'positive' : 'negative';
+    var nc = d.netMargin >= 0 ? 'positive' : 'negative';
+    var rc = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'rank-other';
+    var gc = d.grossMargin !== null ? (d.grossMargin>=80?'var(--green)':d.grossMargin>=60?'var(--text)':'var(--yellow)') : '';
+    var topBadge = i < 3 && d.profit > 0 ? '<span class="flag star">TOP' + (i+1) + '</span>' : '';
+    var lossBadge = d.profit < 0 ? '<span class="flag warn">亏损</span>' : '';
+
+    var row = '<tr><td><span class="rank-badge ' + rc + '">' + (i+1) + '</span>' + c.name + topBadge + '</td><td>' + c.code + '</td><td class="positive">' + fmt(d.revenue) + '</td><td class="' + pc + '">' + (d.profit>=0?'+':'') + fmt(d.profit) + lossBadge + '</td>';
+    if (hasGross) row += '<td style="color:' + gc + '">' + (d.grossMargin !== null ? d.grossMargin.toFixed(1)+'%' : '-') + '</td>';
+    row += '<td class="' + nc + '">' + (d.netMargin>=0?'+':'') + d.netMargin.toFixed(1) + '%</td>';
+    row += '<td class="' + (growth !== null ? (growth>=0?'positive':'negative') : '') + '">' + (growth !== null ? ((growth>=0?'+':'') + growth.toFixed(1) + '%') : '-') + '</td>';
+    if (hasRD) row += '<td>' + (d.rd > 0 ? d.rd.toFixed(1) : '-') + '</td>';
+    row += '<td><button class="detail-btn" onclick="openModal(\'' + c.id + '\',\'' + year + '\')">详情</button></td></tr>';
+    return row;
+  }).join('');
 }
 
-// ============ Modal ============
-function openModal(companyId, year) {
-  const company = companies.find(c => c.id === companyId);
+// ===================== MODAL =====================
+function findCompany(id) {
+  var found = null, source = null;
+  Object.keys(ALL_DATA).forEach(function(k) {
+    var c = ALL_DATA[k].companies.find(function(x) { return x.id === id; });
+    if (c) { found = c; source = ALL_DATA[k]; }
+  });
+  if (!found) {
+    Object.keys(MOST_PROFIT).forEach(function(k) {
+      var c = MOST_PROFIT[k].companies.find(function(x) { return x.id === id; });
+      if (c) { found = c; source = MOST_PROFIT[k]; }
+    });
+  }
+  return found;
+}
+
+function openModal(id, year) {
+  var company = findCompany(id);
   if (!company) return;
-
   document.getElementById('modalTitle').textContent = company.name;
-  document.getElementById('modalSub').textContent = `${company.code} · ${company.exchange} · ${company.desc}`;
-
+  document.getElementById('modalSub').textContent = company.code + ' &middot; ' + (company.exchange || '');
   switchModalTab(0);
   document.getElementById('modalOverlay').classList.add('show');
-
-  // Store for tab switching
-  window._modalCompany = company;
-  window._modalYear = year;
+  window._mc = company;
+  window._my = year;
 }
 
 function switchModalTab(idx) {
-  document.querySelectorAll('.modal-tab').forEach((t, i) => {
-    t.classList.toggle('active', i === idx);
-  });
-
-  const company = window._modalCompany;
-  const year = window._modalYear;
-  const body = document.getElementById('modalBody');
+  document.querySelectorAll('.modal-tab').forEach(function(t,i) { t.classList.toggle('active', i===idx); });
+  var company = window._mc, year = window._my;
+  var body = document.getElementById('modalBody');
+  if (!company || !company.data || !company.data[year]) { body.innerHTML = ''; return; }
+  var d = company.data[year];
+  var prevYear = String(parseInt(year) - 1);
+  var prev = company.data[prevYear];
+  var growth = prev && prev.revenue > 0 ? ((d.revenue - prev.revenue) / prev.revenue * 100) : null;
 
   if (idx === 0) {
-    // 财务概览
-    const d = company.data[year];
-    const prevYear = String(parseInt(year) - 1);
-    const prev = company.data[prevYear];
-    const growth = prev && prev.revenue > 0 ? ((d.revenue - prev.revenue) / prev.revenue * 100) : null;
-
-    body.innerHTML = `
-      <h4>核心财务指标 · ${year}年</h4>
-      <div class="financial-metrics">
-        <div class="metric-box"><div class="metric-label">营业收入</div><div class="metric-value positive">${d.revenue.toFixed(2)}亿</div></div>
-        <div class="metric-box"><div class="metric-label">净利润</div><div class="metric-value" style="color:${d.profit>=0?'var(--green)':'var(--red)'}">${d.profit>=0?'+':''}${d.profit.toFixed(2)}亿</div></div>
-        <div class="metric-box"><div class="metric-label">毛利率</div><div class="metric-value" style="color:${d.grossMargin>=80?'var(--green)':'var(--text)'}">${d.grossMargin.toFixed(1)}%</div></div>
-        <div class="metric-box"><div class="metric-label">净利率</div><div class="metric-value" style="color:${d.netMargin>=0?'var(--green)':'var(--red)'}">${d.netMargin>=0?'+':''}${d.netMargin.toFixed(1)}%</div></div>
-        <div class="metric-box"><div class="metric-label">研发费用</div><div class="metric-value">${d.rd ? d.rd.toFixed(2) + '亿' : '-'}</div></div>
-        <div class="metric-box"><div class="metric-label">同比增速</div><div class="metric-value" style="color:${growth>=0?'var(--green)':'var(--red)'}">${growth !== null ? ((growth>=0?'+':'')+growth.toFixed(1)+'%') : '-'}</div></div>
-      </div>
-      <h4>多年度财务表现</h4>
-      <div class="table-scroll" style="margin-top:8px;">
-        <table style="font-size:11px;">
-          <thead><tr><th>指标</th>${['2019','2020','2021','2022','2023','2024'].map(y => `<th>${y}</th>`).join('')}</tr></thead>
-          <tbody>
-            ${['revenue','profit','grossMargin','netMargin'].map(m => {
-              const labels = {revenue:'营收(亿)', profit:'净利润(亿)', grossMargin:'毛利率(%)', netMargin:'净利率(%)'};
-              return `<tr><td style="color:var(--text2);font-weight:500">${labels[m]}</td>${['2019','2020','2021','2022','2023','2024'].map(y => {
-                const v = company.data[y] ? (m.endsWith('Margin') ? company.data[y][m].toFixed(1) : company.data[y][m].toFixed(1)) : '-';
-                const cls = company.data[y] ? (m === 'profit' ? (company.data[y].profit >= 0 ? 'positive' : 'negative') : '') : '';
-                return `<td class="${cls}">${v}</td>`;
-              }).join('')}</tr>`;
-            }).join('')}
-          </tbody>
-        </table>
-      </div>
-    `;
+    body.innerHTML = '<h4>核心财务指标 &middot; ' + year + '年</h4><div class="financial-metrics">' +
+      '<div class="metric-box"><div class="metric-label">营业收入</div><div class="metric-value positive">' + fmt(d.revenue) + '</div></div>' +
+      '<div class="metric-box"><div class="metric-label">净利润</div><div class="metric-value" style="color:' + (d.profit>=0?'var(--green)':'var(--red)') + '">' + (d.profit>=0?'+':'') + fmt(d.profit) + '</div></div>' +
+      '<div class="metric-box"><div class="metric-label">毛利率</div><div class="metric-value" style="color:' + (d.grossMargin===null?'':(d.grossMargin>=80?'var(--green)':'var(--text)')) + '">' + (d.grossMargin!==null?d.grossMargin.toFixed(1)+'%':'-') + '</div></div>' +
+      '<div class="metric-box"><div class="metric-label">净利率</div><div class="metric-value" style="color:' + (d.netMargin>=0?'var(--green)':'var(--red)') + '">' + (d.netMargin>=0?'+':'') + d.netMargin.toFixed(1) + '%</div></div>' +
+      '<div class="metric-box"><div class="metric-label">研发费用</div><div class="metric-value">' + (d.rd>0?d.rd.toFixed(2)+'亿':'-') + '</div></div>' +
+      '<div class="metric-box"><div class="metric-label">同比增速</div><div class="metric-value" style="color:' + (growth>=0?'var(--green)':'var(--red)') + '">' + (growth !== null ? ((growth>=0?'+':'')+growth.toFixed(1)+'%') : '-') + '</div></div>' +
+      '</div>' +
+      '<h4>多年度财务表现</h4><div class="table-scroll" style="margin-top:8px;"><table style="font-size:11px;"><thead><tr><th>指标</th>' + YEARS.map(function(y) { return '<th>' + y + '</th>'; }).join('') + '</tr></thead><tbody>' +
+      ['revenue','profit','grossMargin','netMargin'].map(function(m) {
+        var labels = {revenue:'营收(亿)', profit:'净利润(亿)', grossMargin:'毛利率(%)', netMargin:'净利率(%)'};
+        return '<tr><td style="color:var(--text2);font-weight:500">' + labels[m] + '</td>' + YEARS.map(function(y) {
+          var v = company.data[y] ? (m === 'profit' ? fmt(company.data[y][m]) : (company.data[y][m] !== null ? company.data[y][m].toFixed(1) : '-')) : '-';
+          var cls = company.data[y] ? (m === 'profit' ? (company.data[y].profit >= 0 ? 'positive' : 'negative') : '') : '';
+          return '<td class="' + cls + '">' + v + '</td>';
+        }).join('') + '</tr>';
+      }).join('') + '</tbody></table></div>';
   } else if (idx === 1) {
-    // 多年度趋势
-    const years = ['2019', '2020', '2021', '2022', '2023', '2024'];
-    const revData = years.map(y => company.data[y]?.revenue || null);
-    const profitData = years.map(y => company.data[y]?.profit || null);
-    const grossData = years.map(y => company.data[y]?.grossMargin || null);
-    const netData = years.map(y => company.data[y]?.netMargin || null);
-
-    body.innerHTML = `
-      <h4>营收与净利润趋势</h4>
-      <div class="chart-modal-wrap"><canvas id="modalTrendChart"></canvas></div>
-      <h4 style="margin-top:16px">利润率趋势</h4>
-      <div class="chart-modal-wrap"><canvas id="modalMarginChart"></canvas></div>
-    `;
-
-    setTimeout(() => {
+    var revData = YEARS.map(function(y) { return company.data[y] ? company.data[y].revenue : null; });
+    var profitData = YEARS.map(function(y) { return company.data[y] ? company.data[y].profit : null; });
+    var grossData = YEARS.map(function(y) { return company.data[y] && company.data[y].grossMargin !== null ? company.data[y].grossMargin : null; });
+    var netData = YEARS.map(function(y) { return company.data[y] ? company.data[y].netMargin : null; });
+    body.innerHTML = '<h4>营收与净利润趋势</h4><div class="chart-modal-wrap"><canvas id="modalTrendChart"></canvas></div><h4 style="margin-top:16px">利润率趋势</h4><div class="chart-modal-wrap"><canvas id="modalMarginChart"></canvas></div>';
+    setTimeout(function() {
       new Chart(document.getElementById('modalTrendChart'), {
-        type: 'line',
-        data: {
-          labels: years,
-          datasets: [
-            { label: '营收(亿)', data: revData, borderColor: '#388bfd', tension: 0.4, borderWidth: 2, fill: false, pointRadius: 4 },
-            { label: '净利润(亿)', data: profitData, borderColor: profitData.map(v => v >= 0 ? '#3fb950' : '#f85149'), tension: 0.4, borderWidth: 2, fill: false, pointRadius: 4 }
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { labels: { color: '#8b949e', font: { size: 11 } } } },
-          scales: {
-            x: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { size: 11 } } },
-            y: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { size: 11 }, callback: v => v + '亿' } }
-          }
-        }
+        type: 'line', data: { labels: YEARS, datasets: [
+          { label: '营收(亿)', data: revData, borderColor: '#388bfd', tension: 0.4, borderWidth: 2, fill: false, pointRadius: 4 },
+          { label: '净利润(亿)', data: profitData, borderColor: profitData.map(function(v) { return v >= 0 ? '#3fb950' : '#f85149'; }), tension: 0.4, borderWidth: 2, fill: false, pointRadius: 4 }
+        ] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#8b949e', font: { size: 11 } } } }, scales: { x: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { size: 11 } } }, y: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { size: 11 }, callback: function(v) { return fmt(v); } } } } }
       });
-
       new Chart(document.getElementById('modalMarginChart'), {
-        type: 'line',
-        data: {
-          labels: years,
-          datasets: [
-            { label: '毛利率(%)', data: grossData, borderColor: '#a371f7', tension: 0.4, borderWidth: 2, fill: false, pointRadius: 4 },
-            { label: '净利率(%)', data: netData, borderColor: netData.map(v => v >= 0 ? '#3fb950' : '#f85149'), tension: 0.4, borderWidth: 2, fill: false, pointRadius: 4 }
-          ]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { labels: { color: '#8b949e', font: { size: 11 } } } },
-          scales: {
-            x: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { size: 11 } } },
-            y: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { size: 11 }, callback: v => v + '%' } }
-          }
-        }
+        type: 'line', data: { labels: YEARS, datasets: [
+          { label: '毛利率(%)', data: grossData, borderColor: '#a371f7', tension: 0.4, borderWidth: 2, fill: false, pointRadius: 4 },
+          { label: '净利率(%)', data: netData, borderColor: netData.map(function(v) { return v >= 0 ? '#3fb950' : '#f85149'; }), tension: 0.4, borderWidth: 2, fill: false, pointRadius: 4 }
+        ] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#8b949e', font: { size: 11 } } } }, scales: { x: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { size: 11 } } }, y: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { size: 11 }, callback: function(v) { return v + '%'; } } } } }
       });
     }, 50);
   } else if (idx === 2) {
-    // 产品与战略
-    body.innerHTML = `
-      <h4>核心产品</h4>
-      <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px;">
-        <div style="color:var(--text2);font-size:11px;margin-bottom:8px;">代表产品</div>
-        <div style="font-size:13px;line-height:1.8;">${company.detail.products}</div>
-      </div>
-      <h4>战略定位</h4>
-      <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px;">
-        <div style="font-size:13px;line-height:1.8;">${company.detail.strategy}</div>
-      </div>
-      <h4>核心亮点</h4>
-      <div style="background:rgba(31,111,235,0.08);border:1px solid rgba(31,111,235,0.2);border-radius:8px;padding:16px;">
-        <div style="font-size:13px;line-height:1.8;color:var(--accent2);">${company.detail.highlight}</div>
-      </div>
-      <h4 style="margin-top:16px">历年营收趋势</h4>
-      <div class="chart-modal-wrap"><canvas id="modalRevChart"></canvas></div>
-    `;
-
-    setTimeout(() => {
-      const years = ['2019', '2020', '2021', '2022', '2023', '2024'];
-      const colors = ['#f85149', '#388bfd', '#a371f7', '#3fb950', '#d29922', '#39c5cf'];
+    var revBarData = YEARS.map(function(y) { return company.data[y] ? company.data[y].revenue : null; });
+    body.innerHTML = '<h4>核心产品</h4><div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px;"><div style="font-size:13px;line-height:1.8;">' + (company.detail && company.detail.products ? company.detail.products : '-') + '</div></div>' +
+      '<h4>战略定位</h4><div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px;"><div style="font-size:13px;line-height:1.8;">' + (company.detail && company.detail.strategy ? company.detail.strategy : '-') + '</div></div>' +
+      '<h4>核心亮点</h4><div style="background:rgba(31,111,235,0.08);border:1px solid rgba(31,111,235,0.2);border-radius:8px;padding:16px;"><div style="font-size:13px;line-height:1.8;color:var(--accent2);">' + (company.detail && company.detail.highlight ? company.detail.highlight : '-') + '</div></div>' +
+      '<h4 style="margin-top:16px">历年营收趋势</h4><div class="chart-modal-wrap"><canvas id="modalRevChart"></canvas></div>';
+    setTimeout(function() {
       new Chart(document.getElementById('modalRevChart'), {
-        type: 'bar',
-        data: {
-          labels: years,
-          datasets: [{
-            label: '营业收入(亿)',
-            data: years.map(y => company.data[y]?.revenue || null),
-            backgroundColor: 'rgba(56,139,253,0.6)',
-            borderColor: '#388bfd',
-            borderWidth: 1,
-            borderRadius: 4
-          }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: { legend: { labels: { color: '#8b949e', font: { size: 11 } } } },
-          scales: {
-            x: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { size: 11 } } },
-            y: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { size: 11 }, callback: v => v + '亿' } }
-          }
-        }
+        type: 'bar', data: { labels: YEARS, datasets: [{ label: '营业收入', data: revBarData, backgroundColor: 'rgba(56,139,253,0.6)', borderColor: '#388bfd', borderWidth: 1, borderRadius: 4 }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#8b949e', font: { size: 11 } } } }, scales: { x: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { size: 11 } } }, y: { grid: { color: 'rgba(48,54,61,0.5)' }, ticks: { color: '#8b949e', font: { size: 11 }, callback: function(v) { return fmt(v); } } } } }
       });
     }, 50);
   }
@@ -1050,16 +804,22 @@ function switchModalTab(idx) {
 
 function closeModal() {
   document.getElementById('modalOverlay').classList.remove('show');
-  window._modalCompany = null;
+  window._mc = null;
 }
 
-document.getElementById('modalOverlay').addEventListener('click', (e) => {
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
   if (e.target === document.getElementById('modalOverlay')) closeModal();
 });
-
-document.addEventListener('keydown', (e) => {
+document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeModal();
 });
+
+// Make openModal global for inline handlers
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.switchModalTab = switchModalTab;
+
+})();
 </script>
 </body>
 </html>
