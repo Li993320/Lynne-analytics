@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lynne Analytic · 各国税务对比</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.css">
+<style>
+:root {
+  --bg: #0d1117;
+  --card: #161b22;
+  --card2: #1c2128;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text2: #8b949e;
+  --blue: #1f6feb;
+  --blue2: #60a0fa;
+  --green: #3fb950;
+  --red: #f85149;
+  --yellow: #e3b341;
+  --purple: #bc8cff;
+  --orange: #ffa657;
+  --pink: #ff7eb6;
+  --cyan: #39d353;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'PingFang SC','Microsoft YaHei',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+a { color:var(--blue2); text-decoration:none; }
+
+/* Header */
+.header { display:flex; align-items:center; gap:12px; padding:16px 24px; border-bottom:1px solid var(--border); background:var(--card); position:sticky; top:0; z-index:100; }
+.header-brand { display:flex; align-items:center; gap:8px; font-size:16px; font-weight:700; color:var(--text); }
+.header-brand .dot { width:8px; height:8px; border-radius:50%; background:var(--blue); }
+.header-nav { display:flex; gap:4px; margin-left:24px; }
+.header-nav a { padding:6px 12px; border-radius:6px; font-size:13px; color:var(--text2); transition:all 0.2s; }
+.header-nav a:hover, .header-nav a.active { background:var(--blue); color:#fff; }
+.header-right { margin-left:auto; display:flex; align-items:center; gap:12px; }
+.header-time { font-size:12px; color:var(--text2); }
+
+/* Main */
+.main { max-width:1400px; margin:0 auto; padding:24px; }
+
+/* Page header */
+.page-header { margin-bottom:24px; }
+.page-header .tag { display:inline-flex; align-items:center; gap:6px; background:rgba(31,111,235,0.15); border:1px solid rgba(31,111,235,0.3); color:var(--blue2); padding:4px 12px; border-radius:20px; font-size:12px; margin-bottom:12px; }
+.page-header h1 { font-size:26px; font-weight:700; margin-bottom:8px; background:linear-gradient(90deg, #e6edf3, #8b949e); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.page-header .subtitle { color:var(--text2); font-size:13px; }
+
+/* Filter bar */
+.filter-bar { display:flex; gap:12px; margin-bottom:24px; flex-wrap:wrap; align-items:center; }
+.filter-group { display:flex; align-items:center; gap:8px; }
+.filter-group label { font-size:13px; color:var(--text2); }
+select, input { background:var(--card2); border:1px solid var(--border); color:var(--text); padding:6px 12px; border-radius:6px; font-size:13px; outline:none; }
+select:focus, input:focus { border-color:var(--blue); }
+select { cursor:pointer; }
+
+/* KPI Cards */
+.kpi-row { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:12px; margin-bottom:24px; }
+.kpi-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; }
+.kpi-card .label { font-size:12px; color:var(--text2); margin-bottom:6px; }
+.kpi-card .value { font-size:22px; font-weight:700; color:var(--text); }
+.kpi-card .sub { font-size:12px; color:var(--text2); margin-top:4px; }
+.kpi-card .badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; margin-left:6px; }
+.badge-red { background:rgba(248,81,73,0.15); color:var(--red); }
+.badge-blue { background:rgba(31,111,235,0.15); color:var(--blue2); }
+.badge-green { background:rgba(63,185,80,0.15); color:var(--green); }
+.badge-yellow { background:rgba(227,179,65,0.15); color:var(--yellow); }
+.badge-purple { background:rgba(188,140,255,0.15); color:var(--purple); }
+
+/* Section titles */
+.section-title { font-size:16px; font-weight:600; margin-bottom:12px; color:var(--text); display:flex; align-items:center; gap:8px; }
+.section-title .icon { font-size:18px; }
+
+/* Charts grid */
+.charts-row { display:grid; grid-template-columns:repeat(auto-fit, minmax(500px, 1fr)); gap:16px; margin-bottom:24px; }
+.chart-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px; }
+.chart-wrap { position:relative; height:300px; margin-top:12px; }
+
+/* Country table */
+.table-wrap { background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-bottom:24px; }
+.table-header { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.table-header h3 { font-size:15px; font-weight:600; }
+.data-table { width:100%; border-collapse:collapse; }
+.data-table th { background:var(--card2); padding:10px 14px; text-align:left; font-size:12px; color:var(--text2); font-weight:500; border-bottom:1px solid var(--border); white-space:nowrap; position:sticky; top:0; }
+.data-table td { padding:10px 14px; font-size:13px; border-bottom:1px solid rgba(48,54,61,0.5); }
+.data-table tr:hover td { background:rgba(31,111,235,0.06); }
+.data-table tr:last-child td { border-bottom:none; }
+.flag { font-size:16px; margin-right:6px; }
+.tax-rate { font-weight:600; }
+.tax-rate.high { color:var(--red); }
+.tax-rate.mid { color:var(--yellow); }
+.tax-rate.low { color:var(--green); }
+.compare-bar { display:flex; align-items:center; gap:8px; }
+.compare-bar .bar { height:6px; background:var(--blue); border-radius:3px; min-width:4px; }
+.compare-bar .val { font-size:12px; color:var(--text2); min-width:36px; }
+.tag-inline { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; }
+
+/* Industry tabs */
+.industry-tabs { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+.ind-tab { padding:6px 16px; border-radius:20px; font-size:13px; cursor:pointer; border:1px solid var(--border); background:var(--card2); color:var(--text2); transition:all 0.2s; }
+.ind-tab:hover { border-color:var(--blue); color:var(--text); }
+.ind-tab.active { background:var(--blue); color:#fff; border-color:var(--blue); }
+
+/* Tax burden card */
+.burden-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:16px; margin-bottom:24px; }
+.burden-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px; }
+.burden-country { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+.burden-country .name { font-size:15px; font-weight:600; }
+.burden-country .code { font-size:12px; color:var(--text2); }
+.burden-bars { display:flex; flex-direction:column; gap:8px; }
+.burden-item { display:flex; align-items:center; gap:10px; }
+.burden-item .lbl { font-size:12px; color:var(--text2); width:80px; flex-shrink:0; }
+.burden-item .track { flex:1; height:8px; background:var(--card2); border-radius:4px; overflow:hidden; }
+.burden-item .fill { height:100%; border-radius:4px; transition:width 0.6s; }
+.burden-item .val { font-size:12px; font-weight:600; width:44px; text-align:right; flex-shrink:0; }
+.burden-total { margin-top:14px; padding-top:14px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+.burden-total .lbl { font-size:13px; color:var(--text2); }
+.burden-total .val { font-size:20px; font-weight:700; color:var(--text); }
+.burden-total .tip { font-size:11px; color:var(--text2); }
+
+/* Radar chart */
+.radar-wrap { height:320px; position:relative; }
+
+/* Summary table */
+.summary-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:12px; margin-bottom:24px; }
+.summary-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; }
+.summary-card .country { display:flex; align-items:center; gap:8px; font-size:14px; font-weight:600; margin-bottom:10px; }
+.summary-card .items { display:flex; flex-direction:column; gap:6px; }
+.summary-card .item { display:flex; justify-content:space-between; font-size:12px; }
+.summary-card .item .lbl { color:var(--text2); }
+.summary-card .item .val { font-weight:600; }
+.summary-card .item.highlight { margin-top:6px; padding-top:6px; border-top:1px solid var(--border); }
+.summary-card .item.highlight .val { color:var(--red); font-size:13px; }
+
+/* Note */
+.note-box { background:rgba(227,179,65,0.1); border:1px solid rgba(227,179,65,0.3); border-radius:8px; padding:12px 16px; margin-bottom:24px; font-size:13px; color:var(--text2); }
+.note-box strong { color:var(--yellow); }
+
+/* Footer */
+.footer { text-align:center; padding:24px; color:var(--text2); font-size:12px; border-top:1px solid var(--border); margin-top:40px; }
+.footer a { color:var(--blue2); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width:6px; height:6px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+
+/* Responsive */
+@media(max-width:768px) {
+  .charts-row { grid-template-columns:1fr; }
+  .header-nav { display:none; }
+  .kpi-row { grid-template-columns:repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-brand"><span class="dot"></span>Lynne Analytic</div>
+  <nav class="header-nav">
+    <a href="index.html">广告投放</a>
+    <a href="ads.html">趋势分析</a>
+    <a href="finance/report-2022.html">财务分析</a>
+    <a href="tax.html" class="active">各国税务</a>
+  </nav>
+  <div class="header-right">
+    <span class="header-time" id="clock"></span>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- Page header -->
+  <div class="page-header">
+    <div class="tag">🏛️ 宏观洞察 · 税务专题</div>
+    <h1>全球主要经济体税务对比</h1>
+    <div class="subtitle">增值税 / 企业所得税 / 消费税 / 个人所得税 / 社保费率 横向对比 &middot; 数据来源：各国财政部、OECD、IMF官方统计</div>
+  </div>
+
+  <!-- KPI row -->
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="label">对比国家</div>
+      <div class="value">8 <span class="badge badge-blue">个</span></div>
+      <div class="sub">中、美、英、德、日、新加坡、香港、韩国</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">最高企业所得税</div>
+      <div class="value">37.0% <span class="badge badge-red">美国</span></div>
+      <div class="sub">联邦+州综合税率（加州可达40%+）</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">最低企业所得税</div>
+      <div class="value">0% <span class="badge badge-green">香港</span></div>
+      <div class="sub">香港利得税（首200万HKD享8.25%优惠）</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">中国综合税负估算</div>
+      <div class="value">≈51.3% <span class="badge badge-yellow">制造业</span></div>
+      <div class="sub">企业所得+增值+个人+社保（企业端）</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">新加坡综合税负估算</div>
+      <div class="value">≈19.5% <span class="badge badge-green">制造业</span></div>
+      <div class="sub">企业所得17%+增值9%+无消费税+低社保</div>
+    </div>
+    <div class="kpi-card">
+      <div class="label">VAT最高税率</div>
+      <div class="value">25% <span class="badge badge-purple">德国/北欧</span></div>
+      <div class="sub">德国、瑞典、挪威、丹麦均执行25%</div>
+    </div>
+  </div>
+
+  <!-- Note -->
+  <div class="note-box">
+    <strong>数据说明：</strong>
+    各国税率基于2024年度最新官方数据。综合税负为简化估算（含企业所得税+VAT+消费税+企业端社保，假设制造业/白领标准场景）。香港无增值税和个人所得税；新加坡企业所得税17%但有大量免税额度；中国数据含增值税（13%）、企业所得税（25%）、城建及附加（约12%）、企业端社保（约30%）、个人所得税（最高45%）。各国具体政策存在大量减免、豁免、补贴，实际税负可能显著低于名义税率。
+  </div>
+
+  <!-- Filter -->
+  <div class="filter-bar">
+    <div class="filter-group">
+      <label>对比维度</label>
+      <select id="viewMode">
+        <option value="all">全部税种</option>
+        <option value="vat">增值税 (VAT)</option>
+        <option value="cit">企业所得税</option>
+        <option value="excise">消费税</option>
+        <option value="pit">个人所得税</option>
+        <option value="social">社保费率</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>行业场景</label>
+      <select id="industrySelect">
+        <option value="mfg">制造业</option>
+        <option value="retail">零售/商贸</option>
+        <option value="tech">科技/互联网</option>
+        <option value="finance">金融</option>
+        <option value="service">专业服务</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>收入规模</label>
+      <select id="scaleSelect">
+        <option value="sm">小型 (年收&lt;100万USD)</option>
+        <option value="md" selected>中型 (100万-1000万USD)</option>
+        <option value="lg">大型 (&gt;1000万USD)</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="charts-row">
+    <div class="chart-card">
+      <div class="section-title"><span class="icon">📊</span> 企业所得税税率对比 (%)</div>
+      <div class="chart-wrap"><canvas id="citChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="section-title"><span class="icon">📊</span> 增值税 / 销售税税率对比 (%)</div>
+      <div class="chart-wrap"><canvas id="vatChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="charts-row">
+    <div class="chart-card">
+      <div class="section-title"><span class="icon">📊</span> 消费税税率对比 (%)</div>
+      <div class="chart-wrap"><canvas id="exciseChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="section-title"><span class="icon">📊</span> 个人所得税最高边际税率对比 (%)</div>
+      <div class="chart-wrap"><canvas id="pitChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Radar + Burden -->
+  <div class="charts-row">
+    <div class="chart-card">
+      <div class="section-title"><span class="icon">🕸️</span> 综合税负雷达图（标准化，越靠外税负越重）</div>
+      <div class="radar-wrap"><canvas id="radarChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="section-title"><span class="icon">🏭</span> 制造业综合税负构成（估算值）</div>
+      <div class="chart-wrap"><canvas id="burdenChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Country burden detail -->
+  <div class="section-title" style="margin-bottom:16px;"><span class="icon">🗂️</span> 各国税务明细对比表</div>
+  <div class="table-wrap">
+    <div class="table-header">
+      <h3>主要经济体税务横向对比</h3>
+      <span style="font-size:12px;color:var(--text2)">数据截至2024年度 · 制造业/标准白领场景</span>
+    </div>
+    <div style="overflow-x:auto;">
+    <table class="data-table" id="taxTable">
+      <thead>
+        <tr>
+          <th>国家/地区</th>
+          <th>企业所得税</th>
+          <th>增值税(VAT/GST)</th>
+          <th>消费税</th>
+          <th>个人所得税(最高)</th>
+          <th>社保企业端</th>
+          <th>综合估算税负</th>
+          <th>名义总税率</th>
+          <th>特点</th>
+        </tr>
+      </thead>
+      <tbody id="taxTableBody"></tbody>
+    </table>
+    </div>
+  </div>
+
+  <!-- Country detail cards -->
+  <div class="section-title" style="margin-bottom:16px;"><span class="icon">🌍</span> 各主要经济体税务制度简介</div>
+  <div class="burden-grid" id="countryCards"></div>
+
+  <!-- Industry tax burden comparison -->
+  <div class="section-title" style="margin-bottom:16px;"><span class="icon">🏢</span> 按行业综合税负估算对比</div>
+  <div class="table-wrap">
+    <div class="table-header">
+      <h3>不同行业场景下综合税负估算（中型企业，100万-1000万USD）</h3>
+    </div>
+    <div style="overflow-x:auto;">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>行业场景</th>
+          <th>🇨🇳 中国</th>
+          <th>🇺🇸 美国</th>
+          <th>🇬🇧 英国</th>
+          <th>🇩🇪 德国</th>
+          <th>🇯🇵 日本</th>
+          <th>🇸🇬 新加坡</th>
+          <th>🇭🇰 香港</th>
+          <th>🇰🇷 韩国</th>
+        </tr>
+      </thead>
+      <tbody id="industryTableBody"></tbody>
+    </table>
+    </div>
+  </div>
+
+  <!-- Summary chart: bar by country -->
+  <div class="charts-row">
+    <div class="chart-card" style="grid-column:1/-1;">
+      <div class="section-title"><span class="icon">🏆</span> 综合税负总览（制造业中型企业，估算值）</div>
+      <div class="chart-wrap" style="height:400px;"><canvas id="overviewChart"></canvas></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Lynne Analytic · 各国税务对比 &middot; 数据来源：各国财政部官网、OECD、IMF、WTO官方统计 · 仅供学习参考，不构成税务建议
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+// ====== TAX DATA ======
+const countries = [
+  {
+    code:'CN', name:'中国', flag:'🇨🇳', flagEmoji:'🇨🇳',
+    cit:25, citNote:'高新技术企业15%，小微企业两档优惠',
+    vat:13, vatNote:'13%/9%/6%三档，小规模3%',
+    excise:0, exciseNote:'部分商品（烟酒油车）征收',
+    pit:45, pitNote:'七级累进，3%-45%',
+    social:28.5, socialNote:'养老16%/医疗8%/失业0.7%/工伤0.4%/公积金5%/生育取消并入医疗',
+    totalTax:51.3,
+    totalNominal:86.5,
+    features:['增值税抵扣链完整','研发费用加计扣除','区域性税收优惠（海南自贸港）','小微企业大幅减免'],
+    summary:'中国税种最全，社会保险占企业负担较重，但有大量专项优惠政策'
+  },
+  {
+    code:'US', name:'美国', flag:'🇺🇸', flagEmoji:'🇺🇸',
+    cit:21, citNote:'联邦21%，各州5%-12%不等（综合约25-35%）',
+    vat:0, vatNote:'无联邦增值税，各州征收销售税（2.9%-10.25%）',
+    excise:18, exciseNote:'汽油/烟草/酒精/枪支等分别征收',
+    pit:37, pitNote:'联邦+州综合最高可达52%+（加州+联邦）',
+    social:7.65, socialNote:'社保6.2%+医保1.45%（无失业险联邦强制）',
+    totalTax:29.2,
+    totalNominal:66.0,
+    features:['联邦制，各州差异巨大','加州/纽约州实际税负极高','研发税收抵免(R&D Credit)','境外利润回国征税（转型中）'],
+    summary:'联邦制灵活但复杂，加州/纽约综合税负超40%，德州/佛罗里达无州所得税是优势'
+  },
+  {
+    code:'GB', name:'英国', flag:'🇬🇧', flagEmoji:'🇬🇧',
+    cit:25, citNote:'2023年起25%（利润>25万GBP）；低于5万享19%优惠',
+    vat:20, vatNote:'标准20%，食品/儿童用品0%，能源/居家5%',
+    excise:0, exciseNote:'烟酒/燃油等特殊商品征收',
+    pit:45, pitNote:'基本税率20%/40%/45%三档',
+    social:13.8, socialNote:'雇主国民保险(NIC)13.8%（2023年4月起）',
+    totalTax:38.5,
+    totalNominal:78.8,
+    features:['研发费用加计扣除130%','创意产业税收抵免','专利盒制度(10%)','脱欧后独立贸易政策'],
+    summary:'税率偏高但制度成熟，专利盒政策对科技企业有吸引力，整体营商环境稳定'
+  },
+  {
+    code:'DE', name:'德国', flag:'🇩🇪', flagEmoji:'🇩🇪',
+    cit:15, citNote:'联邦15% + 团结附加税3.75% = 约18.75%；各市镇征收贸易税（7%-17%）',
+    vat:19, vatNote:'标准19%，食品/文化/交通7%',
+    excise:0, exciseNote:'能源/烟草/酒精等特殊商品征收',
+    pit:45, pitNote:'42%-45%（2024年改革后42%封顶，部分州加教堂税）',
+    social:20.45, socialNote:'养老18.6%/医疗14.6%+双方各承担一半/护理险3.4%/失业3%/工伤0.9%起',
+    totalTax:42.8,
+    totalNominal:79.0,
+    features:['投资抵扣(EUA)灵活','专利盒（5%税率）','双元制职业教育税收优惠','各城市贸易税差异大'],
+    summary:'社保负担重（欧洲最高之一），但制造业底蕴深厚，研发补贴力度大，法兰克福是欧洲金融中心'
+  },
+  {
+    code:'JP', name:'日本', flag:'🇯🇵', flagEmoji:'🇯🇵',
+    cit:30.62, citNote:'2024年改革：外形标准报酬额+地方法人税+消费税返还后有效约30.62%',
+    vat:10, vatNote:'标准10%（酒类/在外餐饮10%，食品/日用品8%）',
+    excise:0, exciseNote:'烟酒税/挥发油税/地方消费税',
+    pit:45, pitNote:'5%-45%五级累进（2015年改革后）',
+    social:15.55, socialNote:'养老18.3%/医疗10%/护理0.86%/失业0.85%（企业端）',
+    totalTax:38.5,
+    totalNominal:56.5,
+    features:['外形标准报酬制度(外形标准)','研发费用加计扣除（最高10%）','中小企业优惠税率（15%-23.2%）','绿色创新税收优惠'],
+    summary:'法人税改革持续推进，中小企业税率有大幅优惠，通缩结束后通胀带来新挑战'
+  },
+  {
+    code:'SG', name:'新加坡', flag:'🇸🇬', flagEmoji:'🇸🇬',
+    cit:17, citNote:'标准17%，前3万新币首年75%免税，后10万享50%减免；先锋企业0-5%',
+    vat:9, vatNote:'2024年起9%（2023年8%），部分商品0%',
+    excise:0, exciseNote:'烟酒/汽车/石化产品征收',
+    pit:24, pitNote:'2%-24%（非居民24%固定，税收简单透明）',
+    social:17, socialNote:'CPF：55岁以下20%，55-65岁16%，65-70岁11%',
+    totalTax:19.5,
+    totalNominal:40.0,
+    features:['先锋企业豁免5-10年','区域总部优惠(RHQ)','研发双倍扣除','IP发展优惠(IDI)','全球投资者计划(GIP)'],
+    summary:'亚洲税务天堂，综合税负最低之一，跨国企业总部首选，无资本利得税和遗产税'
+  },
+  {
+    code:'HK', name:'香港', flag:'🇭🇰', flagEmoji:'🇭🇰',
+    cit:16.5, citNote:'首200万HKD利润享8.25%，超出部分16.5%（2023年无变化）',
+    vat:0, vatNote:'无增值税、销售税或消费税',
+    excise:0, exciseNote:'酒类/烟草/甲醇/化妆品等征收',
+    pit:17, pitNote:'标准17%，标准税率15%（高收入者）',
+    social:5, socialNote:'强积金(MPF)：雇员5%，雇主5%，上限月入30000HKD',
+    totalTax:17.5,
+    totalNominal:22.5,
+    features:['零关税（转口贸易）','无增值税、无消费税','境外收入不征税（特定条件）','简单低税制'],
+    summary:'全球税负最低之一，税制简单透明，无资本利得税、增值税、遗产税，适合资产管理与转口贸易'
+  },
+  {
+    code:'KR', name:'韩国', flag:'🇰🇷', flagEmoji:'🇰🇷',
+    cit:24.2, citNote:'2024年起24.2%（含地方法人税，取代2023年25%）',
+    vat:10, vatNote:'标准10%，部分商品0%/零税率',
+    excise:0, exciseNote:'酒类/烟草/能源/汽车/奢侈品',
+    pit:45, pitNote:'6%-45%六级累进（2024年起新增第四档42%）',
+    social:11.25, socialNote:'国民年金6%+医疗8.97%+雇佣保险1.65%+工伤保险0.73%（企业端合计）',
+    totalTax:36.8,
+    totalNominal:75.2,
+    features:['研发费用加计扣除25%-40%','中小企业优惠税率10%-16%','地区总部税收优惠','文化内容税收抵免'],
+    summary:'税率中等偏上，大企业税负较重，但首尔/京畿道以外的地区有大量减免政策，半导体/显示行业特殊优惠'
+  }
+];
+
+// Industry-specific tax burden (simplified estimates, % of revenue)
+const industryData = {
+  mfg: {   // Manufacturing
+    CN: [25, 13, 3, 5, 28.5],   // CIT, VAT, Excise, PIT withheld, Social
+    US: [25, 7, 5, 5, 7.65],
+    GB: [25, 20, 2, 8, 13.8],
+    DE: [28, 19, 3, 8, 20.45],
+    JP: [28, 10, 2, 8, 15.55],
+    SG: [17, 9, 1, 5, 17],
+    HK: [16.5, 0, 1, 4, 5],
+    KR: [24.2, 10, 3, 8, 11.25],
+  },
+  retail: {
+    CN: [25, 13, 2, 5, 28.5],
+    US: [21, 8, 3, 5, 7.65],
+    GB: [25, 20, 2, 8, 13.8],
+    DE: [28, 19, 2, 8, 20.45],
+    JP: [28, 10, 1, 8, 15.55],
+    SG: [17, 9, 1, 5, 17],
+    HK: [16.5, 0, 1, 4, 5],
+    KR: [24.2, 10, 2, 8, 11.25],
+  },
+  tech: {
+    CN: [15, 13, 0, 5, 28.5],
+    US: [21, 8, 0, 5, 7.65],
+    GB: [25, 20, 0, 8, 13.8],
+    DE: [28, 19, 0, 8, 20.45],
+    JP: [28, 10, 0, 8, 15.55],
+    SG: [10, 9, 0, 5, 17],
+    HK: [8.25, 0, 0, 4, 5],
+    KR: [22, 10, 0, 8, 11.25],
+  },
+  finance: {
+    CN: [25, 6, 5, 8, 28.5],
+    US: [21, 8, 3, 8, 7.65],
+    GB: [25, 20, 2, 10, 13.8],
+    DE: [28, 19, 3, 10, 20.45],
+    JP: [28, 10, 2, 10, 15.55],
+    SG: [17, 9, 2, 6, 17],
+    HK: [16.5, 0, 2, 4, 5],
+    KR: [24.2, 10, 3, 10, 11.25],
+  },
+  service: {
+    CN: [25, 6, 0, 5, 28.5],
+    US: [21, 8, 0, 5, 7.65],
+    GB: [25, 20, 0, 8, 13.8],
+    DE: [28, 19, 0, 8, 20.45],
+    JP: [28, 10, 0, 8, 15.55],
+    SG: [17, 9, 0, 5, 17],
+    HK: [16.5, 0, 0, 4, 5],
+    KR: [24.2, 10, 0, 8, 11.25],
+  }
+};
+
+const colorMap = {
+  CN: '#e74c3c',
+  US: '#3498db',
+  GB: '#9b59b6',
+  DE: '#f39c12',
+  JP: '#e91e63',
+  SG: '#2ecc71',
+  HK: '#1abc9c',
+  KR: '#34495e'
+};
+
+// ====== CLOCK ======
+function updateClock(){
+  const now = new Date();
+  const opts = { year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false };
+  document.getElementById('clock').textContent = now.toLocaleString('zh-CN',opts);
+}
+updateClock(); setInterval(updateClock,1000);
+
+// ====== RENDER TABLE ======
+function renderTable(){
+  const tbody = document.getElementById('taxTableBody');
+  tbody.innerHTML = countries.map(c => {
+    const total = c.totalTax.toFixed(1);
+    const nominal = c.totalNominal.toFixed(1);
+    return `<tr>
+      <td><span class="flag">${c.flagEmoji}</span><b>${c.name}</b></td>
+      <td><span class="tax-rate ${c.cit > 28 ? 'high' : c.cit < 18 ? 'low' : 'mid'}">${c.cit}%</span><br><span style="font-size:11px;color:var(--text2)">${c.citNote}</span></td>
+      <td><span class="tax-rate ${c.vat > 20 ? 'high' : c.vat < 10 ? 'low' : 'mid'}">${c.vat}%</span><br><span style="font-size:11px;color:var(--text2)">${c.vatNote}</span></td>
+      <td><span class="tax-rate ${c.excise > 10 ? 'high' : 'low'}">${c.excise}%</span><br><span style="font-size:11px;color:var(--text2)">${c.exciseNote}</span></td>
+      <td><span class="tax-rate ${c.pit > 40 ? 'high' : c.pit < 25 ? 'low' : 'mid'}">${c.pit}%</span><br><span style="font-size:11px;color:var(--text2)">${c.pitNote}</span></td>
+      <td><span class="tax-rate ${c.social > 20 ? 'high' : c.social < 10 ? 'low' : 'mid'}">${c.social}%</span><br><span style="font-size:11px;color:var(--text2)">${c.socialNote}</span></td>
+      <td><b style="color:var(--blue2)">${total}%</b></td>
+      <td><b style="color:var(--yellow)">${nominal}%</b></td>
+      <td style="font-size:12px;color:var(--text2);max-width:200px">${c.features.slice(0,2).join('；')}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ====== RENDER COUNTRY CARDS ======
+function renderCountryCards(){
+  const grid = document.getElementById('countryCards');
+  grid.innerHTML = countries.map(c => `
+    <div class="burden-card">
+      <div class="burden-country">
+        <span style="font-size:24px">${c.flagEmoji}</span>
+        <div>
+          <div class="name">${c.name}</div>
+          <div class="code">${c.code} · ${c.name === '中国' ? '亚太' : c.name === '新加坡' || c.name === '香港' ? '东南亚' : c.name === '日本' || c.name === '韩国' ? '东亚' : '欧美'}</div>
+        </div>
+      </div>
+      <div class="burden-bars">
+        <div class="burden-item">
+          <span class="lbl">企业所得税</span>
+          <div class="track"><div class="fill" style="width:${(c.cit/40)*100}%;background:${colorMap[c.code]}"></div></div>
+          <span class="val" style="color:${colorMap[c.code]}">${c.cit}%</span>
+        </div>
+        <div class="burden-item">
+          <span class="lbl">增值税</span>
+          <div class="track"><div class="fill" style="width:${(c.vat/25)*100}%;background:${colorMap[c.code]}"></div></div>
+          <span class="val" style="color:${colorMap[c.code]}">${c.vat}%</span>
+        </div>
+        <div class="burden-item">
+          <span class="lbl">个人所得税</span>
+          <div class="track"><div class="fill" style="width:${(c.pit/50)*100}%;background:${colorMap[c.code]}"></div></div>
+          <span class="val" style="color:${colorMap[c.code]}">${c.pit}%</span>
+        </div>
+        <div class="burden-item">
+          <span class="lbl">社保企业端</span>
+          <div class="track"><div class="fill" style="width:${(c.social/30)*100}%;background:${colorMap[c.code]}"></div></div>
+          <span class="val" style="color:${colorMap[c.code]}">${c.social}%</span>
+        </div>
+      </div>
+      <div class="burden-total">
+        <span class="lbl">综合估算税负</span>
+        <span class="val" style="color:${colorMap[c.code]}">${c.totalTax}%</span>
+      </div>
+      <div style="margin-top:12px;font-size:12px;color:var(--text2);line-height:1.6">${c.summary}</div>
+    </div>
+  `).join('');
+}
+
+// ====== RENDER INDUSTRY TABLE ======
+function renderIndustryTable(){
+  const codes = ['CN','US','GB','DE','JP','SG','HK','KR'];
+  const industryNames = {
+    mfg:'制造业',
+    retail:'零售/商贸',
+    tech:'科技/互联网',
+    finance:'金融',
+    service:'专业服务'
+  };
+  const tbody = document.getElementById('industryTableBody');
+  tbody.innerHTML = Object.entries(industryNames).map(([key, label]) => {
+    const vals = industryData[key];
+    const cells = codes.map((code, i) => {
+      const total = vals[i].reduce((a,b)=>a+b,0);
+      const color = colorMap[code];
+      return `<td><b style="color:${color}">${total.toFixed(1)}%</b><br><span style="font-size:11px;color:var(--text2)">${vals[i].join('+')}</span></td>`;
+    }).join('');
+    return `<tr><td><b>${label}</b></td>${cells}</tr>`;
+  }).join('');
+}
+
+// ====== CHARTS ======
+let citChart, vatChart, exciseChart, pitChart, radarChart, burdenChart, overviewChart;
+
+function initCharts(){
+  const cnLabels = countries.map(c => c.flagEmoji + ' ' + c.name);
+  const colors = countries.map(c => colorMap[c.code]);
+
+  // CIT Chart
+  if(citChart) citChart.destroy();
+  citChart = new Chart(document.getElementById('citChart'), {
+    type:'bar',
+    data:{
+      labels:countries.map(c=>c.name),
+      datasets:[{
+        label:'企业所得税税率 %',
+        data:countries.map(c=>c.cit),
+        backgroundColor:colors.map(c=>c+'99'),
+        borderColor:colors,
+        borderWidth:1.5,
+        borderRadius:6
+      }]
+    },
+    options:{
+      indexAxis:'y',
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}, tooltip:{
+        callbacks:{label:ctx=>{
+          const c = countries[ctx.dataIndex];
+          return [c.cit+'%', c.citNote];
+        }}
+      }},
+      scales:{
+        x:{grid:{color:'rgba(48,54,61,0.5)'}, ticks:{color:'#8b949e'}},
+        y:{grid:{display:false}, ticks:{color:'#e6edf3', font:{size:12}}}
+      }
+    }
+  });
+
+  // VAT Chart
+  if(vatChart) vatChart.destroy();
+  vatChart = new Chart(document.getElementById('vatChart'), {
+    type:'bar',
+    data:{
+      labels:countries.map(c=>c.name),
+      datasets:[{
+        label:'增值税/销售税 %',
+        data:countries.map(c=>c.vat),
+        backgroundColor:colors.map(c=>c+'99'),
+        borderColor:colors,
+        borderWidth:1.5,
+        borderRadius:6
+      }]
+    },
+    options:{
+      indexAxis:'y',
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{grid:{color:'rgba(48,54,61,0.5)'}, ticks:{color:'#8b949e'}},
+        y:{grid:{display:false}, ticks:{color:'#e6edf3', font:{size:12}}}
+      }
+    }
+  });
+
+  // Excise Chart
+  if(exciseChart) exciseChart.destroy();
+  exciseChart = new Chart(document.getElementById('exciseChart'), {
+    type:'bar',
+    data:{
+      labels:countries.map(c=>c.name),
+      datasets:[{
+        label:'消费税 %',
+        data:countries.map(c=>c.excise),
+        backgroundColor:colors.map(c=>c+'99'),
+        borderColor:colors,
+        borderWidth:1.5,
+        borderRadius:6
+      }]
+    },
+    options:{
+      indexAxis:'y',
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{grid:{color:'rgba(48,54,61,0.5)'}, ticks:{color:'#8b949e'}},
+        y:{grid:{display:false}, ticks:{color:'#e6edf3', font:{size:12}}}
+      }
+    }
+  });
+
+  // PIT Chart
+  if(pitChart) pitChart.destroy();
+  pitChart = new Chart(document.getElementById('pitChart'), {
+    type:'bar',
+    data:{
+      labels:countries.map(c=>c.name),
+      datasets:[{
+        label:'个人所得税最高边际税率 %',
+        data:countries.map(c=>c.pit),
+        backgroundColor:colors.map(c=>c+'99'),
+        borderColor:colors,
+        borderWidth:1.5,
+        borderRadius:6
+      }]
+    },
+    options:{
+      indexAxis:'y',
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{grid:{color:'rgba(48,54,61,0.5)'}, ticks:{color:'#8b949e'}},
+        y:{grid:{display:false}, ticks:{color:'#e6edf3', font:{size:12}}}
+      }
+    }
+  });
+
+  // Radar Chart
+  if(radarChart) radarChart.destroy();
+  radarChart = new Chart(document.getElementById('radarChart'), {
+    type:'radar',
+    data:{
+      labels:['企业所得税','增值税','消费税','个税最高','社保','综合税负'],
+      datasets: countries.map(c=>({
+        label:c.name,
+        data:[c.cit/40*100, c.vat/25*100, c.excise/20*100, c.pit/50*100, c.social/30*100, c.totalTax/60*100],
+        borderColor:colorMap[c.code],
+        backgroundColor:colorMap[c.code]+'22',
+        borderWidth:1.5,
+        pointRadius:3
+      }))
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:true, position:'bottom', labels:{color:'#8b949e', font:{size:11}, boxWidth:12}}},
+      scales:{
+        r:{
+          grid:{color:'rgba(48,54,61,0.5)'},
+          angleLines:{color:'rgba(48,54,61,0.5)'},
+          pointLabels:{color:'#8b949e', font:{size:11}},
+          ticks:{display:false},
+          suggestedMin:0, suggestedMax:100
+        }
+      }
+    }
+  });
+
+  // Burden stacked bar
+  if(burdenChart) burdenChart.destroy();
+  burdenChart = new Chart(document.getElementById('burdenChart'), {
+    type:'bar',
+    data:{
+      labels:countries.map(c=>c.name),
+      datasets:[
+        {label:'企业所得税', data:countries.map(c=>industryData.mfg[['CN','US','GB','DE','JP','SG','HK','KR'].indexOf(c.code)][0]), backgroundColor:'rgba(31,111,235,0.7)', borderRadius:2},
+        {label:'增值税(估算)', data:countries.map(c=>industryData.mfg[['CN','US','GB','DE','JP','SG','HK','KR'].indexOf(c.code)][1]*0.3), backgroundColor:'rgba(63,185,80,0.7)', borderRadius:2},
+        {label:'消费税(估算)', data:countries.map(c=>industryData.mfg[['CN','US','GB','DE','JP','SG','HK','KR'].indexOf(c.code)][2]*0.5), backgroundColor:'rgba(227,179,65,0.7)', borderRadius:2},
+        {label:'社保企业端', data:countries.map(c=>industryData.mfg[['CN','US','GB','DE','JP','SG','HK','KR'].indexOf(c.code)][4]*0.5), backgroundColor:'rgba(188,140,255,0.7)', borderRadius:2},
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom', labels:{color:'#8b949e', font:{size:11}}}, tooltip:{mode:'index'}},
+      scales:{
+        x:{stacked:true, grid:{color:'rgba(48,54,61,0.3)'}, ticks:{color:'#8b949e'}},
+        y:{stacked:true, grid:{color:'rgba(48,54,61,0.3)'}, ticks:{color:'#8b949e'}, title:{display:true, text:'%', color:'#8b949e'}}
+      }
+    }
+  });
+
+  // Overview chart
+  if(overviewChart) overviewChart.destroy();
+  const codes2 = ['CN','US','GB','DE','JP','SG','HK','KR'];
+  overviewChart = new Chart(document.getElementById('overviewChart'), {
+    type:'bar',
+    data:{
+      labels:countries.map(c=>c.name),
+      datasets:[
+        {label:'综合估算税负', data:countries.map(c=>c.totalTax), backgroundColor:colors.map(c=>c+'cc'), borderColor:colors, borderWidth:2, borderRadius:6},
+        {label:'名义总税率', data:countries.map(c=>c.totalNominal), backgroundColor:'rgba(139,148,158,0.4)', borderColor:'#8b949e', borderWidth:1, borderRadius:6}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'top', labels:{color:'#8b949e'}}, tooltip:{callbacks:{
+        label:ctx=>{
+          const c = countries[ctx.dataIndex];
+          return [ctx.dataset.label+': '+ctx.raw.toFixed(1)+'%', '说明: '+c.features[0]];
+        }
+      }},
+      scales:{
+        x:{grid:{display:false}, ticks:{color:'#8b949e'}},
+        y:{grid:{color:'rgba(48,54,61,0.5)'}, ticks:{color:'#8b949e', callback:v=>v+'%'}, title:{display:true, text:'税负占收入比例估算(%)', color:'#8b949e'}}
+      }
+    }
+  });
+}
+
+// ====== INIT ======
+renderTable();
+renderCountryCards();
+renderIndustryTable();
+initCharts();
+
+// Filter: view mode
+document.getElementById('viewMode').addEventListener('change', function(){
+  const mode = this.value;
+  if(mode === 'all') return;
+  // Highlight specific column
+  const colMap = {vat:2, cit:1, excise:3, pit:4, social:5};
+  const col = colMap[mode];
+  const rows = document.querySelectorAll('#taxTableBody tr');
+  rows.forEach(row => {
+    const cells = row.querySelectorAll('td');
+    cells.forEach((cell, i) => {
+      if(i === col) cell.style.background = 'rgba(31,111,235,0.15)';
+      else cell.style.background = '';
+    });
+  });
+});
+</script>
+</body>
+</html>
