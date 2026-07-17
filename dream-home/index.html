@@ -7,120 +7,108 @@
 <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --pink:#ff8fa3; --pink-dark:#e8677e; --pink-light:#ffd6df;
-    --cream:#fff8ee; --mint:#b8e6c9; --mint-dark:#8fd3a8;
-    --blue:#a8d8f0; --yellow:#ffe89a; --purple:#d4b8e6;
+    --wall:#d4e4c3; --wall-2:#c2d6ae; --floor:#e8d4b0; --floor-2:#d4c096;
+    --sky:#b8d4e3; --sea:#7bb8c9; --tree:#7da87b; --tree-2:#5d8a5b;
+    --pink:#ff8fa3; --pink-d:#e8677e; --pink-l:#ffd6df;
+    --cream:#fff8ee; --mint:#b8e6c9; --blue:#a8d8f0; --yellow:#ffe89a;
     --bg:#fff0f4; --panel:#ffffff; --text:#5c4a52; --line:#f0d8df;
-    --room-wall:#ffd6df; --room-floor:#fff3e0;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%;font-family:"ZCOOL KuaiLe","Nunito","Microsoft YaHei",sans-serif;color:var(--text);background:var(--bg)}
   body{display:flex;flex-direction:column;overflow:hidden}
 
-  /* 顶栏 */
   .topbar{
-    display:flex;align-items:center;gap:14px;padding:10px 18px;
-    background:linear-gradient(90deg,#fff 0%,var(--pink-light) 100%);
-    border-bottom:2px solid var(--pink-light);box-shadow:0 2px 8px rgba(232,103,126,.12);
-    z-index:20
+    display:flex;align-items:center;gap:14px;padding:8px 18px;
+    background:linear-gradient(90deg,#fff,var(--pink-l));border-bottom:2px solid var(--pink-l);
+    box-shadow:0 2px 8px rgba(232,103,126,.12);z-index:20
   }
-  .logo{width:46px;height:46px;flex-shrink:0}
-  .title{font-size:20px;font-weight:700;color:var(--pink-dark);letter-spacing:1px}
-  .title small{display:block;font-size:11px;color:#a88;font-weight:400;letter-spacing:0}
+  .logo{width:44px;height:44px;flex-shrink:0}
+  .title{font-size:19px;font-weight:700;color:var(--pink-d)}
+  .title small{display:block;font-size:10px;color:#a88;font-weight:400}
   .spacer{flex:1}
-  .topbtn{
-    border:none;padding:8px 14px;border-radius:999px;cursor:pointer;font-family:inherit;font-size:13px;
-    background:var(--pink);color:#fff;box-shadow:0 3px 0 var(--pink-dark);transition:transform .15s;
-  }
+  .topbtn{border:none;padding:7px 13px;border-radius:999px;cursor:pointer;font-family:inherit;font-size:13px;background:var(--pink);color:#fff;box-shadow:0 3px 0 var(--pink-d);transition:transform .15s}
   .topbtn:active{transform:translateY(3px);box-shadow:none}
-  .topbtn.alt{background:#fff;color:var(--pink-dark);box-shadow:0 3px 0 var(--pink-light)}
-  .topbtn.alt:active{box-shadow:none}
+  .topbtn.alt{background:#fff;color:var(--pink-d);box-shadow:0 3px 0 var(--pink-l)}
 
-  /* 主体三栏 */
   .main{flex:1;display:flex;overflow:hidden}
 
   /* 左侧家具库 */
-  .palette{
-    width:200px;background:var(--panel);border-right:2px solid var(--line);overflow-y:auto;padding:10px;flex-shrink:0;
-  }
-  .cat-title{font-size:13px;color:var(--pink-dark);margin:6px 0 6px;padding-bottom:4px;border-bottom:1px dashed var(--line)}
+  .palette{width:190px;background:var(--panel);border-right:2px solid var(--line);overflow-y:auto;padding:8px;flex-shrink:0}
+  .cat-title{font-size:12px;color:var(--pink-d);margin:6px 0 4px;padding-bottom:3px;border-bottom:1px dashed var(--line)}
   .cat-title:first-child{margin-top:0}
-  .items{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .item{
-    background:var(--cream);border:2px solid var(--line);border-radius:12px;padding:8px 4px;text-align:center;
-    cursor:grab;transition:all .2s;user-select:none;
-  }
+  .items{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .item{background:var(--cream);border:2px solid var(--line);border-radius:10px;padding:4px;text-align:center;cursor:grab;transition:all .2s;user-select:none}
   .item:hover{border-color:var(--pink);transform:translateY(-2px);box-shadow:0 4px 10px rgba(255,143,163,.2)}
-  .item:active{cursor:grabbing}
-  .item .ic{font-size:26px;line-height:1}
-  .item .nm{font-size:11px;color:#888;margin-top:2px}
+  .item svg{width:42px;height:42px;display:block;margin:0 auto}
+  .item .nm{font-size:10px;color:#888;margin-top:2px}
 
-  /* 中央房间 */
-  .stage{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto;position:relative}
+  /* 中央房间 - 剖面立体 */
+  .stage{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto}
   .room{
-    position:relative;width:560px;height:420px;background:var(--room-wall);border-radius:14px;
-    box-shadow:0 12px 30px rgba(0,0,0,.12),inset 0 0 0 8px rgba(255,255,255,.4);
-    overflow:hidden;
+    position:relative;width:620px;height:460px;border-radius:10px;overflow:hidden;
+    box-shadow:0 16px 40px rgba(80,90,70,.25),0 4px 0 rgba(0,0,0,.06);
   }
-  .room-floor{position:absolute;left:8px;top:8px;right:8px;bottom:8px;background:var(--room-floor);border-radius:8px;transition:background .3s}
-  .room-floor::before{
-    content:"";position:absolute;inset:0;
-    background-image:repeating-linear-gradient(0deg,transparent 0,transparent 39px,rgba(180,140,90,.12) 40px),
-                     repeating-linear-gradient(90deg,transparent 0,transparent 39px,rgba(180,140,90,.12) 40px);
-    border-radius:8px;
-  }
-  .room-label{position:absolute;left:14px;top:14px;font-size:12px;color:rgba(255,255,255,.9);background:rgba(232,103,126,.6);padding:2px 10px;border-radius:999px;z-index:2}
+  /* 天花板 */
+  .ceiling{position:absolute;top:0;left:0;right:0;height:14px;background:linear-gradient(180deg,#f0ead8,#e8dcc6);z-index:1}
+  .ceiling::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(180,160,130,.3)}
+  /* 后墙 */
+  .back-wall{position:absolute;top:14px;left:0;right:0;bottom:32%;background:linear-gradient(180deg,var(--wall),var(--wall-2));transition:background .3s;z-index:1}
+  /* 墙脚线 */
+  .baseboard{position:absolute;left:0;right:0;bottom:32%;height:10px;background:#fff3e0;z-index:3;box-shadow:0 -2px 0 rgba(180,160,130,.2)}
+  /* 地板 */
+  .floor{position:absolute;left:0;right:0;bottom:0;height:32%;background:linear-gradient(180deg,var(--floor),var(--floor-2));transition:background .3s;z-index:1}
+  .floor::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0,transparent 48px,rgba(160,130,80,.1) 49px,rgba(160,130,80,.1) 50px)}
+  /* 窗户 */
+  .window{position:absolute;left:50%;top:8%;transform:translateX(-50%);width:46%;height:62%;background:linear-gradient(180deg,var(--sky) 0%,#d4e8f0 55%,var(--sea) 55%,#6aa7b8 100%);border:10px solid #fff8ee;border-radius:6px;box-shadow:0 6px 14px rgba(0,0,0,.1),inset 0 0 0 3px rgba(220,200,170,.3);z-index:2;overflow:hidden}
+  .window::before,.window::after{content:"";position:absolute;background:#fff8ee;z-index:3}
+  .window::before{left:50%;top:0;bottom:0;width:6px;transform:translateX(-50%)}
+  .window::after{left:0;right:0;top:50%;height:6px;transform:translateY(-50%)}
+  .cloud{position:absolute;background:#fff;border-radius:50px;opacity:.92}
+  .cloud::before,.cloud::after{content:"";position:absolute;background:#fff;border-radius:50%}
+  .c1{width:60px;height:20px;top:14%;left:8%;animation:drift 30s linear infinite}
+  .c1::before{width:30px;height:30px;top:-14px;left:10px}
+  .c1::after{width:24px;height:24px;top:-10px;right:10px}
+  .c2{width:48px;height:16px;top:30%;left:-20%;animation:drift 40s linear infinite;animation-delay:-12s}
+  .c2::before{width:24px;height:24px;top:-12px;left:8px}
+  .distant{position:absolute;bottom:42%;left:-10%;right:-10%;height:60px;background:var(--tree);border-radius:50% 50% 0 0/40% 40% 0 0;opacity:.85;z-index:1}
+  .distant::after{content:"";position:absolute;right:10%;bottom:0;width:60%;height:100%;background:var(--tree-2);border-radius:50% 50% 0 0/40% 40% 0 0;opacity:.6}
+  /* 房间标签 */
+  .room-label{position:absolute;left:12px;top:18px;font-size:11px;color:#fff;background:rgba(232,103,126,.7);padding:2px 10px;border-radius:999px;z-index:4}
 
   /* 已放置家具 */
-  .placed{
-    position:absolute;display:flex;align-items:center;justify-content:center;cursor:move;user-select:none;
-    z-index:5;transition:filter .2s;
-  }
-  .placed .ic{font-size:38px;filter:drop-shadow(0 3px 4px rgba(0,0,0,.2))}
-  .placed .nm{position:absolute;bottom:-14px;font-size:9px;color:#888;background:#fff;padding:0 4px;border-radius:4px;white-space:nowrap}
-  .placed.selected{filter:drop-shadow(0 0 6px var(--pink))}
-  .placed.selected::after{
-    content:"";position:absolute;inset:-4px;border:2px dashed var(--pink);border-radius:8px;
-  }
-  .placed .del{
-    position:absolute;top:-8px;right:-8px;width:18px;height:18px;background:#ff5a5a;color:#fff;
-    border-radius:50%;font-size:11px;line-height:18px;text-align:center;cursor:pointer;display:none;
-  }
+  .placed{position:absolute;cursor:move;user-select:none;z-index:5;transition:filter .2s;filter:drop-shadow(0 4px 6px rgba(80,90,70,.25))}
+  .placed svg{width:100%;height:100%;display:block}
+  .placed.selected{filter:drop-shadow(0 0 8px var(--pink)) drop-shadow(0 4px 6px rgba(80,90,70,.25))}
+  .placed.selected::after{content:"";position:absolute;inset:-4px;border:2px dashed var(--pink);border-radius:8px;pointer-events:none}
+  .placed .del{position:absolute;top:-9px;right:-9px;width:20px;height:20px;background:#ff5a5a;color:#fff;border-radius:50%;font-size:13px;line-height:20px;text-align:center;cursor:pointer;display:none;z-index:6}
   .placed.selected .del{display:block}
 
   /* 右侧属性 */
-  .props{width:200px;background:var(--panel);border-left:2px solid var(--line);padding:10px;overflow-y:auto;flex-shrink:0}
-  .prop-title{font-size:13px;color:var(--pink-dark);margin:6px 0;padding-bottom:4px;border-bottom:1px dashed var(--line)}
+  .props{width:190px;background:var(--panel);border-left:2px solid var(--line);padding:8px;overflow-y:auto;flex-shrink:0}
+  .prop-title{font-size:12px;color:var(--pink-d);margin:6px 0 4px;padding-bottom:3px;border-bottom:1px dashed var(--line)}
   .prop-title:first-child{margin-top:0}
-  .swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-  .sw{aspect-ratio:1;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:transform .15s}
+  .swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+  .sw{aspect-ratio:1;border-radius:7px;cursor:pointer;border:2px solid transparent;transition:transform .15s}
   .sw:hover{transform:scale(1.1)}
-  .sw.on{border-color:var(--pink-dark);box-shadow:0 0 0 2px #fff inset}
-  .hint{font-size:11px;color:#aaa;line-height:1.5;margin-top:8px}
-  .selbox{background:var(--cream);border-radius:10px;padding:10px;font-size:12px;color:#666}
-  .selbtn{display:block;width:100%;margin-top:6px;padding:6px;border:none;border-radius:8px;background:var(--pink);color:#fff;cursor:pointer;font-family:inherit;font-size:12px}
-  .selbtn.del{background:#fff;color:#e8677e;border:2px solid var(--pink-light)}
+  .sw.on{border-color:var(--pink-d);box-shadow:0 0 0 2px #fff inset}
+  .selbox{background:var(--cream);border-radius:9px;padding:9px;font-size:11px;color:#666;line-height:1.5}
+  .selbtn{display:block;width:100%;margin-top:5px;padding:5px;border:none;border-radius:7px;background:var(--pink);color:#fff;cursor:pointer;font-family:inherit;font-size:11px}
+  .selbtn.del{background:#fff;color:var(--pink-d);border:2px solid var(--pink-l)}
 
-  /* 提示 */
-  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);
-    background:rgba(92,74,82,.95);color:#fff;padding:10px 20px;border-radius:999px;font-size:13px;
-    opacity:0;transition:all .3s;z-index:100}
+  .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(20px);background:rgba(92,74,82,.95);color:#fff;padding:9px 18px;border-radius:999px;font-size:13px;opacity:0;transition:all .3s;z-index:100}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-  @media(max-width:860px){
-    .palette,.props{width:150px}
-    .room{width:90%;max-width:480px;height:340px}
-  }
+  @keyframes drift{from{transform:translateX(0)}to{transform:translateX(360%)}}
+  @media(max-width:900px){.palette,.props{width:150px}.room{width:90%;max-width:520px;height:380px}}
 </style>
 </head>
 <body>
 
 <div class="topbar">
-  <!-- 蝴蝶结 logo -->
   <svg class="logo" viewBox="0 0 100 70">
     <path d="M50 35 L8 12 Q4 10 6 16 L14 50 Q16 56 22 52 L44 38 Z" fill="#ff5a7a"/>
     <path d="M50 35 L92 12 Q96 10 94 16 L86 50 Q84 56 78 52 L56 38 Z" fill="#ff5a7a"/>
-    <path d="M50 35 L8 12 Q4 10 6 16 L14 50 Q16 56 22 52 L44 38 Z" fill="#ff7a93" opacity=".5"/>
+    <path d="M50 35 L8 12 Q4 10 6 16 L14 50 Q16 56 22 52 L44 38 Z" fill="#ff7a93" opacity=".45"/>
     <ellipse cx="50" cy="35" rx="9" ry="11" fill="#e04560"/>
     <circle cx="46" cy="33" r="2" fill="#ffb8c5"/>
     <path d="M50 46 L46 64 L54 64 Z" fill="#e04560"/>
@@ -129,86 +117,99 @@
   <div class="spacer"></div>
   <button class="topbtn alt" onclick="randomRoom()">🎲 随机布置</button>
   <button class="topbtn alt" onclick="clearRoom()">🗑 清空</button>
-  <button class="topbtn" onclick="saveRoom()">💾 保存设计</button>
+  <button class="topbtn" onclick="saveRoom()">💾 保存</button>
 </div>
 
 <div class="main">
-  <!-- 左：家具库 -->
   <div class="palette" id="palette"></div>
 
-  <!-- 中：房间 -->
   <div class="stage">
     <div class="room" id="room">
+      <div class="ceiling"></div>
+      <div class="back-wall" id="backWall">
+        <div class="window">
+          <div class="cloud c1"></div>
+          <div class="cloud c2"></div>
+          <div class="distant"></div>
+        </div>
+      </div>
+      <div class="baseboard"></div>
+      <div class="floor" id="floor"></div>
       <div class="room-label">🧸 我的小屋</div>
-      <div class="room-floor" id="floor"></div>
     </div>
   </div>
 
-  <!-- 右：属性 -->
   <div class="props">
     <div class="prop-title">墙面颜色</div>
     <div class="swatches" id="wallColors"></div>
-    <div class="prop-title" style="margin-top:10px">地板样式</div>
+    <div class="prop-title" style="margin-top:8px">地板样式</div>
     <div class="swatches" id="floorStyles"></div>
-    <div class="prop-title" style="margin-top:10px">选中物品</div>
-    <div class="selbox" id="selbox">点家具可选中<br>拖动可移动</div>
+    <div class="prop-title" style="margin-top:8px">选中物品</div>
+    <div class="selbox" id="selbox">点家具可选中<br>拖动可移动<br>双击可旋转</div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// 家具库数据
+// ===== 立体 SVG 家具库 =====
+const SVG={
+  bed:`<svg viewBox="0 0 100 80"><rect x="8" y="44" width="84" height="14" fill="#d4a5b5" rx="3"/><rect x="8" y="20" width="84" height="28" fill="#f4b8c4" rx="4"/><rect x="14" y="28" width="30" height="16" fill="#fff" rx="3"/><rect x="48" y="28" width="38" height="16" fill="#ffe8ee" rx="3"/><rect x="8" y="16" width="84" height="10" fill="#e89aac" rx="3"/><circle cx="20" cy="21" r="2" fill="#fff"/></svg>`,
+  sofa:`<svg viewBox="0 0 100 75"><rect x="8" y="40" width="84" height="20" fill="#8fd3a8" rx="6"/><rect x="8" y="22" width="84" height="24" fill="#a8e6c0" rx="6"/><rect x="6" y="38" width="16" height="26" fill="#7dc998" rx="5"/><rect x="78" y="38" width="16" height="26" fill="#7dc998" rx="5"/><rect x="22" y="44" width="26" height="14" fill="#fff" rx="4" opacity=".8"/><rect x="52" y="44" width="26" height="14" fill="#fff" rx="4" opacity=".8"/></svg>`,
+  chair:`<svg viewBox="0 0 60 75"><rect x="14" y="8" width="32" height="30" fill="#c9a87c" rx="4"/><rect x="10" y="36" width="40" height="12" fill="#d4b88c" rx="3"/><rect x="14" y="48" width="7" height="22" fill="#a88660"/><rect x="39" y="48" width="7" height="22" fill="#a88660"/></svg>`,
+  table:`<svg viewBox="0 0 100 60"><rect x="6" y="20" width="88" height="10" fill="#d4b88c" rx="3"/><rect x="6" y="28" width="88" height="6" fill="#b89868"/><rect x="12" y="34" width="8" height="22" fill="#a88660"/><rect x="80" y="34" width="8" height="22" fill="#a88660"/></svg>`,
+  wardrobe:`<svg viewBox="0 0 70 95"><rect x="6" y="8" width="58" height="80" fill="#fff8ee" rx="4" stroke="#e0d4bc" stroke-width="2"/><rect x="8" y="10" width="27" height="76" fill="#fff" rx="3"/><rect x="35" y="10" width="27" height="76" fill="#fff3e0" rx="3"/><circle cx="32" cy="48" r="2.5" fill="#c9a87c"/><circle cx="38" cy="48" r="2.5" fill="#c9a87c"/><rect x="6" y="84" width="58" height="6" fill="#e0d4bc" rx="2"/></svg>`,
+  tv:`<svg viewBox="0 0 90 65"><rect x="6" y="6" width="78" height="44" fill="#3a3a4a" rx="4"/><rect x="10" y="10" width="70" height="36" fill="#a8d8f0" rx="2"/><circle cx="20" cy="22" r="5" fill="#ffe89a"/><path d="M10 40 L30 24 L45 34 L60 20 L80 40 Z" fill="#7da87b"/><rect x="30" y="50" width="30" height="8" fill="#5a5a6a"/><rect x="20" y="56" width="50" height="5" fill="#4a4a5a" rx="2"/></svg>`,
+  lamp:`<svg viewBox="0 0 50 80"><path d="M15 18 L35 18 L30 6 L20 6 Z" fill="#ffe89a"/><rect x="23" y="18" width="4" height="42" fill="#c9a87c"/><ellipse cx="25" cy="64" rx="14" ry="5" fill="#c9a87c"/><circle cx="25" cy="20" r="8" fill="#fff8c8" opacity=".7"/></svg>`,
+  rug:`<svg viewBox="0 0 110 70"><ellipse cx="55" cy="35" rx="50" ry="28" fill="#ff8fa3"/><ellipse cx="55" cy="35" rx="42" ry="22" fill="#ffd6df"/><ellipse cx="55" cy="35" rx="30" ry="15" fill="#ff8fa3" opacity=".5"/><circle cx="55" cy="35" r="8" fill="#ffe89a"/></svg>`,
+  plant:`<svg viewBox="0 0 55 75"><path d="M14 50 L41 50 L37 72 L18 72 Z" fill="#d88a7a"/><ellipse cx="27.5" cy="50" rx="14" ry="4" fill="#e89aac"/><ellipse cx="20" cy="32" rx="12" ry="16" fill="#7da87b" transform="rotate(-20 20 32)"/><ellipse cx="36" cy="30" rx="12" ry="16" fill="#8fb98a" transform="rotate(20 36 30)"/><ellipse cx="28" cy="22" rx="10" ry="14" fill="#7da87b"/><circle cx="28" cy="16" r="4" fill="#ff8fa3"/></svg>`,
+  flower:`<svg viewBox="0 0 50 75"><path d="M18 40 L32 40 L30 70 L20 70 Z" fill="#a8d8f0"/><ellipse cx="25" cy="40" rx="10" ry="3" fill="#c9a87c"/><circle cx="25" cy="22" r="8" fill="#ff8fa3"/><circle cx="25" cy="22" r="3" fill="#ffe89a"/><circle cx="18" cy="28" r="5" fill="#a8d8f0"/><circle cx="32" cy="28" r="5" fill="#ffe89a"/><circle cx="25" cy="14" r="5" fill="#d4b8e6"/></svg>`,
+  shelf:`<svg viewBox="0 0 80 60"><rect x="4" y="10" width="72" height="8" fill="#c9a87c" rx="2"/><rect x="4" y="26" width="72" height="8" fill="#c9a87c" rx="2"/><rect x="4" y="42" width="72" height="8" fill="#c9a87c" rx="2"/><rect x="10" y="12" width="8" height="6" fill="#ff8fa3"/><rect x="20" y="11" width="8" height="7" fill="#a8d8f0"/><rect x="30" y="12" width="8" height="6" fill="#ffe89a"/><rect x="14" y="28" width="8" height="6" fill="#d4b8e6"/><rect x="26" y="27" width="8" height="7" fill="#8fd3a8"/><circle cx="50" cy="32" r="5" fill="#ff8fa3"/><circle cx="48" cy="46" r="5" fill="#a8d8f0"/></svg>`,
+  kitty:`<svg viewBox="0 0 60 60"><ellipse cx="30" cy="48" rx="18" ry="6" fill="#eee"/><circle cx="30" cy="30" r="20" fill="#fff"/><polygon points="14,18 10,4 22,12" fill="#fff"/><polygon points="46,18 50,4 38,12" fill="#fff"/><circle cx="98" cy="20" r="6" fill="#ff5a7a"/><g transform="translate(40 18)"><circle cx="0" cy="0" r="5" fill="#ff5a7a"/><ellipse cx="-9" cy="0" rx="7" ry="5" fill="#ff5a7a" transform="rotate(-20)"/><ellipse cx="9" cy="0" rx="7" ry="5" fill="#ff5a7a" transform="rotate(20)"/></g><ellipse cx="23" cy="30" rx="2.5" ry="4" fill="#3a3a4a"/><ellipse cx="37" cy="30" rx="2.5" ry="4" fill="#3a3a4a"/><ellipse cx="30" cy="36" rx="3" ry="2" fill="#ffb0b8"/><path d="M27 38 Q30 41 33 38" stroke="#3a3a4a" stroke-width="1.5" fill="none"/><circle cx="22" cy="36" r="2" fill="#ffd0d8"/><circle cx="38" cy="36" r="2" fill="#ffd0d8"/></svg>`,
+  cinnamon:`<svg viewBox="0 0 60 60"><ellipse cx="30" cy="50" rx="18" ry="6" fill="#eee"/><circle cx="30" cy="32" r="20" fill="#fff"/><ellipse cx="14" cy="20" rx="6" ry="12" fill="#fff" transform="rotate(-25 14 20)"/><ellipse cx="46" cy="20" rx="6" ry="12" fill="#fff" transform="rotate(25 46 20)"/><ellipse cx="23" cy="32" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="37" cy="32" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="30" cy="38" rx="4" ry="3" fill="#c4d4e8"/><path d="M27 40 Q30 43 33 40" stroke="#3a3a4a" stroke-width="1.5" fill="none"/><circle cx="20" cy="38" r="2.5" fill="#ffd0e0"/><circle cx="40" cy="38" r="2.5" fill="#ffd0e0"/></svg>`,
+  melody:`<svg viewBox="0 0 60 60"><ellipse cx="30" cy="50" rx="18" ry="6" fill="#eee"/><circle cx="30" cy="32" r="20" fill="#fff"/><path d="M12 30 Q8 6 22 16 Q16 22 12 30" fill="#ff5a7a"/><path d="M48 30 Q52 6 38 16 Q44 22 48 30" fill="#ff5a7a"/><ellipse cx="14" cy="14" rx="5" ry="8" fill="#ff8fa3" transform="rotate(-15 14 14)"/><ellipse cx="46" cy="14" rx="5" ry="8" fill="#ff8fa3" transform="rotate(15 46 14)"/><ellipse cx="23" cy="32" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="37" cy="32" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="30" cy="38" rx="3" ry="2" fill="#ffb0b8"/><path d="M27 40 Q30 43 33 40" stroke="#3a3a4a" stroke-width="1.5" fill="none"/></svg>`,
+  purin:`<svg viewBox="0 0 60 60"><ellipse cx="30" cy="50" rx="18" ry="6" fill="#d4b88c"/><circle cx="30" cy="32" r="20" fill="#ffe08a"/><ellipse cx="14" cy="22" rx="5" ry="8" fill="#ffe08a" transform="rotate(-20 14 22)"/><ellipse cx="46" cy="22" rx="5" ry="8" fill="#ffe08a" transform="rotate(20 46 22)"/><ellipse cx="14" cy="22" rx="3" ry="5" fill="#d4a55a" transform="rotate(-20 14 22)"/><ellipse cx="46" cy="22" rx="3" ry="5" fill="#d4a55a" transform="rotate(20 46 22)"/><ellipse cx="23" cy="32" rx="2" ry="3" fill="#3a3a4a"/><ellipse cx="37" cy="32" rx="2" ry="3" fill="#3a3a4a"/><path d="M26 38 Q30 42 34 38" stroke="#3a3a4a" stroke-width="1.5" fill="none"/><circle cx="24" cy="37" r="1.5" fill="#fff"/></svg>`,
+  pompom:`<svg viewBox="0 0 60 60"><ellipse cx="30" cy="50" rx="18" ry="6" fill="#eee"/><circle cx="30" cy="32" r="20" fill="#fff"/><ellipse cx="14" cy="18" rx="8" ry="10" fill="#fff" transform="rotate(-15 14 18)"/><ellipse cx="46" cy="18" rx="8" ry="10" fill="#fff" transform="rotate(15 46 18)"/><ellipse cx="23" cy="32" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="37" cy="32" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="30" cy="38" rx="3" ry="2" fill="#ffb0b8"/><path d="M27 40 Q30 43 33 40" stroke="#3a3a4a" stroke-width="1.5" fill="none"/><circle cx="22" cy="36" r="2" fill="#ffd0e0"/><circle cx="38" cy="36" r="2" fill="#ffd0e0"/></svg>`,
+};
+
 const FURNITURE=[
   {cat:'家具',items:[
-    {t:'bed',n:'床',i:'🛏️',w:90,h:110},
-    {t:'sofa',n:'沙发',i:'🛋️',w:110,h:60},
-    {t:'chair',n:'椅子',i:'🪑',w:42,h:42},
-    {t:'table',n:'桌子',i:'🪟',w:80,h:50},
-    {t:'desk',n:'书桌',i:'📋',w:80,h:50},
-    {t:'wardrobe',n:'衣柜',i:'🚪',w:60,h:70},
-    {t:'tv',n:'电视',i:'📺',w:70,h:40},
-    {t:'lamp',n:'台灯',i:'💡',w:34,h:34},
+    {t:'bed',n:'小床',svg:'bed',w:96,h:72},
+    {t:'sofa',n:'沙发',svg:'sofa',w:104,h:70},
+    {t:'chair',n:'椅子',svg:'chair',w:52,h:62},
+    {t:'table',n:'桌子',svg:'table',w:96,h:52},
+    {t:'wardrobe',n:'衣柜',svg:'wardrobe',w:68,h:86},
+    {t:'tv',n:'电视',svg:'tv',w:82,h:58},
+    {t:'lamp',n:'台灯',svg:'lamp',w:46,h:70},
+    {t:'shelf',n:'书架',svg:'shelf',w:78,h:56},
   ]},
   {cat:'装饰',items:[
-    {t:'rug',n:'地毯',i:'🟥',w:120,h:80},
-    {t:'window',n:'窗户',i:'🪟',w:60,h:40},
-    {t:'mirror',n:'镜子',i:'🪞',w:40,h:50},
-    {t:'clock',n:'挂钟',i:'🕐',w:36,h:36},
-    {t:'painting',n:'画作',i:'🖼️',w:50,h:40},
-    {t:'candle',n:'蜡烛',i:'🕯️',w:30,h:30},
-    {t:'gift',n:'礼物',i:'🎁',w:36,h:36},
-    {t:'bow',n:'蝴蝶结',i:'🎀',w:36,h:36},
+    {t:'rug',n:'地毯',svg:'rug',w:108,h:66},
+    {t:'flower',n:'花瓶',svg:'flower',w:46,h:68},
   ]},
   {cat:'植物',items:[
-    {t:'potted',n:'盆栽',i:'🪴',w:42,h:42},
-    {t:'flower',n:'花束',i:'💐',w:40,h:40},
-    {t:'tree',n:'小树',i:'🌳',w:50,h:50},
-    {t:'cactus',n:'仙人掌',i:'🌵',w:40,h:50},
-    {t:'tulip',n:'郁金香',i:'🌷',w:34,h:40},
-    {t:'cherry',n:'樱花',i:'🌸',w:38,h:38},
+    {t:'plant',n:'盆栽',svg:'plant',w:50,h:68},
   ]},
   {cat:'三丽鸥',items:[
-    {t:'kitty',n:'凯蒂猫',i:'🐱',w:46,h:46},
-    {t:'cinnamon',n:'玉桂狗',i:'🐶',w:46,h:46},
-    {t:'melody',n:'美乐蒂',i:'🐰',w:46,h:46},
-    {t:'purin',n:'布丁狗',i:'🐹',w:46,h:46},
-    {t:'pompom',n:'大耳狗',i:'🐻',w:46,h:46},
-    {t:'kiki',n:'双子星',i:'👾',w:40,h:40},
-    {t:'patty',n:'帕恰狗',i:'🦴',w:46,h:46},
-    {t:'hangy',n:'大眼蛙',i:'🐸',w:46,h:46},
+    {t:'kitty',n:'凯蒂猫',svg:'kitty',w:56,h:56},
+    {t:'cinnamon',n:'玉桂狗',svg:'cinnamon',w:56,h:56},
+    {t:'melody',n:'美乐蒂',svg:'melody',w:56,h:56},
+    {t:'purin',n:'布丁狗',svg:'purin',w:56,h:56},
+    {t:'pompom',n:'大耳狗',svg:'pompom',w:56,h:56},
   ]},
 ];
 
 const WALL_COLORS=[
-  {n:'樱花粉',c:'#ffd6df'},{n:'薄荷绿',c:'#b8e6c9'},{n:'天空蓝',c:'#a8d8f0'},
-  {n:'柠檬黄',c:'#ffe89a'},{n:'薰衣紫',c:'#d4b8e6'},{n:'奶油白',c:'#fff8ee'},
-  {n:'蜜桃橙',c:'#ffd4b8'},{n:'珊瑚红',c:'#ffb0b8'},
+  {n:'薄荷绿',c1:'#d4e4c3',c2:'#c2d6ae'},{n:'樱花粉',c1:'#ffd6df',c2:'#f4b8c4'},
+  {n:'天空蓝',c1:'#c4dcef',c2:'#a8d8f0'},{n:'柠檬黄',c1:'#ffe89a',c2:'#ffe066'},
+  {n:'薰衣紫',c1:'#e0c6f0',c2:'#d4b8e6'},{n:'奶油白',c1:'#fff8ee',c2:'#f0e4d0'},
+  {n:'蜜桃橙',c1:'#ffd4b8',c2:'#ffb88a'},{n:'珊瑚红',c1:'#ffb0b8',c2:'#ff8a96'},
 ];
 const FLOOR_STYLES=[
-  {n:'原木',c:'#fff3e0'},{n:'暖棕',c:'#e8d4b0'},{n:'白砖',c:'#f5f5f5'},
-  {n:'粉砖',c:'#ffe0e8'},{n:'绿格',c:'#e0f0d8'},{n:'蓝砖',c:'#e0ecf5'},
-  {n:'米色',c:'#f0e8d8'},{n:'灰石',c:'#e8e8e8'},
+  {n:'原木',c1:'#e8d4b0',c2:'#d4c096'},{n:'暖棕',c1:'#d4b88c',c2:'#b89868'},
+  {n:'白砖',c1:'#f5f5f5',c2:'#e8e8e8'},{n:'粉砖',c1:'#ffe0e8',c2:'#ffc4d4'},
+  {n:'绿格',c1:'#d8eccf',c2:'#b8d8a8'},{n:'蓝砖',c1:'#d8e8f5',c2:'#b8d0e8'},
+  {n:'米色',c1:'#f0e8d8',c2:'#e0d4bc'},{n:'灰石',c1:'#e8e8e8',c2:'#d0d0d0'},
 ];
 
 // 渲染家具库
@@ -218,189 +219,106 @@ FURNITURE.forEach(g=>{
   const items=document.createElement('div');items.className='items';
   g.items.forEach(it=>{
     const d=document.createElement('div');d.className='item';d.draggable=true;
-    d.innerHTML=`<div class="ic">${it.i}</div><div class="nm">${it.n}</div>`;
-    d.dataset.t=it.t;d.dataset.n=it.n;d.dataset.i=it.i;
-    d.dataset.w=it.w;d.dataset.h=it.h;
+    d.innerHTML=SVG[it.svg]+`<div class="nm">${it.n}</div>`;
     d.addEventListener('click',()=>addFurniture(it));
-    d.addEventListener('dragstart',e=>{
-      e.dataTransfer.setData('text',JSON.stringify(it));
-    });
+    d.addEventListener('dragstart',e=>e.dataTransfer.setData('text',JSON.stringify(it)));
     items.appendChild(d);
   });
   palette.appendChild(t);palette.appendChild(items);
 });
 
-// 渲染色板
+// 色板
 const wallBox=document.getElementById('wallColors');
 WALL_COLORS.forEach((c,i)=>{
-  const s=document.createElement('div');s.className='sw'+(i===0?' on':'');s.style.background=c.c;s.title=c.n;
+  const s=document.createElement('div');s.className='sw'+(i===0?' on':'');s.style.background=`linear-gradient(180deg,${c.c1},${c.c2})`;s.title=c.n;
   s.onclick=()=>{document.querySelectorAll('#wallColors .sw').forEach(x=>x.classList.remove('on'));s.classList.add('on');
-    document.getElementById('room').style.background=c.c;toast('墙面：'+c.n)};
+    document.getElementById('backWall').style.background=`linear-gradient(180deg,${c.c1},${c.c2})`;toast('墙面：'+c.n)};
   wallBox.appendChild(s);
 });
 const floorBox=document.getElementById('floorStyles');
 FLOOR_STYLES.forEach((c,i)=>{
-  const s=document.createElement('div');s.className='sw'+(i===0?' on':'');s.style.background=c.c;s.title=c.n;
+  const s=document.createElement('div');s.className='sw'+(i===0?' on':'');s.style.background=`linear-gradient(180deg,${c.c1},${c.c2})`;s.title=c.n;
   s.onclick=()=>{document.querySelectorAll('#floorStyles .sw').forEach(x=>x.classList.remove('on'));s.classList.add('on');
-    document.getElementById('floor').style.background=c.c;toast('地板：'+c.n)};
+    document.getElementById('floor').style.background=`linear-gradient(180deg,${c.c1},${c.c2})`;toast('地板：'+c.n)};
   floorBox.appendChild(s);
 });
 
 // 房间逻辑
 const room=document.getElementById('room');
-let placed=[];
-let selected=null;
-let zTop=5;
+let selected=null,zTop=5;
 
 function addFurniture(it){
-  const rect=room.getBoundingClientRect();
-  const x=rect.width/2-it.w/2+(Math.random()*60-30);
-  const y=rect.height/2-it.h/2+(Math.random()*60-30);
-  createPlaced(it,x,y);
-  toast('已添加：'+it.n);
+  const x=room.clientWidth/2-it.w/2+(Math.random()*60-30);
+  const y=room.clientHeight-it.h-20-(Math.random()*40);
+  createPlaced(it,x,y);toast('已添加：'+it.n);
 }
-
 function createPlaced(it,x,y){
-  const el=document.createElement('div');
-  el.className='placed';el.style.width=it.w+'px';el.style.height=it.h+'px';
-  el.style.left=Math.max(8,Math.min(x,room.clientWidth-it.w-8))+'px';
-  el.style.top=Math.max(8,Math.min(y,room.clientHeight-it.h-8))+'px';
-  el.style.zIndex=++zTop;
-  el.dataset.t=it.t;el.dataset.i=it.i;el.dataset.n=it.n;
-  let rot=0;
-  el.innerHTML=`<div class="ic">${it.i}</div><div class="nm">${it.n}</div><div class="del" onclick="event.stopPropagation();removePlaced(this.parentElement)">×</div>`;
+  const el=document.createElement('div');el.className='placed';
+  el.style.width=it.w+'px';el.style.height=it.h+'px';
+  el.style.left=Math.max(4,Math.min(x,room.clientWidth-it.w-4))+'px';
+  el.style.top=Math.max(18,Math.min(y,room.clientHeight-it.h-4))+'px';
+  el.style.zIndex=++zTop;el.dataset.n=it.n;el.dataset.t=it.t;
+  el.innerHTML=SVG[it.svg]+`<div class="del" onclick="event.stopPropagation();removePlaced(this.parentElement)">×</div>`;
   el.onclick=e=>{e.stopPropagation();selectPlaced(el)};
-  enableDrag(el);
-  room.appendChild(el);
-  placed.push({el,t:it.t});
-  selectPlaced(el);
+  enableDrag(el);room.appendChild(el);selectPlaced(el);
 }
-
 function enableDrag(el){
   let sx,sy,ox,oy,drag=false;
-  el.addEventListener('mousedown',e=>{
-    if(e.target.classList.contains('del'))return;
-    drag=true;sx=e.clientX;sy=e.clientY;ox=el.offsetLeft;oy=el.offsetTop;
-    el.style.zIndex=++zTop;e.preventDefault();
-  });
-  document.addEventListener('mousemove',e=>{
-    if(!drag)return;
-    let nx=ox+e.clientX-sx,ny=oy+e.clientY-sy;
-    nx=Math.max(8,Math.min(nx,room.clientWidth-el.offsetWidth-8));
-    ny=Math.max(8,Math.min(ny,room.clientHeight-el.offsetHeight-8));
-    el.style.left=nx+'px';el.style.top=ny+'px';
-  });
+  const down=(cx,cy)=>{drag=true;sx=cx;sy=cy;ox=el.offsetLeft;oy=el.offsetTop;el.style.zIndex=++zTop;};
+  const move=(cx,cy)=>{if(!drag)return;let nx=ox+cx-sx,ny=oy+cy-sy;
+    nx=Math.max(4,Math.min(nx,room.clientWidth-el.offsetWidth-4));
+    ny=Math.max(18,Math.min(ny,room.clientHeight-el.offsetHeight-4));
+    el.style.left=nx+'px';el.style.top=ny+'px';};
+  el.addEventListener('mousedown',e=>{if(e.target.classList.contains('del'))return;down(e.clientX,e.clientY);e.preventDefault();});
+  document.addEventListener('mousemove',e=>move(e.clientX,e.clientY));
   document.addEventListener('mouseup',()=>drag=false);
-  // 触摸支持
-  el.addEventListener('touchstart',e=>{
-    if(e.target.classList.contains('del'))return;
-    const t=e.touches[0];drag=true;sx=t.clientX;sy=t.clientY;ox=el.offsetLeft;oy=el.offsetTop;el.style.zIndex=++zTop;
-  },{passive:true});
-  el.addEventListener('touchmove',e=>{
-    if(!drag)return;const t=e.touches[0];
-    let nx=ox+t.clientX-sx,ny=oy+t.clientY-sy;
-    nx=Math.max(8,Math.min(nx,room.clientWidth-el.offsetWidth-8));
-    ny=Math.max(8,Math.min(ny,room.clientHeight-el.offsetHeight-8));
-    el.style.left=nx+'px';el.style.top=ny+'px';e.preventDefault();
-  },{passive:false});
+  el.addEventListener('touchstart',e=>{if(e.target.classList.contains('del'))return;const t=e.touches[0];down(t.clientX,t.clientY);},{passive:true});
+  el.addEventListener('touchmove',e=>{const t=e.touches[0];move(t.clientX,t.clientY);e.preventDefault();},{passive:false});
   el.addEventListener('touchend',()=>drag=false);
 }
-
 function selectPlaced(el){
   document.querySelectorAll('.placed').forEach(x=>x.classList.remove('selected'));
   el.classList.add('selected');selected=el;
-  const sb=document.getElementById('selbox');
-  sb.innerHTML=`已选中：<b>${el.dataset.n}</b><br>双击可旋转<br>`+
-    `<button class="selbtn" onclick="rotateSelected()">🔄 旋转 90°</button>`+
+  document.getElementById('selbox').innerHTML=`已选中：<b>${el.dataset.n}</b><br>拖动移动 · 双击旋转<br>`+
+    `<button class="selbtn" onclick="rotateSelected()">🔄 旋转</button>`+
     `<button class="selbtn del" onclick="removeSelected()">🗑 删除</button>`;
 }
-
 room.addEventListener('click',e=>{
-  if(e.target===room||e.target.id==='floor'||e.target.classList.contains('room-label')){
+  if(e.target===room||e.target.id==='floor'||e.target.id==='backWall'||e.target.classList.contains('ceiling')||e.target.classList.contains('baseboard')||e.target.classList.contains('room-label')){
     document.querySelectorAll('.placed').forEach(x=>x.classList.remove('selected'));selected=null;
-    document.getElementById('selbox').innerHTML='点家具可选中<br>拖动可移动';
+    document.getElementById('selbox').innerHTML='点家具可选中<br>拖动可移动<br>双击可旋转';
   }
 });
-
-// 双击旋转
-room.addEventListener('dblclick',e=>{
-  const p=e.target.closest('.placed');if(p){rotateEl(p);}
-});
+room.addEventListener('dblclick',e=>{const p=e.target.closest('.placed');if(p)rotateEl(p);});
 function rotateSelected(){if(selected)rotateEl(selected);}
-function rotateEl(el){
-  let r=parseInt(el.dataset.rot||0)+90;r%=360;el.dataset.rot=r;
-  el.querySelector('.ic').style.transform=`rotate(${r}deg)`;
-}
-
-function removeSelected(){if(selected)removePlaced(selected)}
-function removePlaced(el){
-  el.remove();placed=placed.filter(p=>p.el!==el);
-  if(selected===el){selected=null;document.getElementById('selbox').innerHTML='点家具可选中<br>拖动可移动';}
-}
-
-function clearRoom(){
-  document.querySelectorAll('.placed').forEach(x=>x.remove());placed=[];selected=null;
-  document.getElementById('selbox').innerHTML='点家具可选中<br>拖动可移动';
-  toast('已清空房间');
-}
-
+function rotateEl(el){let r=(parseInt(el.dataset.rot||0)+15)%360;el.dataset.rot=r;el.style.transform=`rotate(${r}deg)`;}
+function removeSelected(){if(selected)removePlaced(selected);}
+function removePlaced(el){el.remove();if(selected===el){selected=null;document.getElementById('selbox').innerHTML='点家具可选中<br>拖动可移动<br>双击可旋转';}}
+function clearRoom(){document.querySelectorAll('.placed').forEach(x=>x.remove());selected=null;document.getElementById('selbox').innerHTML='点家具可选中<br>拖动可移动<br>双击可旋转';toast('已清空房间');}
 function randomRoom(){
-  clearRoom();
-  const all=FURNITURE.flatMap(g=>g.items);
-  const picks=all.sort(()=>Math.random()-.5).slice(0,8);
-  picks.forEach(it=>{
-    const x=20+Math.random()*(room.clientWidth-it.w-40);
-    const y=20+Math.random()*(room.clientHeight-it.h-40);
-    createPlaced(it,x,y);
-  });
-  document.querySelectorAll('.placed').forEach(x=>x.classList.remove('selected'));selected=null;
-  toast('随机布置完成 🎲');
+  clearRoom();const all=FURNITURE.flatMap(g=>g.items);const picks=all.sort(()=>Math.random()-.5).slice(0,7);
+  picks.forEach(it=>{const x=20+Math.random()*(room.clientWidth-it.w-40);const y=room.clientHeight-it.h-10-(Math.random()*(room.clientHeight*0.6-it.h));createPlaced(it,x,y);});
+  document.querySelectorAll('.placed').forEach(x=>x.classList.remove('selected'));selected=null;toast('随机布置完成 🎲');
 }
-
 function saveRoom(){
-  // 用 localStorage 保存布局快照
-  const data=[...document.querySelectorAll('.placed')].map(el=>({
-    t:el.dataset.t,n:el.dataset.n,i:el.dataset.i,
-    w:el.offsetWidth,h:el.offsetHeight,x:el.offsetLeft,y:el.offsetTop,
-    r:parseInt(el.dataset.rot||0)
-  }));
-  localStorage.setItem('sanrio_house',JSON.stringify(data));
-  toast('设计已保存！共 '+data.length+' 件家具 💾');
+  const data=[...document.querySelectorAll('.placed')].map(el=>({t:el.dataset.t,n:el.dataset.n,w:el.offsetWidth,h:el.offsetHeight,x:el.offsetLeft,y:el.offsetTop,r:parseInt(el.dataset.rot||0)}));
+  localStorage.setItem('sanrio_house_3d',JSON.stringify(data));toast('设计已保存！共 '+data.length+' 件 💾');
 }
-
-// 拖入房间
 room.addEventListener('dragover',e=>e.preventDefault());
-room.addEventListener('drop',e=>{
-  e.preventDefault();
-  try{
-    const it=JSON.parse(e.dataTransfer.getData('text'));
-    const rect=room.getBoundingClientRect();
-    addFurniture(it);
-  }catch(_){}
-});
-
-function toast(msg){
-  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
-  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1800);
-}
+room.addEventListener('drop',e=>{e.preventDefault();try{addFurniture(JSON.parse(e.dataTransfer.getData('text')))}catch(_){}});
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1600);}
 
 // 加载已保存
 window.addEventListener('load',()=>{
-  const saved=localStorage.getItem('sanrio_house');
-  if(saved){
-    try{
-      JSON.parse(saved).forEach(d=>{
-        const el=document.createElement('div');
-        el.className='placed';el.style.width=d.w+'px';el.style.height=d.h+'px';
-        el.style.left=d.x+'px';el.style.top=d.y+'px';el.style.zIndex=++zTop;
-        el.dataset.t=d.t;el.dataset.i=d.i;el.dataset.n=d.n;el.dataset.rot=d.r||0;
-        el.innerHTML=`<div class="ic" style="transform:rotate(${d.r||0}deg)">${d.i}</div><div class="nm">${d.n}</div><div class="del" onclick="event.stopPropagation();removePlaced(this.parentElement)">×</div>`;
-        el.onclick=e=>{e.stopPropagation();selectPlaced(el)};
-        enableDrag(el);room.appendChild(el);placed.push({el,t:d.t});
-      });
-      if(placed.length)toast('已加载上次的设计');
-    }catch(_){}
-  }
+  const s=localStorage.getItem('sanrio_house_3d');if(!s)return;
+  try{JSON.parse(s).forEach(d=>{
+    const def=FURNITURE.flatMap(g=>g.items).find(x=>x.t===d.t);if(!def)return;
+    const el=document.createElement('div');el.className='placed';el.style.width=d.w+'px';el.style.height=d.h+'px';
+    el.style.left=d.x+'px';el.style.top=d.y+'px';el.style.zIndex=++zTop;el.dataset.n=d.n;el.dataset.t=d.t;el.dataset.rot=d.r||0;
+    if(d.r)el.style.transform=`rotate(${d.r}deg)`;
+    el.innerHTML=SVG[def.svg]+`<div class="del" onclick="event.stopPropagation();removePlaced(this.parentElement)">×</div>`;
+    el.onclick=e=>{e.stopPropagation();selectPlaced(el)};enableDrag(el);room.appendChild(el);
+  });if(document.querySelectorAll('.placed').length)toast('已加载上次的设计');}catch(_){}
 });
 </script>
 </body>
