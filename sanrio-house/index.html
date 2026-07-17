@@ -201,6 +201,8 @@ body { font-family: -apple-system, 'PingFang SC', sans-serif; overflow: hidden; 
   </div>
   <div class="style-section-title">🎀 三丽鸥主题</div>
   <div class="style-list" id="sanrioStyleList"></div>
+  <div class="style-section-title">📺 动漫主题</div>
+  <div class="style-list" id="animeStyleList"></div>
   <div class="style-section-title">🌸 经典风格</div>
   <div class="style-list" id="classicStyleList"></div>
   <div class="index-footer">💖 拖拽家具到房间，打造你的专属空间 💖</div>
@@ -295,6 +297,14 @@ const allStyles = [
     colors:{wall:'#2D1B4E',floor:'#4A3060',accent:'#C77DFF',bg:'#3D2B5E',bgGradient:'#2A1848',text:'#D4B8F0',tabActive:'#C77DFF'},
     tags:['甜酷','暗黑','个性','洛丽塔']
   },
+  // ===== 动漫主题 =====
+  {
+    id:'shinchan', group:'anime',
+    name:'蜡笔小新', subtitle:'Kasukabe Home', emoji:'👶',
+    desc:'野原家的春日部小屋，暖桌、动感超人、小白狗窝，和小新一起过快乐的每一天',
+    colors:{wall:'#FFF5E6',floor:'#D4A574',accent:'#7CCD3A',bg:'#FFF8EC',bgGradient:'#FFF0DC',text:'#6B5A3A',tabActive:'#7CCD3A'},
+    tags:['童年','温馨','搞笑','日本家庭'],
+  },
   // ===== 经典风格 =====
   {
     id:'french', group:'classic',
@@ -379,6 +389,32 @@ const allItems = [
   { id:'kmp1',name:'暗紫玫瑰',emoji:'🥀',category:'plant',style:'kuromi',points:11 },
   { id:'kmp2',name:'黑色郁金香',emoji:'🌷',category:'plant',style:'kuromi',points:10 },
 
+  // ---- 蜡笔小新（春日部小屋）----
+  { id:'scw1',name:'春日部蓝天墙',emoji:'☀️',category:'wall',style:'shinchan',points:12 },
+  { id:'scw2',name:'野原家暖黄墙',emoji:'🏠',category:'wall',style:'shinchan',points:11 },
+  { id:'scw3',name:'幼儿园彩绘墙',emoji:'🎨',category:'wall',style:'shinchan',points:13 },
+  { id:'scf1',name:'日式榻榻米',emoji:'🟫',category:'floor',style:'shinchan',points:13 },
+  { id:'scf2',name:'浅木地板',emoji:'🪟',category:'floor',style:'shinchan',points:11 },
+  { id:'scb1',name:'小新被窝',emoji:'🛏️',category:'bed',style:'shinchan',points:22 },
+  { id:'scb2',name:'向日葵婴儿床',emoji:'👶',category:'bed',style:'shinchan',points:20 },
+  { id:'scd1',name:'野原家暖桌',emoji:'🍵',category:'furniture',style:'shinchan',points:18 },
+  { id:'scd2',name:'动感超人电视墙',emoji:'📺',category:'furniture',style:'shinchan',points:17 },
+  { id:'scd3',name:'美冴梳妆台',emoji:'🪞',category:'furniture',style:'shinchan',points:15 },
+  { id:'scd4',name:'广志办公桌',emoji:'💼',category:'furniture',style:'shinchan',points:14 },
+  { id:'scd5',name:'小新小书桌',emoji:'✏️',category:'furniture',style:'shinchan',points:12 },
+  { id:'scd6',name:'风间的小椅子',emoji:'🪑',category:'furniture',style:'shinchan',points:11 },
+  { id:'scdc1',name:'动感超人海报',emoji:'🦸',category:'decor',style:'shinchan',points:16 },
+  { id:'scdc2',name:'小白狗窝',emoji:'🐕',category:'decor',style:'shinchan',points:15 },
+  { id:'scdc3',name:'小新小黄书包',emoji:'🎒',category:'decor',style:'shinchan',points:13 },
+  { id:'scdc4',name:'不理不理左卫门',emoji:'🐷',category:'decor',style:'shinchan',points:14 },
+  { id:'scdc5',name:'野原家全家福',emoji:'🖼️',category:'decor',style:'shinchan',points:14 },
+  { id:'scdc6',name:'风间的蓝背包',emoji:'🟦',category:'decor',style:'shinchan',points:11 },
+  { id:'scdc7',name:'妮妮的超真实家家酒',emoji:'🍳',category:'decor',style:'shinchan',points:12 },
+  { id:'scdc8',name:'正男的小火车',emoji:'🚂',category:'decor',style:'shinchan',points:10 },
+  { id:'scdc9',name:'阿呆的石头收藏',emoji:'🪨',category:'decor',style:'shinchan',points:11 },
+  { id:'scp1',name:'向日葵',emoji:'🌻',category:'plant',style:'shinchan',points:14 },
+  { id:'scp2',name:'美冴的盆栽',emoji:'🪴',category:'plant',style:'shinchan',points:11 },
+
   // ---- 经典通用 (common = for all classic styles) ----
   { id:'w1',name:'奶白墙',emoji:'🤍',category:'wall',style:'french',points:10 },
   { id:'w2',name:'豆沙粉墙',emoji:'💗',category:'wall',style:'french',points:12 },
@@ -436,6 +472,7 @@ const wallColors = {
   'hkw1':'#FFE0EC','hkw2':'#FFB6C1','hkw3':'#FFFAFA',
   'mmw1':'#FFF0F5','mmw2':'#FFFAFA','mmw3':'#FFFACD',
   'kmw1':'#2D1B4E','kmw2':'#1A1A2E','kmw3':'#3D2B5E',
+  'scw1':'#B8D8F0','scw2':'#FFF5E6','scw3':'#E8F4C8',
   'w1':'#F5F0E8','w2':'#E8D0D4','w3':'#D4BCA0','w4':'#C8C0B8','w5':'#C8DFC8','w6':'#D8C8A8'
 };
 
@@ -443,6 +480,7 @@ const floorColors = {
   'hkf1':'#FF6B8A','hkf2':'#FFB6C1','hkf3':'#FFC0CB',
   'mmf1':'#FFCED8','mmf2':'#FFD1DC',
   'kmf1':'#4A3060','kmf2':'#3D2B5E',
+  'scf1':'#C8B898','scf2':'#D4B888',
   'f1':'#C8A97E','f2':'#E8E4DE','f3':'#A0785A','f4':'#C4A886','f5':'#C0A878','f6':'#D0CCC4'
 };
 
@@ -479,6 +517,7 @@ function showScreen(id) {
 // ===== INDEX =====
 function renderStyleList() {
   const sanrioList = document.getElementById('sanrioStyleList');
+  const animeList = document.getElementById('animeStyleList');
   const classicList = document.getElementById('classicStyleList');
 
   const renderCard = (s) => `
@@ -496,6 +535,7 @@ function renderStyleList() {
   `;
 
   sanrioList.innerHTML = allStyles.filter(s => s.group === 'sanrio').map(renderCard).join('');
+  animeList.innerHTML = allStyles.filter(s => s.group === 'anime').map(renderCard).join('');
   classicList.innerHTML = allStyles.filter(s => s.group === 'classic').map(renderCard).join('');
 
   document.querySelectorAll('.style-card').forEach(card => {
@@ -556,22 +596,18 @@ function loadCategory(catId) {
   state.activeCategory = catId;
   let filtered;
 
-  const isSanrio = allStyles.find(s => s.id === state.styleId)?.group === 'sanrio';
+  const group = allStyles.find(s => s.id === state.styleId)?.group;
 
   if (catId === 'wall' || catId === 'floor') {
-    // Show style-specific walls/floors, plus common ones
     filtered = allItems.filter(i => i.category === catId && (i.style === state.styleId || i.style === 'common'));
   } else {
-    // For classic styles, show style-specific + common
-    // For sanrio styles, show only sanrio-specific items
-    if (isSanrio) {
-      filtered = allItems.filter(i => i.category === catId && (i.style === state.styleId));
-      // If no items for this category, show common ones
+    if (group === 'classic') {
+      filtered = allItems.filter(i => i.category === catId && (i.style === state.styleId || i.style === 'common'));
+    } else {
+      filtered = allItems.filter(i => i.category === catId && i.style === state.styleId);
       if (filtered.length === 0) {
         filtered = allItems.filter(i => i.category === catId && i.style === 'common');
       }
-    } else {
-      filtered = allItems.filter(i => i.category === catId && (i.style === state.styleId || i.style === 'common'));
     }
   }
 
