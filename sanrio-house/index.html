@@ -1,889 +1,658 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>三丽鸥梦幻小屋 - 室内设计小游戏</title>
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-body { font-family: -apple-system, 'PingFang SC', sans-serif; overflow: hidden; user-select: none; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>三丽鸥梦幻小屋 | Sanrio Dream House</title>
+  <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Nunito:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --wall: #d4e4c3;
+      --wall-dark: #c2d6ae;
+      --floor: #d9c9a8;
+      --floor-shadow: #c4b390;
+      --window-frame: #f8f0e0;
+      --sky-day: #b8d4e3;
+      --sea-day: #7bb8c9;
+      --green-tree: #7da87b;
+      --green-dark: #5d8a5b;
+      --pink-soft: #f4c2c7;
+      --pink-dark: #e8a6b0;
+      --cream: #fff8e7;
+      --white: #ffffff;
+      --shadow: rgba(80, 90, 70, 0.15);
+      --night-overlay: rgba(30, 40, 70, 0.45);
+      --text: #5c6b55;
+      --accent: #ff8fa3;
+    }
 
-/* ===== SCREENS ===== */
-.screen { display: none; width: 100vw; height: 100vh; position: relative; }
-.screen.active { display: flex; flex-direction: column; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      font-family: "ZCOOL KuaiLe", "Nunito", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background: #f0f4e8;
+    }
 
-/* ===== INDEX SCREEN ===== */
-#screen-index {
-  background: linear-gradient(180deg, #FFE0EC 0%, #FFF0F5 30%, #F0E6FF 70%, #FFF5F0 100%);
-  overflow-y: auto;
-  padding: 16px 14px;
-}
-.index-header { text-align: center; padding: 16px 0 20px; }
-.sanrio-header { display: flex; justify-content: center; gap: 10px; font-size: 20px; margin-bottom: 8px; letter-spacing: 4px; }
-.index-title { font-size: 26px; font-weight: 800; color: #D4457A; letter-spacing: 3px; text-shadow: 0 2px 4px rgba(212,69,122,0.15); }
-.index-subtitle { font-size: 11px; color: #C9A0B8; letter-spacing: 2px; margin-top: 2px; }
-.index-desc { font-size: 13px; color: #9A7A8A; margin-top: 6px; }
+    .scene {
+      position: relative;
+      width: 100vw; height: 100vh;
+      background: linear-gradient(180deg, var(--wall) 0%, var(--wall-dark) 70%, var(--floor) 70%, var(--floor-shadow) 100%);
+      overflow: hidden;
+    }
 
-.style-section-title { font-size: 14px; font-weight: 700; color: #D4457A; padding: 8px 0 10px; letter-spacing: 2px; display: flex; align-items: center; gap: 6px; }
-.style-section-title::before { content: ''; width: 3px; height: 14px; background: #D4457A; border-radius: 2px; }
+    /* 地板纹理 */
+    .floor {
+      position: absolute; bottom: 0; left: 0; width: 100%; height: 30%;
+      background:
+        repeating-linear-gradient(90deg, transparent 0, transparent 49px, rgba(160,140,100,0.08) 50px),
+        linear-gradient(180deg, var(--floor) 0%, var(--floor-shadow) 100%);
+      transform-origin: bottom;
+      transform: perspective(600px) rotateX(20deg) scale(1.15);
+      z-index: 1;
+    }
 
-.style-list { display: flex; flex-direction: column; gap: 10px; padding-bottom: 8px; }
-.style-card {
-  border-radius: 16px; padding: 16px; position: relative; overflow: hidden;
-  box-shadow: 0 4px 14px rgba(200,160,180,0.2); border: 2px solid rgba(255,255,255,0.7);
-  cursor: pointer; transition: transform 0.2s;
-}
-.style-card:active { transform: scale(0.98); }
-.style-card .card-ribbon {
-  position: absolute; top: 12px; right: -28px; background: #FF6B8A; color: #fff;
-  font-size: 10px; padding: 3px 32px; transform: rotate(45deg);
-  font-weight: 700; letter-spacing: 1px;
-}
-.style-emoji { font-size: 26px; margin-bottom: 6px; }
-.style-name { font-size: 17px; font-weight: 700; letter-spacing: 2px; }
-.style-sub { font-size: 10px; letter-spacing: 1px; opacity: 0.55; margin-bottom: 6px; }
-.style-desc { font-size: 12px; line-height: 1.55; opacity: 0.7; margin-bottom: 8px; }
-.style-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
-.tag { font-size: 10px; padding: 3px 9px; border-radius: 10px; border: 1px solid; opacity: 0.8; }
-.style-go { font-size: 13px; font-weight: 600; }
-.index-footer { text-align: center; padding: 16px 0 24px; font-size: 12px; color: #D4A0B8; }
+    /* 墙脚线 */
+    .baseboard {
+      position: absolute; bottom: 30%; left: 0; width: 100%; height: 12px;
+      background: #e8dcc6; z-index: 2;
+    }
 
-/* ===== GAME SCREEN ===== */
-#screen-game { overflow: hidden; }
+    /* 大窗户 */
+    .window {
+      position: absolute;
+      left: 50%; top: 10%; transform: translateX(-50%);
+      width: 34%; height: 52%;
+      background: var(--sky-day);
+      border: 14px solid var(--window-frame);
+      border-radius: 6px;
+      box-shadow: inset 0 0 0 4px rgba(180,160,130,0.2), 0 10px 30px var(--shadow);
+      overflow: hidden;
+      z-index: 3;
+      transition: background 1s ease;
+    }
+    .window::before, .window::after {
+      content: ""; position: absolute; background: var(--window-frame); z-index: 5;
+    }
+    .window::before { width: 100%; height: 8px; top: 50%; left: 0; transform: translateY(-50%); }
+    .window::after { width: 8px; height: 100%; top: 0; left: 50%; transform: translateX(-50%); }
 
-.top-bar {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 8px 14px; gap: 8px; flex-shrink: 0;
-}
-.style-badge {
-  padding: 5px 12px; border-radius: 10px; color: #fff;
-  font-size: 12px; font-weight: 600; letter-spacing: 1px; flex-shrink: 0;
-}
-.stats { display: flex; align-items: center; gap: 10px; flex: 1; justify-content: center; }
-.stat-item { display: flex; flex-direction: column; align-items: center; }
-.stat-num { font-size: 18px; font-weight: 700; color: #5A4A42; }
-.stat-label { font-size: 10px; color: #9A8A8A; }
-.stat-divider { width: 1px; height: 20px; background: rgba(0,0,0,0.1); }
-.top-btn {
-  width: 30px; height: 30px; border-radius: 50%; background: #fff;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); cursor: pointer;
-}
+    .sky {
+      position: absolute; inset: 0; background: linear-gradient(180deg, var(--sky-day) 0%, #d4e8f0 60%, var(--sea-day) 60%, #6aa7b8 100%);
+      transition: background 1s ease;
+    }
+    .cloud {
+      position: absolute; background: var(--white); border-radius: 50px; opacity: 0.9;
+      animation: floatCloud 30s linear infinite;
+    }
+    .cloud1 { width: 80px; height: 30px; top: 12%; left: -10%; }
+    .cloud2 { width: 60px; height: 22px; top: 22%; left: -20%; animation-duration: 38s; animation-delay: -10s; }
+    .cloud3 { width: 100px; height: 36px; top: 8%; left: -30%; animation-duration: 45s; animation-delay: -5s; }
+    .cloud::before, .cloud::after {
+      content: ""; position: absolute; background: var(--white); border-radius: 50%;
+    }
+    .cloud1::before { width: 40px; height: 40px; top: -18px; left: 12px; }
+    .cloud1::after { width: 32px; height: 32px; top: -12px; right: 14px; }
 
-.room-area {
-  margin: 0 10px; border-radius: 12px; position: relative; overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 2px solid #fff;
-  flex: 1; min-height: 200px;
-}
-.room-wall { position: absolute; top: 0; left: 0; right: 0; height: 65%; transition: background 0.3s; }
-.room-floor { position: absolute; bottom: 0; left: 0; right: 0; height: 35%; transition: background 0.3s; }
-.room-divider { position: absolute; top: 65%; left: 0; right: 0; height: 1px; background: rgba(0,0,0,0.06); }
+    .distant-tree {
+      position: absolute; bottom: 38%; left: -10%; width: 120%; height: 80px;
+      background: var(--green-tree);
+      border-radius: 50% 50% 0 0 / 30% 30% 0 0;
+      opacity: 0.9;
+    }
+    .distant-tree::after {
+      content: ""; position: absolute; right: -40%; bottom: 0; width: 80%; height: 100%;
+      background: var(--green-dark); border-radius: 50% 50% 0 0 / 30% 30% 0 0;
+      opacity: 0.6;
+    }
+    .bird {
+      position: absolute; width: 14px; height: 8px; background: transparent;
+      border-bottom: 2px solid rgba(255,255,255,0.8); border-radius: 0 0 50% 50%;
+      animation: birdFly 12s linear infinite;
+    }
+    .bird:nth-child(1) { top: 18%; animation-delay: 0s; }
+    .bird:nth-child(2) { top: 24%; animation-delay: -6s; }
 
-.empty-hint {
-  position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);
-  text-align: center; pointer-events: none;
-}
-.hint-icon { font-size: 28px; margin-bottom: 6px; animation: bounce 1.5s ease-in-out infinite; }
-.empty-hint text { display: block; font-size: 13px; color: rgba(0,0,0,0.35); }
-.hint-sub { font-size: 11px !important; margin-top: 4px !important; color: rgba(0,0,0,0.25) !important; }
-@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(5px)} }
+    /* 窗帘 */
+    .curtain {
+      position: absolute; top: 8%; width: 11%; height: 56%; z-index: 4;
+      background: linear-gradient(90deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.3) 100%);
+      border-radius: 0 0 40% 40% / 0 0 10% 10%;
+      box-shadow: 2px 4px 10px var(--shadow);
+      animation: sway 6s ease-in-out infinite;
+    }
+    .curtain.left { left: 14%; transform-origin: top left; }
+    .curtain.right { right: 14%; transform-origin: top right; animation-delay: -3s; }
 
-.placed-item {
-  position: absolute; transform: translate(-50%, -50%);
-  display: flex; flex-direction: column; align-items: center;
-  cursor: grab; transition: transform 0.1s;
-}
-.placed-item:active { transform: translate(-50%, -50%) scale(1.1); cursor: grabbing; }
-.placed-item.rotated .placed-emoji { transform: rotate(15deg); }
-.placed-emoji { font-size: 26px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15)); }
-.placed-name {
-  font-size: 9px; color: rgba(0,0,0,0.5); margin-top: 2px;
-  white-space: nowrap; background: rgba(255,255,255,0.7);
-  padding: 1px 5px; border-radius: 4px;
-}
+    /* 阳台 / 窗台 */
+    .balcony {
+      position: absolute; left: 50%; bottom: 30%; transform: translateX(-50%);
+      width: 40%; height: 18%;
+      background: linear-gradient(180deg, #e8d9c0 0%, #d4c4a8 100%);
+      border-radius: 4px 4px 0 0;
+      z-index: 2;
+      box-shadow: 0 -4px 0 rgba(180,160,130,0.3), 0 10px 20px var(--shadow);
+    }
+    .pot {
+      position: absolute; bottom: 100%; width: 40px; height: 36px;
+      background: #d88a7a; border-radius: 0 0 30% 30%;
+      box-shadow: 0 4px 8px var(--shadow);
+    }
+    .pot::before {
+      content: ""; position: absolute; top: -18px; left: 50%; transform: translateX(-50%);
+      width: 50px; height: 30px; background: var(--green-tree); border-radius: 50%;
+    }
+    .pot::after {
+      content: ""; position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
+      width: 18px; height: 18px; background: var(--pink-soft); border-radius: 50%;
+      box-shadow: 12px 4px 0 var(--pink-dark), -8px 6px 0 var(--pink-soft);
+    }
+    .pot.left { left: 15%; }
+    .pot.right { right: 15%; }
 
-.category-bar { flex-shrink: 0; padding: 8px 0; overflow-x: auto; }
-.cat-inner { display: flex; gap: 8px; padding: 0 12px; }
-.cat-tab {
-  display: flex; flex-direction: column; align-items: center;
-  padding: 6px 14px; border-radius: 10px; background: #fff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.06); min-width: 50px; cursor: pointer;
-  transition: transform 0.1s;
-}
-.cat-tab:active { transform: scale(0.95); }
-.cat-emoji { font-size: 16px; }
-.cat-name { font-size: 11px; color: #5A4A42; margin-top: 2px; }
-.cat-tab.active .cat-name { color: #fff; }
+    /* 墙上装饰：左侧 */
+    .wall-decor-left {
+      position: absolute; left: 3%; top: 8%; width: 12%; height: 60%; z-index: 2;
+      display: flex; flex-direction: column; gap: 12px; align-items: center;
+    }
+    .oval-frame {
+      width: 60%; aspect-ratio: 3/4; background: var(--cream); border: 4px solid var(--pink-soft);
+      border-radius: 50%; box-shadow: 0 4px 10px var(--shadow); position: relative; overflow: hidden;
+    }
+    .oval-frame::after {
+      content: "🌸"; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+      font-size: 1.4rem;
+    }
+    .hat {
+      width: 70%; aspect-ratio: 1; background: var(--pink-soft); border-radius: 50% 50% 45% 45%;
+      box-shadow: 0 4px 10px var(--shadow); position: relative;
+    }
+    .hat::after { content: "🎀"; position: absolute; left: 50%; top: 35%; transform: translateX(-50%); font-size: 1.2rem; }
 
-.item-bar { flex-shrink: 0; padding: 4px 0 8px; overflow-x: auto; }
-.item-inner { display: flex; gap: 8px; padding: 0 12px; }
-.item-card {
-  display: flex; flex-direction: column; align-items: center;
-  width: 70px; flex-shrink: 0; cursor: pointer; transition: transform 0.1s;
-}
-.item-card:active { transform: scale(0.95); }
-.item-emoji-wrap {
-  width: 50px; height: 50px; border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08); border: 1px solid #fff;
-}
-.item-emoji { font-size: 22px; }
-.item-name { font-size: 11px; color: #5A4A42; margin-top: 4px; text-align: center; }
-.item-points { font-size: 10px; font-weight: 600; margin-top: 1px; }
+    /* 书桌 */
+    .desk {
+      position: absolute; left: 8%; bottom: 32%; width: 22%; height: 28%; z-index: 6;
+      background: #a8c6a0; border-radius: 4px 4px 0 0;
+      box-shadow: 0 8px 20px var(--shadow);
+    }
+    .desk-top {
+      position: absolute; top: 0; left: 0; width: 100%; height: 14px;
+      background: #b8d4ae; border-radius: 4px 4px 0 0;
+    }
+    .desk-leg { position: absolute; bottom: 0; width: 12px; height: 100%; background: #8fb085; }
+    .desk-leg.left { left: 8%; }
+    .desk-leg.right { right: 8%; }
+    .shelf-unit {
+      position: absolute; right: 10%; bottom: 0; width: 40%; height: 75%; background: #9bb990;
+      display: grid; grid-template-rows: repeat(3, 1fr); padding: 6px; gap: 4px; border-radius: 4px;
+    }
+    .shelf-row { background: #b8d4ae; border-radius: 2px; position: relative; }
+    .book {
+      position: absolute; bottom: 0; width: 8px; height: 80%; border-radius: 2px;
+      box-shadow: 1px 0 2px rgba(0,0,0,0.1);
+    }
+    .book:nth-child(1) { left: 4px; background: #f4b8c4; }
+    .book:nth-child(2) { left: 14px; background: #a8d4e6; height: 70%; }
+    .book:nth-child(3) { left: 24px; background: #ffe6a8; height: 85%; }
+    .book:nth-child(4) { left: 34px; background: #d4a5d9; height: 75%; }
 
-.complete-bar { flex-shrink: 0; padding: 4px 14px 8px; }
-.complete-btn {
-  width: 100%; padding: 12px; border-radius: 24px;
-  color: #fff; font-size: 16px; font-weight: 700; letter-spacing: 3px;
-  border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.15); cursor: pointer;
-}
-.complete-btn:active { transform: scale(0.98); }
+    /* 兔子灯 */
+    .bunny-lamp {
+      position: absolute; left: 8%; top: -12%; width: 18%; z-index: 8;
+      filter: drop-shadow(0 4px 6px var(--shadow));
+      cursor: pointer; transition: transform 0.3s ease;
+    }
+    .bunny-lamp:hover { transform: scale(1.05); }
+    .lamp-glow {
+      position: absolute; left: -40%; top: -40%; width: 180%; height: 180%;
+      background: radial-gradient(circle, rgba(255,245,180,0.6) 0%, transparent 70%);
+      opacity: 0; transition: opacity 0.6s ease; pointer-events: none;
+    }
+    .bunny-lamp:hover .lamp-glow, .night .lamp-glow { opacity: 1; }
 
-/* ===== RESULT SCREEN ===== */
-#screen-result {
-  background: linear-gradient(180deg, #FFE0EC, #FFF5F0);
-  overflow-y: auto; padding: 20px 16px;
-}
-.celebration { text-align: center; padding: 10px 0 18px; }
-.rating-emoji { font-size: 36px; margin-bottom: 6px; animation: pop 0.6s ease; }
-.rating-title { font-size: 20px; font-weight: 700; color: #5A4A42; letter-spacing: 2px; margin-bottom: 8px; }
-.rating-stars { display: flex; justify-content: center; gap: 4px; margin-bottom: 8px; }
-.star { font-size: 26px; color: #E0D9CD; }
-.star.filled { color: #FFD700; text-shadow: 0 1px 4px rgba(255,215,0,0.4); }
-.rating-desc { font-size: 13px; color: #9A8A8A; padding: 0 20px; line-height: 1.6; }
-@keyframes pop { 0%{transform:scale(0);opacity:0} 60%{transform:scale(1.2);opacity:1} 100%{transform:scale(1)} }
+    /* 绿色沙发椅 */
+    .sofa {
+      position: absolute; left: 34%; bottom: 34%; width: 14%; height: 22%; z-index: 5;
+      background: #9cc285; border-radius: 40% 40% 30% 30% / 20% 20% 10% 10%;
+      box-shadow: 0 8px 20px var(--shadow);
+    }
+    .sofa::before {
+      content: ""; position: absolute; top: -25%; left: 10%; width: 80%; height: 50%;
+      background: #a8ce91; border-radius: 50% 50% 20% 20%;
+    }
+    .sofa::after {
+      content: ""; position: absolute; top: 20%; left: 50%; transform: translateX(-50%);
+      width: 50%; height: 40%; background: var(--cream); border-radius: 50%; opacity: 0.7;
+      box-shadow: inset 0 0 0 4px rgba(140,180,120,0.3);
+    }
 
-.room-preview {
-  height: 200px; border-radius: 16px; overflow: hidden; position: relative;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.12); border: 2px solid #fff; margin-bottom: 16px;
-}
-.preview-item { position: absolute; transform: translate(-50%, -50%); }
-.preview-item.rotated .preview-emoji { transform: rotate(15deg); }
-.preview-emoji { font-size: 24px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15)); }
+    /* 地毯和睡觉小狗 */
+    .rug {
+      position: absolute; left: 50%; bottom: 30%; transform: translateX(-50%);
+      width: 18%; height: 10%; background: var(--pink-soft); border-radius: 50%;
+      z-index: 4; box-shadow: 0 6px 14px var(--shadow);
+    }
+    .sleeping-dog {
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+      width: 60%; z-index: 5; cursor: pointer; transition: transform 0.3s ease;
+    }
+    .sleeping-dog:hover { transform: translate(-50%, -50%) scale(1.08); }
+    .zzz {
+      position: absolute; right: -10%; top: -10%; font-size: 0.9rem; color: #88a;
+      opacity: 0; animation: zzz 3s ease-in-out infinite;
+    }
+    .sleeping-dog:hover .zzz { opacity: 1; }
 
-.score-card {
-  background: #fff; border-radius: 16px; padding: 16px; margin-bottom: 18px;
-  box-shadow: 0 4px 16px rgba(255,182,193,0.2); border: 1px solid #FFE0EC;
-}
-.score-header { display: flex; align-items: baseline; justify-content: center; gap: 8px; margin-bottom: 12px; }
-.score-label { font-size: 14px; color: #9A8A8A; }
-.score-num { font-size: 32px; font-weight: 700; }
-.score-divider { height: 1px; background: #F0E8E0; margin: 0 0 12px; }
-.breakdown { display: flex; flex-direction: column; gap: 10px; }
-.breakdown-item { display: flex; justify-content: space-between; align-items: center; }
-.bd-left { display: flex; align-items: center; gap: 6px; }
-.bd-name { font-size: 14px; color: #5A4A42; }
-.bd-count { font-size: 11px; color: #C0B8B0; background: #F5F0F0; padding: 2px 7px; border-radius: 6px; }
-.bd-points { font-size: 16px; font-weight: 700; }
-.summary-row { display: flex; justify-content: space-between; align-items: center; }
-.summary-label { font-size: 14px; color: #9A8A8A; }
-.summary-val { font-size: 15px; font-weight: 600; color: #5A4A42; }
+    /* 画架 */
+    .easel {
+      position: absolute; right: 8%; bottom: 30%; width: 16%; height: 50%; z-index: 6;
+    }
+    .easel-stand {
+      position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+      width: 8px; height: 100%; background: #c9a87c; border-radius: 4px;
+    }
+    .easel-stand::before, .easel-stand::after {
+      content: ""; position: absolute; top: 0; width: 6px; height: 95%; background: #c9a87c; border-radius: 4px; transform-origin: top center;
+    }
+    .easel-stand::before { left: -40px; transform: rotate(8deg); }
+    .easel-stand::after { left: 40px; transform: rotate(-8deg); }
+    .canvas {
+      position: absolute; left: 50%; top: 18%; transform: translateX(-50%);
+      width: 90%; height: 52%; background: var(--cream); border: 6px solid #c9a87c;
+      border-radius: 4px; box-shadow: 0 4px 12px var(--shadow); overflow: hidden;
+    }
+    .canvas-art {
+      position: absolute; inset: 8%;
+      background: linear-gradient(180deg, #b8d4e3 50%, #7bb8c9 50%);
+      border-radius: 4px;
+    }
+    .canvas-art::after {
+      content: "☁️"; position: absolute; left: 20%; top: 20%; font-size: 1rem;
+    }
 
-.action-bar { display: flex; flex-direction: column; gap: 10px; }
-.action-btn {
-  width: 100%; padding: 12px; border-radius: 24px;
-  font-size: 15px; font-weight: 600; letter-spacing: 2px;
-  border: none; color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.12); cursor: pointer;
-}
-.action-btn:active { transform: scale(0.98); }
-.action-btn.again { background: #E8D5C4; color: #6B4E3A; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
-</style>
+    /* 画画的女孩 */
+    .artist {
+      position: absolute; right: 2%; bottom: 30%; width: 12%; height: 32%; z-index: 7;
+      cursor: pointer; transition: transform 0.3s ease;
+    }
+    .artist:hover { transform: scale(1.03); }
+
+    /* 画具小车 */
+    .art-cart {
+      position: absolute; right: 22%; bottom: 30%; width: 10%; height: 18%; z-index: 5;
+      background: #a8c6a0; border-radius: 4px; box-shadow: 0 6px 14px var(--shadow);
+    }
+    .art-cart::before {
+      content: ""; position: absolute; top: -8px; left: 8%; width: 84%; height: 8px; background: #9bb990; border-radius: 4px;
+    }
+    .paint-tube {
+      position: absolute; bottom: 10%; width: 16%; height: 40%; border-radius: 30% 30% 4px 4px;
+      transform: rotate(-15deg);
+    }
+    .paint-tube:nth-child(1) { left: 15%; background: #ff8fa3; }
+    .paint-tube:nth-child(2) { left: 42%; background: #8fd3ff; transform: rotate(10deg); }
+    .paint-tube:nth-child(3) { left: 68%; background: #ffe08a; transform: rotate(-5deg); }
+
+    /* 捕梦网 */
+    .dreamcatcher {
+      position: absolute; left: 52%; top: 8%; width: 6%; z-index: 4;
+      animation: swing 8s ease-in-out infinite; transform-origin: top center;
+      cursor: pointer;
+    }
+
+    /* 日历 */
+    .calendar {
+      position: absolute; left: 50%; top: 5%; transform: translateX(-50%);
+      width: 6%; aspect-ratio: 3/4; background: var(--cream); z-index: 4;
+      border-radius: 4px; box-shadow: 0 4px 10px var(--shadow); padding: 4px; text-align: center;
+      font-size: 0.6rem; color: #888; cursor: pointer; transition: transform 0.3s ease;
+    }
+    .calendar:hover { transform: translateX(-50%) rotate(-3deg); }
+    .calendar strong { display: block; font-size: 1.2rem; color: var(--accent); margin-top: 4px; }
+
+    /* 镜子 */
+    .mirror {
+      position: absolute; right: 3%; top: 18%; width: 10%; height: 22%; z-index: 4;
+      background: linear-gradient(135deg, #d4e8f0 0%, #eef8fc 50%, #d4e8f0 100%);
+      border: 6px solid #e8d9c0; border-radius: 50% 50% 0 0;
+      box-shadow: 0 6px 14px var(--shadow); transform: rotate(3deg);
+      overflow: hidden;
+    }
+    .mirror::after {
+      content: ""; position: absolute; left: -20%; top: -20%; width: 60%; height: 100%;
+      background: rgba(255,255,255,0.4); transform: rotate(25deg);
+    }
+
+    /* 漂浮的闪光粒子 */
+    .sparkle {
+      position: absolute; width: 6px; height: 6px; background: var(--white); border-radius: 50%;
+      box-shadow: 0 0 8px var(--white); opacity: 0; animation: twinkle 4s ease-in-out infinite;
+      z-index: 10; pointer-events: none;
+    }
+
+    /* 控制面板 */
+    .controls {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 12px; z-index: 100; padding: 10px 16px;
+      background: rgba(255,255,255,0.85); border-radius: 999px; box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      backdrop-filter: blur(6px);
+    }
+    .btn {
+      border: none; padding: 8px 16px; border-radius: 999px; cursor: pointer;
+      font-family: inherit; font-size: 0.9rem; background: var(--pink-soft); color: var(--text);
+      transition: transform 0.2s, background 0.2s; box-shadow: 0 3px 0 var(--pink-dark);
+    }
+    .btn:active { transform: translateY(3px); box-shadow: none; }
+    .btn:hover { background: #f8d4d9; }
+    .btn.active { background: #b8d4ae; box-shadow: 0 3px 0 #8fb085; }
+
+    /* 提示气泡 */
+    .tooltip {
+      position: absolute; padding: 8px 12px; background: var(--cream); color: var(--text);
+      border-radius: 12px; font-size: 0.85rem; box-shadow: 0 4px 12px var(--shadow);
+      pointer-events: none; opacity: 0; transform: translateY(10px) scale(0.95); transition: all 0.3s ease;
+      z-index: 50; max-width: 180px; text-align: center;
+    }
+    .tooltip.show { opacity: 1; transform: translateY(0) scale(1); }
+    .tooltip::after {
+      content: ""; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
+      border-width: 8px 8px 0; border-style: solid; border-color: var(--cream) transparent transparent;
+    }
+
+    /* 夜间模式 */
+    .scene.night .window { background: #2a3a55; }
+    .scene.night .sky { background: linear-gradient(180deg, #1e2b45 0%, #2a3d5c 60%, #22354d 60%, #1a2a3d 100%); }
+    .scene.night .cloud { opacity: 0.3; }
+    .scene.night .distant-tree { opacity: 0.5; }
+    .scene.night::before {
+      content: ""; position: absolute; inset: 0; background: var(--night-overlay);
+      pointer-events: none; z-index: 20; transition: background 1s ease;
+    }
+    .scene.night .sparkle { background: #fff7a8; box-shadow: 0 0 10px #fff7a8; }
+    .scene.night .lamp-glow { opacity: 1; }
+
+    /* 动画定义 */
+    @keyframes floatCloud { from { transform: translateX(0); } to { transform: translateX(420%); } }
+    @keyframes sway { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(1.5deg); } }
+    @keyframes swing { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
+    @keyframes birdFly { 0% { left: -10%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { left: 110%; opacity: 0; } }
+    @keyframes zzz { 0% { transform: translateY(0) scale(0.8); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(-20px) scale(1.2); opacity: 0; } }
+    @keyframes twinkle { 0%, 100% { opacity: 0; transform: scale(0.5); } 50% { opacity: 0.9; transform: scale(1); } }
+
+    /* 响应式 */
+    @media (max-width: 768px) {
+      .controls { bottom: 10px; transform: translateX(-50%) scale(0.9); }
+      .calendar { font-size: 0.5rem; }
+      .tooltip { font-size: 0.75rem; max-width: 140px; }
+    }
+  </style>
 </head>
 <body>
+  <div class="scene" id="scene">
+    <div class="floor"></div>
+    <div class="baseboard"></div>
 
-<!-- ===== INDEX SCREEN ===== -->
-<div id="screen-index" class="screen active">
-  <div class="index-header">
-    <div class="sanrio-header">🎀 🐰 🖤</div>
-    <div class="index-title">三丽鸥梦幻小屋</div>
-    <div class="index-subtitle">Sanrio Dream House Designer</div>
-    <div class="index-desc">和三丽鸥的小伙伴一起设计梦幻房间吧～</div>
-  </div>
-  <div class="style-section-title">🎀 三丽鸥主题</div>
-  <div class="style-list" id="sanrioStyleList"></div>
-  <div class="style-section-title">📺 动漫主题</div>
-  <div class="style-list" id="animeStyleList"></div>
-  <div class="style-section-title">🌸 经典风格</div>
-  <div class="style-list" id="classicStyleList"></div>
-  <div class="index-footer">💖 拖拽家具到房间，打造你的专属空间 💖</div>
-</div>
+    <!-- 墙上装饰左侧 -->
+    <div class="wall-decor-left">
+      <div class="oval-frame" data-tip="墙上的小花装饰画"></div>
+      <div class="hat" data-tip="美乐蒂的粉色帽子"></div>
+      <div class="oval-frame" data-tip="三丽鸥朋友们的合影"></div>
+      <div class="oval-frame" data-tip="窗边的绿叶"></div>
+    </div>
 
-<!-- ===== GAME SCREEN ===== -->
-<div id="screen-game" class="screen">
-  <div class="top-bar">
-    <div class="style-badge" id="gameStyleBadge"></div>
-    <div class="stats">
-      <div class="stat-item">
-        <span class="stat-num" id="itemCount">0</span>
-        <span class="stat-label">物品</span>
-      </div>
-      <div class="stat-divider"></div>
-      <div class="stat-item">
-        <span class="stat-num" id="totalPoints">0</span>
-        <span class="stat-label">积分</span>
+    <!-- 窗户与窗外 -->
+    <div class="curtain left"></div>
+    <div class="curtain right"></div>
+    <div class="window" id="window">
+      <div class="sky">
+        <div class="cloud cloud1"></div>
+        <div class="cloud cloud2"></div>
+        <div class="cloud cloud3"></div>
+        <div class="distant-tree"></div>
+        <div class="bird"></div>
+        <div class="bird"></div>
       </div>
     </div>
-    <div class="top-btn" id="resetBtn" style="cursor:pointer;">↺</div>
-  </div>
-  <div class="room-area" id="roomArea">
-    <div class="room-wall" id="roomWall"></div>
-    <div class="room-floor" id="roomFloor"></div>
-    <div class="room-divider"></div>
-    <div class="empty-hint" id="emptyHint">
-      <div class="hint-icon">👇</div>
-      <span>从下方选择家具放入房间</span>
-      <span class="hint-sub">长按物品可拖拽，点击可旋转/删除</span>
+
+    <!-- 阳台 -->
+    <div class="balcony">
+      <div class="pot left" data-tip="阳台上的小花"></div>
+      <div class="pot right" data-tip="窗边的绿植"></div>
     </div>
-  </div>
-  <div class="category-bar" id="categoryBar"><div class="cat-inner" id="catInner"></div></div>
-  <div class="item-bar"><div class="item-inner" id="itemInner"></div></div>
-  <div class="complete-bar">
-    <button class="complete-btn" id="completeBtn">完成设计 ✨</button>
-  </div>
-</div>
 
-<!-- ===== RESULT SCREEN ===== -->
-<div id="screen-result" class="screen">
-  <div class="celebration">
-    <div class="rating-emoji" id="ratingEmoji"></div>
-    <div class="rating-title" id="ratingTitle"></div>
-    <div class="rating-stars" id="ratingStars"></div>
-    <div class="rating-desc" id="ratingDesc"></div>
-  </div>
-  <div class="room-preview" id="roomPreview"></div>
-  <div class="score-card">
-    <div class="score-header">
-      <span class="score-label">总得分</span>
-      <span class="score-num" id="resultScore">0</span>
+    <!-- 日历 -->
+    <div class="calendar" data-tip="今天是画画的好日子">
+      <span>JUL</span><strong id="dayNum">17</strong>
     </div>
-    <div class="score-divider"></div>
-    <div class="breakdown" id="breakdown"></div>
-    <div class="score-divider"></div>
-    <div class="summary-row">
-      <span class="summary-label">摆放物品</span>
-      <span class="summary-val" id="resultItemCount">0 件</span>
+
+    <!-- 捕梦网 -->
+    <div class="dreamcatcher" data-tip="捕梦网会带走噩梦">
+      <svg viewBox="0 0 80 120" width="100%">
+        <circle cx="40" cy="30" r="24" fill="none" stroke="#d4a5d9" stroke-width="3"/>
+        <line x1="40" y1="6" x2="40" y2="0" stroke="#c9a87c" stroke-width="2"/>
+        <line x1="40" y1="6" x2="18" y2="20" stroke="#d4a5d9" stroke-width="1"/>
+        <line x1="40" y1="6" x2="62" y2="20" stroke="#d4a5d9" stroke-width="1"/>
+        <line x1="18" y1="20" x2="62" y2="20" stroke="#d4a5d9" stroke-width="1"/>
+        <line x1="18" y1="20" x2="40" y2="54" stroke="#d4a5d9" stroke-width="1"/>
+        <line x1="62" y1="20" x2="40" y2="54" stroke="#d4a5d9" stroke-width="1"/>
+        <line x1="40" y1="6" x2="40" y2="54" stroke="#d4a5d9" stroke-width="1"/>
+        <path d="M40 54 Q30 70 25 85" stroke="#d4a5d9" stroke-width="2" fill="none"/>
+        <path d="M40 54 Q50 70 55 85" stroke="#d4a5d9" stroke-width="2" fill="none"/>
+        <path d="M40 54 Q40 70 40 90" stroke="#d4a5d9" stroke-width="2" fill="none"/>
+        <circle cx="25" cy="88" r="4" fill="#f4b8c4"/>
+        <circle cx="55" cy="88" r="4" fill="#f4b8c4"/>
+        <circle cx="40" cy="93" r="4" fill="#a8d4e6"/>
+      </svg>
     </div>
-  </div>
-  <div class="action-bar">
-    <button class="action-btn" id="shareBtn" style="cursor:pointer;">分享我的设计 💌</button>
-    <button class="action-btn again" id="againBtn" style="cursor:pointer;">再设计一个 🔄</button>
-  </div>
-</div>
 
-<script>
-// ===== ALL STYLES =====
-const allStyles = [
-  // ===== 三丽鸥主题 =====
-  {
-    id:'hello-kitty', group:'sanrio',
-    name:'Hello Kitty', subtitle:'Pink Dream', emoji:'🎀',
-    desc:'经典红色蝴蝶结遇上少女粉，凯蒂猫的可爱小窝，每一处都是甜蜜暴击',
-    colors:{wall:'#FFF0F5',floor:'#FFB6C1',accent:'#FF6B8A',bg:'#FFE0EC',bgGradient:'#FFF0F5',text:'#D4457A',tabActive:'#FF6B8A'},
-    tags:['粉嫩','甜美','蝴蝶结','少女心'],
-    ribbon: 'HOT', ribbonColor: '#FF6B8A'
-  },
-  {
-    id:'my-melody', group:'sanrio',
-    name:'My Melody', subtitle:'Sweet Bunny', emoji:'🐰',
-    desc:'软绵绵的兔子耳朵和粉白花边，美乐蒂的温柔小天地，像棉花糖一样软',
-    colors:{wall:'#FFF3F8',floor:'#FFCED8',accent:'#FF80AB',bg:'#FFF0F5',bgGradient:'#FFE0EC',text:'#C07080',tabActive:'#FF80AB'},
-    tags:['软萌','兔子','花边','棉花糖'],
-    ribbon: 'NEW', ribbonColor: '#FF80AB'
-  },
-  {
-    id:'kuromi', group:'sanrio',
-    name:'Kuromi', subtitle:'Punk Lolita', emoji:'🖤',
-    desc:'紫色小恶魔的甜酷房间，铆钉与蕾丝的碰撞，做最有个性的坏坏女孩',
-    colors:{wall:'#2D1B4E',floor:'#4A3060',accent:'#C77DFF',bg:'#3D2B5E',bgGradient:'#2A1848',text:'#D4B8F0',tabActive:'#C77DFF'},
-    tags:['甜酷','暗黑','个性','洛丽塔']
-  },
-  // ===== 动漫主题 =====
-  {
-    id:'shinchan', group:'anime',
-    name:'蜡笔小新', subtitle:'Kasukabe Home', emoji:'👶',
-    desc:'野原家的春日部小屋，暖桌、动感超人、小白狗窝，和小新一起过快乐的每一天',
-    colors:{wall:'#FFF5E6',floor:'#D4A574',accent:'#7CCD3A',bg:'#FFF8EC',bgGradient:'#FFF0DC',text:'#6B5A3A',tabActive:'#7CCD3A'},
-    tags:['童年','温馨','搞笑','日本家庭'],
-  },
-  // ===== 经典风格 =====
-  {
-    id:'french', group:'classic',
-    name:'法式少女', subtitle:'French Romance', emoji:'🌸',
-    desc:'奶白与豆沙粉的浪漫邂逅，黄铜与蕾丝交织出巴黎公寓的优雅',
-    colors:{wall:'#F5F0E8',floor:'#C8A97E',accent:'#D4A5A5',bg:'#FFE8E0',bgGradient:'#FFF0EB',text:'#8B6B6B',tabActive:'#D4A5A5'},
-    tags:['浪漫','优雅','复古','精致']
-  },
-  {
-    id:'vintage', group:'classic',
-    name:'美式复古', subtitle:'American Vintage', emoji:'🪕',
-    desc:'焦糖色皮革与做旧木质，暖灯光下重现六十年代的慵懒时光',
-    colors:{wall:'#E8D5C4',floor:'#A0785A',accent:'#C4956A',bg:'#F5E6D3',bgGradient:'#F0E0CC',text:'#6B4E3A',tabActive:'#C4956A'},
-    tags:['复古','温暖','随性','故事感']
-  },
-  {
-    id:'nature', group:'classic',
-    name:'自然森系', subtitle:'Forest Nature', emoji:'🌿',
-    desc:'原木与绿植的清新对话，阳光穿过藤编窗帘洒下斑驳光影',
-    colors:{wall:'#E8EFE8',floor:'#B8A07A',accent:'#7BAE7B',bg:'#E8F5E8',bgGradient:'#DFF0DF',text:'#4A6B4A',tabActive:'#7BAE7B'},
-    tags:['清新','自然','治愈','生机']
-  }
-];
-
-// ===== ALL ITEMS =====
-const allItems = [
-  // ---- Hello Kitty ----
-  { id:'hkw1',name:'粉嫩爱心墙',emoji:'💗',category:'wall',style:'hello-kitty',points:12 },
-  { id:'hkw2',name:'草莓糖霜墙',emoji:'🍓',category:'wall',style:'hello-kitty',points:11 },
-  { id:'hkw3',name:'纯白牛奶墙',emoji:'🥛',category:'wall',style:'hello-kitty',points:10 },
-  { id:'hkf1',name:'草莓红地毯',emoji:'🔴',category:'floor',style:'hello-kitty',points:12 },
-  { id:'hkf2',name:'粉格瓷砖',emoji:'🟥',category:'floor',style:'hello-kitty',points:13 },
-  { id:'hkf3',name:'波点地板',emoji:'🔘',category:'floor',style:'hello-kitty',points:11 },
-  { id:'hkb1',name:'蝴蝶结公主床',emoji:'🛏️',category:'bed',style:'hello-kitty',points:22 },
-  { id:'hkb2',name:'草莓软床',emoji:'🛌',category:'bed',style:'hello-kitty',points:20 },
-  { id:'hkd1',name:'蝴蝶结梳妆台',emoji:'🪞',category:'furniture',style:'hello-kitty',points:16 },
-  { id:'hkd2',name:'猫咪沙发',emoji:'🛋️',category:'furniture',style:'hello-kitty',points:15 },
-  { id:'hkd3',name:'爱心衣橱',emoji:'🚪',category:'furniture',style:'hello-kitty',points:14 },
-  { id:'hkd4',name:'糖果边几',emoji:'🍬',category:'furniture',style:'hello-kitty',points:10 },
-  { id:'hkd5',name:'蝴蝶结相框',emoji:'🖼️',category:'decor',style:'hello-kitty',points:12 },
-  { id:'hkd6',name:'草莓抱枕',emoji:'🍓',category:'decor',style:'hello-kitty',points:9 },
-  { id:'hkd7',name:'经典红丝带',emoji:'🎀',category:'decor',style:'hello-kitty',points:15 },
-  { id:'hkd8',name:'蕾丝窗帘',emoji:'🪟',category:'decor',style:'hello-kitty',points:13 },
-  { id:'hkp1',name:'红玫瑰',emoji:'🌹',category:'plant',style:'hello-kitty',points:11 },
-  { id:'hkp2',name:'粉百合',emoji:'🌷',category:'plant',style:'hello-kitty',points:10 },
-
-  // ---- My Melody ----
-  { id:'mmw1',name:'樱花粉墙',emoji:'🌸',category:'wall',style:'my-melody',points:12 },
-  { id:'mmw2',name:'棉花糖白墙',emoji:'☁️',category:'wall',style:'my-melody',points:10 },
-  { id:'mmw3',name:'淡奶黄墙',emoji:'🍰',category:'wall',style:'my-melody',points:11 },
-  { id:'mmf1',name:'花瓣地砖',emoji:'🌺',category:'floor',style:'my-melody',points:12 },
-  { id:'mmf2',name:'软绵地毯',emoji:'🩷',category:'floor',style:'my-melody',points:13 },
-  { id:'mmb1',name:'兔子耳朵床',emoji:'🛏️',category:'bed',style:'my-melody',points:22 },
-  { id:'mmb2',name:'蓬蓬公主床',emoji:'🛌',category:'bed',style:'my-melody',points:20 },
-  { id:'mmd1',name:'兔耳化妆台',emoji:'🪞',category:'furniture',style:'my-melody',points:16 },
-  { id:'mmd2',name:'花花单人椅',emoji:'🪑',category:'furniture',style:'my-melody',points:14 },
-  { id:'mmd3',name:'蕾丝衣柜',emoji:'🚪',category:'furniture',style:'my-melody',points:15 },
-  { id:'mmd4',name:'草莓甜点架',emoji:'🍰',category:'furniture',style:'my-melody',points:12 },
-  { id:'mmd5',name:'花朵地毯',emoji:'🌼',category:'decor',style:'my-melody',points:13 },
-  { id:'mmd6',name:'星星许愿灯',emoji:'✨',category:'decor',style:'my-melody',points:15 },
-  { id:'mmd7',name:'花瓣窗帘',emoji:'🪟',category:'decor',style:'my-melody',points:12 },
-  { id:'mmd8',name:'兔子布偶',emoji:'🧸',category:'decor',style:'my-melody',points:10 },
-  { id:'mmp1',name:'小雏菊',emoji:'🌼',category:'plant',style:'my-melody',points:10 },
-  { id:'mmp2',name:'草莓盆栽',emoji:'🍓',category:'plant',style:'my-melody',points:11 },
-
-  // ---- Kuromi ----
-  { id:'kmw1',name:'暗夜紫墙',emoji:'💜',category:'wall',style:'kuromi',points:12 },
-  { id:'kmw2',name:'星空黑墙',emoji:'🌑',category:'wall',style:'kuromi',points:11 },
-  { id:'kmw3',name:'哥特条纹墙',emoji:'🦇',category:'wall',style:'kuromi',points:13 },
-  { id:'kmf1',name:'紫格地板',emoji:'🟪',category:'floor',style:'kuromi',points:12 },
-  { id:'kmf2',name:'星月地砖',emoji:'🌙',category:'floor',style:'kuromi',points:13 },
-  { id:'kmb1',name:'黑紫洛丽塔床',emoji:'🛏️',category:'bed',style:'kuromi',points:22 },
-  { id:'kmb2',name:'铆钉女王床',emoji:'🛌',category:'bed',style:'kuromi',points:20 },
-  { id:'kmd1',name:'骷髅梳妆台',emoji:'💀',category:'furniture',style:'kuromi',points:16 },
-  { id:'kmd2',name:'紫色天鹅绒椅',emoji:'🪑',category:'furniture',style:'kuromi',points:15 },
-  { id:'kmd3',name:'哥特衣柜',emoji:'🚪',category:'furniture',style:'kuromi',points:14 },
-  { id:'kmd4',name:'十字架落地镜',emoji:'🪞',category:'furniture',style:'kuromi',points:18 },
-  { id:'kmd5',name:'蝙蝠挂画',emoji:'🦇',category:'decor',style:'kuromi',points:13 },
-  { id:'kmd6',name:'紫水晶吊灯',emoji:'💡',category:'decor',style:'kuromi',points:15 },
-  { id:'kmd7',name:'铆钉抱枕',emoji:'⚫',category:'decor',style:'kuromi',points:9 },
-  { id:'kmd8',name:'黑纱窗帘',emoji:'🪟',category:'decor',style:'kuromi',points:12 },
-  { id:'kmp1',name:'暗紫玫瑰',emoji:'🥀',category:'plant',style:'kuromi',points:11 },
-  { id:'kmp2',name:'黑色郁金香',emoji:'🌷',category:'plant',style:'kuromi',points:10 },
-
-  // ---- 蜡笔小新（春日部小屋）----
-  { id:'scw1',name:'春日部蓝天墙',emoji:'☀️',category:'wall',style:'shinchan',points:12 },
-  { id:'scw2',name:'野原家暖黄墙',emoji:'🏠',category:'wall',style:'shinchan',points:11 },
-  { id:'scw3',name:'幼儿园彩绘墙',emoji:'🎨',category:'wall',style:'shinchan',points:13 },
-  { id:'scf1',name:'日式榻榻米',emoji:'🟫',category:'floor',style:'shinchan',points:13 },
-  { id:'scf2',name:'浅木地板',emoji:'🪟',category:'floor',style:'shinchan',points:11 },
-  { id:'scb1',name:'小新被窝',emoji:'🛏️',category:'bed',style:'shinchan',points:22 },
-  { id:'scb2',name:'向日葵婴儿床',emoji:'👶',category:'bed',style:'shinchan',points:20 },
-  { id:'scd1',name:'野原家暖桌',emoji:'🍵',category:'furniture',style:'shinchan',points:18 },
-  { id:'scd2',name:'动感超人电视墙',emoji:'📺',category:'furniture',style:'shinchan',points:17 },
-  { id:'scd3',name:'美冴梳妆台',emoji:'🪞',category:'furniture',style:'shinchan',points:15 },
-  { id:'scd4',name:'广志办公桌',emoji:'💼',category:'furniture',style:'shinchan',points:14 },
-  { id:'scd5',name:'小新小书桌',emoji:'✏️',category:'furniture',style:'shinchan',points:12 },
-  { id:'scd6',name:'风间的小椅子',emoji:'🪑',category:'furniture',style:'shinchan',points:11 },
-  { id:'scdc1',name:'动感超人海报',emoji:'🦸',category:'decor',style:'shinchan',points:16 },
-  { id:'scdc2',name:'小白狗窝',emoji:'🐕',category:'decor',style:'shinchan',points:15 },
-  { id:'scdc3',name:'小新小黄书包',emoji:'🎒',category:'decor',style:'shinchan',points:13 },
-  { id:'scdc4',name:'不理不理左卫门',emoji:'🐷',category:'decor',style:'shinchan',points:14 },
-  { id:'scdc5',name:'野原家全家福',emoji:'🖼️',category:'decor',style:'shinchan',points:14 },
-  { id:'scdc6',name:'风间的蓝背包',emoji:'🟦',category:'decor',style:'shinchan',points:11 },
-  { id:'scdc7',name:'妮妮的超真实家家酒',emoji:'🍳',category:'decor',style:'shinchan',points:12 },
-  { id:'scdc8',name:'正男的小火车',emoji:'🚂',category:'decor',style:'shinchan',points:10 },
-  { id:'scdc9',name:'阿呆的石头收藏',emoji:'🪨',category:'decor',style:'shinchan',points:11 },
-  { id:'scp1',name:'向日葵',emoji:'🌻',category:'plant',style:'shinchan',points:14 },
-  { id:'scp2',name:'美冴的盆栽',emoji:'🪴',category:'plant',style:'shinchan',points:11 },
-
-  // ---- 经典通用 (common = for all classic styles) ----
-  { id:'w1',name:'奶白墙',emoji:'🤍',category:'wall',style:'french',points:10 },
-  { id:'w2',name:'豆沙粉墙',emoji:'💗',category:'wall',style:'french',points:12 },
-  { id:'w3',name:'焦糖色墙',emoji:'🟤',category:'wall',style:'vintage',points:12 },
-  { id:'w4',name:'做旧灰墙',emoji:'⬜',category:'wall',style:'vintage',points:10 },
-  { id:'w5',name:'薄荷绿墙',emoji:'🫒',category:'wall',style:'nature',points:12 },
-  { id:'w6',name:'浅木墙',emoji:'🟫',category:'wall',style:'nature',points:11 },
-  { id:'f1',name:'人字拼橡木',emoji:'🪵',category:'floor',style:'french',points:12 },
-  { id:'f2',name:'大理石地',emoji:'⬜',category:'floor',style:'french',points:11 },
-  { id:'f3',name:'做旧木地板',emoji:'🟤',category:'floor',style:'vintage',points:12 },
-  { id:'f4',name:'复古花砖',emoji:'🔲',category:'floor',style:'vintage',points:13 },
-  { id:'f5',name:'原木地板',emoji:'🌲',category:'floor',style:'nature',points:12 },
-  { id:'f6',name:'石纹地砖',emoji:'🪨',category:'floor',style:'nature',points:10 },
-  { id:'b1',name:'软包双人床',emoji:'🛏️',category:'bed',style:'french',points:20 },
-  { id:'b2',name:'四柱床',emoji:'🛏️',category:'bed',style:'french',points:22 },
-  { id:'b3',name:'皮质床',emoji:'🛏️',category:'bed',style:'vintage',points:20 },
-  { id:'b4',name:'铁艺床',emoji:'🛏️',category:'bed',style:'vintage',points:18 },
-  { id:'b5',name:'木质平台床',emoji:'🛏️',category:'bed',style:'nature',points:20 },
-  { id:'b6',name:'藤编床',emoji:'🛏️',category:'bed',style:'nature',points:19 },
-  { id:'fu1',name:'梳妆台',emoji:'🪞',category:'furniture',style:'french',points:15 },
-  { id:'fu2',name:'法式扶手椅',emoji:'🪑',category:'furniture',style:'french',points:14 },
-  { id:'fu3',name:'雕花衣柜',emoji:'🚪',category:'furniture',style:'french',points:16 },
-  { id:'fu4',name:'皮质沙发',emoji:'🛋️',category:'furniture',style:'vintage',points:16 },
-  { id:'fu5',name:'复古斗柜',emoji:'🗄️',category:'furniture',style:'vintage',points:14 },
-  { id:'fu6',name:'留声机',emoji:'📻',category:'furniture',style:'vintage',points:18 },
-  { id:'fu7',name:'原木书架',emoji:'📚',category:'furniture',style:'nature',points:15 },
-  { id:'fu8',name:'藤编椅',emoji:'🪑',category:'furniture',style:'nature',points:13 },
-  { id:'d1',name:'水晶吊灯',emoji:'💡',category:'decor',style:'french',points:15 },
-  { id:'d2',name:'金色画框',emoji:'🖼️',category:'decor',style:'french',points:12 },
-  { id:'d3',name:'复古地毯',emoji:'🟫',category:'decor',style:'vintage',points:14 },
-  { id:'d4',name:'老式台灯',emoji:'💡',category:'decor',style:'vintage',points:11 },
-  { id:'d5',name:'编织挂毯',emoji:'🧶',category:'decor',style:'nature',points:14 },
-  { id:'d6',name:'木质挂钟',emoji:'🕐',category:'decor',style:'nature',points:11 },
-  { id:'dc1',name:'香薰蜡烛',emoji:'🕯️',category:'decor',style:'common',points:8 },
-  { id:'dc2',name:'抱枕',emoji:'🪇',category:'decor',style:'common',points:7 },
-  { id:'p1',name:'芍药花',emoji:'🌸',category:'plant',style:'french',points:12 },
-  { id:'p2',name:'薰衣草',emoji:'💜',category:'plant',style:'french',points:11 },
-  { id:'p3',name:'龟背竹',emoji:'🌿',category:'plant',style:'nature',points:12 },
-  { id:'p4',name:'多肉',emoji:'🪴',category:'plant',style:'nature',points:10 },
-  { id:'p5',name:'琴叶榕',emoji:'🌳',category:'plant',style:'nature',points:13 },
-  { id:'pc1',name:'尤加利',emoji:'🍃',category:'plant',style:'common',points:10 },
-  { id:'pc2',name:'小雏菊',emoji:'🌼',category:'plant',style:'common',points:9 }
-];
-
-const categories = [
-  {id:'wall',name:'墙面',emoji:'🎨'},
-  {id:'floor',name:'地板',emoji:'🪵'},
-  {id:'bed',name:'床',emoji:'🛏️'},
-  {id:'furniture',name:'家具',emoji:'🪑'},
-  {id:'decor',name:'装饰',emoji:'🖼️'},
-  {id:'plant',name:'植物',emoji:'🌿'}
-];
-
-const wallColors = {
-  'hkw1':'#FFE0EC','hkw2':'#FFB6C1','hkw3':'#FFFAFA',
-  'mmw1':'#FFF0F5','mmw2':'#FFFAFA','mmw3':'#FFFACD',
-  'kmw1':'#2D1B4E','kmw2':'#1A1A2E','kmw3':'#3D2B5E',
-  'scw1':'#B8D8F0','scw2':'#FFF5E6','scw3':'#E8F4C8',
-  'w1':'#F5F0E8','w2':'#E8D0D4','w3':'#D4BCA0','w4':'#C8C0B8','w5':'#C8DFC8','w6':'#D8C8A8'
-};
-
-const floorColors = {
-  'hkf1':'#FF6B8A','hkf2':'#FFB6C1','hkf3':'#FFC0CB',
-  'mmf1':'#FFCED8','mmf2':'#FFD1DC',
-  'kmf1':'#4A3060','kmf2':'#3D2B5E',
-  'scf1':'#C8B898','scf2':'#D4B888',
-  'f1':'#C8A97E','f2':'#E8E4DE','f3':'#A0785A','f4':'#C4A886','f5':'#C0A878','f6':'#D0CCC4'
-};
-
-const ratingLevels = [
-  {min:90,stars:5,title:'设计师之神',desc:'你的品味令人惊叹！这个房间堪称完美！✨',emoji:'👑'},
-  {min:75,stars:4,title:'品味达人',desc:'非常棒的搭配！房间温馨又有格调～',emoji:'🌟'},
-  {min:60,stars:3,title:'小小设计师',desc:'不错的开始！再添加一些装饰会更棒哦',emoji:'⭐'},
-  {min:40,stars:2,title:'初出茅庐',desc:'房间还有点空旷，多放些家具试试吧',emoji:'🌱'},
-  {min:0,stars:1,title:'毛坯房住人',desc:'这也太空了吧！快去装修一下～',emoji:'🏠'}
-];
-
-// ===== STATE =====
-let state = {
-  styleId: '', styleData: null, activeCategory: 'wall',
-  placedItems: [], wallColor: '', floorColor: ''
-};
-
-// ===== INIT =====
-function init() {
-  renderStyleList();
-  document.getElementById('resetBtn').addEventListener('click', onReset);
-  document.getElementById('completeBtn').addEventListener('click', onComplete);
-  document.getElementById('againBtn').addEventListener('click', () => showScreen('index'));
-  document.getElementById('shareBtn').addEventListener('click', () => {
-    alert('长按截图分享给朋友吧～ 📸💖');
-  });
-}
-
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-' + id).classList.add('active');
-}
-
-// ===== INDEX =====
-function renderStyleList() {
-  const sanrioList = document.getElementById('sanrioStyleList');
-  const animeList = document.getElementById('animeStyleList');
-  const classicList = document.getElementById('classicStyleList');
-
-  const renderCard = (s) => `
-    <div class="style-card" data-id="${s.id}" style="background:linear-gradient(135deg,${s.colors.bg},${s.colors.bgGradient});${s.colors.text === '#D4B8F0' ? 'color:#E0D0F0;' : ''}">
-      ${s.ribbon ? `<div class="card-ribbon" style="background:${s.ribbonColor};">${s.ribbon}</div>` : ''}
-      <div class="style-emoji">${s.emoji}</div>
-      <div class="style-name" style="color:${s.colors.text};">${s.name}</div>
-      <div class="style-sub" style="color:${s.colors.text};">${s.subtitle}</div>
-      <div class="style-desc" style="color:${s.colors.text};">${s.desc}</div>
-      <div class="style-tags">
-        ${s.tags.map(t => `<span class="tag" style="color:${s.colors.text};border-color:${s.colors.accent};">${t}</span>`).join('')}
+    <!-- 书桌 -->
+    <div class="desk">
+      <div class="desk-top"></div>
+      <div class="desk-leg left"></div>
+      <div class="desk-leg right"></div>
+      <div class="shelf-unit">
+        <div class="shelf-row"><div class="book"></div><div class="book"></div><div class="book"></div><div class="book"></div></div>
+        <div class="shelf-row"><div class="book" style="background:#ffe08a;left:6px;height:70%"></div><div class="book" style="background:#a8d4e6;left:16px;height:85%"></div><div class="book" style="background:#f4b8c4;left:26px;height:75%"></div></div>
+        <div class="shelf-row"><div class="book" style="background:#d4a5d9;left:8px;height:80%"></div><div class="book" style="background:#b8d4ae;left:18px;height:65%"></div></div>
       </div>
-      <div class="style-go" style="color:${s.colors.accent};">开始设计 →</div>
+      <!-- 兔子灯 -->
+      <div class="bunny-lamp" data-tip="美乐蒂兔子灯">
+        <div class="lamp-glow"></div>
+        <svg viewBox="0 0 100 120" width="100%">
+          <ellipse cx="50" cy="95" rx="30" ry="10" fill="#f4c2c7"/>
+          <ellipse cx="50" cy="85" rx="22" ry="18" fill="#fff0f3"/>
+          <ellipse cx="50" cy="60" rx="28" ry="26" fill="#fff0f3"/>
+          <ellipse cx="35" cy="30" rx="8" ry="22" fill="#fff0f3" transform="rotate(-15 35 30)"/>
+          <ellipse cx="65" cy="30" rx="8" ry="22" fill="#fff0f3" transform="rotate(15 65 30)"/>
+          <circle cx="40" cy="55" r="3" fill="#333"/>
+          <circle cx="60" cy="55" r="3" fill="#333"/>
+          <ellipse cx="50" cy="62" rx="4" ry="3" fill="#f4b8c4"/>
+          <path d="M50 70 Q42 78 50 80 Q58 78 50 70" fill="#f4b8c4"/>
+          <ellipse cx="50" cy="88" rx="18" ry="10" fill="#e0f0d8"/>
+        </svg>
+      </div>
+      <!-- 泰迪熊 -->
+      <div class="bunny-lamp" style="left:55%;top:-8%;width:16%;" data-tip="小熊陪你画画">
+        <svg viewBox="0 0 100 100" width="100%">
+          <circle cx="50" cy="50" r="25" fill="#c49a6c"/>
+          <circle cx="28" cy="28" r="10" fill="#c49a6c"/>
+          <circle cx="72" cy="28" r="10" fill="#c49a6c"/>
+          <circle cx="50" cy="55" r="6" fill="#a0704a"/>
+          <circle cx="42" cy="46" r="2.5" fill="#333"/>
+          <circle cx="58" cy="46" r="2.5" fill="#333"/>
+          <ellipse cx="50" cy="62" rx="5" ry="3" fill="#a0704a"/>
+          <circle cx="35" cy="75" r="7" fill="#c49a6c"/>
+          <circle cx="65" cy="75" r="7" fill="#c49a6c"/>
+        </svg>
+      </div>
     </div>
-  `;
 
-  sanrioList.innerHTML = allStyles.filter(s => s.group === 'sanrio').map(renderCard).join('');
-  animeList.innerHTML = allStyles.filter(s => s.group === 'anime').map(renderCard).join('');
-  classicList.innerHTML = allStyles.filter(s => s.group === 'classic').map(renderCard).join('');
+    <!-- 沙发 -->
+    <div class="sofa" data-tip="软软的绿色小沙发"></div>
 
-  document.querySelectorAll('.style-card').forEach(card => {
-    card.addEventListener('click', () => startGame(card.dataset.id));
-  });
-}
-
-function startGame(styleId) {
-  state.styleId = styleId;
-  state.styleData = allStyles.find(s => s.id === styleId);
-  state.placedItems = [];
-  state.wallColor = state.styleData.colors.wall;
-  state.floorColor = state.styleData.colors.floor;
-  state.activeCategory = 'wall';
-
-  const c = state.styleData.colors;
-  document.getElementById('screen-game').style.background = `linear-gradient(180deg, ${c.bg}, ${c.bgGradient})`;
-
-  const badge = document.getElementById('gameStyleBadge');
-  badge.textContent = `${state.styleData.emoji} ${state.styleData.name}`;
-  badge.style.background = c.accent;
-
-  document.getElementById('completeBtn').style.background = `linear-gradient(135deg, ${c.accent}, ${c.tabActive})`;
-
-  document.getElementById('roomWall').style.background = state.wallColor;
-  document.getElementById('roomFloor').style.background = state.floorColor;
-
-  renderCategories();
-  loadCategory('wall');
-  updateStats();
-  showScreen('game');
-
-  // Hide hint if this is Kuromi (dark theme)
-  if (styleId === 'kuromi') {
-    document.querySelectorAll('.empty-hint text').forEach(t => t.style.color = 'rgba(255,255,255,0.35)');
-  } else {
-    document.querySelectorAll('.empty-hint text').forEach(t => t.style.color = 'rgba(0,0,0,0.35)');
-  }
-}
-
-// ===== CATEGORIES =====
-function renderCategories() {
-  const inner = document.getElementById('catInner');
-  const c = state.styleData.colors;
-  inner.innerHTML = categories.map(cat => `
-    <div class="cat-tab ${state.activeCategory === cat.id ? 'active' : ''}" data-id="${cat.id}"
-      style="${state.activeCategory === cat.id ? `background:${c.tabActive};` : ''}">
-      <span class="cat-emoji">${cat.emoji}</span>
-      <span class="cat-name">${cat.name}</span>
+    <!-- 地毯和睡觉的小狗 -->
+    <div class="rug">
+      <div class="sleeping-dog" data-tip="玉桂狗正在做美梦">
+        <div class="zzz">z</div><div class="zzz" style="animation-delay:1s;right:5%;top:-25%">Z</div>
+        <svg viewBox="0 0 120 80" width="100%">
+          <ellipse cx="60" cy="45" rx="45" ry="22" fill="#fff"/>
+          <ellipse cx="30" cy="35" rx="18" ry="8" fill="#fff" transform="rotate(-20 30 35)"/>
+          <ellipse cx="90" cy="35" rx="18" ry="8" fill="#fff" transform="rotate(20 90 35)"/>
+          <circle cx="45" cy="40" r="2.5" fill="#333"/>
+          <circle cx="75" cy="40" r="2.5" fill="#333"/>
+          <ellipse cx="60" cy="48" rx="3" ry="2" fill="#f4b8c4"/>
+          <path d="M30 55 Q60 65 90 55" stroke="#e0e0f0" stroke-width="2" fill="none"/>
+        </svg>
+      </div>
     </div>
-  `).join('');
-  inner.querySelectorAll('.cat-tab').forEach(tab => {
-    tab.addEventListener('click', () => loadCategory(tab.dataset.id));
-  });
-}
 
-function loadCategory(catId) {
-  state.activeCategory = catId;
-  let filtered;
+    <!-- 画架 -->
+    <div class="easel">
+      <div class="easel-stand"></div>
+      <div class="canvas">
+        <div class="canvas-art"></div>
+      </div>
+    </div>
 
-  const group = allStyles.find(s => s.id === state.styleId)?.group;
+    <!-- 画画的女孩 -->
+    <div class="artist" data-tip="凯蒂猫正在画海边风景">
+      <svg viewBox="0 0 140 220" width="100%" height="100%">
+        <!-- 凳子 -->
+        <rect x="45" y="180" width="50" height="12" fill="#c9a87c" rx="4"/>
+        <rect x="55" y="192" width="8" height="28" fill="#a88660"/>
+        <rect x="77" y="192" width="8" height="28" fill="#a88660"/>
+        <!-- 身体 -->
+        <ellipse cx="70" cy="135" rx="28" ry="38" fill="#fff"/>
+        <path d="M42 120 Q70 95 98 120" fill="none" stroke="#fff" stroke-width="20" stroke-linecap="round"/>
+        <!-- 腿 -->
+        <path d="M60 165 Q50 195 35 210" stroke="#ffe0d0" stroke-width="14" fill="none" stroke-linecap="round"/>
+        <path d="M80 165 Q95 190 115 205" stroke="#ffe0d0" stroke-width="14" fill="none" stroke-linecap="round"/>
+        <!-- 背带裤 -->
+        <path d="M48 145 Q70 170 92 145" fill="#a8d4e6"/>
+        <rect x="48" y="145" width="44" height="38" fill="#a8d4e6" rx="6"/>
+        <circle cx="55" cy="148" r="3" fill="#fff"/>
+        <circle cx="85" cy="148" r="3" fill="#fff"/>
+        <!-- 头部（猫耳） -->
+        <circle cx="70" cy="70" r="32" fill="#fff"/>
+        <polygon points="42,52 35,22 55,42" fill="#fff"/>
+        <polygon points="98,52 105,22 85,42" fill="#fff"/>
+        <!-- 蝴蝶结 -->
+        <circle cx="95" cy="50" r="10" fill="#ff5a7a"/>
+        <ellipse cx="85" cy="50" rx="9" ry="6" fill="#ff5a7a" transform="rotate(-20 85 50)"/>
+        <ellipse cx="105" cy="50" rx="9" ry="6" fill="#ff5a7a" transform="rotate(20 105 50)"/>
+        <!-- 五官 -->
+        <ellipse cx="58" cy="72" rx="4" ry="6" fill="#333"/>
+        <ellipse cx="82" cy="72" rx="4" ry="6" fill="#333"/>
+        <ellipse cx="70" cy="82" rx="4" ry="3" fill="#ff8fa3"/>
+        <!-- 手臂和画笔 -->
+        <path d="M55 115 Q35 130 40 150" stroke="#ffe0d0" stroke-width="10" fill="none" stroke-linecap="round"/>
+        <path d="M85 115 Q105 130 115 120" stroke="#ffe0d0" stroke-width="10" fill="none" stroke-linecap="round"/>
+        <line x1="115" y1="120" x2="135" y2="105" stroke="#8b5a2b" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="136" cy="103" r="4" fill="#ff8fa3"/>
+      </svg>
+    </div>
 
-  if (catId === 'wall' || catId === 'floor') {
-    filtered = allItems.filter(i => i.category === catId && (i.style === state.styleId || i.style === 'common'));
-  } else {
-    if (group === 'classic') {
-      filtered = allItems.filter(i => i.category === catId && (i.style === state.styleId || i.style === 'common'));
-    } else {
-      filtered = allItems.filter(i => i.category === catId && i.style === state.styleId);
-      if (filtered.length === 0) {
-        filtered = allItems.filter(i => i.category === catId && i.style === 'common');
-      }
+    <!-- 画具小车 -->
+    <div class="art-cart">
+      <div class="paint-tube"></div>
+      <div class="paint-tube"></div>
+      <div class="paint-tube"></div>
+    </div>
+
+    <!-- 镜子 -->
+    <div class="mirror" data-tip="镜子映出窗外的海"></div>
+
+    <!-- 闪光粒子 -->
+    <div class="sparkle" style="left:20%;top:25%;animation-delay:0s"></div>
+    <div class="sparkle" style="left:75%;top:20%;animation-delay:1.2s"></div>
+    <div class="sparkle" style="left:45%;top:12%;animation-delay:2.4s"></div>
+    <div class="sparkle" style="left:62%;top:35%;animation-delay:3.1s"></div>
+    <div class="sparkle" style="left:30%;top:55%;animation-delay:1.8s"></div>
+  </div>
+
+  <div class="controls">
+    <button class="btn" id="themeBtn">🌙 夜晚模式</button>
+    <button class="btn" id="musicBtn">🎵 轻音乐</button>
+    <button class="btn" id="animBtn">✨ 暂停动画</button>
+  </div>
+
+  <div class="tooltip" id="tooltip"></div>
+
+  <script>
+    const scene = document.getElementById('scene');
+    const windowEl = document.getElementById('window');
+    const tooltip = document.getElementById('tooltip');
+    const themeBtn = document.getElementById('themeBtn');
+    const musicBtn = document.getElementById('musicBtn');
+    const animBtn = document.getElementById('animBtn');
+
+    // 昼夜切换
+    themeBtn.addEventListener('click', () => {
+      scene.classList.toggle('night');
+      themeBtn.textContent = scene.classList.contains('night') ? '☀️ 白天模式' : '🌙 夜晚模式';
+      themeBtn.classList.toggle('active', scene.classList.contains('night'));
+    });
+
+    // 暂停动画
+    let animPaused = false;
+    animBtn.addEventListener('click', () => {
+      animPaused = !animPaused;
+      document.body.style.setProperty('--play-state', animPaused ? 'paused' : 'running');
+      const animated = document.querySelectorAll('.cloud, .curtain, .dreamcatcher, .bird, .sleeping-dog .zzz, .sparkle');
+      animated.forEach(el => el.style.animationPlayState = animPaused ? 'paused' : 'running');
+      animBtn.textContent = animPaused ? '▶️ 继续动画' : '✨ 暂停动画';
+    });
+
+    // 提示气泡
+    document.querySelectorAll('[data-tip]').forEach(el => {
+      el.addEventListener('mouseenter', e => {
+        tooltip.textContent = el.dataset.tip;
+        tooltip.classList.add('show');
+        positionTooltip(el);
+      });
+      el.addEventListener('mouseleave', () => tooltip.classList.remove('show'));
+      el.addEventListener('mousemove', () => positionTooltip(el));
+    });
+    function positionTooltip(el) {
+      const rect = el.getBoundingClientRect();
+      const tt = tooltip.getBoundingClientRect();
+      let left = rect.left + rect.width/2 - tt.width/2;
+      let top = rect.top - tt.height - 10;
+      if (left < 10) left = 10; if (left + tt.width > window.innerWidth - 10) left = window.innerWidth - tt.width - 10;
+      if (top < 10) top = rect.bottom + 10;
+      tooltip.style.left = left + 'px'; tooltip.style.top = top + 'px';
     }
-  }
 
-  const c = state.styleData.colors;
-  const isDark = state.styleId === 'kuromi';
-
-  const inner = document.getElementById('itemInner');
-  inner.innerHTML = filtered.map(item => `
-    <div class="item-card" data-id="${item.id}">
-      <div class="item-emoji-wrap" style="background:${isDark ? '#3D2B5E' : c.bg};${isDark ? 'border-color:rgba(255,255,255,0.1);' : ''}">
-        <span class="item-emoji">${item.emoji}</span>
-      </div>
-      <span class="item-name" style="${isDark ? 'color:#D4B8F0;' : ''}">${item.name}</span>
-      <span class="item-points" style="color:${c.tabActive};">+${item.points}</span>
-    </div>
-  `).join('');
-  inner.querySelectorAll('.item-card').forEach(card => {
-    card.addEventListener('click', () => onItemTap(card.dataset.id));
-  });
-  renderCategories();
-}
-
-// ===== ITEM PLACEMENT =====
-function onItemTap(itemId) {
-  const item = allItems.find(i => i.id === itemId);
-  if (!item) return;
-
-  if (item.category === 'wall') {
-    state.wallColor = wallColors[itemId] || state.styleData.colors.wall;
-    document.getElementById('roomWall').style.background = state.wallColor;
-    state.placedItems = state.placedItems.filter(p => p.category !== 'wall');
-    state.placedItems.push({ ...item, x: 50, y: 50, isBackground: true });
-    updateStats();
-    return;
-  }
-  if (item.category === 'floor') {
-    state.floorColor = floorColors[itemId] || state.styleData.colors.floor;
-    document.getElementById('roomFloor').style.background = state.floorColor;
-    state.placedItems = state.placedItems.filter(p => p.category !== 'floor');
-    state.placedItems.push({ ...item, x: 50, y: 75, isBackground: true });
-    updateStats();
-    return;
-  }
-
-  const offsetX = (Math.random() - 0.5) * 40;
-  const offsetY = (Math.random() - 0.5) * 30;
-  state.placedItems.push({
-    ...item, uid: Date.now() + Math.random(),
-    x: 50 + offsetX, y: 55 + offsetY,
-    z: state.placedItems.length + 1, rotated: false
-  });
-  renderPlacedItems();
-  updateStats();
-  document.getElementById('emptyHint').style.display = 'none';
-}
-
-function renderPlacedItems() {
-  const area = document.getElementById('roomArea');
-  area.querySelectorAll('.placed-item').forEach(el => el.remove());
-
-  state.placedItems.filter(p => !p.isBackground).forEach(item => {
-    const el = document.createElement('div');
-    el.className = 'placed-item' + (item.rotated ? ' rotated' : '');
-    el.style.left = item.x + '%';
-    el.style.top = item.y + '%';
-    el.style.zIndex = item.z || 1;
-    el.dataset.uid = item.uid;
-    el.innerHTML = `<span class="placed-emoji">${item.emoji}</span><span class="placed-name">${item.name}</span>`;
-
-    let isDragging = false, hasMoved = false;
-    let startX, startY;
-    const roomArea = document.getElementById('roomArea');
-
-    // Touch events
-    el.addEventListener('touchstart', (e) => {
-      hasMoved = false;
-      const touch = e.touches[0];
-      startX = touch.clientX;
-      startY = touch.clientY;
-    }, { passive: true });
-
-    el.addEventListener('touchmove', (e) => {
-      e.preventDefault();
-      hasMoved = true;
-      const touch = e.touches[0];
-      const rect = roomArea.getBoundingClientRect();
-      let x = ((touch.clientX - rect.left) / rect.width) * 100;
-      let y = ((touch.clientY - rect.top) / rect.height) * 100;
-      x = Math.max(8, Math.min(92, x));
-      y = Math.max(8, Math.min(92, y));
-      el.style.left = x + '%';
-      el.style.top = y + '%';
-      const idx = state.placedItems.findIndex(p => p.uid === item.uid);
-      if (idx >= 0) {
-        state.placedItems[idx].x = x;
-        state.placedItems[idx].y = y;
-      }
-    }, { passive: false });
-
-    el.addEventListener('touchend', (e) => {
-      if (!hasMoved) {
-        if (confirm(`${item.name}\n\n点击「确定」旋转 / 点击「取消」删除`)) {
-          const idx = state.placedItems.findIndex(p => p.uid === item.uid);
-          if (idx >= 0) {
-            state.placedItems[idx].rotated = !state.placedItems[idx].rotated;
-            renderPlacedItems();
-          }
-        } else {
-          state.placedItems = state.placedItems.filter(p => p.uid !== item.uid);
-          renderPlacedItems();
-          updateStats();
-          if (state.placedItems.filter(p => !p.isBackground).length === 0) {
-            document.getElementById('emptyHint').style.display = '';
-          }
-        }
-      }
+    // 鼠标视差
+    document.addEventListener('mousemove', e => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 2;
+      const y = (e.clientY / window.innerHeight - 0.5) * 2;
+      windowEl.style.transform = `translateX(calc(-50% + ${x * 8}px)) translateY(${y * 4}px)`;
+      document.querySelectorAll('.pot').forEach((pot, i) => {
+        pot.style.transform = `translateX(${x * (i === 0 ? -3 : 3)}px) translateY(${y * 2}px)`;
+      });
+      document.querySelector('.distant-tree').style.transform = `translateX(${x * -6}px)`;
     });
 
-    // Mouse events (desktop)
-    el.addEventListener('mousedown', (e) => {
-      e.preventDefault();
-      hasMoved = false;
-      const rect = roomArea.getBoundingClientRect();
-      startX = e.clientX;
-      startY = e.clientY;
-
-      const onMove = (ev) => {
-        hasMoved = true;
-        let x = ((ev.clientX - rect.left) / rect.width) * 100;
-        let y = ((ev.clientY - rect.top) / rect.height) * 100;
-        x = Math.max(8, Math.min(92, x));
-        y = Math.max(8, Math.min(92, y));
-        el.style.left = x + '%';
-        el.style.top = y + '%';
-        const idx = state.placedItems.findIndex(p => p.uid === item.uid);
-        if (idx >= 0) {
-          state.placedItems[idx].x = x;
-          state.placedItems[idx].y = y;
-        }
-      };
-      const onUp = () => {
-        document.removeEventListener('mousemove', onMove);
-        document.removeEventListener('mouseup', onUp);
-        if (!hasMoved) {
-          if (confirm(`${item.name}\n\n点击「确定」旋转 / 点击「取消」删除`)) {
-            const idx = state.placedItems.findIndex(p => p.uid === item.uid);
-            if (idx >= 0) {
-              state.placedItems[idx].rotated = !state.placedItems[idx].rotated;
-              renderPlacedItems();
-            }
-          } else {
-            state.placedItems = state.placedItems.filter(p => p.uid !== item.uid);
-            renderPlacedItems();
-            updateStats();
-            if (state.placedItems.filter(p => !p.isBackground).length === 0) {
-              document.getElementById('emptyHint').style.display = '';
-            }
-          }
-        }
-      };
-      document.addEventListener('mousemove', onMove);
-      document.addEventListener('mouseup', onUp);
+    // 音乐按钮（简单模拟提示）
+    let musicPlaying = false;
+    musicBtn.addEventListener('click', () => {
+      musicPlaying = !musicPlaying;
+      musicBtn.textContent = musicPlaying ? '🔇 停止音乐' : '🎵 轻音乐';
+      musicBtn.classList.toggle('active', musicPlaying);
+      // 这里可接入真实音频文件，当前作为交互占位
+      if (musicPlaying) {
+        tooltip.textContent = '已开启舒缓音乐模式 🎶';
+      } else {
+        tooltip.textContent = '音乐已暂停';
+      }
+      tooltip.classList.add('show');
+      setTimeout(() => tooltip.classList.remove('show'), 1800);
     });
 
-    area.appendChild(el);
-  });
-}
-
-function updateStats() {
-  const real = state.placedItems.filter(p => !p.isBackground);
-  const pts = real.reduce((s, p) => s + (p.points || 0), 0);
-  document.getElementById('itemCount').textContent = real.length;
-  document.getElementById('totalPoints').textContent = pts;
-}
-
-function onReset() {
-  if (confirm('确定要清空房间重新开始吗？')) {
-    state.placedItems = [];
-    state.wallColor = state.styleData.colors.wall;
-    state.floorColor = state.styleData.colors.floor;
-    document.getElementById('roomWall').style.background = state.wallColor;
-    document.getElementById('roomFloor').style.background = state.floorColor;
-    renderPlacedItems();
-    updateStats();
-    document.getElementById('emptyHint').style.display = '';
-  }
-}
-
-// ===== COMPLETE =====
-function onComplete() {
-  const real = state.placedItems.filter(p => !p.isBackground);
-  if (real.length === 0) {
-    alert('请先放置一些家具～');
-    return;
-  }
-
-  const score = real.reduce((s, p) => s + (p.points || 0), 0);
-  let rating = ratingLevels[ratingLevels.length - 1];
-  for (let r of ratingLevels) {
-    if (score >= r.min) { rating = r; break; }
-  }
-
-  // Breakdown
-  const cats = {};
-  real.forEach(item => {
-    if (!cats[item.category]) cats[item.category] = { count: 0, points: 0 };
-    cats[item.category].count++;
-    cats[item.category].points += item.points || 0;
-  });
-  const catNames = {bed:'床品',furniture:'家具',decor:'装饰',plant:'植物'};
-  const breakdown = Object.keys(cats).map(c => ({name:catNames[c]||c,count:cats[c].count,points:cats[c].points}));
-  const matched = real.filter(i => i.style === state.styleId).length;
-  if (matched > 0) breakdown.push({name:'风格匹配',count:matched,points:matched*3});
-  if (breakdown.length >= 3) breakdown.push({name:'搭配丰富度',count:breakdown.length,points:10});
-
-  // Render result
-  const c = state.styleData.colors;
-  const isDark = state.styleId === 'kuromi';
-  document.getElementById('screen-result').style.background = `linear-gradient(180deg, ${c.bg}, ${isDark ? '#2A1848' : '#FFF5F0'})`;
-  document.getElementById('ratingEmoji').textContent = rating.emoji;
-  document.getElementById('ratingTitle').textContent = rating.title;
-  if (isDark) document.getElementById('ratingTitle').style.color = '#D4B8F0';
-  else document.getElementById('ratingTitle').style.color = '#5A4A42';
-  document.getElementById('ratingDesc').textContent = rating.desc;
-
-  const starsEl = document.getElementById('ratingStars');
-  starsEl.innerHTML = '';
-  for (let i = 0; i < 5; i++) {
-    const s = document.createElement('span');
-    s.className = 'star' + (i < rating.stars ? ' filled' : '');
-    s.textContent = '★';
-    starsEl.appendChild(s);
-  }
-
-  document.getElementById('resultScore').textContent = score;
-  document.getElementById('resultScore').style.color = c.tabActive;
-
-  // Room preview
-  const preview = document.getElementById('roomPreview');
-  preview.innerHTML = `
-    <div class="room-wall" style="background:${state.wallColor};position:absolute;top:0;left:0;right:0;height:65%;"></div>
-    <div class="room-floor" style="background:${state.floorColor};position:absolute;bottom:0;left:0;right:0;height:35%;"></div>
-    <div style="position:absolute;top:65%;left:0;right:0;height:1px;background:rgba(0,0,0,0.06);"></div>
-  `;
-  state.placedItems.filter(p => !p.isBackground).forEach(item => {
-    const el = document.createElement('div');
-    el.className = 'preview-item' + (item.rotated ? ' rotated' : '');
-    el.style.left = item.x + '%';
-    el.style.top = item.y + '%';
-    el.style.zIndex = item.z || 1;
-    el.innerHTML = `<span class="preview-emoji">${item.emoji}</span>`;
-    preview.appendChild(el);
-  });
-
-  // Breakdown
-  document.getElementById('breakdown').innerHTML = breakdown.map(b => `
-    <div class="breakdown-item">
-      <div class="bd-left">
-        <span class="bd-name">${b.name}</span>
-        <span class="bd-count">×${b.count}</span>
-      </div>
-      <span class="bd-points" style="color:${c.tabActive};">+${b.points}</span>
-    </div>
-  `).join('');
-
-  document.getElementById('resultItemCount').textContent = real.length + ' 件';
-  const shareBtn = document.getElementById('shareBtn');
-  shareBtn.style.background = c.accent;
-  if (isDark) shareBtn.style.color = '#fff';
-
-  showScreen('result');
-}
-
-// ===== START =====
-init();
-</script>
-
+    // 更新日历日期
+    document.getElementById('dayNum').textContent = new Date().getDate();
+  </script>
 </body>
 </html>
