@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>三丽鸥小屋设计游戏 · Sanrio House Design</title>
-<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Nunito:wght@600;800&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
 <style>
   :root{
     --wall:#d4e4c3; --wall-2:#c2d6ae; --floor:#e8d4b0; --floor-2:#d4c096;
@@ -12,11 +12,81 @@
     --pink:#ff8fa3; --pink-d:#e8677e; --pink-l:#ffd6df;
     --cream:#fff8ee; --mint:#b8e6c9; --blue:#a8d8f0; --yellow:#ffe89a;
     --bg:#fff0f4; --panel:#ffffff; --text:#5c4a52; --line:#f0d8df;
+    --gold:#f0c060; --purple:#b8a0d8;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%;font-family:"ZCOOL KuaiLe","Nunito","Microsoft YaHei",sans-serif;color:var(--text);background:var(--bg)}
   body{display:flex;flex-direction:column;overflow:hidden}
 
+  /* ========== 开场动画 ========== */
+  #intro{
+    position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    background:linear-gradient(135deg,#2a1a3a 0%,#4a2a5a 25%,#6a3a6a 50%,#8a4a7a 75%,#aa5a8a 100%);
+    transition:opacity 1.2s ease,transform 1.2s ease;overflow:hidden;
+  }
+  #intro.gone{opacity:0;transform:scale(1.08);pointer-events:none}
+  /* 星光粒子 */
+  .sparkle{position:absolute;width:4px;height:4px;background:#fff;border-radius:50%;
+    box-shadow:0 0 6px #fff,0 0 12px #ffd0e0;animation:sparkleFloat 3s ease-in-out infinite;opacity:0}
+  .sparkle.big{width:7px;height:7px;box-shadow:0 0 10px #fff,0 0 20px #ffe0a0,0 0 30px #ffc0e0}
+  @keyframes sparkleFloat{
+    0%,100%{opacity:0;transform:translateY(0) scale(.5)}
+    50%{opacity:1;transform:translateY(-30px) scale(1.2)}
+  }
+  /* 光晕 */
+  .glow-ring{position:absolute;border-radius:50%;border:2px solid rgba(255,200,220,.15);
+    animation:ringPulse 4s ease-in-out infinite}
+  @keyframes ringPulse{0%,100%{transform:scale(.8);opacity:.3}50%{transform:scale(1.1);opacity:.6}}
+  /* 标题 */
+  .intro-title{
+    font-family:"Ma Shan Zheng","ZCOOL KuaiLe",serif;font-size:42px;
+    background:linear-gradient(90deg,#ffd0e0,#ffe8a0,#a8d8f0,#ffd0e0);
+    background-size:300% 100%;-webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+    animation:titleShimmer 3s linear infinite,titleAppear 1.5s ease-out;
+    text-shadow:0 0 40px rgba(255,200,220,.5);letter-spacing:4px;
+    position:relative;z-index:10;
+  }
+  .intro-sub{font-size:14px;color:rgba(255,220,235,.7);margin-top:8px;letter-spacing:6px;
+    animation:subFade 2s ease-out .8s both;z-index:10}
+  @keyframes titleShimmer{0%{background-position:0% 0}100%{background-position:300% 0}}
+  @keyframes titleAppear{0%{opacity:0;transform:translateY(30px) scale(.8)}100%{opacity:1;transform:translateY(0) scale(1)}}
+  @keyframes subFade{0%{opacity:0}100%{opacity:.7}}
+  /* 角色飘入 */
+  .intro-chars{display:flex;gap:24px;margin-top:36px;z-index:10}
+  .intro-char{width:56px;height:56px;opacity:0;animation:charFloatIn 1s ease-out both,charBob 2.5s ease-in-out infinite}
+  .intro-char:nth-child(1){animation-delay:1.2s,2.2s}
+  .intro-char:nth-child(2){animation-delay:1.4s,2.4s}
+  .intro-char:nth-child(3){animation-delay:1.6s,2.6s}
+  .intro-char:nth-child(4){animation-delay:1.8s,2.8s}
+  .intro-char:nth-child(5){animation-delay:2.0s,3.0s}
+  @keyframes charFloatIn{0%{opacity:0;transform:translateY(40px) scale(.5)}100%{opacity:1;transform:translateY(0) scale(1)}}
+  @keyframes charBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  /* 进入提示 */
+  .intro-enter{
+    margin-top:32px;padding:10px 32px;border:2px solid rgba(255,200,220,.4);
+    border-radius:999px;color:#fff;font-size:15px;font-family:inherit;letter-spacing:3px;
+    background:rgba(255,255,255,.08);cursor:pointer;z-index:10;
+    animation:enterPulse 1.5s ease-in-out infinite,enterFade .8s ease-out 3s both;
+    transition:background .3s,transform .2s;
+  }
+  .intro-enter:hover{background:rgba(255,255,255,.2);transform:scale(1.05)}
+  @keyframes enterPulse{0%,100%{box-shadow:0 0 20px rgba(255,200,220,.3)}50%{box-shadow:0 0 40px rgba(255,200,220,.6)}}
+  @keyframes enterFade{0%{opacity:0}100%{opacity:1}}
+  /* 帘幕 */
+  .curtain{position:absolute;top:0;bottom:0;width:50%;z-index:5;
+    transition:transform 1.5s cubic-bezier(.7,0,.3,1)}
+  .curtain.left{left:0;background:linear-gradient(90deg,#3a1a4a,#5a2a5a)}
+  .curtain.right{right:0;background:linear-gradient(270deg,#3a1a4a,#5a2a5a)}
+  #intro.opening .curtain.left{transform:translateX(-100%)}
+  #intro.opening .curtain.right{transform:translateX(100%)}
+  .curtain::before{content:"";position:absolute;top:0;bottom:0;width:20px;
+    background:repeating-linear-gradient(0deg,transparent 0,transparent 30px,rgba(255,255,255,.05) 30px,rgba(255,255,255,.05) 60px)}
+  .curtain.left::before{right:0}
+  .curtain.right::before{left:0}
+
+  /* ========== 顶栏 ========== */
   .topbar{
     display:flex;align-items:center;gap:14px;padding:8px 18px;
     background:linear-gradient(90deg,#fff,var(--pink-l));border-bottom:2px solid var(--pink-l);
@@ -32,7 +102,7 @@
 
   .main{flex:1;display:flex;overflow:hidden}
 
-  /* 左侧家具库 */
+  /* ========== 左侧家具库 ========== */
   .palette{width:190px;background:var(--panel);border-right:2px solid var(--line);overflow-y:auto;padding:8px;flex-shrink:0}
   .cat-title{font-size:12px;color:var(--pink-d);margin:6px 0 4px;padding-bottom:3px;border-bottom:1px dashed var(--line)}
   .cat-title:first-child{margin-top:0}
@@ -42,48 +112,129 @@
   .item svg{width:42px;height:42px;display:block;margin:0 auto}
   .item .nm{font-size:10px;color:#888;margin-top:2px}
 
-  /* 中央房间 - 剖面立体 */
-  .stage{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto}
+  /* ========== 中央房间 - 增强真实感 ========== */
+  .stage{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto;
+    background:radial-gradient(ellipse at 50% 40%,rgba(255,240,220,.4),transparent 70%)}
   .room{
-    position:relative;width:620px;height:460px;border-radius:10px;overflow:hidden;
-    box-shadow:0 16px 40px rgba(80,90,70,.25),0 4px 0 rgba(0,0,0,.06);
+    position:relative;width:620px;height:460px;border-radius:12px;overflow:hidden;
+    box-shadow:0 20px 50px rgba(80,90,70,.3),0 6px 0 rgba(0,0,0,.08),inset 0 0 0 3px rgba(255,255,255,.15);
   }
   /* 天花板 */
-  .ceiling{position:absolute;top:0;left:0;right:0;height:14px;background:linear-gradient(180deg,#f0ead8,#e8dcc6);z-index:1}
-  .ceiling::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(180,160,130,.3)}
-  /* 后墙 */
-  .back-wall{position:absolute;top:14px;left:0;right:0;bottom:32%;background:linear-gradient(180deg,var(--wall),var(--wall-2));transition:background .3s;z-index:1}
+  .ceiling{position:absolute;top:0;left:0;right:0;height:16px;
+    background:linear-gradient(180deg,#f5efe0,#e8dcc6);z-index:1;
+    box-shadow:0 2px 4px rgba(180,160,130,.2)}
+  .ceiling::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;
+    background:linear-gradient(90deg,rgba(180,160,130,.4),rgba(180,160,130,.2),rgba(180,160,130,.4))}
+  /* 吊灯 */
+  .pendant{position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:4}
+  .pendant-cord{width:2px;height:22px;background:#c9a87c;margin:0 auto}
+  .pendant-shade{width:30px;height:18px;background:linear-gradient(180deg,#ffd4b8,#ff8fa3);
+    border-radius:0 0 15px 15px;box-shadow:0 4px 12px rgba(255,143,163,.4)}
+  .pendant-light{position:absolute;top:38px;left:50%;transform:translateX(-50%);
+    width:120px;height:80px;background:radial-gradient(ellipse at center top,rgba(255,250,200,.25),transparent 70%);
+    pointer-events:none;z-index:3;animation:lightFlicker 4s ease-in-out infinite}
+  @keyframes lightFlicker{0%,100%{opacity:.8}50%{opacity:1}}
+  /* 后墙 - 带纹理 */
+  .back-wall{position:absolute;top:16px;left:0;right:0;bottom:32%;
+    background:linear-gradient(180deg,var(--wall),var(--wall-2));transition:background .4s;z-index:1}
+  .back-wall::before{content:"";position:absolute;inset:0;opacity:.15;
+    background:repeating-linear-gradient(0deg,transparent 0,transparent 40px,rgba(255,255,255,.08) 40px,rgba(255,255,255,.08) 41px,
+    transparent 41px,transparent 80px,rgba(0,0,0,.03) 80px,rgba(0,0,0,.03) 81px)}
+  /* 墙面光晕（窗户投射） */
+  .wall-light{position:absolute;top:16px;left:0;right:0;bottom:32%;z-index:2;pointer-events:none;
+    background:radial-gradient(ellipse 40% 60% at 50% 30%,rgba(255,250,210,.2),transparent 70%)}
   /* 墙脚线 */
-  .baseboard{position:absolute;left:0;right:0;bottom:32%;height:10px;background:#fff3e0;z-index:3;box-shadow:0 -2px 0 rgba(180,160,130,.2)}
-  /* 地板 */
-  .floor{position:absolute;left:0;right:0;bottom:0;height:32%;background:linear-gradient(180deg,var(--floor),var(--floor-2));transition:background .3s;z-index:1}
-  .floor::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0,transparent 48px,rgba(160,130,80,.1) 49px,rgba(160,130,80,.1) 50px)}
-  /* 窗户 */
-  .window{position:absolute;left:50%;top:8%;transform:translateX(-50%);width:46%;height:62%;background:linear-gradient(180deg,var(--sky) 0%,#d4e8f0 55%,var(--sea) 55%,#6aa7b8 100%);border:10px solid #fff8ee;border-radius:6px;box-shadow:0 6px 14px rgba(0,0,0,.1),inset 0 0 0 3px rgba(220,200,170,.3);z-index:2;overflow:hidden}
+  .baseboard{position:absolute;left:0;right:0;bottom:32%;height:12px;
+    background:linear-gradient(180deg,#fff8ee,#f0e4d0);z-index:3;
+    box-shadow:0 -2px 0 rgba(180,160,130,.2),0 2px 4px rgba(0,0,0,.06)}
+  /* 地板 - 带透视和反光 */
+  .floor{position:absolute;left:0;right:0;bottom:0;height:32%;
+    background:linear-gradient(180deg,var(--floor),var(--floor-2));transition:background .4s;z-index:1;
+    perspective:300px}
+  .floor::before{content:"";position:absolute;inset:0;
+    background:repeating-linear-gradient(90deg,transparent 0,transparent 48px,rgba(160,130,80,.12) 49px,rgba(160,130,80,.12) 50px)}
+  .floor::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(255,255,255,.08) 0%,transparent 30%,transparent 70%,rgba(0,0,0,.06) 100%)}
+  /* 地板光斑（窗户阳光投射） */
+  .sun-patch{position:absolute;bottom:0;left:20%;width:50%;height:32%;z-index:2;pointer-events:none;
+    background:linear-gradient(160deg,rgba(255,250,200,.18) 0%,rgba(255,240,180,.08) 50%,transparent 80%);
+    transform:skewX(-8deg);animation:sunShift 8s ease-in-out infinite}
+  @keyframes sunShift{0%,100%{opacity:.7;transform:skewX(-8deg) translateX(0)}50%{opacity:1;transform:skewX(-6deg) translateX(10px)}}
+  /* 窗户 - 增强细节 */
+  .window{position:absolute;left:50%;top:8%;transform:translateX(-50%);width:46%;height:62%;
+    background:linear-gradient(180deg,var(--sky) 0%,#d4e8f0 50%,var(--sea) 50%,#6aa7b8 100%);
+    border:10px solid #fff8ee;border-radius:6px;
+    box-shadow:0 6px 14px rgba(0,0,0,.12),inset 0 0 0 3px rgba(220,200,170,.3),0 0 30px rgba(255,250,200,.15);
+    z-index:2;overflow:hidden}
   .window::before,.window::after{content:"";position:absolute;background:#fff8ee;z-index:3}
   .window::before{left:50%;top:0;bottom:0;width:6px;transform:translateX(-50%)}
   .window::after{left:0;right:0;top:50%;height:6px;transform:translateY(-50%)}
-  .cloud{position:absolute;background:#fff;border-radius:50px;opacity:.92}
+  /* 太阳 */
+  .sun{position:absolute;top:8%;right:12%;width:24px;height:24px;border-radius:50%;
+    background:radial-gradient(circle,#fff8c8,#ffe89a);box-shadow:0 0 20px rgba(255,232,154,.6);
+    animation:sunGlow 3s ease-in-out infinite}
+  @keyframes sunGlow{0%,100%{box-shadow:0 0 20px rgba(255,232,154,.6)}50%{box-shadow:0 0 30px rgba(255,232,154,.9)}}
+  .cloud{position:absolute;background:#fff;border-radius:50px;opacity:.92;filter:blur(.5px)}
   .cloud::before,.cloud::after{content:"";position:absolute;background:#fff;border-radius:50%}
   .c1{width:60px;height:20px;top:14%;left:8%;animation:drift 30s linear infinite}
   .c1::before{width:30px;height:30px;top:-14px;left:10px}
   .c1::after{width:24px;height:24px;top:-10px;right:10px}
   .c2{width:48px;height:16px;top:30%;left:-20%;animation:drift 40s linear infinite;animation-delay:-12s}
   .c2::before{width:24px;height:24px;top:-12px;left:8px}
-  .distant{position:absolute;bottom:42%;left:-10%;right:-10%;height:60px;background:var(--tree);border-radius:50% 50% 0 0/40% 40% 0 0;opacity:.85;z-index:1}
-  .distant::after{content:"";position:absolute;right:10%;bottom:0;width:60%;height:100%;background:var(--tree-2);border-radius:50% 50% 0 0/40% 40% 0 0;opacity:.6}
+  .distant{position:absolute;bottom:42%;left:-10%;right:-10%;height:60px;
+    background:var(--tree);border-radius:50% 50% 0 0/40% 40% 0 0;opacity:.85;z-index:1}
+  .distant::after{content:"";position:absolute;right:10%;bottom:0;width:60%;height:100%;
+    background:var(--tree-2);border-radius:50% 50% 0 0/40% 40% 0 0;opacity:.6}
+  /* 飞鸟 */
+  .bird{position:absolute;top:20%;left:15%;font-size:10px;color:#555;animation:birdFly 15s linear infinite}
+  @keyframes birdFly{0%{left:15%;top:20%}25%{left:40%;top:15%}50%{left:60%;top:22%}75%{left:80%;top:18%}100%{left:105%;top:20%}}
+  /* 光柱（从窗户射入） */
+  .light-beam{position:absolute;top:16px;left:30%;width:40%;bottom:0;z-index:4;pointer-events:none;
+    background:linear-gradient(160deg,rgba(255,250,210,.06) 0%,rgba(255,240,180,.1) 30%,rgba(255,230,160,.04) 60%,transparent 90%);
+    transform:skewX(-12deg);clip-path:polygon(15% 0,85% 0,100% 100%,0% 100%)}
   /* 房间标签 */
-  .room-label{position:absolute;left:12px;top:18px;font-size:11px;color:#fff;background:rgba(232,103,126,.7);padding:2px 10px;border-radius:999px;z-index:4}
+  .room-label{position:absolute;left:12px;top:22px;font-size:11px;color:#fff;
+    background:rgba(232,103,126,.7);padding:2px 10px;border-radius:999px;z-index:5;
+    box-shadow:0 2px 6px rgba(232,103,126,.3)}
 
-  /* 已放置家具 */
-  .placed{position:absolute;cursor:move;user-select:none;z-index:5;transition:filter .2s;filter:drop-shadow(0 4px 6px rgba(80,90,70,.25))}
+  /* ========== 小猫 ========== */
+  .pet-cat{position:absolute;bottom:2%;left:30%;width:48px;height:40px;z-index:8;cursor:pointer;
+    transition:left 3s ease-in-out;filter:drop-shadow(0 4px 6px rgba(80,60,40,.3))}
+  .pet-cat svg{width:100%;height:100%}
+  .pet-cat .cat-tail{transform-origin:30px 28px;animation:tailWag 1.5s ease-in-out infinite}
+  @keyframes tailWag{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(15deg)}}
+  .pet-cat .cat-eye{animation:catBlink 4s ease-in-out infinite}
+  @keyframes catBlink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+  .pet-cat.walking{animation:catWalk .5s ease-in-out infinite}
+  @keyframes catWalk{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+  .pet-cat.sleeping .cat-body{animation:catBreathe 2.5s ease-in-out infinite}
+  @keyframes catBreathe{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.05)}}
+  .pet-cat.sleeping .cat-tail{animation:tailSleep 3s ease-in-out infinite}
+  @keyframes tailSleep{0%,100%{transform:rotate(0)}50%{transform:rotate(8deg)}}
+  .pet-cat.sleeping::after{content:"Z z z";position:absolute;top:-16px;right:-8px;font-size:10px;
+    color:rgba(180,160,200,.7);animation:zzzFloat 2s ease-in-out infinite}
+  @keyframes zzzFloat{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:.8;transform:translateY(-6px)}}
+  .heart-particle{position:absolute;font-size:16px;pointer-events:none;z-index:9;
+    animation:heartFloat 1.2s ease-out forwards}
+  @keyframes heartFloat{0%{opacity:1;transform:translateY(0) scale(.5)}100%{opacity:0;transform:translateY(-40px) scale(1.5)}}
+  .meow-bubble{position:absolute;top:-30px;left:50%;transform:translateX(-50%);
+    background:#fff;border:2px solid var(--pink-l);border-radius:12px;padding:2px 8px;
+    font-size:11px;color:var(--pink-d);white-space:nowrap;z-index:10;
+    animation:bubblePop .5s ease-out;box-shadow:0 2px 6px rgba(0,0,0,.1)}
+  .meow-bubble::after{content:"";position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);
+    border:4px solid transparent;border-top-color:#fff}
+  @keyframes bubblePop{0%{opacity:0;transform:translateX(-50%) scale(.5)}50%{transform:translateX(-50%) scale(1.1)}100%{opacity:1;transform:translateX(-50%) scale(1)}}
+
+  /* ========== 已放置家具 ========== */
+  .placed{position:absolute;cursor:move;user-select:none;z-index:5;transition:filter .2s;
+    filter:drop-shadow(0 4px 8px rgba(80,90,70,.3))}
   .placed svg{width:100%;height:100%;display:block}
-  .placed.selected{filter:drop-shadow(0 0 8px var(--pink)) drop-shadow(0 4px 6px rgba(80,90,70,.25))}
+  .placed.selected{filter:drop-shadow(0 0 10px var(--pink)) drop-shadow(0 4px 8px rgba(80,90,70,.3))}
   .placed.selected::after{content:"";position:absolute;inset:-4px;border:2px dashed var(--pink);border-radius:8px;pointer-events:none}
   .placed .del{position:absolute;top:-9px;right:-9px;width:20px;height:20px;background:#ff5a5a;color:#fff;border-radius:50%;font-size:13px;line-height:20px;text-align:center;cursor:pointer;display:none;z-index:6}
   .placed.selected .del{display:block}
 
-  /* 右侧属性 */
+  /* ========== 右侧属性 ========== */
   .props{width:190px;background:var(--panel);border-left:2px solid var(--line);padding:8px;overflow-y:auto;flex-shrink:0}
   .prop-title{font-size:12px;color:var(--pink-d);margin:6px 0 4px;padding-bottom:3px;border-bottom:1px dashed var(--line)}
   .prop-title:first-child{margin-top:0}
@@ -94,6 +245,8 @@
   .selbox{background:var(--cream);border-radius:9px;padding:9px;font-size:11px;color:#666;line-height:1.5}
   .selbtn{display:block;width:100%;margin-top:5px;padding:5px;border:none;border-radius:7px;background:var(--pink);color:#fff;cursor:pointer;font-family:inherit;font-size:11px}
   .selbtn.del{background:#fff;color:var(--pink-d);border:2px solid var(--pink-l)}
+  .pet-info{background:linear-gradient(135deg,var(--pink-l),var(--cream));border-radius:9px;padding:8px;font-size:11px;color:var(--pink-d);line-height:1.5;margin-top:4px}
+  .pet-info b{font-size:12px}
 
   .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(20px);background:rgba(92,74,82,.95);color:#fff;padding:9px 18px;border-radius:999px;font-size:13px;opacity:0;transition:all .3s;z-index:100}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -104,6 +257,20 @@
 </head>
 <body>
 
+<!-- ========== 开场动画 ========== -->
+<div id="intro">
+  <div class="curtain left"></div>
+  <div class="curtain right"></div>
+  <div class="glow-ring" style="width:300px;height:300px;top:30%;left:35%"></div>
+  <div class="glow-ring" style="width:500px;height:500px;top:20%;left:25%;animation-delay:1s"></div>
+  <div id="sparkles"></div>
+  <div class="intro-title">三丽鸥小屋设计游戏</div>
+  <div class="intro-sub">SANRIO HOUSE DESIGN</div>
+  <div class="intro-chars" id="introChars"></div>
+  <button class="intro-enter" onclick="startGame()">✦ 进入小屋 ✦</button>
+</div>
+
+<!-- ========== 主界面 ========== -->
 <div class="topbar">
   <svg class="logo" viewBox="0 0 100 70">
     <path d="M50 35 L8 12 Q4 10 6 16 L14 50 Q16 56 22 52 L44 38 Z" fill="#ff5a7a"/>
@@ -126,16 +293,64 @@
   <div class="stage">
     <div class="room" id="room">
       <div class="ceiling"></div>
+      <div class="pendant">
+        <div class="pendant-cord"></div>
+        <div class="pendant-shade"></div>
+      </div>
+      <div class="pendant-light"></div>
       <div class="back-wall" id="backWall">
         <div class="window">
+          <div class="sun"></div>
           <div class="cloud c1"></div>
           <div class="cloud c2"></div>
           <div class="distant"></div>
+          <div class="bird">~</div>
         </div>
       </div>
+      <div class="wall-light"></div>
+      <div class="light-beam"></div>
       <div class="baseboard"></div>
-      <div class="floor" id="floor"></div>
+      <div class="floor" id="floor">
+        <div class="sun-patch"></div>
+      </div>
       <div class="room-label">🧸 我的小屋</div>
+      <!-- 小猫 -->
+      <div class="pet-cat" id="petCat" onclick="petCat()">
+        <svg viewBox="0 0 60 50">
+          <!-- 尾巴 -->
+          <path class="cat-tail" d="M40 28 Q52 20 50 8 Q48 4 44 6 Q42 12 40 18" fill="none" stroke="#f4a460" stroke-width="4" stroke-linecap="round"/>
+          <!-- 身体 -->
+          <ellipse class="cat-body" cx="28" cy="32" rx="16" ry="11" fill="#ffd4a8" stroke="#d4a070" stroke-width="1.5"/>
+          <!-- 前腿 -->
+          <ellipse cx="20" cy="40" rx="4" ry="5" fill="#ffd4a8" stroke="#d4a070" stroke-width="1.5"/>
+          <ellipse cx="36" cy="40" rx="4" ry="5" fill="#ffd4a8" stroke="#d4a070" stroke-width="1.5"/>
+          <!-- 头 -->
+          <circle cx="22" cy="20" r="11" fill="#ffd4a8" stroke="#d4a070" stroke-width="1.5"/>
+          <!-- 耳朵 -->
+          <path d="M14 14 L12 6 L18 12 Z" fill="#ffd4a8" stroke="#d4a070" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M30 14 L32 6 L26 12 Z" fill="#ffd4a8" stroke="#d4a070" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M14 12 L13 8 L16 11 Z" fill="#ffb0c8"/>
+          <path d="M30 12 L31 8 L28 11 Z" fill="#ffb0c8"/>
+          <!-- 眼睛 -->
+          <ellipse class="cat-eye" cx="18" cy="20" rx="2" ry="2.5" fill="#4a7a3a"/>
+          <ellipse class="cat-eye" cx="26" cy="20" rx="2" ry="2.5" fill="#4a7a3a"/>
+          <circle cx="18.5" cy="19" r=".8" fill="#fff"/>
+          <circle cx="26.5" cy="19" r=".8" fill="#fff"/>
+          <!-- 鼻子嘴巴 -->
+          <path d="M22 23 L20 25 L24 25 Z" fill="#ff8fa3"/>
+          <path d="M22 25 Q20 27 18 26" stroke="#d4a070" stroke-width="1" fill="none"/>
+          <path d="M22 25 Q24 27 26 26" stroke="#d4a070" stroke-width="1" fill="none"/>
+          <!-- 胡须 -->
+          <line x1="8" y1="22" x2="14" y2="22" stroke="#d4a070" stroke-width=".8"/>
+          <line x1="8" y1="25" x2="14" y2="24" stroke="#d4a070" stroke-width=".8"/>
+          <line x1="30" y1="22" x2="36" y2="22" stroke="#d4a070" stroke-width=".8"/>
+          <line x1="30" y1="24" x2="36" y2="25" stroke="#d4a070" stroke-width=".8"/>
+          <!-- 蝴蝶结 -->
+          <path d="M22 30 L16 28 L16 34 Z" fill="#ff5a7a"/>
+          <path d="M22 30 L28 28 L28 34 Z" fill="#ff5a7a"/>
+          <circle cx="22" cy="31" r="2" fill="#e04560"/>
+        </svg>
+      </div>
     </div>
   </div>
 
@@ -146,13 +361,54 @@
     <div class="swatches" id="floorStyles"></div>
     <div class="prop-title" style="margin-top:8px">选中物品</div>
     <div class="selbox" id="selbox">点家具可选中<br>拖动可移动<br>双击可旋转</div>
+    <div class="prop-title" style="margin-top:8px">🐱 我的小猫</div>
+    <div class="pet-info" id="petInfo">
+      <b>奶油 🐱</b><br>
+      <span id="catStatus">正在好奇地东张西望…</span><br>
+      <span style="font-size:10px;color:#999">点击小猫可以抚摸它</span>
+    </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ===== 立体 SVG 家具库 =====
+// ========== 开场动画 ==========
+const SVG_CHAR={
+  kitty:`<svg viewBox="0 0 60 60"><ellipse cx="30" cy="32" rx="22" ry="19" fill="#fff" stroke="#8b7355" stroke-width="2.5"/><polygon points="12,20 8,4 22,14" fill="#fff" stroke="#8b7355" stroke-width="2.5" stroke-linejoin="round"/><polygon points="48,20 52,4 38,14" fill="#fff" stroke="#8b7355" stroke-width="2.5" stroke-linejoin="round"/><g transform="translate(42 10)"><ellipse cx="-5" cy="0" rx="6" ry="4" fill="#ff5a7a" stroke="#8b7355" stroke-width="2" transform="rotate(-20)"/><ellipse cx="5" cy="0" rx="6" ry="4" fill="#ff5a7a" stroke="#8b7355" stroke-width="2" transform="rotate(20)"/><circle cx="0" cy="0" r="4" fill="#ff5a7a" stroke="#8b7355" stroke-width="1.5"/></g><ellipse cx="22" cy="32" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="38" cy="32" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="30" cy="38" rx="3" ry="2" fill="#ffcd3c" stroke="#8b7355" stroke-width="1.5"/><path d="M27 41 Q30 44 33 41" stroke="#8b7355" stroke-width="1.5" fill="none"/><line x1="10" y1="30" x2="18" y2="32" stroke="#8b7355" stroke-width="1.5"/><line x1="10" y1="36" x2="18" y2="36" stroke="#8b7355" stroke-width="1.5"/><line x1="42" y1="32" x2="50" y2="30" stroke="#8b7355" stroke-width="1.5"/><line x1="42" y1="36" x2="50" y2="36" stroke="#8b7355" stroke-width="1.5"/></svg>`,
+  cinnamon:`<svg viewBox="0 0 60 60"><ellipse cx="30" cy="34" rx="20" ry="17" fill="#fff" stroke="#8b7355" stroke-width="2.5"/><ellipse cx="10" cy="24" rx="7" ry="12" fill="#fff" stroke="#8b7355" stroke-width="2.5" transform="rotate(-20 10 24)"/><ellipse cx="50" cy="24" rx="7" ry="12" fill="#fff" stroke="#8b7355" stroke-width="2.5" transform="rotate(20 50 24)"/><path d="M14 24 Q10 18 14 14 Q18 18 14 24" fill="#a8d8f0" stroke="#8b7355" stroke-width="1.5"/><path d="M46 24 Q50 18 46 14 Q42 18 46 24" fill="#a8d8f0" stroke="#8b7355" stroke-width="1.5"/><ellipse cx="23" cy="34" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="37" cy="34" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="30" cy="40" rx="3" ry="2" fill="#c4d4e8" stroke="#8b7355" stroke-width="1.5"/><path d="M27 42 Q30 45 33 42" stroke="#8b7355" stroke-width="1.5" fill="none"/></svg>`,
+  melody:`<svg viewBox="0 0 60 60"><path d="M10 34 Q6 8 20 18 Q14 24 10 34 Z" fill="#ff8fa3" stroke="#8b7355" stroke-width="2.5" stroke-linejoin="round"/><path d="M50 34 Q54 8 40 18 Q46 24 50 34 Z" fill="#ff8fa3" stroke="#8b7355" stroke-width="2.5" stroke-linejoin="round"/><ellipse cx="14" cy="14" rx="6" ry="9" fill="#ff8fa3" stroke="#8b7355" stroke-width="2" transform="rotate(-15 14 14)"/><ellipse cx="46" cy="14" rx="6" ry="9" fill="#ff8fa3" stroke="#8b7355" stroke-width="2" transform="rotate(15 46 14)"/><circle cx="38" cy="10" r="4" fill="#fff" stroke="#8b7355" stroke-width="1.5"/><circle cx="39" cy="9" r="1.2" fill="#ffcd3c"/><circle cx="30" cy="34" r="18" fill="#fff" stroke="#8b7355" stroke-width="2.5"/><ellipse cx="23" cy="34" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="37" cy="34" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="30" cy="40" rx="3" ry="2" fill="#ffcd3c" stroke="#8b7355" stroke-width="1.5"/><path d="M27 42 Q30 45 33 42" stroke="#8b7355" stroke-width="1.5" fill="none"/></svg>`,
+  purin:`<svg viewBox="0 0 60 60"><ellipse cx="30" cy="34" rx="21" ry="18" fill="#ffe08a" stroke="#8b7355" stroke-width="2.5"/><ellipse cx="14" cy="24" rx="5" ry="9" fill="#ffe08a" stroke="#8b7355" stroke-width="2" transform="rotate(-20 14 24)"/><ellipse cx="46" cy="24" rx="5" ry="9" fill="#ffe08a" stroke="#8b7355" stroke-width="2" transform="rotate(20 46 24)"/><ellipse cx="30" cy="14" rx="10" ry="6" fill="#b67c52" stroke="#8b7355" stroke-width="2"/><rect x="25" y="8" width="10" height="4" rx="2" fill="#8b5a36"/><ellipse cx="23" cy="34" rx="2" ry="3" fill="#3a3a4a"/><ellipse cx="37" cy="34" rx="2" ry="3" fill="#3a3a4a"/><ellipse cx="30" cy="40" rx="3" ry="2" fill="#c4a86b" stroke="#8b7355" stroke-width="1.5"/><path d="M27 42 Q30 45 33 42" stroke="#8b7355" stroke-width="1.5" fill="none"/></svg>`,
+  kuromi:`<svg viewBox="0 0 60 60"><ellipse cx="30" cy="34" rx="21" ry="18" fill="#4a3a52" stroke="#8b7355" stroke-width="2.5"/><polygon points="12,22 6,4 22,14" fill="#4a3a52" stroke="#8b7355" stroke-width="2.5" stroke-linejoin="round"/><polygon points="48,22 54,4 38,14" fill="#4a3a52" stroke="#8b7355" stroke-width="2.5" stroke-linejoin="round"/><polygon points="12,22 8,10 18,18" fill="#ff8fa3" stroke="#8b7355" stroke-width="1.5" stroke-linejoin="round"/><polygon points="48,22 52,10 42,18" fill="#ff8fa3" stroke="#8b7355" stroke-width="1.5" stroke-linejoin="round"/><ellipse cx="30" cy="36" rx="13" ry="11" fill="#fff" stroke="#8b7355" stroke-width="2"/><ellipse cx="23" cy="34" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="37" cy="34" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="30" cy="40" rx="3" ry="2" fill="#ff8fa3" stroke="#8b7355" stroke-width="1.5"/><path d="M27 42 Q30 45 33 42" stroke="#8b7355" stroke-width="1.5" fill="none"/><circle cx="30" cy="10" r="5" fill="#ff8fa3" stroke="#8b7355" stroke-width="1.5"/><circle cx="26" cy="10" r="1.5" fill="#3a3a4a"/><circle cx="34" cy="10" r="1.5" fill="#3a3a4a"/><circle cx="30" cy="7" r="1.5" fill="#3a3a4a"/></svg>`,
+};
+
+// 生成星光
+const sparkleContainer=document.getElementById('sparkles');
+for(let i=0;i<40;i++){
+  const s=document.createElement('div');s.className='sparkle'+(Math.random()>.7?' big':'');
+  s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';
+  s.style.animationDelay=Math.random()*3+'s';s.style.animationDuration=(2+Math.random()*3)+'s';
+  sparkleContainer.appendChild(s);
+}
+// 开场角色
+const introChars=document.getElementById('introChars');
+['kitty','cinnamon','melody','purin','kuromi'].forEach(k=>{
+  const d=document.createElement('div');d.className='intro-char';d.innerHTML=SVG_CHAR[k];
+  introChars.appendChild(d);
+});
+
+let gameStarted=false;
+function startGame(){
+  if(gameStarted)return;gameStarted=true;
+  const intro=document.getElementById('intro');
+  intro.classList.add('opening');
+  setTimeout(()=>{intro.classList.add('gone');setTimeout(()=>intro.remove(),1300);},1500);
+  setTimeout(()=>{toast('欢迎来到三丽鸥小屋！🐱 点击小猫可以抚摸它');initCat();},2200);
+}
+// 自动开始（5秒后如果没点击）
+setTimeout(()=>{if(!gameStarted)startGame();},8000);
+
+// ========== 立体 SVG 家具库 ==========
 const SVG={
   bed:`<svg viewBox="0 0 100 80"><rect x="8" y="44" width="84" height="14" fill="#d4a5b5" rx="3"/><rect x="8" y="20" width="84" height="28" fill="#f4b8c4" rx="4"/><rect x="14" y="28" width="30" height="16" fill="#fff" rx="3"/><rect x="48" y="28" width="38" height="16" fill="#ffe8ee" rx="3"/><rect x="8" y="16" width="84" height="10" fill="#e89aac" rx="3"/><circle cx="20" cy="21" r="2" fill="#fff"/></svg>`,
   sofa:`<svg viewBox="0 0 100 75"><rect x="8" y="40" width="84" height="20" fill="#8fd3a8" rx="6"/><rect x="8" y="22" width="84" height="24" fill="#a8e6c0" rx="6"/><rect x="6" y="38" width="16" height="26" fill="#7dc998" rx="5"/><rect x="78" y="38" width="16" height="26" fill="#7dc998" rx="5"/><rect x="22" y="44" width="26" height="14" fill="#fff" rx="4" opacity=".8"/><rect x="52" y="44" width="26" height="14" fill="#fff" rx="4" opacity=".8"/></svg>`,
@@ -165,11 +421,7 @@ const SVG={
   plant:`<svg viewBox="0 0 55 75"><path d="M14 50 L41 50 L37 72 L18 72 Z" fill="#d88a7a"/><ellipse cx="27.5" cy="50" rx="14" ry="4" fill="#e89aac"/><ellipse cx="20" cy="32" rx="12" ry="16" fill="#7da87b" transform="rotate(-20 20 32)"/><ellipse cx="36" cy="30" rx="12" ry="16" fill="#8fb98a" transform="rotate(20 36 30)"/><ellipse cx="28" cy="22" rx="10" ry="14" fill="#7da87b"/><circle cx="28" cy="16" r="4" fill="#ff8fa3"/></svg>`,
   flower:`<svg viewBox="0 0 50 75"><path d="M18 40 L32 40 L30 70 L20 70 Z" fill="#a8d8f0"/><ellipse cx="25" cy="40" rx="10" ry="3" fill="#c9a87c"/><circle cx="25" cy="22" r="8" fill="#ff8fa3"/><circle cx="25" cy="22" r="3" fill="#ffe89a"/><circle cx="18" cy="28" r="5" fill="#a8d8f0"/><circle cx="32" cy="28" r="5" fill="#ffe89a"/><circle cx="25" cy="14" r="5" fill="#d4b8e6"/></svg>`,
   shelf:`<svg viewBox="0 0 80 60"><rect x="4" y="10" width="72" height="8" fill="#c9a87c" rx="2"/><rect x="4" y="26" width="72" height="8" fill="#c9a87c" rx="2"/><rect x="4" y="42" width="72" height="8" fill="#c9a87c" rx="2"/><rect x="10" y="12" width="8" height="6" fill="#ff8fa3"/><rect x="20" y="11" width="8" height="7" fill="#a8d8f0"/><rect x="30" y="12" width="8" height="6" fill="#ffe89a"/><rect x="14" y="28" width="8" height="6" fill="#d4b8e6"/><rect x="26" y="27" width="8" height="7" fill="#8fd3a8"/><circle cx="50" cy="32" r="5" fill="#ff8fa3"/><circle cx="48" cy="46" r="5" fill="#a8d8f0"/></svg>`,
-  kitty:`<svg viewBox="0 0 60 60"><ellipse cx="30" cy="50" rx="18" ry="5" fill="#ddd" opacity=".5"/><ellipse cx="30" cy="32" rx="22" ry="19" fill="#fff" stroke="#8b7355" stroke-width="2.5"/><polygon points="12,20 8,4 22,14" fill="#fff" stroke="#8b7355" stroke-width="2.5" stroke-linejoin="round"/><polygon points="48,20 52,4 38,14" fill="#fff" stroke="#8b7355" stroke-width="2.5" stroke-linejoin="round"/><circle cx="42" cy="10" r="5" fill="#ff5a7a" stroke="#8b7355" stroke-width="2"/><ellipse cx="37" cy="10" rx="6" ry="4" fill="#ff5a7a" stroke="#8b7355" stroke-width="2" transform="rotate(-20 37 10)"/><ellipse cx="47" cy="10" rx="6" ry="4" fill="#ff5a7a" stroke="#8b7355" stroke-width="2" transform="rotate(20 47 10)"/><ellipse cx="22" cy="32" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="38" cy="32" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="30" cy="38" rx="3" ry="2" fill="#ffcd3c" stroke="#8b7355" stroke-width="1.5"/><path d="M27 41 Q30 44 33 41" stroke="#8b7355" stroke-width="1.5" fill="none"/><line x1="10" y1="30" x2="18" y2="32" stroke="#8b7355" stroke-width="1.5"/><line x1="10" y1="36" x2="18" y2="36" stroke="#8b7355" stroke-width="1.5"/><line x1="42" y1="32" x2="50" y2="30" stroke="#8b7355" stroke-width="1.5"/><line x1="42" y1="36" x2="50" y2="36" stroke="#8b7355" stroke-width="1.5"/></svg>`,
-  cinnamon:`<svg viewBox="0 0 60 60"><ellipse cx="30" cy="50" rx="18" ry="5" fill="#ddd" opacity=".5"/><ellipse cx="30" cy="34" rx="20" ry="17" fill="#fff" stroke="#8b7355" stroke-width="2.5"/><ellipse cx="10" cy="24" rx="7" ry="12" fill="#fff" stroke="#8b7355" stroke-width="2.5" transform="rotate(-20 10 24)"/><ellipse cx="50" cy="24" rx="7" ry="12" fill="#fff" stroke="#8b7355" stroke-width="2.5" transform="rotate(20 50 24)"/><path d="M14 24 Q10 18 14 14 Q18 18 14 24" fill="#a8d8f0" stroke="#8b7355" stroke-width="1.5"/><path d="M46 24 Q50 18 46 14 Q42 18 46 24" fill="#a8d8f0" stroke="#8b7355" stroke-width="1.5"/><ellipse cx="23" cy="34" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="37" cy="34" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="30" cy="40" rx="3" ry="2" fill="#c4d4e8" stroke="#8b7355" stroke-width="1.5"/><path d="M27 42 Q30 45 33 42" stroke="#8b7355" stroke-width="1.5" fill="none"/></svg>`,
-  melody:`<svg viewBox="0 0 60 60"><ellipse cx="30" cy="50" rx="18" ry="5" fill="#ddd" opacity=".5"/><path d="M10 34 Q6 8 20 18 Q14 24 10 34 Z" fill="#ff8fa3" stroke="#8b7355" stroke-width="2.5" stroke-linejoin="round"/><path d="M50 34 Q54 8 40 18 Q46 24 50 34 Z" fill="#ff8fa3" stroke="#8b7355" stroke-width="2.5" stroke-linejoin="round"/><ellipse cx="14" cy="14" rx="6" ry="9" fill="#ff8fa3" stroke="#8b7355" stroke-width="2" transform="rotate(-15 14 14)"/><ellipse cx="46" cy="14" rx="6" ry="9" fill="#ff8fa3" stroke="#8b7355" stroke-width="2" transform="rotate(15 46 14)"/><circle cx="38" cy="10" r="4" fill="#fff" stroke="#8b7355" stroke-width="1.5"/><circle cx="39" cy="9" r="1.2" fill="#ffcd3c"/><circle cx="30" cy="34" r="18" fill="#fff" stroke="#8b7355" stroke-width="2.5"/><ellipse cx="23" cy="34" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="37" cy="34" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="30" cy="40" rx="3" ry="2" fill="#ffcd3c" stroke="#8b7355" stroke-width="1.5"/><path d="M27 42 Q30 45 33 42" stroke="#8b7355" stroke-width="1.5" fill="none"/></svg>`,
-  purin:`<svg viewBox="0 0 60 60"><ellipse cx="30" cy="50" rx="18" ry="5" fill="#ddd" opacity=".5"/><ellipse cx="30" cy="34" rx="21" ry="18" fill="#ffe08a" stroke="#8b7355" stroke-width="2.5"/><ellipse cx="14" cy="24" rx="5" ry="9" fill="#ffe08a" stroke="#8b7355" stroke-width="2" transform="rotate(-20 14 24)"/><ellipse cx="46" cy="24" rx="5" ry="9" fill="#ffe08a" stroke="#8b7355" stroke-width="2" transform="rotate(20 46 24)"/><ellipse cx="30" cy="14" rx="10" ry="6" fill="#b67c52" stroke="#8b7355" stroke-width="2"/><rect x="25" y="8" width="10" height="4" rx="2" fill="#8b5a36"/><ellipse cx="23" cy="34" rx="2" ry="3" fill="#3a3a4a"/><ellipse cx="37" cy="34" rx="2" ry="3" fill="#3a3a4a"/><ellipse cx="30" cy="40" rx="3" ry="2" fill="#c4a86b" stroke="#8b7355" stroke-width="1.5"/><path d="M27 42 Q30 45 33 42" stroke="#8b7355" stroke-width="1.5" fill="none"/></svg>`,
-  kuromi:`<svg viewBox="0 0 60 60"><ellipse cx="30" cy="50" rx="18" ry="5" fill="#ddd" opacity=".5"/><ellipse cx="30" cy="34" rx="21" ry="18" fill="#4a3a52" stroke="#8b7355" stroke-width="2.5"/><polygon points="12,22 6,4 22,14" fill="#4a3a52" stroke="#8b7355" stroke-width="2.5" stroke-linejoin="round"/><polygon points="48,22 54,4 38,14" fill="#4a3a52" stroke="#8b7355" stroke-width="2.5" stroke-linejoin="round"/><polygon points="12,22 8,10 18,18" fill="#ff8fa3" stroke="#8b7355" stroke-width="1.5" stroke-linejoin="round"/><polygon points="48,22 52,10 42,18" fill="#ff8fa3" stroke="#8b7355" stroke-width="1.5" stroke-linejoin="round"/><ellipse cx="30" cy="36" rx="13" ry="11" fill="#fff" stroke="#8b7355" stroke-width="2"/><ellipse cx="23" cy="34" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="37" cy="34" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="30" cy="40" rx="3" ry="2" fill="#ff8fa3" stroke="#8b7355" stroke-width="1.5"/><path d="M27 42 Q30 45 33 42" stroke="#8b7355" stroke-width="1.5" fill="none"/><circle cx="30" cy="10" r="5" fill="#ff8fa3" stroke="#8b7355" stroke-width="1.5"/><circle cx="26" cy="10" r="1.5" fill="#3a3a4a"/><circle cx="34" cy="10" r="1.5" fill="#3a3a4a"/><circle cx="30" cy="7" r="1.5" fill="#3a3a4a"/></svg>`,
+  kitty:SVG_CHAR.kitty, cinnamon:SVG_CHAR.cinnamon, melody:SVG_CHAR.melody, purin:SVG_CHAR.purin, kuromi:SVG_CHAR.kuromi,
 };
 
 const FURNITURE=[
@@ -284,7 +536,7 @@ function selectPlaced(el){
     `<button class="selbtn del" onclick="removeSelected()">🗑 删除</button>`;
 }
 room.addEventListener('click',e=>{
-  if(e.target===room||e.target.id==='floor'||e.target.id==='backWall'||e.target.classList.contains('ceiling')||e.target.classList.contains('baseboard')||e.target.classList.contains('room-label')){
+  if(e.target===room||e.target.id==='floor'||e.target.id==='backWall'||e.target.classList.contains('ceiling')||e.target.classList.contains('baseboard')||e.target.classList.contains('room-label')||e.target.classList.contains('sun-patch')||e.target.classList.contains('wall-light')||e.target.classList.contains('light-beam')){
     document.querySelectorAll('.placed').forEach(x=>x.classList.remove('selected'));selected=null;
     document.getElementById('selbox').innerHTML='点家具可选中<br>拖动可移动<br>双击可旋转';
   }
@@ -308,6 +560,72 @@ room.addEventListener('dragover',e=>e.preventDefault());
 room.addEventListener('drop',e=>{e.preventDefault();try{addFurniture(JSON.parse(e.dataTransfer.getData('text')))}catch(_){}});
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1600);}
 
+// ========== 小猫 AI ==========
+const catEl=document.getElementById('petCat');
+const catStatusEl=document.getElementById('catStatus');
+const catStates=['正在好奇地东张西望…','在房间里悠闲散步','找到了一个舒服的位置','正在追逐光斑','偷偷打量着家具','想跳上沙发玩','闻了闻盆栽的味道'];
+const catMoods=['喵~','咕噜咕噜~','喵喵！','(伸懒腰)','(打哈欠)'];
+let catTimer=null,catState='idle';
+
+function initCat(){
+  if(catTimer)return;
+  catWander();
+  catTimer=setInterval(catWander,6000);
+}
+function catWander(){
+  if(!gameStarted)return;
+  const rw=room.clientWidth, rh=room.clientHeight;
+  const newX=20+Math.random()*(rw-80);
+  const floorY=rh-44;
+  catEl.style.left=newX+'px';
+  catEl.style.top=floorY+'px';
+  // 随机朝向
+  catEl.style.transform=newX<parseFloat(catEl.style.left||0)?'scaleX(-1)':'scaleX(1)';
+  // 随机状态
+  const r=Math.random();
+  if(r<.6){
+    catEl.classList.remove('sleeping');
+    catEl.classList.add('walking');
+    catState='walking';
+    catStatusEl.textContent=catStates[Math.floor(Math.random()*catStates.length)];
+    setTimeout(()=>{catEl.classList.remove('walking');catState='idle';},3000);
+  }else if(r<.85){
+    catEl.classList.remove('walking');
+    catEl.classList.add('sleeping');
+    catState='sleeping';
+    catStatusEl.textContent='趴下来打盹了… Zzz';
+  }else{
+    catEl.classList.remove('sleeping','walking');
+    catState='idle';
+    catStatusEl.textContent='坐下来舔爪子…';
+  }
+}
+function petCat(){
+  if(!gameStarted)return;
+  // 爱心粒子
+  for(let i=0;i<5;i++){
+    const h=document.createElement('div');h.className='heart-particle';
+    h.textContent=['💕','💖','💗','💓','❤️'][i%5];
+    h.style.left=(20+Math.random()*30)+'px';
+    h.style.top=(-10+Math.random()*10)+'px';
+    h.style.animationDelay=(i*.15)+'s';
+    catEl.appendChild(h);
+    setTimeout(()=>h.remove(),1300);
+  }
+  // 喵叫气泡
+  const bubble=document.createElement('div');bubble.className='meow-bubble';
+  bubble.textContent=catMoods[Math.floor(Math.random()*catMoods.length)];
+  catEl.appendChild(bubble);
+  setTimeout(()=>bubble.remove(),1500);
+  // 状态更新
+  catStatusEl.textContent='被抚摸了！好开心~ 咕噜咕噜';
+  catEl.classList.remove('sleeping','walking');
+  // 3秒后恢复
+  clearTimeout(petCat._t);
+  petCat._t=setTimeout(()=>{catStatusEl.textContent=catStates[Math.floor(Math.random()*catStates.length)];},3000);
+  toast('奶油很开心！🐱💕');
+}
+
 // 加载已保存
 window.addEventListener('load',()=>{
   const s=localStorage.getItem('sanrio_house_3d');if(!s)return;
@@ -318,7 +636,7 @@ window.addEventListener('load',()=>{
     if(d.r)el.style.transform=`rotate(${d.r}deg)`;
     el.innerHTML=SVG[def.svg]+`<div class="del" onclick="event.stopPropagation();removePlaced(this.parentElement)">×</div>`;
     el.onclick=e=>{e.stopPropagation();selectPlaced(el)};enableDrag(el);room.appendChild(el);
-  });if(document.querySelectorAll('.placed').length)toast('已加载上次的设计');}catch(_){}
+  });}catch(_){}
 });
 </script>
 </body>
