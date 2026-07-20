@@ -86,6 +86,27 @@
       font-size: 20px;
       color: var(--primary);
     }
+    .card.featured {
+      border-color: #c9a46a;
+      background: linear-gradient(135deg, #fffbf5, #fef7ed);
+    }
+    .card.featured:hover {
+      border-color: #c9a46a;
+      box-shadow: 0 8px 24px rgba(201, 164, 106, 0.18);
+    }
+    .card.featured .card-arrow {
+      color: #c9a46a;
+    }
+    .badge {
+      display: inline-block;
+      background: #c9a46a;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 10px;
+      margin-bottom: 4px;
+    }
   </style>
 </head>
 <body>
@@ -94,6 +115,13 @@
     <h1 class="title">Lynne Analytic</h1>
     <p class="subtitle">选择你要使用的分析平台</p>
     <div class="cards">
+      <a href="dream-home/index.html" class="card featured">
+        <span class="badge">NEW</span>
+        <span class="card-icon">🏠</span>
+        <span class="card-title">梦幻小屋设计</span>
+        <span class="card-desc">高清写实家具 · 自由装修<br>沙发 · 地毯 · 单人椅 · 实时替换 · 评分奖励</span>
+        <span class="card-arrow">→</span>
+      </a>
       <a href="ads.html" class="card">
         <span class="card-icon">📈</span>
         <span class="card-title">广告分析</span>
@@ -110,18 +138,6 @@
         <span class="card-icon">🏛️</span>
         <span class="card-title">各国税务</span>
         <span class="card-desc">全球税务对比 · 各税种分析<br>综合税负估算 · 行业场景</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a href="dream-home/index.html" class="card">
-        <span class="card-icon">🏠</span>
-        <span class="card-title">梦幻小屋设计</span>
-        <span class="card-desc">自由装修 · 家具搭配<br>沙发 · 地毯 · 单人椅 · 实时替换 · 评分奖励</span>
-        <span class="card-arrow">→</span>
-      </a>
-      <a href="sanrio-house/index.html" class="card" style="border-color:#f5a9b8;background:linear-gradient(135deg,#fff5f7,#fef0f4)">
-        <span class="card-icon">🎀</span>
-        <span class="card-title" style="color:#d4506a">梦幻小屋设计 Pro</span>
-        <span class="card-desc">高清写实家具 · 3D场景<br>沙发 · 地毯 · 单人椅 · 评分奖励</span>
         <span class="card-arrow">→</span>
       </a>
     </div>
