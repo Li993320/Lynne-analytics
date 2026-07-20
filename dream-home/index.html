@@ -409,7 +409,7 @@
   <main class="app">
     <section class="stage">
       <div class="room" id="room">
-        <img class="base" src="images/room.png" alt="现代客餐厅">
+        <img class="base" id="roomBase" src="images/room_1.png" alt="现代阳光客厅">
 
         <div class="layer layer-rug" id="layer-rug">
           <img src="" alt="地毯">
@@ -426,11 +426,16 @@
 
     <section class="controls">
       <div class="tabs" id="tabs">
+        <div class="tab" data-cat="room">房间<span class="count">1/1</span></div>
         <div class="tab active" data-cat="sofa">沙发<span class="count">0/1</span></div>
         <div class="tab" data-cat="rug">地毯<span class="count">0/1</span></div>
         <div class="tab" data-cat="chair">单人椅<span class="count">0/1</span></div>
       </div>
 
+      <div class="panel" data-panel="room">
+        <p class="panel-title">选择你的房间背景</p>
+        <div class="options" id="roomOptions"></div>
+      </div>
       <div class="panel active" data-panel="sofa">
         <p class="panel-title">选择你喜欢的沙发</p>
         <div class="options" id="sofaOptions"></div>
@@ -464,6 +469,11 @@
   <script>
     // 数据：家具选项（图片路径可替换为真实素材）
     const CATALOG = {
+      room: [
+        { id: 'room_1', name: '现代阳光客厅', tag: '现代极简', img: 'images/room_1.png', emoji: '🏠', pos: 'base' },
+        { id: 'room_2', name: '复古法式壁炉', tag: '复古法式', img: 'images/room_2.jpg', emoji: '🕯️', pos: 'base' },
+        { id: 'room_3', name: '明亮绿植厨房', tag: '清新田园', img: 'images/room_3.jpg', emoji: '🪴', pos: 'base' },
+      ],
       sofa: [
         { id: 'sofa_1', name: '海蓝色现代沙发', tag: '现代极简', img: 'images/sofa_1.png', emoji: '🛋️', pos: 'center' },
         { id: 'sofa_2', name: '复古法式丝绒沙发', tag: '复古法式', img: 'images/sofa_2.png', emoji: '🎠', pos: 'center' },
@@ -483,6 +493,7 @@
 
     // 状态
     let state = {
+      room: 'room_1',
       sofa: null,
       rug: null,
       chair: null,
@@ -500,16 +511,18 @@
       const container = $(`#${cat}Options`);
       container.innerHTML = '';
 
-      // 不选/移除选项
-      const none = document.createElement('div');
-      none.className = `option none ${state[cat] === null ? 'selected' : ''}`;
-      none.innerHTML = `
-        <div class="option-thumb">🚫</div>
-        <div class="option-name">不摆放</div>
-        <div class="option-tag">保持空旷</div>
-      `;
-      none.addEventListener('click', () => selectItem(cat, null));
-      container.appendChild(none);
+      // 房间类型不提供"不摆放"选项
+      if (cat !== 'room') {
+        const none = document.createElement('div');
+        none.className = `option none ${state[cat] === null ? 'selected' : ''}`;
+        none.innerHTML = `
+          <div class="option-thumb">🚫</div>
+          <div class="option-name">不摆放</div>
+          <div class="option-tag">保持空旷</div>
+        `;
+        none.addEventListener('click', () => selectItem(cat, null));
+        container.appendChild(none);
+      }
 
       CATALOG[cat].forEach((item) => {
         const el = document.createElement('div');
@@ -530,8 +543,22 @@
     function selectItem(cat, id) {
       state[cat] = id;
       renderOptions(cat);
-      updateLayer(cat);
+      if (cat === 'room') {
+        updateRoomBase();
+      } else {
+        updateLayer(cat);
+      }
       updateTabCounts();
+    }
+
+    // 更新房间背景图
+    function updateRoomBase() {
+      const item = CATALOG.room.find((x) => x.id === state.room);
+      const baseImg = $('#roomBase');
+      if (item) {
+        baseImg.src = item.img;
+        baseImg.alt = item.name;
+      }
     }
 
     // 更新画布图层
@@ -556,7 +583,8 @@
       $$('.tab').forEach((tab) => {
         const cat = tab.dataset.cat;
         const selected = state[cat] ? 1 : 0;
-        tab.querySelector('.count').textContent = `${selected}/1`;
+        const max = cat === 'room' ? 1 : 1;
+        tab.querySelector('.count').textContent = `${selected}/${max}`;
       });
     }
 
@@ -570,7 +598,7 @@
       });
     });
 
-    // 重置
+    // 重置（保留房间背景）
     $('#resetBtn').addEventListener('click', () => {
       state.sofa = state.rug = state.chair = null;
       ['sofa', 'rug', 'chair'].forEach((cat) => {
@@ -623,9 +651,9 @@
     });
 
     // 初始化渲染
-    ['sofa', 'rug', 'chair'].forEach((cat) => {
+    ['room', 'sofa', 'rug', 'chair'].forEach((cat) => {
       renderOptions(cat);
-      updateLayer(cat);
+      if (cat === 'room') { updateRoomBase(); } else { updateLayer(cat); }
     });
     updateTabCounts();
   </script>
