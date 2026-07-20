@@ -1,663 +1,633 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>三丽鸥小屋设计游戏 · Sanrio House Design</title>
-<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Nunito:wght@600;800&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --wall:#d4e4c3; --wall-2:#c2d6ae; --floor:#e8d4b0; --floor-2:#d4c096;
-    --sky:#b8d4e3; --sea:#7bb8c9; --tree:#7da87b; --tree-2:#5d8a5b;
-    --pink:#ff8fa3; --pink-d:#e8677e; --pink-l:#ffd6df;
-    --cream:#fff8ee; --mint:#b8e6c9; --blue:#a8d8f0; --yellow:#ffe89a;
-    --bg:#fff0f4; --panel:#ffffff; --text:#5c4a52; --line:#f0d8df;
-    --gold:#f0c060; --purple:#b8a0d8;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html,body{height:100%;font-family:"ZCOOL KuaiLe","Nunito","Microsoft YaHei",sans-serif;color:var(--text);background:var(--bg)}
-  body{display:flex;flex-direction:column;overflow:hidden}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>我的设计小屋 · 自由装修</title>
+  <style>
+    :root {
+      --bg: #f7f4ef;
+      --card: #ffffff;
+      --ink: #2b2b2b;
+      --muted: #8a8a8a;
+      --accent: #c9a46a;
+      --accent-2: #e76f51;
+      --shadow: 0 10px 30px rgba(0,0,0,0.08);
+      --radius: 18px;
+    }
 
-  /* ========== 开场动画 ========== */
-  #intro{
-    position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;
-    background:linear-gradient(135deg,#2a1a3a 0%,#4a2a5a 25%,#6a3a6a 50%,#8a4a7a 75%,#aa5a8a 100%);
-    transition:opacity 1.2s ease,transform 1.2s ease;overflow:hidden;
-  }
-  #intro.gone{opacity:0;transform:scale(1.08);pointer-events:none}
-  /* 星光粒子 */
-  .sparkle{position:absolute;width:4px;height:4px;background:#fff;border-radius:50%;
-    box-shadow:0 0 6px #fff,0 0 12px #ffd0e0;animation:sparkleFloat 3s ease-in-out infinite;opacity:0}
-  .sparkle.big{width:7px;height:7px;box-shadow:0 0 10px #fff,0 0 20px #ffe0a0,0 0 30px #ffc0e0}
-  @keyframes sparkleFloat{
-    0%,100%{opacity:0;transform:translateY(0) scale(.5)}
-    50%{opacity:1;transform:translateY(-30px) scale(1.2)}
-  }
-  /* 光晕 */
-  .glow-ring{position:absolute;border-radius:50%;border:2px solid rgba(255,200,220,.15);
-    animation:ringPulse 4s ease-in-out infinite}
-  @keyframes ringPulse{0%,100%{transform:scale(.8);opacity:.3}50%{transform:scale(1.1);opacity:.6}}
-  /* 标题 */
-  .intro-title{
-    font-family:"Ma Shan Zheng","ZCOOL KuaiLe",serif;font-size:42px;
-    background:linear-gradient(90deg,#ffd0e0,#ffe8a0,#a8d8f0,#ffd0e0);
-    background-size:300% 100%;-webkit-background-clip:text;background-clip:text;
-    -webkit-text-fill-color:transparent;
-    animation:titleShimmer 3s linear infinite,titleAppear 1.5s ease-out;
-    text-shadow:0 0 40px rgba(255,200,220,.5);letter-spacing:4px;
-    position:relative;z-index:10;
-  }
-  .intro-sub{font-size:14px;color:rgba(255,220,235,.7);margin-top:8px;letter-spacing:6px;
-    animation:subFade 2s ease-out .8s both;z-index:10}
-  @keyframes titleShimmer{0%{background-position:0% 0}100%{background-position:300% 0}}
-  @keyframes titleAppear{0%{opacity:0;transform:translateY(30px) scale(.8)}100%{opacity:1;transform:translateY(0) scale(1)}}
-  @keyframes subFade{0%{opacity:0}100%{opacity:.7}}
-  /* 角色飘入 */
-  .intro-chars{display:flex;gap:24px;margin-top:36px;z-index:10}
-  .intro-char{width:56px;height:56px;opacity:0;animation:charFloatIn 1s ease-out both,charBob 2.5s ease-in-out infinite}
-  .intro-char:nth-child(1){animation-delay:1.2s,2.2s}
-  .intro-char:nth-child(2){animation-delay:1.4s,2.4s}
-  .intro-char:nth-child(3){animation-delay:1.6s,2.6s}
-  .intro-char:nth-child(4){animation-delay:1.8s,2.8s}
-  .intro-char:nth-child(5){animation-delay:2.0s,3.0s}
-  .intro-char:nth-child(6){animation-delay:2.2s,3.2s}
-  .intro-char:nth-child(7){animation-delay:2.4s,3.4s}
-  .intro-char:nth-child(8){animation-delay:2.6s,3.6s}
-  .intro-char:nth-child(9){animation-delay:2.8s,3.8s}
-  .intro-char:nth-child(6),.intro-char:nth-child(7){width:44px;height:70px}
-  @keyframes charFloatIn{0%{opacity:0;transform:translateY(40px) scale(.5)}100%{opacity:1;transform:translateY(0) scale(1)}}
-  @keyframes charBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-  /* 进入提示 */
-  .intro-enter{
-    margin-top:32px;padding:10px 32px;border:2px solid rgba(255,200,220,.4);
-    border-radius:999px;color:#fff;font-size:15px;font-family:inherit;letter-spacing:3px;
-    background:rgba(255,255,255,.08);cursor:pointer;z-index:10;
-    animation:enterPulse 1.5s ease-in-out infinite,enterFade .8s ease-out 3s both;
-    transition:background .3s,transform .2s;
-  }
-  .intro-enter:hover{background:rgba(255,255,255,.2);transform:scale(1.05)}
-  @keyframes enterPulse{0%,100%{box-shadow:0 0 20px rgba(255,200,220,.3)}50%{box-shadow:0 0 40px rgba(255,200,220,.6)}}
-  @keyframes enterFade{0%{opacity:0}100%{opacity:1}}
-  /* 帘幕 */
-  .curtain{position:absolute;top:0;bottom:0;width:50%;z-index:5;
-    transition:transform 1.5s cubic-bezier(.7,0,.3,1)}
-  .curtain.left{left:0;background:linear-gradient(90deg,#3a1a4a,#5a2a5a)}
-  .curtain.right{right:0;background:linear-gradient(270deg,#3a1a4a,#5a2a5a)}
-  #intro.opening .curtain.left{transform:translateX(-100%)}
-  #intro.opening .curtain.right{transform:translateX(100%)}
-  .curtain::before{content:"";position:absolute;top:0;bottom:0;width:20px;
-    background:repeating-linear-gradient(0deg,transparent 0,transparent 30px,rgba(255,255,255,.05) 30px,rgba(255,255,255,.05) 60px)}
-  .curtain.left::before{right:0}
-  .curtain.right::before{left:0}
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-  /* ========== 顶栏 ========== */
-  .topbar{
-    display:flex;align-items:center;gap:14px;padding:8px 18px;
-    background:linear-gradient(90deg,#fff,var(--pink-l));border-bottom:2px solid var(--pink-l);
-    box-shadow:0 2px 8px rgba(232,103,126,.12);z-index:20
-  }
-  .logo{width:44px;height:44px;flex-shrink:0}
-  .title{font-size:19px;font-weight:700;color:var(--pink-d)}
-  .title small{display:block;font-size:10px;color:#a88;font-weight:400}
-  .spacer{flex:1}
-  .topbtn{border:none;padding:7px 13px;border-radius:999px;cursor:pointer;font-family:inherit;font-size:13px;background:var(--pink);color:#fff;box-shadow:0 3px 0 var(--pink-d);transition:transform .15s}
-  .topbtn:active{transform:translateY(3px);box-shadow:none}
-  .topbtn.alt{background:#fff;color:var(--pink-d);box-shadow:0 3px 0 var(--pink-l)}
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
 
-  .main{flex:1;display:flex;overflow:hidden}
+    header {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+      z-index: 10;
+    }
 
-  /* ========== 左侧家具库 ========== */
-  .palette{width:190px;background:var(--panel);border-right:2px solid var(--line);overflow-y:auto;padding:8px;flex-shrink:0}
-  .cat-title{font-size:12px;color:var(--pink-d);margin:6px 0 4px;padding-bottom:3px;border-bottom:1px dashed var(--line)}
-  .cat-title:first-child{margin-top:0}
-  .items{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-  .item{background:var(--cream);border:2px solid var(--line);border-radius:10px;padding:4px;text-align:center;cursor:grab;transition:all .2s;user-select:none}
-  .item:hover{border-color:var(--pink);transform:translateY(-2px);box-shadow:0 4px 10px rgba(255,143,163,.2)}
-  .item svg{width:42px;height:42px;display:block;margin:0 auto}
-  .item .nm{font-size:10px;color:#888;margin-top:2px}
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.3px;
+    }
 
-  /* ========== 中央房间 - 增强真实感 ========== */
-  .stage{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto;
-    background:radial-gradient(ellipse at 50% 40%,rgba(255,240,220,.4),transparent 70%)}
-  .room{
-    position:relative;width:620px;height:460px;border-radius:12px;overflow:hidden;
-    box-shadow:0 20px 50px rgba(80,90,70,.3),0 6px 0 rgba(0,0,0,.08),inset 0 0 0 3px rgba(255,255,255,.15);
-  }
-  /* 天花板 */
-  .ceiling{position:absolute;top:0;left:0;right:0;height:16px;
-    background:linear-gradient(180deg,#f5efe0,#e8dcc6);z-index:1;
-    box-shadow:0 2px 4px rgba(180,160,130,.2)}
-  .ceiling::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;
-    background:linear-gradient(90deg,rgba(180,160,130,.4),rgba(180,160,130,.2),rgba(180,160,130,.4))}
-  /* 吊灯 */
-  .pendant{position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:4}
-  .pendant-cord{width:2px;height:22px;background:#c9a87c;margin:0 auto}
-  .pendant-shade{width:30px;height:18px;background:linear-gradient(180deg,#ffd4b8,#ff8fa3);
-    border-radius:0 0 15px 15px;box-shadow:0 4px 12px rgba(255,143,163,.4)}
-  .pendant-light{position:absolute;top:38px;left:50%;transform:translateX(-50%);
-    width:120px;height:80px;background:radial-gradient(ellipse at center top,rgba(255,250,200,.25),transparent 70%);
-    pointer-events:none;z-index:3;animation:lightFlicker 4s ease-in-out infinite}
-  @keyframes lightFlicker{0%,100%{opacity:.8}50%{opacity:1}}
-  /* 后墙 - 带纹理 */
-  .back-wall{position:absolute;top:16px;left:0;right:0;bottom:32%;
-    background:linear-gradient(180deg,var(--wall),var(--wall-2));transition:background .4s;z-index:1}
-  .back-wall::before{content:"";position:absolute;inset:0;opacity:.15;
-    background:repeating-linear-gradient(0deg,transparent 0,transparent 40px,rgba(255,255,255,.08) 40px,rgba(255,255,255,.08) 41px,
-    transparent 41px,transparent 80px,rgba(0,0,0,.03) 80px,rgba(0,0,0,.03) 81px)}
-  /* 墙面光晕（窗户投射） */
-  .wall-light{position:absolute;top:16px;left:0;right:0;bottom:32%;z-index:2;pointer-events:none;
-    background:radial-gradient(ellipse 40% 60% at 50% 30%,rgba(255,250,210,.2),transparent 70%)}
-  /* 墙脚线 */
-  .baseboard{position:absolute;left:0;right:0;bottom:32%;height:12px;
-    background:linear-gradient(180deg,#fff8ee,#f0e4d0);z-index:3;
-    box-shadow:0 -2px 0 rgba(180,160,130,.2),0 2px 4px rgba(0,0,0,.06)}
-  /* 地板 - 带透视和反光 */
-  .floor{position:absolute;left:0;right:0;bottom:0;height:32%;
-    background:linear-gradient(180deg,var(--floor),var(--floor-2));transition:background .4s;z-index:1;
-    perspective:300px}
-  .floor::before{content:"";position:absolute;inset:0;
-    background:repeating-linear-gradient(90deg,transparent 0,transparent 48px,rgba(160,130,80,.12) 49px,rgba(160,130,80,.12) 50px)}
-  .floor::after{content:"";position:absolute;inset:0;
-    background:linear-gradient(180deg,rgba(255,255,255,.08) 0%,transparent 30%,transparent 70%,rgba(0,0,0,.06) 100%)}
-  /* 地板光斑（窗户阳光投射） */
-  .sun-patch{position:absolute;bottom:0;left:20%;width:50%;height:32%;z-index:2;pointer-events:none;
-    background:linear-gradient(160deg,rgba(255,250,200,.18) 0%,rgba(255,240,180,.08) 50%,transparent 80%);
-    transform:skewX(-8deg);animation:sunShift 8s ease-in-out infinite}
-  @keyframes sunShift{0%,100%{opacity:.7;transform:skewX(-8deg) translateX(0)}50%{opacity:1;transform:skewX(-6deg) translateX(10px)}}
-  /* 窗户 - 增强细节 */
-  .window{position:absolute;left:50%;top:8%;transform:translateX(-50%);width:46%;height:62%;
-    background:linear-gradient(180deg,var(--sky) 0%,#d4e8f0 50%,var(--sea) 50%,#6aa7b8 100%);
-    border:10px solid #fff8ee;border-radius:6px;
-    box-shadow:0 6px 14px rgba(0,0,0,.12),inset 0 0 0 3px rgba(220,200,170,.3),0 0 30px rgba(255,250,200,.15);
-    z-index:2;overflow:hidden}
-  .window::before,.window::after{content:"";position:absolute;background:#fff8ee;z-index:3}
-  .window::before{left:50%;top:0;bottom:0;width:6px;transform:translateX(-50%)}
-  .window::after{left:0;right:0;top:50%;height:6px;transform:translateY(-50%)}
-  /* 太阳 */
-  .sun{position:absolute;top:8%;right:12%;width:24px;height:24px;border-radius:50%;
-    background:radial-gradient(circle,#fff8c8,#ffe89a);box-shadow:0 0 20px rgba(255,232,154,.6);
-    animation:sunGlow 3s ease-in-out infinite}
-  @keyframes sunGlow{0%,100%{box-shadow:0 0 20px rgba(255,232,154,.6)}50%{box-shadow:0 0 30px rgba(255,232,154,.9)}}
-  .cloud{position:absolute;background:#fff;border-radius:50px;opacity:.92;filter:blur(.5px)}
-  .cloud::before,.cloud::after{content:"";position:absolute;background:#fff;border-radius:50%}
-  .c1{width:60px;height:20px;top:14%;left:8%;animation:drift 30s linear infinite}
-  .c1::before{width:30px;height:30px;top:-14px;left:10px}
-  .c1::after{width:24px;height:24px;top:-10px;right:10px}
-  .c2{width:48px;height:16px;top:30%;left:-20%;animation:drift 40s linear infinite;animation-delay:-12s}
-  .c2::before{width:24px;height:24px;top:-12px;left:8px}
-  .distant{position:absolute;bottom:42%;left:-10%;right:-10%;height:60px;
-    background:var(--tree);border-radius:50% 50% 0 0/40% 40% 0 0;opacity:.85;z-index:1}
-  .distant::after{content:"";position:absolute;right:10%;bottom:0;width:60%;height:100%;
-    background:var(--tree-2);border-radius:50% 50% 0 0/40% 40% 0 0;opacity:.6}
-  /* 飞鸟 */
-  .bird{position:absolute;top:20%;left:15%;font-size:10px;color:#555;animation:birdFly 15s linear infinite}
-  @keyframes birdFly{0%{left:15%;top:20%}25%{left:40%;top:15%}50%{left:60%;top:22%}75%{left:80%;top:18%}100%{left:105%;top:20%}}
-  /* 光柱（从窗户射入） */
-  .light-beam{position:absolute;top:16px;left:30%;width:40%;bottom:0;z-index:4;pointer-events:none;
-    background:linear-gradient(160deg,rgba(255,250,210,.06) 0%,rgba(255,240,180,.1) 30%,rgba(255,230,160,.04) 60%,transparent 90%);
-    transform:skewX(-12deg);clip-path:polygon(15% 0,85% 0,100% 100%,0% 100%)}
-  /* 房间标签 */
-  .room-label{position:absolute;left:12px;top:22px;font-size:11px;color:#fff;
-    background:rgba(232,103,126,.7);padding:2px 10px;border-radius:999px;z-index:5;
-    box-shadow:0 2px 6px rgba(232,103,126,.3)}
+    .brand-icon {
+      width: 32px; height: 32px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #d4a373 0%, #e76f51 100%);
+      display: grid; place-items: center;
+      color: #fff; font-size: 16px;
+      box-shadow: 0 4px 10px rgba(231,111,81,0.25);
+    }
 
-  /* ========== 小猫 ========== */
-  .pet-cat{position:absolute;bottom:2%;left:30%;width:48px;height:40px;z-index:8;cursor:pointer;
-    transition:left 3s ease-in-out;filter:drop-shadow(0 4px 6px rgba(80,60,40,.3))}
-  .pet-cat svg{width:100%;height:100%}
-  .pet-cat .cat-tail{transform-origin:30px 28px;animation:tailWag 1.5s ease-in-out infinite}
-  @keyframes tailWag{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(15deg)}}
-  .pet-cat .cat-eye{animation:catBlink 4s ease-in-out infinite}
-  @keyframes catBlink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
-  .pet-cat.walking{animation:catWalk .5s ease-in-out infinite}
-  @keyframes catWalk{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
-  .pet-cat.sleeping .cat-body{animation:catBreathe 2.5s ease-in-out infinite}
-  @keyframes catBreathe{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.05)}}
-  .pet-cat.sleeping .cat-tail{animation:tailSleep 3s ease-in-out infinite}
-  @keyframes tailSleep{0%,100%{transform:rotate(0)}50%{transform:rotate(8deg)}}
-  .pet-cat.sleeping::after{content:"Z z z";position:absolute;top:-16px;right:-8px;font-size:10px;
-    color:rgba(180,160,200,.7);animation:zzzFloat 2s ease-in-out infinite}
-  @keyframes zzzFloat{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:.8;transform:translateY(-6px)}}
-  .heart-particle{position:absolute;font-size:16px;pointer-events:none;z-index:9;
-    animation:heartFloat 1.2s ease-out forwards}
-  @keyframes heartFloat{0%{opacity:1;transform:translateY(0) scale(.5)}100%{opacity:0;transform:translateY(-40px) scale(1.5)}}
-  .meow-bubble{position:absolute;top:-30px;left:50%;transform:translateX(-50%);
-    background:#fff;border:2px solid var(--pink-l);border-radius:12px;padding:2px 8px;
-    font-size:11px;color:var(--pink-d);white-space:nowrap;z-index:10;
-    animation:bubblePop .5s ease-out;box-shadow:0 2px 6px rgba(0,0,0,.1)}
-  .meow-bubble::after{content:"";position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);
-    border:4px solid transparent;border-top-color:#fff}
-  @keyframes bubblePop{0%{opacity:0;transform:translateX(-50%) scale(.5)}50%{transform:translateX(-50%) scale(1.1)}100%{opacity:1;transform:translateX(-50%) scale(1)}}
+    .coins {
+      display: flex; align-items: center; gap: 6px;
+      background: #fff8e7; color: #a67c2e;
+      padding: 6px 12px; border-radius: 20px;
+      font-weight: 700; font-size: 14px;
+      border: 1px solid rgba(201,164,106,0.25);
+    }
 
-  /* ========== 已放置家具 ========== */
-  .placed{position:absolute;cursor:move;user-select:none;z-index:5;transition:filter .2s;
-    filter:drop-shadow(0 4px 8px rgba(80,90,70,.3))}
-  .placed svg{width:100%;height:100%;display:block}
-  .placed.selected{filter:drop-shadow(0 0 10px var(--pink)) drop-shadow(0 4px 8px rgba(80,90,70,.3))}
-  .placed.selected::after{content:"";position:absolute;inset:-4px;border:2px dashed var(--pink);border-radius:8px;pointer-events:none}
-  .placed .del{position:absolute;top:-9px;right:-9px;width:20px;height:20px;background:#ff5a5a;color:#fff;border-radius:50%;font-size:13px;line-height:20px;text-align:center;cursor:pointer;display:none;z-index:6}
-  .placed.selected .del{display:block}
+    .app {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
 
-  /* ========== 右侧属性 ========== */
-  .props{width:190px;background:var(--panel);border-left:2px solid var(--line);padding:8px;overflow-y:auto;flex-shrink:0}
-  .prop-title{font-size:12px;color:var(--pink-d);margin:6px 0 4px;padding-bottom:3px;border-bottom:1px dashed var(--line)}
-  .prop-title:first-child{margin-top:0}
-  .swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
-  .sw{aspect-ratio:1;border-radius:7px;cursor:pointer;border:2px solid transparent;transition:transform .15s}
-  .sw:hover{transform:scale(1.1)}
-  .sw.on{border-color:var(--pink-d);box-shadow:0 0 0 2px #fff inset}
-  .selbox{background:var(--cream);border-radius:9px;padding:9px;font-size:11px;color:#666;line-height:1.5}
-  .selbtn{display:block;width:100%;margin-top:5px;padding:5px;border:none;border-radius:7px;background:var(--pink);color:#fff;cursor:pointer;font-family:inherit;font-size:11px}
-  .selbtn.del{background:#fff;color:var(--pink-d);border:2px solid var(--pink-l)}
-  .pet-info{background:linear-gradient(135deg,var(--pink-l),var(--cream));border-radius:9px;padding:8px;font-size:11px;color:var(--pink-d);line-height:1.5;margin-top:4px}
-  .pet-info b{font-size:12px}
+    /* 画布区域 */
+    .stage {
+      flex: 1 1 auto;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      background: linear-gradient(180deg, #f2efe9 0%, #e9e5df 100%);
+      overflow: hidden;
+    }
 
-  .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(20px);background:rgba(92,74,82,.95);color:#fff;padding:9px 18px;border-radius:999px;font-size:13px;opacity:0;transition:all .3s;z-index:100}
-  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .room {
+      position: relative;
+      width: 100%;
+      max-width: 640px;
+      aspect-ratio: 3/4;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      background: #ddd;
+    }
 
-  @keyframes drift{from{transform:translateX(0)}to{transform:translateX(360%)}}
-  @media(max-width:900px){.palette,.props{width:150px}.room{width:90%;max-width:520px;height:380px}}
-</style>
+    .room img.base {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .layer {
+      position: absolute;
+      pointer-events: none;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.18));
+      opacity: 0;
+      transform: scale(0.96) translateY(10px);
+    }
+
+    .layer.active {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+
+    .layer img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* 家具默认位置（基于示例图比例，可后续按素材调整） */
+    .layer-sofa { left: 6%; bottom: 18%; width: 88%; height: 34%; }
+    .layer-rug  { left: 4%; bottom: 8%; width: 92%; height: 28%; z-index: 1; }
+    .layer-chair { right: 2%; bottom: 28%; width: 38%; height: 28%; z-index: 3; }
+
+    .stage-hint {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(8px);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      color: var(--muted);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    /* 控制面板 */
+    .controls {
+      flex: 0 0 auto;
+      background: var(--card);
+      border-radius: var(--radius) var(--radius) 0 0;
+      box-shadow: 0 -4px 30px rgba(0,0,0,0.06);
+      padding: 18px 18px 28px;
+      z-index: 20;
+      max-height: 44vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      margin-bottom: 14px;
+      scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+
+    .tab {
+      flex: 0 0 auto;
+      padding: 10px 18px;
+      border-radius: 24px;
+      border: 1px solid #ece9e4;
+      background: #faf8f5;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .tab.active {
+      background: var(--ink);
+      color: #fff;
+      border-color: var(--ink);
+      box-shadow: 0 4px 12px rgba(43,43,43,0.18);
+    }
+
+    .tab .count {
+      display: inline-block;
+      margin-left: 4px;
+      font-size: 11px;
+      background: rgba(255,255,255,0.2);
+      padding: 1px 6px;
+      border-radius: 10px;
+    }
+
+    .panel {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      display: none;
+    }
+
+    .panel.active { display: block; }
+
+    .panel-title {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 0 0 12px;
+      font-weight: 600;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .option {
+      border: 2px solid #f0ede8;
+      border-radius: 14px;
+      background: #fdfcfa;
+      padding: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .option:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+    .option.selected {
+      border-color: var(--accent-2);
+      background: #fff5f2;
+      box-shadow: 0 6px 14px rgba(231,111,81,0.12);
+    }
+
+    .option-thumb {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 10px;
+      background: #f2f0ec;
+      overflow: hidden;
+      margin-bottom: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+    }
+
+    .option-thumb img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+
+    .option-name {
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.35;
+      color: var(--ink);
+    }
+
+    .option-tag {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .option.none .option-thumb {
+      background: repeating-linear-gradient(45deg, #f7f5f2, #f7f5f2 8px, #ece9e4 8px, #ece9e4 10px);
+      color: #bbb;
+      font-size: 20px;
+    }
+
+    .action-bar {
+      margin-top: 16px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      flex: 1;
+      border: none;
+      border-radius: 14px;
+      padding: 14px 18px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.2s ease;
+    }
+
+    .btn:active { transform: scale(0.98); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #e76f51 0%, #d1495b 100%);
+      color: #fff;
+      box-shadow: 0 6px 18px rgba(231,111,81,0.28);
+    }
+
+    .btn-secondary {
+      background: #f2f0ec;
+      color: var(--ink);
+    }
+
+    /* 弹窗 */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(4px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      padding: 20px;
+    }
+
+    .modal-overlay.show { display: flex; }
+
+    .modal {
+      width: 100%;
+      max-width: 380px;
+      background: var(--card);
+      border-radius: 24px;
+      padding: 28px 24px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      transform: translateY(20px) scale(0.96);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .modal-overlay.show .modal {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    .modal-icon {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      margin: 0 auto 16px;
+      background: linear-gradient(135deg, #ffe082 0%, #ffb300 100%);
+      display: grid; place-items: center;
+      font-size: 40px;
+      box-shadow: 0 8px 20px rgba(255,179,0,0.25);
+    }
+
+    .modal h2 {
+      margin: 0 0 8px;
+      font-size: 22px;
+    }
+
+    .modal p {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .reward {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff8e7;
+      color: #a67c2e;
+      padding: 10px 18px;
+      border-radius: 24px;
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 18px;
+    }
+
+    .modal .btn { width: 100%; }
+
+    /* PC 适配 */
+    @media (min-width: 900px) {
+      .app { flex-direction: row; }
+      .stage { flex: 1.35; padding: 28px; }
+      .controls {
+        flex: 0 0 360px;
+        max-height: none;
+        border-radius: 0;
+        box-shadow: -4px 0 30px rgba(0,0,0,0.05);
+        padding: 24px;
+      }
+      .room { max-width: 520px; }
+      .options { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 380px) {
+      .options { gap: 8px; }
+      .option-name { font-size: 11px; }
+      .tab { padding: 8px 14px; font-size: 13px; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- ========== 开场动画 ========== -->
-<div id="intro">
-  <div class="curtain left"></div>
-  <div class="curtain right"></div>
-  <div class="glow-ring" style="width:300px;height:300px;top:30%;left:35%"></div>
-  <div class="glow-ring" style="width:500px;height:500px;top:20%;left:25%;animation-delay:1s"></div>
-  <div id="sparkles"></div>
-  <div class="intro-title">三丽鸥小屋设计游戏</div>
-  <div class="intro-sub">SANRIO HOUSE DESIGN</div>
-  <div class="intro-chars" id="introChars"></div>
-  <button class="intro-enter" onclick="startGame()">✦ 进入小屋 ✦</button>
-</div>
+  <header>
+    <div class="brand">
+      <div class="brand-icon">🏠</div>
+      <span>我的设计小屋</span>
+    </div>
+    <div class="coins">
+      <span>🪙</span>
+      <span id="coinDisplay">0</span>
+    </div>
+  </header>
 
-<!-- ========== 主界面 ========== -->
-<div class="topbar">
-  <svg class="logo" viewBox="0 0 100 70">
-    <path d="M50 35 L8 12 Q4 10 6 16 L14 50 Q16 56 22 52 L44 38 Z" fill="#ff5a7a"/>
-    <path d="M50 35 L92 12 Q96 10 94 16 L86 50 Q84 56 78 52 L56 38 Z" fill="#ff5a7a"/>
-    <path d="M50 35 L8 12 Q4 10 6 16 L14 50 Q16 56 22 52 L44 38 Z" fill="#ff7a93" opacity=".45"/>
-    <ellipse cx="50" cy="35" rx="9" ry="11" fill="#e04560"/>
-    <circle cx="46" cy="33" r="2" fill="#ffb8c5"/>
-    <path d="M50 46 L46 64 L54 64 Z" fill="#e04560"/>
-  </svg>
-  <div class="title">三丽鸥小屋设计游戏<small>Sanrio House Design Game</small></div>
-  <div class="spacer"></div>
-  <button class="topbtn alt" onclick="randomRoom()">🎲 随机布置</button>
-  <button class="topbtn alt" onclick="clearRoom()">🗑 清空</button>
-  <button class="topbtn" onclick="saveRoom()">💾 保存</button>
-</div>
+  <main class="app">
+    <section class="stage">
+      <div class="room" id="room">
+        <img class="base" src="images/room.png" alt="现代客餐厅">
 
-<div class="main">
-  <div class="palette" id="palette"></div>
-
-  <div class="stage">
-    <div class="room" id="room">
-      <div class="ceiling"></div>
-      <div class="pendant">
-        <div class="pendant-cord"></div>
-        <div class="pendant-shade"></div>
-      </div>
-      <div class="pendant-light"></div>
-      <div class="back-wall" id="backWall">
-        <div class="window">
-          <div class="sun"></div>
-          <div class="cloud c1"></div>
-          <div class="cloud c2"></div>
-          <div class="distant"></div>
-          <div class="bird">~</div>
+        <div class="layer layer-rug" id="layer-rug">
+          <img src="" alt="地毯">
+        </div>
+        <div class="layer layer-sofa" id="layer-sofa">
+          <img src="" alt="沙发">
+        </div>
+        <div class="layer layer-chair" id="layer-chair">
+          <img src="" alt="单人椅">
         </div>
       </div>
-      <div class="wall-light"></div>
-      <div class="light-beam"></div>
-      <div class="baseboard"></div>
-      <div class="floor" id="floor">
-        <div class="sun-patch"></div>
+      <div class="stage-hint">点击下方家具卡片进行实时替换</div>
+    </section>
+
+    <section class="controls">
+      <div class="tabs" id="tabs">
+        <div class="tab active" data-cat="sofa">沙发<span class="count">0/1</span></div>
+        <div class="tab" data-cat="rug">地毯<span class="count">0/1</span></div>
+        <div class="tab" data-cat="chair">单人椅<span class="count">0/1</span></div>
       </div>
-      <div class="room-label">🧸 我的小屋</div>
-      <!-- 小猫 -->
-      <div class="pet-cat" id="petCat" onclick="petCat()">
-        <svg viewBox="0 0 60 50">
-          <!-- 尾巴 -->
-          <path class="cat-tail" d="M40 28 Q52 20 50 8 Q48 4 44 6 Q42 12 40 18" fill="none" stroke="#f4a460" stroke-width="4" stroke-linecap="round"/>
-          <!-- 身体 -->
-          <ellipse class="cat-body" cx="28" cy="32" rx="16" ry="11" fill="#ffd4a8" stroke="#d4a070" stroke-width="1.5"/>
-          <!-- 前腿 -->
-          <ellipse cx="20" cy="40" rx="4" ry="5" fill="#ffd4a8" stroke="#d4a070" stroke-width="1.5"/>
-          <ellipse cx="36" cy="40" rx="4" ry="5" fill="#ffd4a8" stroke="#d4a070" stroke-width="1.5"/>
-          <!-- 头 -->
-          <circle cx="22" cy="20" r="11" fill="#ffd4a8" stroke="#d4a070" stroke-width="1.5"/>
-          <!-- 耳朵 -->
-          <path d="M14 14 L12 6 L18 12 Z" fill="#ffd4a8" stroke="#d4a070" stroke-width="1.5" stroke-linejoin="round"/>
-          <path d="M30 14 L32 6 L26 12 Z" fill="#ffd4a8" stroke="#d4a070" stroke-width="1.5" stroke-linejoin="round"/>
-          <path d="M14 12 L13 8 L16 11 Z" fill="#ffb0c8"/>
-          <path d="M30 12 L31 8 L28 11 Z" fill="#ffb0c8"/>
-          <!-- 眼睛 -->
-          <ellipse class="cat-eye" cx="18" cy="20" rx="2" ry="2.5" fill="#4a7a3a"/>
-          <ellipse class="cat-eye" cx="26" cy="20" rx="2" ry="2.5" fill="#4a7a3a"/>
-          <circle cx="18.5" cy="19" r=".8" fill="#fff"/>
-          <circle cx="26.5" cy="19" r=".8" fill="#fff"/>
-          <!-- 鼻子嘴巴 -->
-          <path d="M22 23 L20 25 L24 25 Z" fill="#ff8fa3"/>
-          <path d="M22 25 Q20 27 18 26" stroke="#d4a070" stroke-width="1" fill="none"/>
-          <path d="M22 25 Q24 27 26 26" stroke="#d4a070" stroke-width="1" fill="none"/>
-          <!-- 胡须 -->
-          <line x1="8" y1="22" x2="14" y2="22" stroke="#d4a070" stroke-width=".8"/>
-          <line x1="8" y1="25" x2="14" y2="24" stroke="#d4a070" stroke-width=".8"/>
-          <line x1="30" y1="22" x2="36" y2="22" stroke="#d4a070" stroke-width=".8"/>
-          <line x1="30" y1="24" x2="36" y2="25" stroke="#d4a070" stroke-width=".8"/>
-          <!-- 蝴蝶结 -->
-          <path d="M22 30 L16 28 L16 34 Z" fill="#ff5a7a"/>
-          <path d="M22 30 L28 28 L28 34 Z" fill="#ff5a7a"/>
-          <circle cx="22" cy="31" r="2" fill="#e04560"/>
-        </svg>
+
+      <div class="panel active" data-panel="sofa">
+        <p class="panel-title">选择你喜欢的沙发</p>
+        <div class="options" id="sofaOptions"></div>
       </div>
+      <div class="panel" data-panel="rug">
+        <p class="panel-title">选择你喜欢的地毯</p>
+        <div class="options" id="rugOptions"></div>
+      </div>
+      <div class="panel" data-panel="chair">
+        <p class="panel-title">选择你喜欢的单人椅</p>
+        <div class="options" id="chairOptions"></div>
+      </div>
+
+      <div class="action-bar">
+        <button class="btn btn-secondary" id="resetBtn">重置</button>
+        <button class="btn btn-primary" id="finishBtn">完成我的设计</button>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <div class="modal-icon" id="modalIcon">🏆</div>
+      <h2 id="modalTitle">设计完成！</h2>
+      <p id="modalText">你的搭配很有个性。</p>
+      <div class="reward">🪙 +<span id="rewardCoins">0</span></div>
+      <button class="btn btn-primary" id="modalClose">继续设计</button>
     </div>
   </div>
 
-  <div class="props">
-    <div class="prop-title">墙面颜色</div>
-    <div class="swatches" id="wallColors"></div>
-    <div class="prop-title" style="margin-top:8px">地板样式</div>
-    <div class="swatches" id="floorStyles"></div>
-    <div class="prop-title" style="margin-top:8px">选中物品</div>
-    <div class="selbox" id="selbox">点家具可选中<br>拖动可移动<br>双击可旋转</div>
-    <div class="prop-title" style="margin-top:8px">🐱 我的小猫</div>
-    <div class="pet-info" id="petInfo">
-      <b>奶油 🐱</b><br>
-      <span id="catStatus">正在好奇地东张西望…</span><br>
-      <span style="font-size:10px;color:#999">点击小猫可以抚摸它</span>
-    </div>
-  </div>
-</div>
+  <script>
+    // 数据：家具选项（图片路径可替换为真实素材）
+    const CATALOG = {
+      sofa: [
+        { id: 'sofa_1', name: '海蓝色现代沙发', tag: '现代极简', img: 'images/sofa_1.png', emoji: '🛋️', pos: 'center' },
+        { id: 'sofa_2', name: '复古法式丝绒沙发', tag: '复古法式', img: 'images/sofa_2.png', emoji: '🎠', pos: 'center' },
+        { id: 'sofa_3', name: '原木风棉麻沙发', tag: '温馨原木', img: 'images/sofa_3.png', emoji: '🍃', pos: 'center' },
+      ],
+      rug: [
+        { id: 'rug_1', name: '毛绒白地毯', tag: '软糯奶油', img: 'images/rug_1.png', emoji: '☁️', pos: 'floor' },
+        { id: 'rug_2', name: '几何复古地毯', tag: '复古摩登', img: 'images/rug_2.png', emoji: '🔷', pos: 'floor' },
+        { id: 'rug_3', name: '极简灰色地毯', tag: '现代极简', img: 'images/rug_3.png', emoji: '⬜', pos: 'floor' },
+      ],
+      chair: [
+        { id: 'chair_1', name: '明黄色单人椅', tag: '活力撞色', img: 'images/chair_1.png', emoji: '🟡', pos: 'corner' },
+        { id: 'chair_2', name: '千鸟格懒人沙发', tag: '轻复古', img: 'images/chair_2.png', emoji: '🔳', pos: 'corner' },
+        { id: 'chair_3', name: '中古藤编椅', tag: '自然中古', img: 'images/chair_3.png', emoji: '🪑', pos: 'corner' },
+      ],
+    };
 
-<div class="toast" id="toast"></div>
+    // 状态
+    let state = {
+      sofa: null,
+      rug: null,
+      chair: null,
+      coins: parseInt(localStorage.getItem('designCoins') || '0', 10),
+    };
 
-<script>
-// ========== 开场动画 ==========
-const SVG_CHAR={
-  kitty:`<svg viewBox="0 0 60 60"><ellipse cx="30" cy="32" rx="22" ry="19" fill="#fff" stroke="#8b7355" stroke-width="2.5"/><polygon points="12,20 8,4 22,14" fill="#fff" stroke="#8b7355" stroke-width="2.5" stroke-linejoin="round"/><polygon points="48,20 52,4 38,14" fill="#fff" stroke="#8b7355" stroke-width="2.5" stroke-linejoin="round"/><g transform="translate(42 10)"><ellipse cx="-5" cy="0" rx="6" ry="4" fill="#ff5a7a" stroke="#8b7355" stroke-width="2" transform="rotate(-20)"/><ellipse cx="5" cy="0" rx="6" ry="4" fill="#ff5a7a" stroke="#8b7355" stroke-width="2" transform="rotate(20)"/><circle cx="0" cy="0" r="4" fill="#ff5a7a" stroke="#8b7355" stroke-width="1.5"/></g><ellipse cx="22" cy="32" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="38" cy="32" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="30" cy="38" rx="3" ry="2" fill="#ffcd3c" stroke="#8b7355" stroke-width="1.5"/><path d="M27 41 Q30 44 33 41" stroke="#8b7355" stroke-width="1.5" fill="none"/><line x1="10" y1="30" x2="18" y2="32" stroke="#8b7355" stroke-width="1.5"/><line x1="10" y1="36" x2="18" y2="36" stroke="#8b7355" stroke-width="1.5"/><line x1="42" y1="32" x2="50" y2="30" stroke="#8b7355" stroke-width="1.5"/><line x1="42" y1="36" x2="50" y2="36" stroke="#8b7355" stroke-width="1.5"/></svg>`,
-  cinnamon:`<svg viewBox="0 0 60 60"><ellipse cx="30" cy="34" rx="20" ry="17" fill="#fff" stroke="#8b7355" stroke-width="2.5"/><ellipse cx="10" cy="24" rx="7" ry="12" fill="#fff" stroke="#8b7355" stroke-width="2.5" transform="rotate(-20 10 24)"/><ellipse cx="50" cy="24" rx="7" ry="12" fill="#fff" stroke="#8b7355" stroke-width="2.5" transform="rotate(20 50 24)"/><path d="M14 24 Q10 18 14 14 Q18 18 14 24" fill="#a8d8f0" stroke="#8b7355" stroke-width="1.5"/><path d="M46 24 Q50 18 46 14 Q42 18 46 24" fill="#a8d8f0" stroke="#8b7355" stroke-width="1.5"/><ellipse cx="23" cy="34" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="37" cy="34" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="30" cy="40" rx="3" ry="2" fill="#c4d4e8" stroke="#8b7355" stroke-width="1.5"/><path d="M27 42 Q30 45 33 42" stroke="#8b7355" stroke-width="1.5" fill="none"/></svg>`,
-  melody:`<svg viewBox="0 0 60 60"><path d="M10 34 Q6 8 20 18 Q14 24 10 34 Z" fill="#ff8fa3" stroke="#8b7355" stroke-width="2.5" stroke-linejoin="round"/><path d="M50 34 Q54 8 40 18 Q46 24 50 34 Z" fill="#ff8fa3" stroke="#8b7355" stroke-width="2.5" stroke-linejoin="round"/><ellipse cx="14" cy="14" rx="6" ry="9" fill="#ff8fa3" stroke="#8b7355" stroke-width="2" transform="rotate(-15 14 14)"/><ellipse cx="46" cy="14" rx="6" ry="9" fill="#ff8fa3" stroke="#8b7355" stroke-width="2" transform="rotate(15 46 14)"/><circle cx="38" cy="10" r="4" fill="#fff" stroke="#8b7355" stroke-width="1.5"/><circle cx="39" cy="9" r="1.2" fill="#ffcd3c"/><circle cx="30" cy="34" r="18" fill="#fff" stroke="#8b7355" stroke-width="2.5"/><ellipse cx="23" cy="34" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="37" cy="34" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="30" cy="40" rx="3" ry="2" fill="#ffcd3c" stroke="#8b7355" stroke-width="1.5"/><path d="M27 42 Q30 45 33 42" stroke="#8b7355" stroke-width="1.5" fill="none"/></svg>`,
-  purin:`<svg viewBox="0 0 60 60"><ellipse cx="30" cy="34" rx="21" ry="18" fill="#ffe08a" stroke="#8b7355" stroke-width="2.5"/><ellipse cx="14" cy="24" rx="5" ry="9" fill="#ffe08a" stroke="#8b7355" stroke-width="2" transform="rotate(-20 14 24)"/><ellipse cx="46" cy="24" rx="5" ry="9" fill="#ffe08a" stroke="#8b7355" stroke-width="2" transform="rotate(20 46 24)"/><ellipse cx="30" cy="14" rx="10" ry="6" fill="#b67c52" stroke="#8b7355" stroke-width="2"/><rect x="25" y="8" width="10" height="4" rx="2" fill="#8b5a36"/><ellipse cx="23" cy="34" rx="2" ry="3" fill="#3a3a4a"/><ellipse cx="37" cy="34" rx="2" ry="3" fill="#3a3a4a"/><ellipse cx="30" cy="40" rx="3" ry="2" fill="#c4a86b" stroke="#8b7355" stroke-width="1.5"/><path d="M27 42 Q30 45 33 42" stroke="#8b7355" stroke-width="1.5" fill="none"/></svg>`,
-  kuromi:`<svg viewBox="0 0 60 60"><ellipse cx="30" cy="34" rx="21" ry="18" fill="#4a3a52" stroke="#8b7355" stroke-width="2.5"/><polygon points="12,22 6,4 22,14" fill="#4a3a52" stroke="#8b7355" stroke-width="2.5" stroke-linejoin="round"/><polygon points="48,22 54,4 38,14" fill="#4a3a52" stroke="#8b7355" stroke-width="2.5" stroke-linejoin="round"/><polygon points="12,22 8,10 18,18" fill="#ff8fa3" stroke="#8b7355" stroke-width="1.5" stroke-linejoin="round"/><polygon points="48,22 52,10 42,18" fill="#ff8fa3" stroke="#8b7355" stroke-width="1.5" stroke-linejoin="round"/><ellipse cx="30" cy="36" rx="13" ry="11" fill="#fff" stroke="#8b7355" stroke-width="2"/><ellipse cx="23" cy="34" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="37" cy="34" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="30" cy="40" rx="3" ry="2" fill="#ff8fa3" stroke="#8b7355" stroke-width="1.5"/><path d="M27 42 Q30 45 33 42" stroke="#8b7355" stroke-width="1.5" fill="none"/><circle cx="30" cy="10" r="5" fill="#ff8fa3" stroke="#8b7355" stroke-width="1.5"/><circle cx="26" cy="10" r="1.5" fill="#3a3a4a"/><circle cx="34" cy="10" r="1.5" fill="#3a3a4a"/><circle cx="30" cy="7" r="1.5" fill="#3a3a4a"/></svg>`,
-  girl:`<svg viewBox="0 0 70 110"><ellipse cx="35" cy="106" rx="20" ry="4" fill="rgba(80,60,40,.12)"/><rect x="26" y="78" width="8" height="26" fill="#f4d4b8" rx="3"/><rect x="36" y="78" width="8" height="26" fill="#f4d4b8" rx="3"/><ellipse cx="30" cy="104" rx="7" ry="4" fill="#d4a5b5"/><ellipse cx="40" cy="104" rx="7" ry="4" fill="#d4a5b5"/><path d="M18 50 Q18 46 22 44 L48 44 Q52 46 52 50 L56 80 Q35 86 14 80 Z" fill="#ff8fa3" stroke="#e8677e" stroke-width="1.5"/><path d="M14 80 Q35 86 56 80 L54 84 Q35 90 16 84 Z" fill="#fff8ee"/><path d="M35 52 L28 48 L28 56 Z" fill="#e8677e"/><path d="M35 52 L42 48 L42 56 Z" fill="#e8677e"/><circle cx="35" cy="52" r="3" fill="#ff5a7a"/><ellipse cx="14" cy="58" rx="5" ry="14" fill="#f4d4b8" transform="rotate(-10 14 58)"/><ellipse cx="56" cy="58" rx="5" ry="14" fill="#f4d4b8" transform="rotate(10 56 58)"/><circle cx="12" cy="70" r="4" fill="#f4d4b8"/><circle cx="58" cy="70" r="4" fill="#f4d4b8"/><line x1="58" y1="68" x2="60" y2="60" stroke="#7da87b" stroke-width="2"/><circle cx="60" cy="58" r="4" fill="#ffe89a"/><circle cx="58" cy="56" r="3" fill="#ff8fa3"/><rect x="31" y="38" width="8" height="8" fill="#f4d4b8"/><circle cx="35" cy="26" r="16" fill="#fde4cc"/><path d="M19 26 Q16 10 35 8 Q54 10 51 26 L52 56 Q48 58 46 52 L44 30 Q35 36 26 30 L24 52 Q22 58 18 56 Z" fill="#9b6b4a"/><path d="M21 20 Q25 12 35 10 Q45 12 49 20 Q45 18 40 20 Q35 16 30 20 Q25 18 21 20" fill="#9b6b4a"/><path d="M35 10 L28 6 L28 14 Z" fill="#ff5a7a"/><path d="M35 10 L42 6 L42 14 Z" fill="#ff5a7a"/><circle cx="35" cy="10" r="2.5" fill="#e04560"/><ellipse cx="28" cy="26" rx="3" ry="4" fill="#4a3a5a"/><ellipse cx="42" cy="26" rx="3" ry="4" fill="#4a3a4a"/><circle cx="29" cy="25" r="1.2" fill="#fff"/><circle cx="43" cy="25" r="1.2" fill="#fff"/><circle cx="24" cy="30" r="2.5" fill="#ffb8c8" opacity=".5"/><circle cx="46" cy="30" r="2.5" fill="#ffb8c8" opacity=".5"/><circle cx="35" cy="30" r=".8" fill="#e8b8a0"/><path d="M32 33 Q35 35 38 33" stroke="#e8677e" stroke-width="1.5" fill="none"/></svg>`,
-  boy:`<svg viewBox="0 0 70 110"><ellipse cx="35" cy="106" rx="20" ry="4" fill="rgba(80,60,40,.12)"/><rect x="26" y="78" width="8" height="26" fill="#3a4a6a" rx="3"/><rect x="36" y="78" width="8" height="26" fill="#3a4a6a" rx="3"/><ellipse cx="30" cy="104" rx="7" ry="4" fill="#2a2a3a"/><ellipse cx="40" cy="104" rx="7" ry="4" fill="#2a2a3a"/><path d="M22 60 Q22 56 26 54 L44 54 Q48 56 48 60 L48 80 Q35 84 22 80 Z" fill="#3a4a6a"/><path d="M16 42 Q16 38 20 36 L50 36 Q54 38 54 42 L56 64 Q35 68 14 64 Z" fill="#5a7aba" stroke="#4a6aaa" stroke-width="1.5"/><path d="M28 36 L42 36 L40 54 L30 54 Z" fill="#fff8ee"/><path d="M33 38 L37 38 L36 50 L34 50 Z" fill="#c45a5a"/><ellipse cx="14" cy="50" rx="5" ry="14" fill="#5a7aba" transform="rotate(-8 14 50)"/><ellipse cx="56" cy="50" rx="5" ry="14" fill="#5a7aba" transform="rotate(8 56 50)"/><circle cx="12" cy="62" r="4" fill="#f4d4b8"/><circle cx="58" cy="62" r="4" fill="#f4d4b8"/><rect x="31" y="30" width="8" height="8" fill="#f4d4b8"/><circle cx="35" cy="20" r="15" fill="#fde4cc"/><path d="M20 18 Q18 4 35 4 Q52 4 50 18 Q48 14 44 16 Q40 10 35 12 Q30 10 26 16 Q22 14 20 18" fill="#3a2a1a"/><path d="M20 18 Q19 24 21 28 L22 22 Z" fill="#3a2a1a"/><path d="M50 18 Q51 24 49 28 L48 22 Z" fill="#3a2a1a"/><ellipse cx="28" cy="20" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="42" cy="20" rx="2.5" ry="3.5" fill="#3a3a4a"/><circle cx="29" cy="19" r="1" fill="#fff"/><circle cx="43" cy="19" r="1" fill="#fff"/><path d="M25 15 L31 14" stroke="#3a2a1a" stroke-width="1.5" stroke-linecap="round"/><path d="M39 14 L45 15" stroke="#3a2a1a" stroke-width="1.5" stroke-linecap="round"/><circle cx="35" cy="24" r=".8" fill="#e8b8a0"/><path d="M32 27 Q35 29 38 27" stroke="#c45a5a" stroke-width="1.5" fill="none"/></svg>`,
-  yier:`<svg viewBox="0 0 60 60"><ellipse cx="30" cy="52" rx="18" ry="4" fill="rgba(80,60,40,.12)"/><ellipse cx="30" cy="36" rx="19" ry="17" fill="#fff8f0" stroke="#8b7355" stroke-width="2.5"/><ellipse cx="13" cy="38" rx="5" ry="9" fill="#fff8f0" stroke="#8b7355" stroke-width="2" transform="rotate(-20 13 38)"/><ellipse cx="47" cy="38" rx="5" ry="9" fill="#fff8f0" stroke="#8b7355" stroke-width="2" transform="rotate(20 47 38)"/><ellipse cx="24" cy="51" rx="6" ry="3" fill="#fff8f0" stroke="#8b7355" stroke-width="2"/><ellipse cx="36" cy="51" rx="6" ry="3" fill="#fff8f0" stroke="#8b7355" stroke-width="2"/><g transform="translate(30 16)"><circle cx="0" cy="0" r="4" fill="#ff8fa3" stroke="#8b7355" stroke-width="1.5"/><ellipse cx="-7" cy="-1" rx="5" ry="3.5" fill="#ff8fa3" stroke="#8b7355" stroke-width="1" transform="rotate(-20)"/><ellipse cx="7" cy="-1" rx="5" ry="3.5" fill="#ff8fa3" stroke="#8b7355" stroke-width="1" transform="rotate(20)"/><circle cx="0" cy="0" r="1.5" fill="#e04560"/></g><ellipse cx="23" cy="33" rx="2" ry="3" fill="#3a3a4a"/><ellipse cx="37" cy="33" rx="2" ry="3" fill="#3a3a4a"/><circle cx="24" cy="32" r="1" fill="#fff"/><circle cx="38" cy="32" r="1" fill="#fff"/><circle cx="17" cy="37" r="3" fill="#ffc8d0" opacity=".5"/><circle cx="43" cy="37" r="3" fill="#ffc8d0" opacity=".5"/><path d="M27 39 Q30 42 33 39" stroke="#8b7355" stroke-width="1.5" fill="none"/></svg>`,
-  bubu:`<svg viewBox="0 0 60 60"><ellipse cx="30" cy="52" rx="18" ry="4" fill="rgba(80,60,40,.12)"/><ellipse cx="30" cy="36" rx="19" ry="17" fill="#c4a070" stroke="#8b7355" stroke-width="2.5"/><ellipse cx="13" cy="38" rx="5" ry="9" fill="#c4a070" stroke="#8b7355" stroke-width="2" transform="rotate(-20 13 38)"/><ellipse cx="47" cy="38" rx="5" ry="9" fill="#c4a070" stroke="#8b7355" stroke-width="2" transform="rotate(20 47 38)"/><ellipse cx="24" cy="51" rx="6" ry="3" fill="#c4a070" stroke="#8b7355" stroke-width="2"/><ellipse cx="36" cy="51" rx="6" ry="3" fill="#c4a070" stroke="#8b7355" stroke-width="2"/><g transform="translate(30 15)"><path d="M0 6 Q-5 -4 0 -6 Q5 -4 0 6" fill="#7da87b" stroke="#8b7355" stroke-width="1.5"/><ellipse cx="0" cy="-2" rx="3" ry="5" fill="#8fb98a" stroke="#8b7355" stroke-width="1.5" transform="rotate(35)"/><path d="M-1 -6 L0 -8 L1 -6" stroke="#8b7355" stroke-width="1"/></g><ellipse cx="23" cy="33" rx="2" ry="3" fill="#3a3a4a"/><ellipse cx="37" cy="33" rx="2" ry="3" fill="#3a3a4a"/><circle cx="24" cy="32" r="1" fill="#fff"/><circle cx="38" cy="32" r="1" fill="#fff"/><circle cx="17" cy="37" r="3" fill="#ffc8d0" opacity=".5"/><circle cx="43" cy="37" r="3" fill="#ffc8d0" opacity=".5"/><path d="M27 39 Q30 42 33 39" stroke="#8b7355" stroke-width="1.5" fill="none"/></svg>`,
-};
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => document.querySelectorAll(sel);
 
-// 生成星光
-const sparkleContainer=document.getElementById('sparkles');
-for(let i=0;i<40;i++){
-  const s=document.createElement('div');s.className='sparkle'+(Math.random()>.7?' big':'');
-  s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';
-  s.style.animationDelay=Math.random()*3+'s';s.style.animationDuration=(2+Math.random()*3)+'s';
-  sparkleContainer.appendChild(s);
-}
-// 开场角色
-const introChars=document.getElementById('introChars');
-['kitty','cinnamon','melody','purin','kuromi','girl','boy','yier','bubu'].forEach(k=>{
-  const d=document.createElement('div');d.className='intro-char';d.innerHTML=SVG_CHAR[k];
-  introChars.appendChild(d);
-});
+    // 初始化金币显示
+    $('#coinDisplay').textContent = state.coins;
 
-let gameStarted=false;
-function startGame(){
-  if(gameStarted)return;gameStarted=true;
-  const intro=document.getElementById('intro');
-  intro.classList.add('opening');
-  setTimeout(()=>{intro.classList.add('gone');setTimeout(()=>intro.remove(),1300);},1500);
-  setTimeout(()=>{toast('欢迎来到三丽鸥小屋！🐱 点击小猫可以抚摸它');initCat();},2200);
-}
-// 自动开始（5秒后如果没点击）
-setTimeout(()=>{if(!gameStarted)startGame();},8000);
+    // 渲染选项卡片
+    function renderOptions(cat) {
+      const container = $(`#${cat}Options`);
+      container.innerHTML = '';
 
-// ========== 立体 SVG 家具库 ==========
-const SVG={
-  bed:`<svg viewBox="0 0 100 80"><rect x="8" y="44" width="84" height="14" fill="#d4a5b5" rx="3"/><rect x="8" y="20" width="84" height="28" fill="#f4b8c4" rx="4"/><rect x="14" y="28" width="30" height="16" fill="#fff" rx="3"/><rect x="48" y="28" width="38" height="16" fill="#ffe8ee" rx="3"/><rect x="8" y="16" width="84" height="10" fill="#e89aac" rx="3"/><circle cx="20" cy="21" r="2" fill="#fff"/></svg>`,
-  sofa:`<svg viewBox="0 0 100 75"><rect x="8" y="40" width="84" height="20" fill="#8fd3a8" rx="6"/><rect x="8" y="22" width="84" height="24" fill="#a8e6c0" rx="6"/><rect x="6" y="38" width="16" height="26" fill="#7dc998" rx="5"/><rect x="78" y="38" width="16" height="26" fill="#7dc998" rx="5"/><rect x="22" y="44" width="26" height="14" fill="#fff" rx="4" opacity=".8"/><rect x="52" y="44" width="26" height="14" fill="#fff" rx="4" opacity=".8"/></svg>`,
-  chair:`<svg viewBox="0 0 60 75"><rect x="14" y="8" width="32" height="30" fill="#c9a87c" rx="4"/><rect x="10" y="36" width="40" height="12" fill="#d4b88c" rx="3"/><rect x="14" y="48" width="7" height="22" fill="#a88660"/><rect x="39" y="48" width="7" height="22" fill="#a88660"/></svg>`,
-  table:`<svg viewBox="0 0 100 60"><rect x="6" y="20" width="88" height="10" fill="#d4b88c" rx="3"/><rect x="6" y="28" width="88" height="6" fill="#b89868"/><rect x="12" y="34" width="8" height="22" fill="#a88660"/><rect x="80" y="34" width="8" height="22" fill="#a88660"/></svg>`,
-  wardrobe:`<svg viewBox="0 0 70 95"><rect x="6" y="8" width="58" height="80" fill="#fff8ee" rx="4" stroke="#e0d4bc" stroke-width="2"/><rect x="8" y="10" width="27" height="76" fill="#fff" rx="3"/><rect x="35" y="10" width="27" height="76" fill="#fff3e0" rx="3"/><circle cx="32" cy="48" r="2.5" fill="#c9a87c"/><circle cx="38" cy="48" r="2.5" fill="#c9a87c"/><rect x="6" y="84" width="58" height="6" fill="#e0d4bc" rx="2"/></svg>`,
-  tv:`<svg viewBox="0 0 90 65"><rect x="6" y="6" width="78" height="44" fill="#3a3a4a" rx="4"/><rect x="10" y="10" width="70" height="36" fill="#a8d8f0" rx="2"/><circle cx="20" cy="22" r="5" fill="#ffe89a"/><path d="M10 40 L30 24 L45 34 L60 20 L80 40 Z" fill="#7da87b"/><rect x="30" y="50" width="30" height="8" fill="#5a5a6a"/><rect x="20" y="56" width="50" height="5" fill="#4a4a5a" rx="2"/></svg>`,
-  lamp:`<svg viewBox="0 0 50 80"><path d="M15 18 L35 18 L30 6 L20 6 Z" fill="#ffe89a"/><rect x="23" y="18" width="4" height="42" fill="#c9a87c"/><ellipse cx="25" cy="64" rx="14" ry="5" fill="#c9a87c"/><circle cx="25" cy="20" r="8" fill="#fff8c8" opacity=".7"/></svg>`,
-  rug:`<svg viewBox="0 0 110 70"><ellipse cx="55" cy="35" rx="50" ry="28" fill="#ff8fa3"/><ellipse cx="55" cy="35" rx="42" ry="22" fill="#ffd6df"/><ellipse cx="55" cy="35" rx="30" ry="15" fill="#ff8fa3" opacity=".5"/><circle cx="55" cy="35" r="8" fill="#ffe89a"/></svg>`,
-  plant:`<svg viewBox="0 0 55 75"><path d="M14 50 L41 50 L37 72 L18 72 Z" fill="#d88a7a"/><ellipse cx="27.5" cy="50" rx="14" ry="4" fill="#e89aac"/><ellipse cx="20" cy="32" rx="12" ry="16" fill="#7da87b" transform="rotate(-20 20 32)"/><ellipse cx="36" cy="30" rx="12" ry="16" fill="#8fb98a" transform="rotate(20 36 30)"/><ellipse cx="28" cy="22" rx="10" ry="14" fill="#7da87b"/><circle cx="28" cy="16" r="4" fill="#ff8fa3"/></svg>`,
-  flower:`<svg viewBox="0 0 50 75"><path d="M18 40 L32 40 L30 70 L20 70 Z" fill="#a8d8f0"/><ellipse cx="25" cy="40" rx="10" ry="3" fill="#c9a87c"/><circle cx="25" cy="22" r="8" fill="#ff8fa3"/><circle cx="25" cy="22" r="3" fill="#ffe89a"/><circle cx="18" cy="28" r="5" fill="#a8d8f0"/><circle cx="32" cy="28" r="5" fill="#ffe89a"/><circle cx="25" cy="14" r="5" fill="#d4b8e6"/></svg>`,
-  shelf:`<svg viewBox="0 0 80 60"><rect x="4" y="10" width="72" height="8" fill="#c9a87c" rx="2"/><rect x="4" y="26" width="72" height="8" fill="#c9a87c" rx="2"/><rect x="4" y="42" width="72" height="8" fill="#c9a87c" rx="2"/><rect x="10" y="12" width="8" height="6" fill="#ff8fa3"/><rect x="20" y="11" width="8" height="7" fill="#a8d8f0"/><rect x="30" y="12" width="8" height="6" fill="#ffe89a"/><rect x="14" y="28" width="8" height="6" fill="#d4b8e6"/><rect x="26" y="27" width="8" height="7" fill="#8fd3a8"/><circle cx="50" cy="32" r="5" fill="#ff8fa3"/><circle cx="48" cy="46" r="5" fill="#a8d8f0"/></svg>`,
-  kitty:SVG_CHAR.kitty, cinnamon:SVG_CHAR.cinnamon, melody:SVG_CHAR.melody, purin:SVG_CHAR.purin, kuromi:SVG_CHAR.kuromi,
-  girl:`<svg viewBox="0 0 70 110"><ellipse cx="35" cy="106" rx="20" ry="4" fill="rgba(80,60,40,.12)"/><rect x="26" y="78" width="8" height="26" fill="#f4d4b8" rx="3"/><rect x="36" y="78" width="8" height="26" fill="#f4d4b8" rx="3"/><ellipse cx="30" cy="104" rx="7" ry="4" fill="#d4a5b5"/><ellipse cx="40" cy="104" rx="7" ry="4" fill="#d4a5b5"/><path d="M18 50 Q18 46 22 44 L48 44 Q52 46 52 50 L56 80 Q35 86 14 80 Z" fill="#ff8fa3" stroke="#e8677e" stroke-width="1.5"/><path d="M14 80 Q35 86 56 80 L54 84 Q35 90 16 84 Z" fill="#fff8ee"/><path d="M35 52 L28 48 L28 56 Z" fill="#e8677e"/><path d="M35 52 L42 48 L42 56 Z" fill="#e8677e"/><circle cx="35" cy="52" r="3" fill="#ff5a7a"/><ellipse cx="14" cy="58" rx="5" ry="14" fill="#f4d4b8" transform="rotate(-10 14 58)"/><ellipse cx="56" cy="58" rx="5" ry="14" fill="#f4d4b8" transform="rotate(10 56 58)"/><circle cx="12" cy="70" r="4" fill="#f4d4b8"/><circle cx="58" cy="70" r="4" fill="#f4d4b8"/><line x1="58" y1="68" x2="60" y2="60" stroke="#7da87b" stroke-width="2"/><circle cx="60" cy="58" r="4" fill="#ffe89a"/><circle cx="58" cy="56" r="3" fill="#ff8fa3"/><rect x="31" y="38" width="8" height="8" fill="#f4d4b8"/><circle cx="35" cy="26" r="16" fill="#fde4cc"/><path d="M19 26 Q16 10 35 8 Q54 10 51 26 L52 56 Q48 58 46 52 L44 30 Q35 36 26 30 L24 52 Q22 58 18 56 Z" fill="#9b6b4a"/><path d="M21 20 Q25 12 35 10 Q45 12 49 20 Q45 18 40 20 Q35 16 30 20 Q25 18 21 20" fill="#9b6b4a"/><path d="M35 10 L28 6 L28 14 Z" fill="#ff5a7a"/><path d="M35 10 L42 6 L42 14 Z" fill="#ff5a7a"/><circle cx="35" cy="10" r="2.5" fill="#e04560"/><ellipse cx="28" cy="26" rx="3" ry="4" fill="#4a3a5a"/><ellipse cx="42" cy="26" rx="3" ry="4" fill="#4a3a5a"/><circle cx="29" cy="25" r="1.2" fill="#fff"/><circle cx="43" cy="25" r="1.2" fill="#fff"/><circle cx="24" cy="30" r="2.5" fill="#ffb8c8" opacity=".5"/><circle cx="46" cy="30" r="2.5" fill="#ffb8c8" opacity=".5"/><circle cx="35" cy="30" r=".8" fill="#e8b8a0"/><path d="M32 33 Q35 35 38 33" stroke="#e8677e" stroke-width="1.5" fill="none"/></svg>`,
-  boy:`<svg viewBox="0 0 70 110"><ellipse cx="35" cy="106" rx="20" ry="4" fill="rgba(80,60,40,.12)"/><rect x="26" y="78" width="8" height="26" fill="#3a4a6a" rx="3"/><rect x="36" y="78" width="8" height="26" fill="#3a4a6a" rx="3"/><ellipse cx="30" cy="104" rx="7" ry="4" fill="#2a2a3a"/><ellipse cx="40" cy="104" rx="7" ry="4" fill="#2a2a3a"/><path d="M22 60 Q22 56 26 54 L44 54 Q48 56 48 60 L48 80 Q35 84 22 80 Z" fill="#3a4a6a"/><path d="M16 42 Q16 38 20 36 L50 36 Q54 38 54 42 L56 64 Q35 68 14 64 Z" fill="#5a7aba" stroke="#4a6aaa" stroke-width="1.5"/><path d="M28 36 L42 36 L40 54 L30 54 Z" fill="#fff8ee"/><path d="M33 38 L37 38 L36 50 L34 50 Z" fill="#c45a5a"/><ellipse cx="14" cy="50" rx="5" ry="14" fill="#5a7aba" transform="rotate(-8 14 50)"/><ellipse cx="56" cy="50" rx="5" ry="14" fill="#5a7aba" transform="rotate(8 56 50)"/><circle cx="12" cy="62" r="4" fill="#f4d4b8"/><circle cx="58" cy="62" r="4" fill="#f4d4b8"/><rect x="31" y="30" width="8" height="8" fill="#f4d4b8"/><circle cx="35" cy="20" r="15" fill="#fde4cc"/><path d="M20 18 Q18 4 35 4 Q52 4 50 18 Q48 14 44 16 Q40 10 35 12 Q30 10 26 16 Q22 14 20 18" fill="#3a2a1a"/><path d="M20 18 Q19 24 21 28 L22 22 Z" fill="#3a2a1a"/><path d="M50 18 Q51 24 49 28 L48 22 Z" fill="#3a2a1a"/><ellipse cx="28" cy="20" rx="2.5" ry="3.5" fill="#3a3a4a"/><ellipse cx="42" cy="20" rx="2.5" ry="3.5" fill="#3a3a4a"/><circle cx="29" cy="19" r="1" fill="#fff"/><circle cx="43" cy="19" r="1" fill="#fff"/><path d="M25 15 L31 14" stroke="#3a2a1a" stroke-width="1.5" stroke-linecap="round"/><path d="M39 14 L45 15" stroke="#3a2a1a" stroke-width="1.5" stroke-linecap="round"/><circle cx="35" cy="24" r=".8" fill="#e8b8a0"/><path d="M32 27 Q35 29 38 27" stroke="#c45a5a" stroke-width="1.5" fill="none"/></svg>`,
-  yier:SVG_CHAR.yier, bubu:SVG_CHAR.bubu,
-};
+      // 不选/移除选项
+      const none = document.createElement('div');
+      none.className = `option none ${state[cat] === null ? 'selected' : ''}`;
+      none.innerHTML = `
+        <div class="option-thumb">🚫</div>
+        <div class="option-name">不摆放</div>
+        <div class="option-tag">保持空旷</div>
+      `;
+      none.addEventListener('click', () => selectItem(cat, null));
+      container.appendChild(none);
 
-const FURNITURE=[
-  {cat:'家具',items:[
-    {t:'bed',n:'小床',svg:'bed',w:96,h:72},
-    {t:'sofa',n:'沙发',svg:'sofa',w:104,h:70},
-    {t:'chair',n:'椅子',svg:'chair',w:52,h:62},
-    {t:'table',n:'桌子',svg:'table',w:96,h:52},
-    {t:'wardrobe',n:'衣柜',svg:'wardrobe',w:68,h:86},
-    {t:'tv',n:'电视',svg:'tv',w:82,h:58},
-    {t:'lamp',n:'台灯',svg:'lamp',w:46,h:70},
-    {t:'shelf',n:'书架',svg:'shelf',w:78,h:56},
-  ]},
-  {cat:'装饰',items:[
-    {t:'rug',n:'地毯',svg:'rug',w:108,h:66},
-    {t:'flower',n:'花瓶',svg:'flower',w:46,h:68},
-  ]},
-  {cat:'植物',items:[
-    {t:'plant',n:'盆栽',svg:'plant',w:50,h:68},
-  ]},
-  {cat:'三丽鸥',items:[
-    {t:'kitty',n:'凯蒂猫',svg:'kitty',w:56,h:56},
-    {t:'cinnamon',n:'玉桂狗',svg:'cinnamon',w:56,h:56},
-    {t:'melody',n:'美乐蒂',svg:'melody',w:56,h:56},
-    {t:'purin',n:'布丁狗',svg:'purin',w:56,h:56},
-    {t:'kuromi',n:'库洛米',svg:'kuromi',w:56,h:56},
-  ]},
-  {cat:'主人公',items:[
-    {t:'girl',n:'小美',svg:'girl',w:56,h:88},
-    {t:'boy',n:'小帅',svg:'boy',w:56,h:88},
-  ]},
-  {cat:'小伙伴',items:[
-    {t:'yier',n:'一二',svg:'yier',w:56,h:56},
-    {t:'bubu',n:'布布',svg:'bubu',w:56,h:56},
-  ]},
-];
+      CATALOG[cat].forEach((item) => {
+        const el = document.createElement('div');
+        el.className = `option ${state[cat] === item.id ? 'selected' : ''}`;
+        el.innerHTML = `
+          <div class="option-thumb">
+            ${item.img ? `<img src="${item.img}" alt="${item.name}" onerror="this.style.display='none'; this.parentElement.textContent='${item.emoji}'">` : item.emoji}
+          </div>
+          <div class="option-name">${item.name}</div>
+          <div class="option-tag">${item.tag}</div>
+        `;
+        el.addEventListener('click', () => selectItem(cat, item.id));
+        container.appendChild(el);
+      });
+    }
 
-const WALL_COLORS=[
-  {n:'薄荷绿',c1:'#d4e4c3',c2:'#c2d6ae'},{n:'樱花粉',c1:'#ffd6df',c2:'#f4b8c4'},
-  {n:'天空蓝',c1:'#c4dcef',c2:'#a8d8f0'},{n:'柠檬黄',c1:'#ffe89a',c2:'#ffe066'},
-  {n:'薰衣紫',c1:'#e0c6f0',c2:'#d4b8e6'},{n:'奶油白',c1:'#fff8ee',c2:'#f0e4d0'},
-  {n:'蜜桃橙',c1:'#ffd4b8',c2:'#ffb88a'},{n:'珊瑚红',c1:'#ffb0b8',c2:'#ff8a96'},
-];
-const FLOOR_STYLES=[
-  {n:'原木',c1:'#e8d4b0',c2:'#d4c096'},{n:'暖棕',c1:'#d4b88c',c2:'#b89868'},
-  {n:'白砖',c1:'#f5f5f5',c2:'#e8e8e8'},{n:'粉砖',c1:'#ffe0e8',c2:'#ffc4d4'},
-  {n:'绿格',c1:'#d8eccf',c2:'#b8d8a8'},{n:'蓝砖',c1:'#d8e8f5',c2:'#b8d0e8'},
-  {n:'米色',c1:'#f0e8d8',c2:'#e0d4bc'},{n:'灰石',c1:'#e8e8e8',c2:'#d0d0d0'},
-];
+    // 切换选中
+    function selectItem(cat, id) {
+      state[cat] = id;
+      renderOptions(cat);
+      updateLayer(cat);
+      updateTabCounts();
+    }
 
-// 渲染家具库
-const palette=document.getElementById('palette');
-FURNITURE.forEach(g=>{
-  const t=document.createElement('div');t.className='cat-title';t.textContent=g.cat;
-  const items=document.createElement('div');items.className='items';
-  g.items.forEach(it=>{
-    const d=document.createElement('div');d.className='item';d.draggable=true;
-    d.innerHTML=SVG[it.svg]+`<div class="nm">${it.n}</div>`;
-    d.addEventListener('click',()=>addFurniture(it));
-    d.addEventListener('dragstart',e=>e.dataTransfer.setData('text',JSON.stringify(it)));
-    items.appendChild(d);
-  });
-  palette.appendChild(t);palette.appendChild(items);
-});
+    // 更新画布图层
+    function updateLayer(cat) {
+      const layer = $(`#layer-${cat}`);
+      const item = CATALOG[cat].find((x) => x.id === state[cat]);
 
-// 色板
-const wallBox=document.getElementById('wallColors');
-WALL_COLORS.forEach((c,i)=>{
-  const s=document.createElement('div');s.className='sw'+(i===0?' on':'');s.style.background=`linear-gradient(180deg,${c.c1},${c.c2})`;s.title=c.n;
-  s.onclick=()=>{document.querySelectorAll('#wallColors .sw').forEach(x=>x.classList.remove('on'));s.classList.add('on');
-    document.getElementById('backWall').style.background=`linear-gradient(180deg,${c.c1},${c.c2})`;toast('墙面：'+c.n)};
-  wallBox.appendChild(s);
-});
-const floorBox=document.getElementById('floorStyles');
-FLOOR_STYLES.forEach((c,i)=>{
-  const s=document.createElement('div');s.className='sw'+(i===0?' on':'');s.style.background=`linear-gradient(180deg,${c.c1},${c.c2})`;s.title=c.n;
-  s.onclick=()=>{document.querySelectorAll('#floorStyles .sw').forEach(x=>x.classList.remove('on'));s.classList.add('on');
-    document.getElementById('floor').style.background=`linear-gradient(180deg,${c.c1},${c.c2})`;toast('地板：'+c.n)};
-  floorBox.appendChild(s);
-});
+      if (!item) {
+        layer.classList.remove('active');
+        layer.querySelector('img').src = '';
+        return;
+      }
 
-// 房间逻辑
-const room=document.getElementById('room');
-let selected=null,zTop=5;
+      const img = layer.querySelector('img');
+      img.src = item.img;
+      img.alt = item.name;
+      layer.classList.add('active');
+    }
 
-function addFurniture(it){
-  const x=room.clientWidth/2-it.w/2+(Math.random()*60-30);
-  const y=room.clientHeight-it.h-20-(Math.random()*40);
-  createPlaced(it,x,y);toast('已添加：'+it.n);
-}
-function createPlaced(it,x,y){
-  const el=document.createElement('div');el.className='placed';
-  el.style.width=it.w+'px';el.style.height=it.h+'px';
-  el.style.left=Math.max(4,Math.min(x,room.clientWidth-it.w-4))+'px';
-  el.style.top=Math.max(18,Math.min(y,room.clientHeight-it.h-4))+'px';
-  el.style.zIndex=++zTop;el.dataset.n=it.n;el.dataset.t=it.t;
-  el.innerHTML=SVG[it.svg]+`<div class="del" onclick="event.stopPropagation();removePlaced(this.parentElement)">×</div>`;
-  el.onclick=e=>{e.stopPropagation();selectPlaced(el)};
-  enableDrag(el);room.appendChild(el);selectPlaced(el);
-}
-function enableDrag(el){
-  let sx,sy,ox,oy,drag=false;
-  const down=(cx,cy)=>{drag=true;sx=cx;sy=cy;ox=el.offsetLeft;oy=el.offsetTop;el.style.zIndex=++zTop;};
-  const move=(cx,cy)=>{if(!drag)return;let nx=ox+cx-sx,ny=oy+cy-sy;
-    nx=Math.max(4,Math.min(nx,room.clientWidth-el.offsetWidth-4));
-    ny=Math.max(18,Math.min(ny,room.clientHeight-el.offsetHeight-4));
-    el.style.left=nx+'px';el.style.top=ny+'px';};
-  el.addEventListener('mousedown',e=>{if(e.target.classList.contains('del'))return;down(e.clientX,e.clientY);e.preventDefault();});
-  document.addEventListener('mousemove',e=>move(e.clientX,e.clientY));
-  document.addEventListener('mouseup',()=>drag=false);
-  el.addEventListener('touchstart',e=>{if(e.target.classList.contains('del'))return;const t=e.touches[0];down(t.clientX,t.clientY);},{passive:true});
-  el.addEventListener('touchmove',e=>{const t=e.touches[0];move(t.clientX,t.clientY);e.preventDefault();},{passive:false});
-  el.addEventListener('touchend',()=>drag=false);
-}
-function selectPlaced(el){
-  document.querySelectorAll('.placed').forEach(x=>x.classList.remove('selected'));
-  el.classList.add('selected');selected=el;
-  document.getElementById('selbox').innerHTML=`已选中：<b>${el.dataset.n}</b><br>拖动移动 · 双击旋转<br>`+
-    `<button class="selbtn" onclick="rotateSelected()">🔄 旋转</button>`+
-    `<button class="selbtn del" onclick="removeSelected()">🗑 删除</button>`;
-}
-room.addEventListener('click',e=>{
-  if(e.target===room||e.target.id==='floor'||e.target.id==='backWall'||e.target.classList.contains('ceiling')||e.target.classList.contains('baseboard')||e.target.classList.contains('room-label')||e.target.classList.contains('sun-patch')||e.target.classList.contains('wall-light')||e.target.classList.contains('light-beam')){
-    document.querySelectorAll('.placed').forEach(x=>x.classList.remove('selected'));selected=null;
-    document.getElementById('selbox').innerHTML='点家具可选中<br>拖动可移动<br>双击可旋转';
-  }
-});
-room.addEventListener('dblclick',e=>{const p=e.target.closest('.placed');if(p)rotateEl(p);});
-function rotateSelected(){if(selected)rotateEl(selected);}
-function rotateEl(el){let r=(parseInt(el.dataset.rot||0)+15)%360;el.dataset.rot=r;el.style.transform=`rotate(${r}deg)`;}
-function removeSelected(){if(selected)removePlaced(selected);}
-function removePlaced(el){el.remove();if(selected===el){selected=null;document.getElementById('selbox').innerHTML='点家具可选中<br>拖动可移动<br>双击可旋转';}}
-function clearRoom(){document.querySelectorAll('.placed').forEach(x=>x.remove());selected=null;document.getElementById('selbox').innerHTML='点家具可选中<br>拖动可移动<br>双击可旋转';toast('已清空房间');}
-function randomRoom(){
-  clearRoom();const all=FURNITURE.flatMap(g=>g.items);const picks=all.sort(()=>Math.random()-.5).slice(0,7);
-  picks.forEach(it=>{const x=20+Math.random()*(room.clientWidth-it.w-40);const y=room.clientHeight-it.h-10-(Math.random()*(room.clientHeight*0.6-it.h));createPlaced(it,x,y);});
-  document.querySelectorAll('.placed').forEach(x=>x.classList.remove('selected'));selected=null;toast('随机布置完成 🎲');
-}
-function saveRoom(){
-  const data=[...document.querySelectorAll('.placed')].map(el=>({t:el.dataset.t,n:el.dataset.n,w:el.offsetWidth,h:el.offsetHeight,x:el.offsetLeft,y:el.offsetTop,r:parseInt(el.dataset.rot||0)}));
-  localStorage.setItem('sanrio_house_3d',JSON.stringify(data));toast('设计已保存！共 '+data.length+' 件 💾');
-}
-room.addEventListener('dragover',e=>e.preventDefault());
-room.addEventListener('drop',e=>{e.preventDefault();try{addFurniture(JSON.parse(e.dataTransfer.getData('text')))}catch(_){}});
-function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1600);}
+    // 更新标签计数
+    function updateTabCounts() {
+      $$('.tab').forEach((tab) => {
+        const cat = tab.dataset.cat;
+        const selected = state[cat] ? 1 : 0;
+        tab.querySelector('.count').textContent = `${selected}/1`;
+      });
+    }
 
-// ========== 小猫 AI ==========
-const catEl=document.getElementById('petCat');
-const catStatusEl=document.getElementById('catStatus');
-const catStates=['正在好奇地东张西望…','在房间里悠闲散步','找到了一个舒服的位置','正在追逐光斑','偷偷打量着家具','想跳上沙发玩','闻了闻盆栽的味道'];
-const catMoods=['喵~','咕噜咕噜~','喵喵！','(伸懒腰)','(打哈欠)'];
-let catTimer=null,catState='idle';
+    // Tab 切换
+    $$('.tab').forEach((tab) => {
+      tab.addEventListener('click', () => {
+        $$('.tab').forEach((t) => t.classList.remove('active'));
+        $$('.panel').forEach((p) => p.classList.remove('active'));
+        tab.classList.add('active');
+        $(`.panel[data-panel="${tab.dataset.cat}"]`).classList.add('active');
+      });
+    });
 
-function initCat(){
-  if(catTimer)return;
-  catWander();
-  catTimer=setInterval(catWander,6000);
-}
-function catWander(){
-  if(!gameStarted)return;
-  const rw=room.clientWidth, rh=room.clientHeight;
-  const newX=20+Math.random()*(rw-80);
-  const floorY=rh-44;
-  catEl.style.left=newX+'px';
-  catEl.style.top=floorY+'px';
-  // 随机朝向
-  catEl.style.transform=newX<parseFloat(catEl.style.left||0)?'scaleX(-1)':'scaleX(1)';
-  // 随机状态
-  const r=Math.random();
-  if(r<.6){
-    catEl.classList.remove('sleeping');
-    catEl.classList.add('walking');
-    catState='walking';
-    catStatusEl.textContent=catStates[Math.floor(Math.random()*catStates.length)];
-    setTimeout(()=>{catEl.classList.remove('walking');catState='idle';},3000);
-  }else if(r<.85){
-    catEl.classList.remove('walking');
-    catEl.classList.add('sleeping');
-    catState='sleeping';
-    catStatusEl.textContent='趴下来打盹了… Zzz';
-  }else{
-    catEl.classList.remove('sleeping','walking');
-    catState='idle';
-    catStatusEl.textContent='坐下来舔爪子…';
-  }
-}
-function petCat(){
-  if(!gameStarted)return;
-  // 爱心粒子
-  for(let i=0;i<5;i++){
-    const h=document.createElement('div');h.className='heart-particle';
-    h.textContent=['💕','💖','💗','💓','❤️'][i%5];
-    h.style.left=(20+Math.random()*30)+'px';
-    h.style.top=(-10+Math.random()*10)+'px';
-    h.style.animationDelay=(i*.15)+'s';
-    catEl.appendChild(h);
-    setTimeout(()=>h.remove(),1300);
-  }
-  // 喵叫气泡
-  const bubble=document.createElement('div');bubble.className='meow-bubble';
-  bubble.textContent=catMoods[Math.floor(Math.random()*catMoods.length)];
-  catEl.appendChild(bubble);
-  setTimeout(()=>bubble.remove(),1500);
-  // 状态更新
-  catStatusEl.textContent='被抚摸了！好开心~ 咕噜咕噜';
-  catEl.classList.remove('sleeping','walking');
-  // 3秒后恢复
-  clearTimeout(petCat._t);
-  petCat._t=setTimeout(()=>{catStatusEl.textContent=catStates[Math.floor(Math.random()*catStates.length)];},3000);
-  toast('奶油很开心！🐱💕');
-}
+    // 重置
+    $('#resetBtn').addEventListener('click', () => {
+      state.sofa = state.rug = state.chair = null;
+      ['sofa', 'rug', 'chair'].forEach((cat) => {
+        renderOptions(cat);
+        updateLayer(cat);
+      });
+      updateTabCounts();
+    });
 
-// 加载已保存
-window.addEventListener('load',()=>{
-  const s=localStorage.getItem('sanrio_house_3d');if(!s)return;
-  try{JSON.parse(s).forEach(d=>{
-    const def=FURNITURE.flatMap(g=>g.items).find(x=>x.t===d.t);if(!def)return;
-    const el=document.createElement('div');el.className='placed';el.style.width=d.w+'px';el.style.height=d.h+'px';
-    el.style.left=d.x+'px';el.style.top=d.y+'px';el.style.zIndex=++zTop;el.dataset.n=d.n;el.dataset.t=d.t;el.dataset.rot=d.r||0;
-    if(d.r)el.style.transform=`rotate(${d.r}deg)`;
-    el.innerHTML=SVG[def.svg]+`<div class="del" onclick="event.stopPropagation();removePlaced(this.parentElement)">×</div>`;
-    el.onclick=e=>{e.stopPropagation();selectPlaced(el)};enableDrag(el);room.appendChild(el);
-  });}catch(_){}
-});
-</script>
+    // 完成设计
+    $('#finishBtn').addEventListener('click', () => {
+      const selected = [state.sofa, state.rug, state.chair].filter(Boolean).length;
+      let title, text, reward, icon;
+
+      if (selected === 3) {
+        icon = '👑'; title = '独具匠心的色彩大师！';
+        text = '沙发、地毯和单人椅完美融合，空间层次丰富又和谐。';
+        reward = 88;
+      } else if (selected === 2) {
+        icon = '🏆'; title = '品味出众的室内设计师';
+        text = '搭配很有节奏感，再尝试加一件家具会让场景更完整。';
+        reward = 58;
+      } else if (selected === 1) {
+        icon = '✨'; title = '潜力无限的新锐设计师';
+        text = '这是一个好的开始，继续挑选更多单品吧。';
+        reward = 28;
+      } else {
+        icon = '💡'; title = '从空白开始探索';
+        text = '每个空间都值得期待，试着选一件喜欢的家具。';
+        reward = 8;
+      }
+
+      state.coins += reward;
+      localStorage.setItem('designCoins', String(state.coins));
+      $('#coinDisplay').textContent = state.coins;
+
+      $('#modalIcon').textContent = icon;
+      $('#modalTitle').textContent = title;
+      $('#modalText').textContent = text;
+      $('#rewardCoins').textContent = reward;
+      $('#modal').classList.add('show');
+    });
+
+    $('#modalClose').addEventListener('click', () => {
+      $('#modal').classList.remove('show');
+    });
+
+    $('#modal').addEventListener('click', (e) => {
+      if (e.target === $('#modal')) $('#modal').classList.remove('show');
+    });
+
+    // 初始化渲染
+    ['sofa', 'rug', 'chair'].forEach((cat) => {
+      renderOptions(cat);
+      updateLayer(cat);
+    });
+    updateTabCounts();
+  </script>
 </body>
 </html>
