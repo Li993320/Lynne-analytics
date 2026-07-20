@@ -472,7 +472,41 @@
   .modal-actions button { flex: 1; padding: 12px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; font-size: 14px; }
   .modal-actions .btn-ok { background: linear-gradient(135deg, #c9a46a, #a07a3a); color: #fff; }
   .modal-actions .btn-cancel { background: #f0e8dd; color: #6a5a4a; }
+
+  /* ===== 3D 家具 ===== */
+  .item-card { position: relative; }
+  .badge3d {
+    position: absolute; top: 4px; left: 4px; z-index: 2;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: #fff; font-size: 10px; font-weight: 700;
+    padding: 1px 6px; border-radius: 6px; letter-spacing: .5px;
+  }
+  .btn-3d {
+    position: absolute; bottom: 4px; right: 4px; z-index: 2;
+    background: rgba(99,102,241,0.92); color: #fff;
+    border: none; font-size: 10px; padding: 3px 7px;
+    border-radius: 6px; cursor: pointer; font-weight: 600;
+  }
+  .btn-3d:hover { background: #6366f1; }
+  .model-modal { display: none; align-items: center; justify-content: center; }
+  .model-modal.show { display: flex; }
+  .model-card {
+    position: relative; width: min(92vw, 660px); height: min(82vh, 580px);
+    background: #f1f1f1; border-radius: 16px; overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,.3);
+  }
+  .model-viewer-wrap { width: 100%; height: calc(100% - 60px); }
+  #modelViewer { width: 100%; height: 100%; background: #f1f1f1; --poster-color: #f1f1f1; }
+  .modal-close-btn {
+    position: absolute; top: 8px; right: 10px; z-index: 5;
+    background: rgba(255,255,255,.92); border: none; font-size: 22px;
+    width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+    line-height: 1; color: #333;
+  }
+  .model-caption { text-align: center; padding: 8px 8px 2px; font-weight: 700; background: #fff; color: #1e293b; }
+  .model-tip { text-align: center; font-size: 12px; color: #64748b; padding-bottom: 10px; background: #fff; }
 </style>
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </head>
 <body>
 
@@ -531,6 +565,18 @@
   </div>
 </div>
 
+<!-- 3D 模型预览弹窗 -->
+<div class="modal model-modal" id="modelModal">
+  <div class="model-card">
+    <button class="modal-close-btn" id="modelModalClose">×</button>
+    <div class="model-viewer-wrap">
+      <model-viewer id="modelViewer" camera-controls auto-rotate shadow-intensity="1" environment-image="neutral" interaction-prompt="auto"></model-viewer>
+    </div>
+    <div class="model-caption" id="modelCaption">3D 模型预览</div>
+    <div class="model-tip">拖拽旋转 · 滚轮缩放 · 点击卡片可放置到房间</div>
+  </div>
+</div>
+
 <script>
 /* ============================================================
    梦幻小屋设计 Pro — 完整编辑器
@@ -556,14 +602,22 @@ const STYLES = [
         title: '沙发',
         items: [
           { id: 'chesterfield', name: '切斯特菲尔德', src: 'images/chesterfield_sofa.png', w: 50, h: 28, draggable: true },
-          { id: 'vintage_fabric', name: '复古布艺', src: 'images/vintage_fabric_sofa.png', w: 48, h: 30, draggable: true }
+          { id: 'vintage_fabric', name: '复古布艺', src: 'images/vintage_fabric_sofa.png', w: 48, h: 30, draggable: true },
+          { id: 'camelback', name: '驼峰沙发', src: 'images/american_camelback_sofa.png', w: 50, h: 30, draggable: true }
         ]
       },
       {
         title: '单人椅',
         items: [
           { id: 'barcelona', name: '巴塞罗那椅', src: 'images/barcelona_chair.png', w: 28, h: 36, draggable: true },
-          { id: 'tiger', name: '老虎椅', src: 'images/tiger_chair.png', w: 30, h: 50, draggable: true }
+          { id: 'tiger', name: '老虎椅', src: 'images/tiger_chair.png', w: 30, h: 50, draggable: true },
+          { id: 'wingback', name: '翼背皮椅', src: 'images/american_wingback_chair.png', w: 30, h: 44, draggable: true }
+        ]
+      },
+      {
+        title: '茶几',
+        items: [
+          { id: 'trunk_table', name: '复古箱式茶几', src: 'images/american_trunk_coffee_table.png', w: 38, h: 30, draggable: true }
         ]
       }
     ]
@@ -575,19 +629,27 @@ const STYLES = [
         title: '沙发',
         items: [
           { id: 'french_blue', name: '蓝色丝绒', src: 'images/french_sofa_blue.png', w: 52, h: 36, draggable: true },
-          { id: 'french_gold', name: '金色丝绒', src: 'images/french_sofa_gold.png', w: 52, h: 38, draggable: true }
+          { id: 'french_gold', name: '金色丝绒', src: 'images/french_sofa_gold.png', w: 52, h: 38, draggable: true },
+          { id: 'french_white_sofa', name: '白色雕花沙发', src: 'images/french_white_sofa.png', w: 52, h: 36, draggable: true }
+        ]
+      },
+      {
+        title: '扶手椅',
+        items: [
+          { id: 'french_white_armchair', name: '白色法式扶手椅', src: 'images/french_white_armchair.png', w: 32, h: 40, draggable: true }
+        ]
+      },
+      {
+        title: '桌柜',
+        items: [
+          { id: 'vanity', name: '雕花梳妆台', src: 'images/french_vanity.png', w: 36, h: 56, draggable: true },
+          { id: 'french_white_console', name: '白色玄关桌', src: 'images/french_white_console.png', w: 40, h: 44, draggable: true }
         ]
       },
       {
         title: '地毯',
         items: [
           { id: 'persian', name: '波斯挂毯', src: 'images/persian_rug.png', w: 56, h: 56, draggable: true }
-        ]
-      },
-      {
-        title: '其他',
-        items: [
-          { id: 'vanity', name: '雕花梳妆台', src: 'images/french_vanity.png', w: 36, h: 56, draggable: true }
         ]
       }
     ]
@@ -617,6 +679,48 @@ const STYLES = [
           { id: 'chair1', name: '灰色休闲', src: 'images/chair_1.png', w: 24, h: 32, draggable: true },
           { id: 'chair2', name: '棕色皮质', src: 'images/chair_2.png', w: 26, h: 38, draggable: true },
           { id: 'chair3', name: '藤编单椅', src: 'images/chair_3.png', w: 28, h: 40, draggable: true }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'threed', name: '3D家具', icon: '🧊',
+    groups: [
+      {
+        title: '3D 沙发',
+        items: [
+          { id: 'sofa3d_brown', name: '棕色皮质三人沙发', src: 'images/sofa3d_brown.png', w: 50, h: 30, draggable: true, model3d: 'models/sofa3d_brown.glb' },
+          { id: 'sofa3d_blue', name: '深蓝天鹅绒沙发', src: 'images/sofa3d_blue.png', w: 50, h: 32, draggable: true, model3d: 'models/sofa3d_blue.glb' },
+          { id: 'sofa3d_chesterfield', name: '切斯特菲尔德沙发', src: 'images/sofa3d_chesterfield.png', w: 52, h: 34, draggable: true, model3d: 'models/sofa3d_chesterfield.glb' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'decor', name: '装饰摆件', icon: '🖼️',
+    groups: [
+      {
+        title: '花瓶',
+        items: [
+          { id: 'decor_vase', name: '陶瓷花瓶', src: 'images/decor_vase.png', w: 18, h: 36, draggable: true }
+        ]
+      },
+      {
+        title: '挂画',
+        items: [
+          { id: 'decor_painting', name: '复古挂画', src: 'images/decor_painting.png', w: 28, h: 36, draggable: true }
+        ]
+      },
+      {
+        title: '灯具',
+        items: [
+          { id: 'decor_floor_lamp', name: '落地灯', src: 'images/decor_floor_lamp.png', w: 22, h: 56, draggable: true }
+        ]
+      },
+      {
+        title: '绿植',
+        items: [
+          { id: 'decor_plant', name: '琴叶榕', src: 'images/decor_plant.png', w: 30, h: 56, draggable: true }
         ]
       }
     ]
@@ -708,16 +812,23 @@ function renderFurnitureList() {
       <div class="group-title">${g.title}</div>
       <div class="item-grid">
         ${g.items.map(item => `
-          <div class="item-card" data-item-id="${item.id}" data-style="${state.style}">
+          <div class="item-card ${item.model3d ? 'has-3d' : ''}" data-item-id="${item.id}" data-style="${state.style}">
+            ${item.model3d ? '<span class="badge3d">3D</span>' : ''}
             <img src="${item.src}" alt="${item.name}" draggable="false" />
             <div class="item-name">${item.name}</div>
+            ${item.model3d ? `<button class="btn-3d" data-glb="${item.model3d}" data-name="${item.name}">🔄 3D预览</button>` : ''}
           </div>
         `).join('')}
       </div>
     </div>
   `).join('');
   furnitureList.querySelectorAll('.item-card').forEach(card => {
-    card.addEventListener('click', () => {
+    card.addEventListener('click', (e) => {
+      if (e.target.classList.contains('btn-3d')) {
+        e.stopPropagation();
+        openModel3d(e.target.dataset.glb, e.target.dataset.name);
+        return;
+      }
       const itemId = card.dataset.itemId;
       const style = STYLES.find(s => s.id === card.dataset.style);
       const itemDef = findItemDef(style, itemId);
@@ -732,6 +843,14 @@ function findItemDef(style, itemId) {
     if (found) return found;
   }
   return null;
+}
+
+// ===== 3D 模型预览 =====
+function openModel3d(glb, name) {
+  const mv = document.getElementById('modelViewer');
+  mv.src = glb;
+  document.getElementById('modelCaption').textContent = name || '3D 模型预览';
+  document.getElementById('modelModal').classList.add('show');
 }
 
 // ===== 添加家具 =====
@@ -816,6 +935,12 @@ function bindEvents() {
   $('#modalShare').addEventListener('click', () => {
     alert('设计已完成！金币已添加到账户。');
     $('#modal').classList.remove('show');
+  });
+
+  // 3D 预览弹窗
+  $('#modelModalClose').addEventListener('click', () => $('#modelModal').classList.remove('show'));
+  $('#modelModal').addEventListener('click', (e) => {
+    if (e.target.id === 'modelModal') $('#modelModal').classList.remove('show');
   });
 
   // 移动端面板切换
