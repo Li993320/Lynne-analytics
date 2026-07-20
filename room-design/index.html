@@ -3,766 +3,444 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>梦幻小屋设计 · 多主题换装</title>
+  <title>梦幻小屋设计</title>
   <style>
-    :root {
-      --bg: #f7f4ef;
-      --card: #ffffff;
-      --ink: #2b2b2b;
-      --muted: #8a8a8a;
-      --accent: #c9a46a;
-      --accent-2: #e76f51;
-      --shadow: 0 10px 30px rgba(0,0,0,0.08);
-      --radius: 18px;
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body { width: 100vw; height: 100vh; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+
+    .app { position: fixed; inset: 0; }
+
+    /* ---------- 全屏房间背景 ---------- */
+    .room-bg {
+      position: fixed; inset: 0; z-index: 0;
+      width: 100vw; height: 100vh;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+      transition: background-image 0.6s ease-in-out;
     }
 
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+    /* ---------- 家具图层 ---------- */
+    .stage {
+      position: fixed; inset: 0; z-index: 1;
+      pointer-events: none;
+    }
+    .layer {
+      position: absolute;
+      pointer-events: none;
+      opacity: 0;
+      transform: scale(0.95) translateY(12px);
+      transform-origin: center bottom;
+      transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+      filter: drop-shadow(0 18px 34px rgba(28, 18, 12, 0.28));
+    }
+    .layer.active {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+    .layer img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      object-position: center bottom;
+      display: block;
+    }
 
-    html, body { height: 100%; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background: var(--bg);
-      color: var(--ink);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
+    /* 默认位置：适配大部分房间视角 */
+    .layer-rug   { left: 8%; bottom: 5%; width: 84%; height: 24%; z-index: 1; }
+    .layer-sofa  { left: 6%; bottom: 13%; width: 74%; height: 28%; z-index: 2; }
+    .layer-chair { right: 4%; bottom: 15%; width: 26%; height: 26%; z-index: 3; }
+
+    /* 海岛大平层：层高更高，地板占比小，家具整体略微上移 */
+    .theme-island .layer-rug   { left: 10%; bottom: 7%; width: 80%; height: 22%; }
+    .theme-island .layer-sofa  { left: 8%; bottom: 15%; width: 72%; height: 26%; }
+    .theme-island .layer-chair { right: 6%; bottom: 17%; width: 24%; height: 24%; }
+
+    /* 带花园小屋：木质地板区域，家具居中 */
+    .theme-garden .layer-rug   { left: 10%; bottom: 6%; width: 80%; height: 22%; }
+    .theme-garden .layer-sofa  { left: 8%; bottom: 14%; width: 72%; height: 26%; }
+    .theme-garden .layer-chair { right: 5%; bottom: 16%; width: 24%; height: 24%; }
+
+    /* 自然风：更贴近底部，强调整体感 */
+    .theme-natural .layer-rug   { left: 6%; bottom: 4%; width: 88%; height: 26%; }
+    .theme-natural .layer-sofa  { left: 5%; bottom: 12%; width: 76%; height: 28%; }
+    .theme-natural .layer-chair { right: 3%; bottom: 14%; width: 28%; height: 26%; }
+
+    /* ---------- 悬浮顶部栏 ---------- */
+    .header {
+      position: absolute; top: 16px; left: 16px; z-index: 20;
+      display: flex; align-items: center; gap: 12px;
+      background: rgba(255,255,255,0.88); backdrop-filter: blur(12px);
+      border-radius: 14px; padding: 10px 16px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+    }
+    .back-btn {
+      width: 34px; height: 34px; border-radius: 10px;
+      border: none; background: rgba(0,0,0,0.05);
+      display: grid; place-items: center; cursor: pointer; font-size: 18px;
+      transition: background 0.2s;
+    }
+    .back-btn:hover { background: rgba(0,0,0,0.1); }
+    .brand-title { font-size: 16px; font-weight: 700; color: #2b2b2b; }
+    .brand-sub { font-size: 12px; color: #888; }
+
+    .coins {
+      position: absolute; top: 16px; right: 344px; z-index: 20;
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(255,248,231,0.92); backdrop-filter: blur(8px);
+      color: #a67c2e; padding: 8px 14px; border-radius: 20px;
+      font-weight: 700; font-size: 14px;
+      border: 1px solid rgba(201,164,106,0.25);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+    }
+
+    /* ---------- 右侧悬浮面板 ---------- */
+    .panel {
+      position: absolute; top: 0; right: 0; bottom: 0; z-index: 15;
+      width: 320px; max-width: 90vw;
+      background: rgba(255,255,255,0.82); backdrop-filter: blur(18px);
+      border-left: 1px solid rgba(255,255,255,0.4);
+      box-shadow: -8px 0 30px rgba(0,0,0,0.12);
+      display: flex; flex-direction: column;
+      padding: 20px;
+      transition: transform 0.3s ease;
+    }
+    .panel-header { font-size: 18px; font-weight: 700; margin-bottom: 16px; color: #2b2b2b; }
+
+    .tabs { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; }
+    .tab {
+      flex: 1; padding: 10px; border-radius: 12px; border: none;
+      background: rgba(0,0,0,0.05); color: #666; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    }
+    .tab.active { background: #2b2b2b; color: #fff; }
+
+    .panel-body { flex: 1; overflow-y: auto; }
+    .category { display: none; }
+    .category.active { display: block; }
+    .category-title { font-size: 13px; color: #888; margin-bottom: 12px; font-weight: 600; }
+
+    .options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .option {
+      border: 2px solid rgba(0,0,0,0.06); border-radius: 12px;
+      background: rgba(255,255,255,0.6);
+      padding: 6px; cursor: pointer; transition: all 0.2s;
+      text-align: center;
+    }
+    .option:hover { border-color: #c9a46a; transform: translateY(-2px); }
+    .option.selected { border-color: #e76f51; background: rgba(231,111,81,0.08); }
+    .option-thumb {
+      width: 100%; aspect-ratio: 1; border-radius: 10px;
+      background: rgba(0,0,0,0.03); overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 6px;
+    }
+    .option-thumb img { width: 100%; height: 100%; object-fit: contain; }
+    .option-name { font-size: 11px; font-weight: 600; color: #333; }
+    .option-tag { font-size: 10px; color: #888; margin-top: 2px; }
+
+    .finish-btn {
+      margin-top: 16px; width: 100%; padding: 14px;
+      border: none; border-radius: 14px;
+      background: linear-gradient(135deg, #d4a373, #e76f51);
+      color: #fff; font-size: 16px; font-weight: 700;
+      cursor: pointer; box-shadow: 0 6px 18px rgba(231,111,81,0.3);
+      transition: transform 0.2s;
+    }
+    .finish-btn:hover { transform: translateY(-2px); }
+
+    /* ---------- 移动端面板切换 ---------- */
+    .panel-toggle {
+      display: none;
+      position: absolute; bottom: 20px; right: 20px; z-index: 25;
+      width: 52px; height: 52px; border-radius: 50%;
+      background: rgba(255,255,255,0.9); backdrop-filter: blur(8px);
+      border: none; box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+      font-size: 22px; cursor: pointer;
     }
 
     /* ---------- 主题选择屏 ---------- */
     .theme-screen {
-      position: fixed; inset: 0;
+      position: fixed; inset: 0; z-index: 50;
       background: linear-gradient(180deg, #fffbf7 0%, #f5f0ea 100%);
-      z-index: 50;
       display: flex; flex-direction: column;
-      overflow: hidden;
       transition: opacity 0.4s ease, transform 0.4s ease;
     }
-    .theme-screen.hidden {
-      opacity: 0; transform: translateY(-20px); pointer-events: none;
-    }
-
-    .theme-header {
-      text-align: center; padding: 28px 20px 18px;
-    }
-    .theme-header .logo {
-      width: 56px; height: 56px; border-radius: 16px;
-      background: linear-gradient(135deg, #e76f51 0%, #d1495b 100%);
-      display: grid; place-items: center; margin: 0 auto 12px;
-      font-size: 28px; box-shadow: 0 8px 20px rgba(231,111,81,0.28);
-    }
-    .theme-header h1 { font-size: 24px; margin-bottom: 6px; }
-    .theme-header p { color: var(--muted); font-size: 14px; }
-
+    .theme-screen.hidden { opacity: 0; transform: translateY(-20px); pointer-events: none; }
+    .theme-header { text-align: center; padding: 28px 20px 18px; }
+    .theme-header h1 { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+    .theme-header p { color: #888; font-size: 14px; }
     .theme-grid {
       flex: 1; overflow-y: auto;
       display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;
       padding: 0 18px 24px; align-content: start;
     }
-
-    .theme-card {
-      position: relative; border-radius: 20px; overflow: hidden;
-      aspect-ratio: 1 / 1; cursor: pointer;
-      border: 3px solid transparent; background: #fff;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-    }
+    .theme-card { position: relative; border-radius: 20px; overflow: hidden; aspect-ratio: 1; cursor: pointer; border: 3px solid transparent; background: #fff; box-shadow: 0 6px 18px rgba(0,0,0,0.08); transition: all 0.25s; }
     .theme-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,0.12); }
-    .theme-card:active { transform: scale(0.98); }
-    .theme-card img {
-      width: 100%; height: 100%; object-fit: cover; display: block;
-    }
-    .theme-card .overlay {
-      position: absolute; inset: 0;
-      background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.55) 100%);
-      display: flex; flex-direction: column; justify-content: flex-end;
-      padding: 16px; color: #fff;
-    }
-    .theme-card .title { font-size: 17px; font-weight: 700; margin-bottom: 2px; }
+    .theme-card img { width: 100%; height: 100%; object-fit: cover; }
+    .theme-card .overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.55) 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 16px; color: #fff; }
+    .theme-card .title { font-size: 17px; font-weight: 700; }
     .theme-card .desc { font-size: 12px; opacity: 0.9; }
-    .theme-card .tag {
-      position: absolute; top: 10px; left: 10px;
-      background: rgba(255,255,255,0.92); color: #333;
-      font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px;
-    }
 
-    /* ---------- 游戏主体 ---------- */
-    header {
-      flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 18px; background: rgba(255,255,255,0.88); backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(0,0,0,0.04); z-index: 10;
-    }
-    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; }
-    .brand-icon {
-      width: 34px; height: 34px; border-radius: 10px;
-      background: linear-gradient(135deg, #d4a373 0%, #e76f51 100%);
-      display: grid; place-items: center; color: #fff; font-size: 16px;
-      box-shadow: 0 4px 10px rgba(231,111,81,0.25);
-    }
-    .brand-back {
-      background: transparent; border: none; color: var(--muted); font-size: 13px; cursor: pointer;
-      display: flex; align-items: center; gap: 4px; padding: 6px 10px; border-radius: 10px;
-      transition: background 0.2s;
-    }
-    .brand-back:hover { background: rgba(0,0,0,0.04); }
-    .coins {
-      display: flex; align-items: center; gap: 6px;
-      background: #fff8e7; color: #a67c2e; padding: 6px 12px;
-      border-radius: 20px; font-weight: 700; font-size: 14px;
-      border: 1px solid rgba(201,164,106,0.25);
-    }
+    /* ---------- 评分弹窗 ---------- */
+    .modal { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
+    .modal.show { opacity: 1; pointer-events: auto; }
+    .modal-card { background: #fff; border-radius: 24px; padding: 32px; width: 90%; max-width: 360px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.2); transform: scale(0.9); transition: transform 0.3s; }
+    .modal.show .modal-card { transform: scale(1); }
+    .modal-icon { font-size: 56px; margin-bottom: 12px; }
+    .modal-title { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+    .modal-text { color: #666; font-size: 14px; margin-bottom: 20px; line-height: 1.6; }
+    .modal-coins { font-size: 28px; font-weight: 800; color: #c9a46a; margin-bottom: 20px; }
+    .modal-btn { padding: 12px 28px; border: none; border-radius: 12px; background: #2b2b2b; color: #fff; font-weight: 600; cursor: pointer; }
 
-    .app {
-      flex: 1 1 auto; display: flex; flex-direction: column;
-      position: relative; overflow: hidden;
-    }
-
-    .stage {
-      flex: 1 1 auto; position: relative; display: flex;
-      justify-content: center; align-items: center;
-      padding: 16px; background: linear-gradient(180deg, #f2efe9 0%, #e9e5df 100%);
-      overflow: hidden;
-    }
-
-    .room {
-      position: relative; width: 100%; max-width: 580px;
-      aspect-ratio: 1 / 1; border-radius: var(--radius);
-      box-shadow: var(--shadow); overflow: hidden; background: #ddd;
-    }
-    .room img.base {
-      position: absolute; inset: 0; width: 100%; height: 100%;
-      object-fit: cover; display: block;
-    }
-
-    .layer {
-      position: absolute; pointer-events: none;
-      transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
-      filter: drop-shadow(0 14px 28px rgba(38, 25, 18, 0.24));
-      opacity: 0; transform: scale(0.92) translateY(16px);
-      transform-origin: center bottom;
-    }
-    .layer.active {
-      opacity: 1; transform: scale(1) translateY(0);
-    }
-    .layer svg {
-      width: 100%; height: 100%; display: block;
-      overflow: visible;
-    }
-
-    /* 精准图层定位：让家具主体自然落在房间地板上 */
-    .layer-rug   { left: 8%; bottom: 6%; width: 84%; height: 26%; z-index: 1; }
-    .layer-sofa  { left: 6%; bottom: 16%; width: 76%; height: 32%; z-index: 2; }
-    .layer-chair { right: 4%; bottom: 18%; width: 28%; height: 28%; z-index: 3; }
-
-    .stage-hint {
-      position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-      background: rgba(255,255,255,0.9); backdrop-filter: blur(8px);
-      padding: 8px 16px; border-radius: 20px; font-size: 12px;
-      color: var(--muted); box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    }
-
-    .controls {
-      flex: 0 0 auto; background: var(--card);
-      border-radius: var(--radius) var(--radius) 0 0;
-      box-shadow: 0 -4px 30px rgba(0,0,0,0.06);
-      padding: 18px 18px 26px; z-index: 20; max-height: 44vh;
-      display: flex; flex-direction: column;
-    }
-
-    .tabs { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 14px; scrollbar-width: none; }
-    .tabs::-webkit-scrollbar { display: none; }
-    .tab {
-      flex: 0 0 auto; padding: 10px 18px; border-radius: 24px; border: 1px solid #ece9e4;
-      background: #faf8f5; color: var(--muted); font-size: 14px; font-weight: 600;
-      cursor: pointer; transition: all 0.2s ease; white-space: nowrap;
-    }
-    .tab.active { background: var(--ink); color: #fff; border-color: var(--ink); box-shadow: 0 4px 12px rgba(43,43,43,0.18); }
-    .tab .count { display: inline-block; margin-left: 4px; font-size: 11px; background: rgba(255,255,255,0.2); padding: 1px 6px; border-radius: 10px; }
-
-    .panel { flex: 1 1 auto; overflow-y: auto; display: none; }
-    .panel.active { display: block; }
-    .panel-title { font-size: 13px; color: var(--muted); margin: 0 0 12px; font-weight: 600; }
-
-    .options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-    .option {
-      border: 2px solid #f0ede8; border-radius: 14px; background: #fdfcfa;
-      padding: 8px; cursor: pointer; transition: all 0.2s ease; text-align: center;
-    }
-    .option:hover { border-color: var(--accent); transform: translateY(-2px); }
-    .option.selected { border-color: var(--accent-2); background: #fff5f2; box-shadow: 0 6px 14px rgba(231,111,81,0.12); }
-    .option-thumb {
-      width: 100%; aspect-ratio: 1; border-radius: 10px; background: #f2f0ec;
-      overflow: hidden; margin-bottom: 8px; display: flex; align-items: center; justify-content: center;
-    }
-    .option-thumb svg { width: 100%; height: 100%; display: block; }
-    .option-name { font-size: 12px; font-weight: 600; line-height: 1.35; color: var(--ink); }
-    .option-tag { font-size: 10px; color: var(--muted); margin-top: 2px; }
-
-    .option.none .option-thumb { background: repeating-linear-gradient(45deg, #f7f5f2, #f7f5f2 8px, #ece9e4 8px, #ece9e4 10px); color: #bbb; font-size: 24px; }
-    .option.selected.none { border-color: #bbb; background: #f7f7f7; box-shadow: none; }
-
-    .action-bar { margin-top: 16px; display: flex; gap: 12px; }
-    .btn {
-      flex: 1; border: none; border-radius: 14px; padding: 14px 18px; font-size: 15px; font-weight: 700;
-      cursor: pointer; transition: transform 0.15s ease, box-shadow 0.2s ease;
-    }
-    .btn:active { transform: scale(0.98); }
-    .btn-primary { background: linear-gradient(135deg, #e76f51 0%, #d1495b 100%); color: #fff; box-shadow: 0 6px 18px rgba(231,111,81,0.28); }
-    .btn-secondary { background: #f2f0ec; color: var(--ink); }
-
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.45); backdrop-filter: blur(4px);
-      display: none; justify-content: center; align-items: center; z-index: 100; padding: 20px;
-    }
-    .modal-overlay.show { display: flex; }
-    .modal {
-      width: 100%; max-width: 380px; background: var(--card); border-radius: 24px;
-      padding: 28px 24px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-      transform: translateY(20px) scale(0.96); opacity: 0; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .modal-overlay.show .modal { transform: translateY(0) scale(1); opacity: 1; }
-    .modal-icon { width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 16px; background: linear-gradient(135deg, #ffe082 0%, #ffb300 100%); display: grid; place-items: center; font-size: 40px; box-shadow: 0 8px 20px rgba(255,179,0,0.25); }
-    .modal h2 { margin: 0 0 8px; font-size: 22px; }
-    .modal p { margin: 0 0 18px; color: var(--muted); font-size: 14px; line-height: 1.6; }
-    .reward { display: inline-flex; align-items: center; gap: 8px; background: #fff8e7; color: #a67c2e; padding: 10px 18px; border-radius: 24px; font-weight: 700; font-size: 16px; margin-bottom: 18px; }
-    .modal .btn { width: 100%; }
-
-    @media (min-width: 900px) {
-      .app { flex-direction: row; }
-      .stage { flex: 1.35; padding: 24px; }
-      .controls { flex: 0 0 360px; max-height: none; border-radius: 0; box-shadow: -4px 0 30px rgba(0,0,0,0.05); padding: 22px; }
-      .room { max-width: 520px; }
-      .options { grid-template-columns: repeat(2, 1fr); }
-      .theme-grid { grid-template-columns: repeat(4, 1fr); padding: 0 32px 32px; gap: 18px; }
-      .theme-header { padding: 36px 20px 22px; }
-      .theme-header h1 { font-size: 28px; }
-    }
-    @media (max-width: 380px) {
-      .options { gap: 8px; }
-      .option-name { font-size: 11px; }
-      .tab { padding: 8px 14px; font-size: 13px; }
-      .theme-card .title { font-size: 15px; }
+    /* ---------- 响应式 ---------- */
+    @media (max-width: 768px) {
+      .panel { width: 100%; max-width: none; top: auto; bottom: 0; left: 0; right: 0; height: 55vh; border-left: none; border-radius: 20px 20px 0 0; transform: translateY(100%); }
+      .panel.open { transform: translateY(0); }
+      .panel-toggle { display: grid; place-items: center; }
+      .coins { right: 20px; top: 66px; }
+      .header { top: 12px; left: 12px; padding: 8px 12px; }
+      .layer-rug { left: 5%; bottom: 4%; width: 90%; height: 22%; }
+      .layer-sofa { left: 4%; bottom: 10%; width: 80%; height: 26%; }
+      .layer-chair { right: 2%; bottom: 12%; width: 28%; height: 24%; }
     }
   </style>
 </head>
 <body>
-
-  <!-- 主题选择 -->
-  <div class="theme-screen" id="themeScreen">
-    <div class="theme-header">
-      <div class="logo">🏠</div>
-      <h1>梦幻小屋设计</h1>
-      <p>选择你喜欢的装修风格，开启换装之旅</p>
+  <div class="app">
+    <!-- 主题选择屏 -->
+    <div class="theme-screen" id="themeScreen">
+      <div class="theme-header">
+        <h1>梦幻小屋设计</h1>
+        <p>选择一个主题，开始你的装修设计之旅</p>
+      </div>
+      <div class="theme-grid" id="themeGrid"></div>
     </div>
-    <div class="theme-grid" id="themeGrid"></div>
-  </div>
 
-  <!-- 游戏主体 -->
-  <header>
-    <div class="brand">
-      <div class="brand-icon">🏠</div>
-      <span>梦幻小屋设计</span>
+    <!-- 全屏背景 -->
+    <div class="room-bg" id="roomBg"></div>
+
+    <!-- 家具图层 -->
+    <div class="stage" id="stage">
+      <div class="layer layer-rug" id="layer-rug"></div>
+      <div class="layer layer-sofa" id="layer-sofa"></div>
+      <div class="layer layer-chair" id="layer-chair"></div>
     </div>
-    <button class="brand-back" id="backBtn">← 切换主题</button>
-    <div class="coins"><span>🪙</span><span id="coinDisplay">0</span></div>
-  </header>
 
-  <main class="app">
-    <section class="stage">
-      <div class="room" id="room">
-        <img class="base" id="roomBase" src="" alt="房间背景" />
-        <div class="layer layer-rug" id="layer-rug"></div>
-        <div class="layer layer-sofa" id="layer-sofa"></div>
-        <div class="layer layer-chair" id="layer-chair"></div>
+    <!-- 顶部悬浮栏 -->
+    <div class="header">
+      <button class="back-btn" id="backBtn">←</button>
+      <div>
+        <div class="brand-title" id="themeTitle">梦幻小屋</div>
+        <div class="brand-sub" id="themeSubtitle">点击右侧家具进行替换</div>
       </div>
-      <div class="stage-hint">点击下方家具卡片进行实时替换</div>
-    </section>
+    </div>
 
-    <section class="controls">
-      <div class="tabs" id="tabs">
-        <div class="tab active" data-cat="sofa">沙发<span class="count">0/1</span></div>
-        <div class="tab" data-cat="rug">地毯<span class="count">0/1</span></div>
-        <div class="tab" data-cat="chair">单人椅<span class="count">0/1</span></div>
-      </div>
+    <div class="coins" id="coins">💰 <span>0</span></div>
 
-      <div class="panel active" data-panel="sofa">
-        <p class="panel-title">选择沙发</p>
-        <div class="options" id="sofaOptions"></div>
-      </div>
-      <div class="panel" data-panel="rug">
-        <p class="panel-title">选择地毯</p>
-        <div class="options" id="rugOptions"></div>
-      </div>
-      <div class="panel" data-panel="chair">
-        <p class="panel-title">选择单人椅</p>
-        <div class="options" id="chairOptions"></div>
-      </div>
+    <!-- 移动端面板开关 -->
+    <button class="panel-toggle" id="panelToggle">🛋</button>
 
-      <div class="action-bar">
-        <button class="btn btn-secondary" id="resetBtn">重置</button>
-        <button class="btn btn-primary" id="finishBtn">完成我的设计</button>
-      </div>
-    </section>
-  </main>
+    <!-- 右侧悬浮面板 -->
+    <div class="panel" id="panel">
+      <div class="panel-header">家具选择</div>
+      <div class="tabs" id="tabs"></div>
+      <div class="panel-body" id="panelBody"></div>
+      <button class="finish-btn" id="finishBtn">完成设计</button>
+    </div>
 
-  <div class="modal-overlay" id="modal">
-    <div class="modal">
-      <div class="modal-icon" id="modalIcon">🏆</div>
-      <h2 id="modalTitle">设计完成！</h2>
-      <p id="modalText">你的搭配很有个性。</p>
-      <div class="reward">🪙 +<span id="rewardCoins">0</span></div>
-      <button class="btn btn-primary" id="modalClose">继续设计</button>
+    <!-- 完成弹窗 -->
+    <div class="modal" id="modal">
+      <div class="modal-card">
+        <div class="modal-icon">✨</div>
+        <div class="modal-title" id="modalTitle">设计完成！</div>
+        <div class="modal-text" id="modalText">你的搭配非常和谐</div>
+        <div class="modal-coins" id="modalCoins">+100 💰</div>
+        <button class="modal-btn" id="modalBtn">继续设计</button>
+      </div>
     </div>
   </div>
 
   <script>
-    /* ================= 家具 SVG 生成器 ================= */
-
-    function svgSofa(style, colors) {
-      const { main, dark, light, accent, wood } = colors;
-      const base = (v) => `stop-color:${v}`;
-      const grad = `url(#gSofa${style})`;
-      let shape = '';
-
-      if (style === 'cloud') {
-        // 云朵圆滚滚沙发
-        shape = `
-          <defs>
-            <linearGradient id="gSofa${style}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" ${base(light)}/><stop offset="1" ${base(main)}/></linearGradient>
-            <filter id="s"><feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.22"/></filter>
-          </defs>
-          <ellipse cx="100" cy="82" rx="92" ry="7" fill="#000" opacity="0.13"/>
-          <path d="M18 55 Q18 25 38 25 L162 25 Q182 25 182 55 L182 68 Q182 78 162 78 L38 78 Q18 78 18 68 Z" fill="${grad}" filter="url(#s)"/>
-          <path d="M30 38 Q30 28 42 28 L158 28 Q170 28 170 38 L170 58 Q170 64 158 64 L42 64 Q30 64 30 58 Z" fill="${light}" opacity="0.6"/>
-          <circle cx="55" cy="55" r="10" fill="${accent}" opacity="0.9"/>
-          <circle cx="145" cy="55" r="10" fill="${accent}" opacity="0.9"/>
-          <rect x="32" y="75" width="8" height="10" rx="3" fill="${wood}"/>
-          <rect x="160" y="75" width="8" height="10" rx="3" fill="${wood}"/>
-        `;
-      } else if (style === 'french') {
-        // 法式卷臂沙发
-        shape = `
-          <defs>
-            <linearGradient id="gSofa${style}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" ${base(light)}/><stop offset="1" ${base(main)}/></linearGradient>
-            <filter id="s"><feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.22"/></filter>
-          </defs>
-          <ellipse cx="100" cy="82" rx="92" ry="7" fill="#000" opacity="0.13"/>
-          <path d="M10 55 Q8 28 28 28 L172 28 Q192 28 190 55 L190 68 Q192 78 172 78 L28 78 Q8 78 10 68 Z" fill="${grad}" filter="url(#s)"/>
-          <path d="M20 45 Q18 30 35 30 L165 30 Q182 30 180 45 L180 55 Q180 60 165 60 L35 60 Q20 60 20 55 Z" fill="${light}" opacity="0.55"/>
-          <path d="M30 65 L30 78 M170 65 L170 78" stroke="${wood}" stroke-width="5" stroke-linecap="round"/>
-          <circle cx="48" cy="48" r="4" fill="${dark}" opacity="0.2"/>
-          <circle cx="68" cy="48" r="4" fill="${dark}" opacity="0.2"/>
-          <circle cx="88" cy="48" r="4" fill="${dark}" opacity="0.2"/>
-          <circle cx="108" cy="48" r="4" fill="${dark}" opacity="0.2"/>
-          <circle cx="128" cy="48" r="4" fill="${dark}" opacity="0.2"/>
-          <circle cx="148" cy="48" r="4" fill="${dark}" opacity="0.2"/>
-        `;
-      } else if (style === 'modern') {
-        // 现代极简低背沙发
-        shape = `
-          <defs>
-            <linearGradient id="gSofa${style}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" ${base(light)}/><stop offset="1" ${base(main)}/></linearGradient>
-            <filter id="s"><feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.22"/></filter>
-          </defs>
-          <ellipse cx="100" cy="82" rx="92" ry="7" fill="#000" opacity="0.13"/>
-          <rect x="12" y="30" width="176" height="48" rx="8" fill="${grad}" filter="url(#s)"/>
-          <rect x="12" y="30" width="176" height="22" rx="8" fill="${light}" opacity="0.5"/>
-          <rect x="52" y="35" width="48" height="40" rx="4" fill="${main}" opacity="0.4"/>
-          <rect x="100" y="35" width="48" height="40" rx="4" fill="${main}" opacity="0.4"/>
-          <rect x="18" y="78" width="6" height="8" rx="1" fill="${wood}"/>
-          <rect x="176" y="78" width="6" height="8" rx="1" fill="${wood}"/>
-        `;
-      } else if (style === 'sectional') {
-        // L型转角沙发
-        shape = `
-          <defs>
-            <linearGradient id="gSofa${style}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" ${base(light)}/><stop offset="1" ${base(main)}/></linearGradient>
-            <filter id="s"><feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.22"/></filter>
-          </defs>
-          <ellipse cx="100" cy="82" rx="92" ry="7" fill="#000" opacity="0.13"/>
-          <path d="M15 55 Q15 28 35 28 L165 28 Q185 28 185 55 L185 75 Q185 80 165 80 L35 80 Q15 80 15 75 Z" fill="${grad}" filter="url(#s)"/>
-          <rect x="155" y="30" width="26" height="48" rx="4" fill="${dark}" opacity="0.25"/>
-          <rect x="50" y="35" width="45" height="38" rx="4" fill="${light}" opacity="0.4"/>
-          <rect x="100" y="35" width="45" height="38" rx="4" fill="${light}" opacity="0.4"/>
-          <rect x="25" y="78" width="6" height="8" rx="1" fill="${wood}"/>
-          <rect x="170" y="78" width="6" height="8" rx="1" fill="${wood}"/>
-        `;
-      } else {
-        // classic
-        shape = `
-          <defs>
-            <linearGradient id="gSofa${style}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" ${base(light)}/><stop offset="1" ${base(main)}/></linearGradient>
-            <filter id="s"><feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.22"/></filter>
-          </defs>
-          <ellipse cx="100" cy="82" rx="92" ry="7" fill="#000" opacity="0.13"/>
-          <path d="M14 55 Q14 26 36 26 L164 26 Q186 26 186 55 L186 70 Q186 78 164 78 L36 78 Q14 78 14 70 Z" fill="${grad}" filter="url(#s)"/>
-          <rect x="45" y="34" width="50" height="40" rx="4" fill="${light}" opacity="0.45"/>
-          <rect x="105" y="34" width="50" height="40" rx="4" fill="${light}" opacity="0.45"/>
-          <rect x="20" y="76" width="7" height="10" rx="3" fill="${wood}"/>
-          <rect x="173" y="76" width="7" height="10" rx="3" fill="${wood}"/>
-        `;
-      }
-      return `<svg viewBox="0 0 200 90" xmlns="http://www.w3.org/2000/svg">${shape}</svg>`;
-    }
-
-    function svgRug(style, colors) {
-      const { main, dark, light, accent } = colors;
-      let shape = '';
-      if (style === 'rect') {
-        shape = `
-          <defs><filter id="rs"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.15"/></filter></defs>
-          <rect x="10" y="15" width="180" height="55" rx="3" fill="${main}" filter="url(#rs)"/>
-          <rect x="20" y="22" width="160" height="41" rx="2" fill="none" stroke="${light}" stroke-width="2"/>
-          <rect x="30" y="30" width="140" height="25" rx="1" fill="${light}" opacity="0.25"/>
-          <line x1="30" y1="42" x2="170" y2="42" stroke="${dark}" stroke-width="1" opacity="0.3"/>
-        `;
-      } else if (style === 'round') {
-        shape = `
-          <defs><filter id="rs"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.15"/></filter></defs>
-          <ellipse cx="100" cy="42" rx="86" ry="28" fill="${main}" filter="url(#rs)"/>
-          <ellipse cx="100" cy="42" rx="70" ry="22" fill="none" stroke="${light}" stroke-width="2"/>
-          <ellipse cx="100" cy="42" rx="52" ry="16" fill="${light}" opacity="0.25"/>
-          <circle cx="100" cy="42" r="8" fill="${accent}"/>
-        `;
-      } else if (style === 'pattern') {
-        shape = `
-          <defs><filter id="rs"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.15"/></filter></defs>
-          <rect x="10" y="15" width="180" height="55" rx="3" fill="${main}" filter="url(#rs)"/>
-          <rect x="10" y="15" width="180" height="55" rx="3" fill="none" stroke="${dark}" stroke-width="3"/>
-          <path d="M10 25 L190 25 M10 35 L190 35 M10 45 L190 45 M10 55 L190 55 M10 65 L190 65" stroke="${light}" stroke-width="1" opacity="0.4"/>
-          <path d="M30 42 L60 20 L90 42 L60 64 Z M110 42 L140 20 L170 42 L140 64 Z" fill="${accent}" opacity="0.35"/>
-        `;
-      } else {
-        shape = `
-          <defs><filter id="rs"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.15"/></filter></defs>
-          <rect x="10" y="15" width="180" height="55" rx="8" fill="${main}" filter="url(#rs)"/>
-          <rect x="18" y="22" width="164" height="41" rx="5" fill="${light}" opacity="0.3"/>
-          <circle cx="100" cy="42" r="16" fill="${accent}" opacity="0.4"/>
-        `;
-      }
-      return `<svg viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">${shape}</svg>`;
-    }
-
-    function svgChair(style, colors) {
-      const { main, dark, light, accent, wood } = colors;
-      let shape = '';
-      if (style === 'armchair') {
-        shape = `
-          <defs><filter id="cs"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-opacity="0.2"/></filter></defs>
-          <ellipse cx="50" cy="95" rx="40" ry="8" fill="#000" opacity="0.13"/>
-          <path d="M15 55 Q15 22 30 22 L70 22 Q85 22 85 55 L85 80 Q85 88 70 88 L30 88 Q15 88 15 80 Z" fill="${main}" filter="url(#cs)"/>
-          <path d="M20 35 Q20 28 35 28 L65 28 Q80 28 80 35 L80 55 Q80 60 65 60 L35 60 Q20 60 20 55 Z" fill="${light}" opacity="0.5"/>
-          <rect x="20" y="82" width="5" height="13" rx="2" fill="${wood}"/>
-          <rect x="75" y="82" width="5" height="13" rx="2" fill="${wood}"/>
-          <circle cx="30" cy="50" r="6" fill="${accent}" opacity="0.8"/>
-        `;
-      } else if (style === 'lounge') {
-        shape = `
-          <defs><filter id="cs"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-opacity="0.2"/></filter></defs>
-          <ellipse cx="50" cy="95" rx="40" ry="8" fill="#000" opacity="0.13"/>
-          <path d="M10 50 Q10 28 25 28 L75 28 Q90 28 90 50 L90 70 Q90 82 75 82 L25 82 Q10 82 10 70 Z" fill="${main}" filter="url(#cs)"/>
-          <rect x="20" y="55" width="60" height="22" rx="6" fill="${light}" opacity="0.45"/>
-          <rect x="15" y="78" width="6" height="18" rx="2" fill="${wood}"/>
-          <rect x="79" y="78" width="6" height="18" rx="2" fill="${wood}"/>
-          <rect x="20" y="40" width="60" height="20" rx="5" fill="${dark}" opacity="0.2"/>
-        `;
-      } else if (style === 'accent') {
-        shape = `
-          <defs><filter id="cs"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-opacity="0.2"/></filter></defs>
-          <ellipse cx="50" cy="95" rx="40" ry="8" fill="#000" opacity="0.13"/>
-          <path d="M18 58 L18 30 Q18 20 30 20 L70 20 Q82 20 82 30 L82 58 Q82 82 50 82 Q18 82 18 58 Z" fill="${main}" filter="url(#cs)"/>
-          <path d="M22 32 L78 32 L75 55 L25 55 Z" fill="${light}" opacity="0.5"/>
-          <rect x="20" y="80" width="5" height="15" rx="2" fill="${wood}"/>
-          <rect x="75" y="80" width="5" height="15" rx="2" fill="${wood}"/>
-          <circle cx="50" cy="45" r="8" fill="${accent}" opacity="0.7"/>
-        `;
-      } else {
-        shape = `
-          <defs><filter id="cs"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-opacity="0.2"/></filter></defs>
-          <ellipse cx="50" cy="95" rx="40" ry="8" fill="#000" opacity="0.13"/>
-          <path d="M14 55 Q14 24 28 24 L72 24 Q86 24 86 55 L86 78 Q86 86 72 86 L28 86 Q14 86 14 78 Z" fill="${main}" filter="url(#cs)"/>
-          <rect x="24" y="35" width="52" height="38" rx="4" fill="${light}" opacity="0.45"/>
-          <rect x="18" y="80" width="5" height="15" rx="2" fill="${wood}"/>
-          <rect x="77" y="80" width="5" height="15" rx="2" fill="${wood}"/>
-        `;
-      }
-      return `<svg viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg">${shape}</svg>`;
-    }
-
-    /* ================= 主题 & 家具数据 ================= */
+    const $ = id => document.getElementById(id);
 
     const THEMES = {
-      girly: {
-        id: 'girly', title: '少女心主题', desc: '粉色梦幻公主房', tag: '甜美',
-        img: 'images/room_girly.png',
-        colors: { main: '#ff9ec8', dark: '#e27ba7', light: '#ffd6eb', accent: '#ffd700', wood: '#e6c9a0' },
-        sofas: [
-          { id: 'girly_sofa_1', name: '公主云朵沙发', tag: '甜美', style: 'cloud' },
-          { id: 'girly_sofa_2', name: '法式珍珠白沙发', tag: '法式', style: 'french' },
-          { id: 'girly_sofa_3', name: '蔷薇绒面沙发', tag: '复古', style: 'classic' },
-        ],
-        rugs: [
-          { id: 'girly_rug_1', name: '粉色方毯', tag: '温馨', style: 'rect' },
-          { id: 'girly_rug_2', name: '玫瑰圆毯', tag: '浪漫', style: 'round' },
-          { id: 'girly_rug_3', name: '波点图案毯', tag: '活泼', style: 'pattern' },
-        ],
-        chairs: [
-          { id: 'girly_chair_1', name: '粉色扶手椅', tag: '优雅', style: 'armchair' },
-          { id: 'girly_chair_2', name: '蝴蝶结懒人椅', tag: '可爱', style: 'lounge' },
-          { id: 'girly_chair_3', name: '珍珠白单椅', tag: '精致', style: 'accent' },
-        ],
-      },
-      natural: {
-        id: 'natural', title: '自然风主题', desc: '原木绿植治愈系', tag: '清新',
-        img: 'images/room_natural.png',
-        colors: { main: '#9cb07c', dark: '#7a9160', light: '#d4e2b8', accent: '#c9a46a', wood: '#8b6f47' },
-        sofas: [
-          { id: 'natural_sofa_1', name: '棉麻现代沙发', tag: '自然', style: 'modern' },
-          { id: 'natural_sofa_2', name: '橄榄绿经典沙发', tag: '复古', style: 'classic' },
-          { id: 'natural_sofa_3', name: '原木转角沙发', tag: '日式', style: 'sectional' },
-        ],
-        rugs: [
-          { id: 'natural_rug_1', name: '草编方毯', tag: '质朴', style: 'rect' },
-          { id: 'natural_rug_2', name: '苔藓圆毯', tag: '清新', style: 'round' },
-          { id: 'natural_rug_3', name: '几何藤编毯', tag: '手工感', style: 'pattern' },
-        ],
-        chairs: [
-          { id: 'natural_chair_1', name: '藤编单椅', tag: '清凉', style: 'armchair' },
-          { id: 'natural_chair_2', name: '原木休闲椅', tag: '舒适', style: 'lounge' },
-          { id: 'natural_chair_3', name: '抹茶绿单椅', tag: '护眼', style: 'accent' },
-        ],
-      },
-      island: {
-        id: 'island', title: '海岛大平层', desc: '海景落地窗豪宅', tag: '奢华',
-        img: 'images/room_island.png',
-        colors: { main: '#6fa8dc', dark: '#4a90e2', light: '#c9daf8', accent: '#ffffff', wood: '#d4a373' },
-        sofas: [
-          { id: 'island_sofa_1', name: '海蓝色云朵沙发', tag: '轻盈', style: 'cloud' },
-          { id: 'island_sofa_2', name: '白色法式沙发', tag: '纯净', style: 'french' },
-          { id: 'island_sofa_3', name: 'L型极简沙发', tag: '现代', style: 'sectional' },
-        ],
-        rugs: [
-          { id: 'island_rug_1', name: '海蓝方毯', tag: '沉静', style: 'rect' },
-          { id: 'island_rug_2', name: '白沙圆毯', tag: '度假', style: 'round' },
-          { id: 'island_rug_3', name: '波浪纹毯', tag: '灵动', style: 'pattern' },
-        ],
-        chairs: [
-          { id: 'island_chair_1', name: '亚克力透明椅', tag: '前卫', style: 'accent' },
-          { id: 'island_chair_2', name: '柚木躺椅', tag: '休闲', style: 'lounge' },
-          { id: 'island_chair_3', name: '海军蓝单椅', tag: '深邃', style: 'armchair' },
-        ],
-      },
-      garden: {
-        id: 'garden', title: '带花园小屋', desc: '法式花园乡村风', tag: '温馨',
-        img: 'images/room_garden.png',
-        colors: { main: '#f4a8a8', dark: '#d98686', light: '#fce4e4', accent: '#7fb069', wood: '#a67c52' },
-        sofas: [
-          { id: 'garden_sofa_1', name: '碎花田园沙发', tag: '浪漫', style: 'french' },
-          { id: 'garden_sofa_2', name: '薄荷绿沙发', tag: '清新', style: 'modern' },
-          { id: 'garden_sofa_3', name: '米白经典沙发', tag: '温暖', style: 'classic' },
-        ],
-        rugs: [
-          { id: 'garden_rug_1', name: '复古花卉毯', tag: '古典', style: 'pattern' },
-          { id: 'garden_rug_2', name: '陶土色圆毯', tag: ' earthy', style: 'round' },
-          { id: 'garden_rug_3', name: '绿野方毯', tag: '自然', style: 'rect' },
-        ],
-        chairs: [
-          { id: 'garden_chair_1', name: '藤编花园椅', tag: '田园', style: 'armchair' },
-          { id: 'garden_chair_2', name: '木质长椅', tag: '休闲', style: 'lounge' },
-          { id: 'garden_chair_3', name: '姜黄格纹椅', tag: '活泼', style: 'accent' },
-        ],
-      },
+      girly:   { name: '少女心主题', desc: '粉色公主风 · 水晶吊灯', bg: 'images/room_girly.png' },
+      natural: { name: '自然风主题', desc: '原木绿植 · 森林窗景', bg: 'images/room_natural.png' },
+      island:  { name: '海岛大平层', desc: '海景落地窗 · 白色大理石', bg: 'images/room_island.png' },
+      garden:  { name: '带花园小屋', desc: '法式花园 · 木质小屋', bg: 'images/room_garden.png' }
     };
 
-    const CATEGORIES = ['sofa', 'rug', 'chair'];
-
-    /* ================= 状态 ================= */
+    const CATEGORIES = [
+      { id: 'sofa', name: '沙发', items: [
+        { id: 'sofa_1', name: '深蓝现代', tag: '简约' },
+        { id: 'sofa_2', name: '米白布艺', tag: '温馨' },
+        { id: 'sofa_3', name: '焦糖皮质', tag: '复古' }
+      ]},
+      { id: 'rug', name: '地毯', items: [
+        { id: 'rug_1', name: '波斯纹地毯', tag: '经典' },
+        { id: 'rug_2', name: '羊毛素色', tag: '极简' },
+        { id: 'rug_3', name: '几何图案', tag: '现代' }
+      ]},
+      { id: 'chair', name: '单人椅', items: [
+        { id: 'chair_1', name: '灰色休闲椅', tag: '舒适' },
+        { id: 'chair_2', name: '棕色皮椅', tag: '轻奢' },
+        { id: 'chair_3', name: '藤编椅', tag: '自然' }
+      ]}
+    ];
 
     let state = {
-      theme: localStorage.getItem('roomDesignTheme') || 'girly',
-      sofa: localStorage.getItem('roomDesignSofa') || null,
-      rug: localStorage.getItem('roomDesignRug') || null,
-      chair: localStorage.getItem('roomDesignChair') || null,
-      coins: parseInt(localStorage.getItem('designCoins') || '0', 10),
+      theme: localStorage.getItem('roomDesignTheme') || '',
+      coins: parseInt(localStorage.getItem('roomDesignCoins') || '0', 10),
+      selected: JSON.parse(localStorage.getItem('roomDesignSelected') || '{}')
     };
 
-    const $ = (sel) => document.querySelector(sel);
-    const $$ = (sel) => document.querySelectorAll(sel);
-
-    /* ================= 渲染 ================= */
+    let activeTab = 'sofa';
 
     function renderThemeScreen() {
-      const grid = $('#themeGrid');
-      grid.innerHTML = Object.values(THEMES).map((t) => `
-        <div class="theme-card" data-theme="${t.id}">
-          <img src="${t.img}" alt="${t.title}" loading="lazy">
-          <span class="tag">${t.tag}</span>
+      $('themeGrid').innerHTML = Object.entries(THEMES).map(([key, t]) => `
+        <div class="theme-card" data-theme="${key}">
+          <img src="${t.bg}" alt="${t.name}">
           <div class="overlay">
-            <div class="title">${t.title}</div>
+            <div class="title">${t.name}</div>
             <div class="desc">${t.desc}</div>
           </div>
         </div>
       `).join('');
 
-      $$('.theme-card').forEach((card) => {
-        card.addEventListener('click', () => selectTheme(card.dataset.theme));
+      document.querySelectorAll('.theme-card').forEach(card => {
+        card.addEventListener('click', () => {
+          loadTheme(card.dataset.theme);
+          $('themeScreen').classList.add('hidden');
+        });
       });
     }
 
-    function selectTheme(themeId) {
-      state.theme = themeId;
-      state.sofa = state.rug = state.chair = null;
-      localStorage.setItem('roomDesignTheme', themeId);
-      localStorage.removeItem('roomDesignSofa');
-      localStorage.removeItem('roomDesignRug');
-      localStorage.removeItem('roomDesignChair');
-      $('#themeScreen').classList.add('hidden');
-      loadTheme(themeId);
-      CATEGORIES.forEach((cat) => { renderOptions(cat); updateLayer(cat); });
-      updateTabCounts();
+    function loadTheme(themeKey) {
+      state.theme = themeKey;
+      const t = THEMES[themeKey];
+      $('roomBg').style.backgroundImage = `url('${t.bg}')`;
+      $('themeTitle').textContent = t.name;
+      $('themeSubtitle').textContent = t.desc;
+      $('stage').className = `stage theme-${themeKey}`;
+      renderTabs();
+      renderOptions();
+      updateAllLayers();
+      saveState();
     }
 
-    function loadTheme(themeId) {
-      const theme = THEMES[themeId];
-      $('#roomBase').src = theme.img;
-      $('#roomBase').alt = theme.title;
-    }
+    function renderTabs() {
+      const sel = state.selected[state.theme] || {};
+      $('tabs').innerHTML = CATEGORIES.map(cat => `
+        <button class="tab ${cat.id === activeTab ? 'active' : ''}" data-tab="${cat.id}">
+          ${cat.name}${sel[cat.id] ? ' ●' : ''}
+        </button>
+      `).join('');
 
-    function getFurnitureSVG(themeId, cat, itemId) {
-      const theme = THEMES[themeId];
-      const item = theme[cat + 's'].find((x) => x.id === itemId);
-      if (!item) return '';
-      const gen = cat === 'sofa' ? svgSofa : cat === 'rug' ? svgRug : svgChair;
-      return gen(item.style, theme.colors);
-    }
-
-    function renderOptions(cat) {
-      const theme = THEMES[state.theme];
-      const container = $(`#${cat}Options`);
-      container.innerHTML = '';
-
-      // 不摆放
-      const none = document.createElement('div');
-      none.className = `option none ${state[cat] === null ? 'selected' : ''}`;
-      none.innerHTML = `<div class="option-thumb">🚫</div><div class="option-name">不摆放</div><div class="option-tag">保持空旷</div>`;
-      none.addEventListener('click', () => selectItem(cat, null));
-      container.appendChild(none);
-
-      theme[cat + 's'].forEach((item) => {
-        const el = document.createElement('div');
-        el.className = `option ${state[cat] === item.id ? 'selected' : ''}`;
-        el.innerHTML = `
-          <div class="option-thumb">${getFurnitureSVG(state.theme, cat, item.id)}</div>
-          <div class="option-name">${item.name}</div>
-          <div class="option-tag">${item.tag}</div>
-        `;
-        el.addEventListener('click', () => selectItem(cat, item.id));
-        container.appendChild(el);
+      document.querySelectorAll('.tab').forEach(btn => {
+        btn.addEventListener('click', () => {
+          activeTab = btn.dataset.tab;
+          renderTabs();
+          renderOptions();
+        });
       });
     }
 
-    function selectItem(cat, id) {
-      state[cat] = id;
-      localStorage.setItem('roomDesign' + cat.charAt(0).toUpperCase() + cat.slice(1), id || '');
-      renderOptions(cat);
-      updateLayer(cat);
-      updateTabCounts();
-    }
+    function renderOptions() {
+      const cat = CATEGORIES.find(c => c.id === activeTab);
+      const selected = (state.selected[state.theme] || {})[cat.id] || '';
 
-    function updateLayer(cat) {
-      const layer = $(`#layer-${cat}`);
-      const itemId = state[cat];
-      if (!itemId) {
-        layer.classList.remove('active');
-        layer.innerHTML = '';
-        return;
-      }
-      layer.innerHTML = getFurnitureSVG(state.theme, cat, itemId);
-      layer.classList.add('active');
-    }
+      $('panelBody').innerHTML = `
+        <div class="category active">
+          <div class="category-title">选择${cat.name}款式</div>
+          <div class="options">
+            ${cat.items.map(item => `
+              <div class="option ${item.id === selected ? 'selected' : ''}" data-item="${item.id}">
+                <div class="option-thumb"><img src="images/${item.id}.png" alt="${item.name}"></div>
+                <div class="option-name">${item.name}</div>
+                <div class="option-tag">${item.tag}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
 
-    function updateTabCounts() {
-      $$('.tab').forEach((tab) => {
-        const cat = tab.dataset.cat;
-        tab.querySelector('.count').textContent = `${state[cat] ? 1 : 0}/1`;
+      document.querySelectorAll('.option').forEach(opt => {
+        opt.addEventListener('click', () => {
+          if (!state.selected[state.theme]) state.selected[state.theme] = {};
+          state.selected[state.theme][cat.id] = opt.dataset.item;
+          renderTabs();
+          renderOptions();
+          updateLayer(cat.id);
+          saveState();
+        });
       });
     }
 
-    /* ================= 交互 ================= */
-
-    $$('.tab').forEach((tab) => {
-      tab.addEventListener('click', () => {
-        $$('.tab').forEach((t) => t.classList.remove('active'));
-        $$('.panel').forEach((p) => p.classList.remove('active'));
-        tab.classList.add('active');
-        $(`.panel[data-panel="${tab.dataset.cat}"]`).classList.add('active');
-      });
-    });
-
-    $('#backBtn').addEventListener('click', () => {
-      $('#themeScreen').classList.remove('hidden');
-    });
-
-    $('#resetBtn').addEventListener('click', () => {
-      state.sofa = state.rug = state.chair = null;
-      localStorage.removeItem('roomDesignSofa');
-      localStorage.removeItem('roomDesignRug');
-      localStorage.removeItem('roomDesignChair');
-      CATEGORIES.forEach((cat) => { renderOptions(cat); updateLayer(cat); });
-      updateTabCounts();
-    });
-
-    $('#finishBtn').addEventListener('click', () => {
-      const selected = [state.sofa, state.rug, state.chair].filter(Boolean).length;
-      let icon, title, text, reward;
-      if (selected === 3) {
-        icon = '👑'; title = '独具匠心的色彩大师！';
-        text = '沙发、地毯和单人椅完美融合，空间层次丰富又和谐。';
-        reward = 88;
-      } else if (selected === 2) {
-        icon = '🏆'; title = '品味出众的室内设计师';
-        text = '搭配很有节奏感，再尝试加一件家具会让场景更完整。';
-        reward = 58;
-      } else if (selected === 1) {
-        icon = '✨'; title = '潜力无限的新锐设计师';
-        text = '这是一个好的开始，继续挑选更多单品吧。';
-        reward = 28;
+    function updateLayer(catId) {
+      const el = $(`layer-${catId}`);
+      const itemId = (state.selected[state.theme] || {})[catId];
+      if (itemId) {
+        el.innerHTML = `<img src="images/${itemId}.png" alt="">`;
+        el.classList.add('active');
       } else {
-        icon = '💡'; title = '从空白开始探索';
-        text = '每个空间都值得期待，试着选一件喜欢的家具。';
-        reward = 8;
+        el.innerHTML = '';
+        el.classList.remove('active');
       }
-      state.coins += reward;
-      localStorage.setItem('designCoins', String(state.coins));
-      $('#coinDisplay').textContent = state.coins;
-      $('#modalIcon').textContent = icon;
-      $('#modalTitle').textContent = title;
-      $('#modalText').textContent = text;
-      $('#rewardCoins').textContent = reward;
-      $('#modal').classList.add('show');
+    }
+
+    function updateAllLayers() {
+      CATEGORIES.forEach(cat => updateLayer(cat.id));
+    }
+
+    function saveState() {
+      localStorage.setItem('roomDesignTheme', state.theme);
+      localStorage.setItem('roomDesignCoins', state.coins);
+      localStorage.setItem('roomDesignSelected', JSON.stringify(state.selected));
+    }
+
+    function scoreDesign() {
+      const sel = state.selected[state.theme] || {};
+      const count = Object.keys(sel).length;
+      if (count === 0) return { score: 0, text: '还没有选择任何家具哦' };
+      const combo = CATEGORIES.every(cat => sel[cat.id]);
+      const base = count * 30;
+      const bonus = combo ? 40 : 0;
+      return { score: base + bonus, text: combo ? '搭配完整，风格和谐统一！' : '基础搭配不错，可以继续完善' };
+    }
+
+    $('backBtn').addEventListener('click', () => {
+      $('themeScreen').classList.remove('hidden');
+      $('panel').classList.remove('open');
     });
 
-    $('#modalClose').addEventListener('click', () => $('#modal').classList.remove('show'));
-    $('#modal').addEventListener('click', (e) => { if (e.target === $('#modal')) $('#modal').classList.remove('show'); });
+    $('panelToggle').addEventListener('click', () => {
+      $('panel').classList.toggle('open');
+    });
 
-    /* ================= 初始化 ================= */
+    $('finishBtn').addEventListener('click', () => {
+      const result = scoreDesign();
+      const reward = result.score;
+      state.coins += reward;
+      saveState();
+      $('modalCoins').textContent = `+${reward} 💰`;
+      $('modalText').textContent = result.text;
+      $('modal').classList.add('show');
+      $('coins').innerHTML = `💰 <span>${state.coins}</span>`;
+    });
 
-    $('#coinDisplay').textContent = state.coins;
+    $('modalBtn').addEventListener('click', () => $('modal').classList.remove('show'));
+    $('modal').addEventListener('click', e => { if (e.target === $('modal')) $('modal').classList.remove('show'); });
+
+    // 初始化
+    $('coins').innerHTML = `💰 <span>${state.coins}</span>`;
     renderThemeScreen();
 
-    // 如果有保存的主题，直接进入游戏；否则停留主题选择
-    if (THEMES[state.theme]) {
+    if (state.theme && THEMES[state.theme]) {
       loadTheme(state.theme);
-      CATEGORIES.forEach((cat) => { renderOptions(cat); updateLayer(cat); });
-      updateTabCounts();
-      // 如果是首次打开（没有主题保存），显示主题选择
-      if (!localStorage.getItem('roomDesignTheme')) {
-        $('#themeScreen').classList.remove('hidden');
-      } else {
-        $('#themeScreen').classList.add('hidden');
-      }
+      $('themeScreen').classList.add('hidden');
     } else {
       state.theme = 'girly';
-      $('#themeScreen').classList.remove('hidden');
+      // 主题选择屏默认显示
     }
   </script>
 </body>
