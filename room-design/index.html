@@ -229,7 +229,6 @@
     z-index: 30;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.4);
-    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .panel-section {
     padding: 14px 16px;
@@ -245,29 +244,6 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    cursor: pointer;
-    user-select: none;
-    transition: color 0.2s;
-  }
-  .section-title:hover { color: #a08560; }
-  .section-title .chevron {
-    margin-left: auto;
-    font-size: 10px;
-    transition: transform 0.25s ease;
-    opacity: 0.6;
-  }
-  .section-title.collapsed .chevron { transform: rotate(-90deg); }
-  .section-content {
-    max-height: 500px;
-    overflow: hidden;
-    transition: max-height 0.3s ease, opacity 0.3s ease;
-    opacity: 1;
-  }
-  .section-content.collapsed {
-    max-height: 0;
-    opacity: 0;
-    padding: 0 !important;
-    margin: 0 !important;
   }
 
   /* 主题选择 */
@@ -424,38 +400,6 @@
   }
   .btn-secondary:hover { background: #fff; }
 
-  /* 一键收起/展开按钮（桌面端始终可见） */
-  .panel-collapse-btn {
-    position: fixed;
-    top: 88px;
-    right: 340px;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.85);
-    backdrop-filter: blur(8px);
-    color: #8b7355;
-    border: 1px solid rgba(0,0,0,0.1);
-    font-size: 14px;
-    cursor: pointer;
-    z-index: 35;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-  }
-  .panel-collapse-btn:hover {
-    background: #fff;
-    transform: scale(1.1);
-  }
-  .side-panel.collapsed {
-    transform: translateX(calc(100% + 20px));
-  }
-  .side-panel.collapsed + .panel-collapse-btn {
-    right: 16px;
-  }
-
   /* 移动端 - 底部抽屉 */
   .panel-toggle {
     display: none;
@@ -602,36 +546,6 @@
     100% { transform: scale(1); }
   }
 
-  /* 猫咪跳舞 */
-  .cat-container.dancing {
-    animation: catDance 0.6s ease-in-out 4;
-    z-index: 30;
-  }
-  @keyframes catDance {
-    0%   { transform: translateY(0) rotate(0deg) scale(1); }
-    15%  { transform: translateY(-18px) rotate(-12deg) scale(1.08); }
-    30%  { transform: translateY(0) rotate(0deg) scale(1); }
-    45%  { transform: translateY(-14px) rotate(12deg) scale(1.06); }
-    60%  { transform: translateY(0) rotate(0deg) scale(1); }
-    75%  { transform: translateY(-20px) rotate(-8deg) scale(1.1); }
-    90%  { transform: translateY(0) rotate(0deg) scale(1); }
-    100% { transform: translateY(0) rotate(0deg) scale(1); }
-  }
-
-  /* 猫咪吃榴莲 */
-  .cat-container.eating-durian {
-    animation: catEatDurian 0.45s ease-in-out 6;
-  }
-  @keyframes catEatDurian {
-    0%   { transform: translateY(0) scale(1); }
-    20%  { transform: translateY(-4px) scale(1.05, 0.96); }
-    40%  { transform: translateY(0) scale(0.97, 1.04); }
-    50%  { transform: translateY(-3px) scale(1.03, 0.98) rotate(-3deg); }
-    70%  { transform: translateY(0) scale(0.98, 1.03) rotate(3deg); }
-    85%  { transform: translateY(-2px) scale(1.02, 0.99); }
-    100% { transform: translateY(0) scale(1); }
-  }
-
   .cat-bubble {
     position: absolute;
     top: -36px;
@@ -659,14 +573,6 @@
     border-width: 5px 5px 0;
     border-style: solid;
     border-color: #fff transparent transparent;
-  }
-  .cat-bubble.hint-bubble {
-    background: linear-gradient(135deg, #fffbe6, #fff5d6);
-    border: 1px solid #FFD700;
-    color: #5a3e1b;
-  }
-  .cat-bubble.hint-bubble::after {
-    border-color: #fffbe6 transparent transparent;
   }
 
   /* ===== 夜间模式 ===== */
@@ -772,7 +678,7 @@
   <div class="discovery-layer" id="discoveryLayer"></div>
 
   <!-- 动态小猫 -->
-  <div class="cat-container idle" id="cat" title="点1下→爱心眼 | 点2下→卡片提示 | 点3下→带我去找卡片">
+  <div class="cat-container idle" id="cat" title="点击摸摸我~ 连点3次有惊喜！">
     <div class="cat-bubble" id="catBubble">喵~</div>
     <img src="images/cat_q_clean.png?v=2" alt="小猫咪" draggable="false" />
     <div class="cat-heart-eyes" id="catHeartEyes">
@@ -808,17 +714,13 @@
 <!-- 右侧面板 -->
 <div class="side-panel" id="sidePanel">
   <div class="panel-section">
-    <div class="section-title" data-section="theme">🏛️ 房间主题 <span class="chevron">▼</span></div>
-    <div class="section-content" id="themeContent">
-      <div class="theme-grid" id="themeGrid"></div>
-    </div>
+    <div class="section-title">🏛️ 房间主题</div>
+    <div class="theme-grid" id="themeGrid"></div>
   </div>
 
   <div class="panel-section">
-    <div class="section-title" data-section="style">🎨 家具风格 <span class="chevron">▼</span></div>
-    <div class="section-content" id="styleContent">
-      <div class="style-tabs" id="styleTabs"></div>
-    </div>
+    <div class="section-title">🎨 家具风格</div>
+    <div class="style-tabs" id="styleTabs"></div>
   </div>
 
   <div class="furniture-list" id="furnitureList"></div>
@@ -828,9 +730,6 @@
     <button class="btn-primary" id="finishBtn">✓ 完成设计</button>
   </div>
 </div>
-
-<!-- 一键收起/展开按钮 -->
-<button class="panel-collapse-btn" id="panelCollapseBtn" title="收起/展开面板">◀</button>
 
 <!-- 移动端面板切换按钮 -->
 <button class="panel-toggle" id="panelToggle">🛋️</button>
@@ -1240,33 +1139,6 @@ function bindEvents() {
     panelToggle.textContent = sidePanel.classList.contains('open') ? '✕' : '🛋️';
   });
 
-  // ===== 一键收起/展开侧栏 =====
-  const panelCollapseBtn = $('#panelCollapseBtn');
-  let panelCollapsed = false;
-
-  panelCollapseBtn.addEventListener('click', () => {
-    panelCollapsed = !panelCollapsed;
-    if (panelCollapsed) {
-      sidePanel.classList.add('collapsed');
-      panelCollapseBtn.textContent = '▶';
-      panelCollapseBtn.title = '展开面板';
-    } else {
-      sidePanel.classList.remove('collapsed');
-      panelCollapseBtn.textContent = '◀';
-      panelCollapseBtn.title = '收起面板';
-    }
-  });
-
-  // ===== 栏目折叠/展开 =====
-  document.querySelectorAll('.section-title[data-section]').forEach(title => {
-    title.addEventListener('click', () => {
-      const sectionId = title.dataset.section;
-      const contentEl = title.nextElementSibling;
-      title.classList.toggle('collapsed');
-      contentEl.classList.toggle('collapsed');
-    });
-  });
-
   // 键盘快捷键
   document.addEventListener('keydown', (e) => {
     if (!state.selectedId) return;
@@ -1594,12 +1466,10 @@ function scheduleCatAction() {
 
 function setCatState(state) {
   catState = state;
-  cat.classList.remove('idle', 'walking', 'sleeping', 'clicked', 'dancing', 'eating-durian');
+  cat.classList.remove('idle', 'walking', 'sleeping', 'clicked');
   if (state === 'idle') cat.classList.add('idle');
   else if (state === 'walking') cat.classList.add('walking');
   else if (state === 'sleeping') cat.classList.add('sleeping');
-  else if (state === 'dancing') cat.classList.add('dancing');
-  else if (state === 'eating-durian') cat.classList.add('eating-durian');
 }
 
 function moveCatRandom() {
@@ -1684,30 +1554,25 @@ function onCatClick(e) {
   cat.classList.add('clicked');
   setTimeout(() => cat.classList.remove('clicked'), 500);
 
+  // 爱心眼 + 飞心
+  showHeartEyes();
+
+  // 连续点击3次 → 切换夜间模式
   catClickCount++;
   if (catClickResetTimer) clearTimeout(catClickResetTimer);
   catClickResetTimer = setTimeout(() => { catClickCount = 0; }, 2500);
-
-  if (catClickCount === 1) {
-    // 第1下：爱心眼 + 猫语
-    showHeartEyes();
-    showCatBubble(catMessages[Math.floor(Math.random() * catMessages.length)]);
-  } else if (catClickCount === 2) {
-    // 第2下：给卡片位置提示
-    showCatHint();
-  } else if (catClickCount >= 3) {
-    // 第3下：带我找到最近的卡片
+  if (catClickCount >= 3) {
     catClickCount = 0;
-    catLeadToCard();
+    toggleNightMode();
+    return;
   }
+  showCatBubble(catMessages[Math.floor(Math.random() * catMessages.length)]);
 }
 
-function showCatBubble(text, isHint) {
+function showCatBubble(text) {
   catBubble.textContent = text;
-  catBubble.classList.remove('hint-bubble');
-  if (isHint) catBubble.classList.add('hint-bubble');
   catBubble.classList.add('show');
-  setTimeout(() => { catBubble.classList.remove('show'); catBubble.classList.remove('hint-bubble'); }, 2200);
+  setTimeout(() => catBubble.classList.remove('show'), 1800);
 }
 
 // Hook into furniture addition so cat reacts
@@ -1739,152 +1604,6 @@ function spawnFloatingHeart() {
   heart.style.top = (rect.top + rect.height * 0.3) + 'px';
   document.body.appendChild(heart);
   setTimeout(() => heart.remove(), 1500);
-}
-
-// ===== 猫咪表演 =====
-function catDance() {
-  if (catTimer) { clearTimeout(catTimer); catTimer = null; }
-  setCatState('dancing');
-  showCatBubble('💃 跳舞庆祝~');
-
-  // 生成音符粒子
-  for (let i = 0; i < 6; i++) {
-    setTimeout(() => spawnNoteParticle(), i * 300);
-  }
-
-  setTimeout(() => {
-    setCatState('idle');
-    showCatBubble('跳完了！开心~ 🎉');
-    scheduleCatAction();
-  }, 2800);
-}
-
-function spawnNoteParticle() {
-  const rect = cat.getBoundingClientRect();
-  const note = document.createElement('div');
-  note.className = 'floating-heart';
-  const notes = ['🎵', '🎶', '🎼', '♪', '♫', '✨'];
-  note.textContent = notes[Math.floor(Math.random() * notes.length)];
-  note.style.left = (rect.left + rect.width * (0.2 + Math.random() * 0.6)) + 'px';
-  note.style.top = (rect.top + rect.height * 0.2) + 'px';
-  note.style.fontSize = (16 + Math.random() * 8) + 'px';
-  document.body.appendChild(note);
-  setTimeout(() => note.remove(), 1500);
-}
-
-function catEatDurian() {
-  if (catTimer) { clearTimeout(catTimer); catTimer = null; }
-  setCatState('eating-durian');
-  showCatBubble('榴莲好吃！🤤');
-
-  // 生成榴莲气味粒子
-  for (let i = 0; i < 5; i++) {
-    setTimeout(() => spawnDurianParticle(), i * 350);
-  }
-
-  setTimeout(() => {
-    showCatBubble('好香呀~ 吃完了 😋');
-    setCatState('idle');
-  }, 1400);
-
-  setTimeout(() => {
-    // 吃完后表情变化
-    showCatBubble('嗯…回味一下 🤔');
-  }, 2200);
-
-  setTimeout(() => {
-    setCatState('idle');
-    scheduleCatAction();
-  }, 3000);
-}
-
-function spawnDurianParticle() {
-  const rect = cat.getBoundingClientRect();
-  const particle = document.createElement('div');
-  particle.className = 'floating-heart';
-  const durianEmojis = ['🫡', '💫', '💚', '🧡', '💨', '✨'];
-  particle.textContent = durianEmojis[Math.floor(Math.random() * durianEmojis.length)];
-  particle.style.left = (rect.left + rect.width * (0.3 + Math.random() * 0.4)) + 'px';
-  particle.style.top = (rect.top + rect.height * 0.4) + 'px';
-  particle.style.fontSize = (14 + Math.random() * 8) + 'px';
-  document.body.appendChild(particle);
-  setTimeout(() => particle.remove(), 1500);
-}
-
-// ===== 猫咪提示 & 带路功能 =====
-function showCatHint() {
-  const theme = state.theme;
-  if (!discoveredCards[theme]) discoveredCards[theme] = [false, false, false];
-  const cards = currentCardPositions[theme] || [];
-  const undiscovered = [];
-  cards.forEach((c, i) => {
-    if (!discoveredCards[theme][i]) undiscovered.push({ ...c, idx: i });
-  });
-
-  if (undiscovered.length === 0) {
-    showCatBubble('这间房的卡片都找到了~ 🎉');
-    return;
-  }
-
-  // 找离猫咪最近的未发现卡片
-  let nearest = undiscovered[0];
-  let minDist = Math.abs(nearest.x - catX) + Math.abs(nearest.y - catY);
-  undiscovered.forEach(c => {
-    const dist = Math.abs(c.x - catX) + Math.abs(c.y - catY);
-    if (dist < minDist) { minDist = dist; nearest = c; }
-  });
-
-  // 从位置池找到对应的 hint 描述
-  const pool = CARD_POSITION_POOLS[theme] || [];
-  const hintEntry = pool.find(p => p.x === nearest.x && p.y === nearest.y);
-  const hintText = hintEntry ? hintEntry.hint : '在某个角落里';
-
-  showCatBubble('💡 提示：卡片' + hintText, true);
-  // 猫咪朝卡片方向微微偏头
-  const dirX = nearest.x > catX ? 1 : -1;
-  cat.style.transform = 'scaleX(' + dirX + ')';
-  setTimeout(() => { cat.style.transform = ''; }, 1500);
-}
-
-function catLeadToCard() {
-  const theme = state.theme;
-  if (!discoveredCards[theme]) discoveredCards[theme] = [false, false, false];
-  const cards = currentCardPositions[theme] || [];
-  const undiscovered = [];
-  cards.forEach((c, i) => {
-    if (!discoveredCards[theme][i]) undiscovered.push({ ...c, idx: i });
-  });
-
-  if (undiscovered.length === 0) {
-    showCatBubble('这间房的卡片都找到了~ 🎉');
-    return;
-  }
-
-  // 找离猫咪最近的未发现卡片
-  let nearest = undiscovered[0];
-  let minDist = Math.abs(nearest.x - catX) + Math.abs(nearest.y - catY);
-  undiscovered.forEach(c => {
-    const dist = Math.abs(c.x - catX) + Math.abs(c.y - catY);
-    if (dist < minDist) { minDist = dist; nearest = c; }
-  });
-
-  // 猫咪走过去
-  catWalkTo(nearest.x + 2, nearest.y + 4, () => {
-    showCatBubble('🔍 就在这里！快点点看~');
-    // 高亮闪烁提示
-    const cardEls = document.querySelectorAll('.discovery-card');
-    cardEls.forEach(el => {
-      if (parseInt(el.dataset.idx) === nearest.idx) {
-        el.style.opacity = '0.6';
-        el.style.transform = 'scale(1.3)';
-        el.style.transition = 'opacity 0.3s, transform 0.3s';
-        setTimeout(() => {
-          el.style.opacity = '';
-          el.style.transform = '';
-        }, 3000);
-      }
-    });
-  });
 }
 
 // ===== 夜间模式 =====
@@ -1926,12 +1645,12 @@ function generateStars() {
 // ===== 探秘卡片 =====
 // 每个房间提供多个候选位置，每次随机挑选 3 个藏起来
 const CARD_POSITION_POOLS = {
-  girly:   [{x:8,y:12,hint:'在沙滩边'},  {x:22,y:18,hint:'在礁石旁'},   {x:35,y:8,hint:'在天际线上'},  {x:48,y:22,hint:'在浪花附近'},  {x:62,y:10,hint:'在云朵下方'},  {x:75,y:20,hint:'在椰树旁'},  {x:88,y:14,hint:'在海角尽头'},  {x:15,y:28,hint:'在脚边沙地'},  {x:55,y:30,hint:'在浅水区域'}],
-  garden:  [{x:10,y:12,hint:'在书架旁'},  {x:25,y:20,hint:'在沙发角落'},  {x:38,y:8,hint:'在窗台边'},    {x:52,y:24,hint:'在茶几底下'},  {x:65,y:10,hint:'在柜子上方'},  {x:78,y:18,hint:'在门边角落'},  {x:90,y:12,hint:'在楼梯间'},    {x:18,y:28,hint:'在落地灯旁'},  {x:72,y:28,hint:'在地毯角落'}],
-  modern:  [{x:12,y:15,hint:'在床头柜旁'}, {x:28,y:22,hint:'在蓝色沙发旁'}, {x:42,y:10,hint:'在挂画下方'},  {x:55,y:25,hint:'在茶几附近'},  {x:68,y:12,hint:'在台灯旁'},   {x:82,y:20,hint:'在落地窗边'},  {x:92,y:15,hint:'在墙角处'},    {x:20,y:30,hint:'在地毯边缘'},  {x:60,y:32,hint:'在书桌下面'}],
-  kitchen: [{x:10,y:14,hint:'在灶台旁'},  {x:24,y:21,hint:'在料理台上'},  {x:38,y:9,hint:'在橱柜上方'},  {x:50,y:26,hint:'在餐桌底下'},  {x:64,y:11,hint:'在水壶附近'},  {x:78,y:23,hint:'在面包篮旁'},  {x:90,y:14,hint:'在冰箱边'},    {x:16,y:29,hint:'在椅脚旁'},    {x:58,y:31,hint:'在碗碟架下'}],
-  foyer:   [{x:12,y:12,hint:'在门框旁边'}, {x:26,y:19,hint:'在玄关桌上'},   {x:40,y:8,hint:'在壁灯下方'},  {x:54,y:23,hint:'在台阶处'},    {x:66,y:10,hint:'在镜子旁边'},  {x:80,y:18,hint:'在花瓶附近'},  {x:92,y:12,hint:'在角落鞋架旁'}, {x:18,y:27,hint:'在长椅旁边'},  {x:62,y:29,hint:'在挂衣架下'}],
-  dining:  [{x:10,y:13,hint:'在餐桌上'},  {x:25,y:21,hint:'在酒杯旁'},   {x:38,y:9,hint:'在吊灯下方'},  {x:52,y:24,hint:'在椅子旁边'},  {x:65,y:11,hint:'在果盘附近'},  {x:79,y:20,hint:'在窗边餐位'},  {x:91,y:14,hint:'在角落花瓶旁'}, {x:17,y:28,hint:'在桌脚旁'},    {x:60,y:30,hint:'在餐具柜下'}],
+  girly:   [{x:8,y:12},{x:22,y:18},{x:35,y:8},{x:48,y:22},{x:62,y:10},{x:75,y:20},{x:88,y:14},{x:15,y:28},{x:55,y:30}],
+  garden:  [{x:10,y:12},{x:25,y:20},{x:38,y:8},{x:52,y:24},{x:65,y:10},{x:78,y:18},{x:90,y:12},{x:18,y:28},{x:72,y:28}],
+  modern:  [{x:12,y:15},{x:28,y:22},{x:42,y:10},{x:55,y:25},{x:68,y:12},{x:82,y:20},{x:92,y:15},{x:20,y:30},{x:60,y:32}],
+  kitchen: [{x:10,y:14},{x:24,y:21},{x:38,y:9},{x:50,y:26},{x:64,y:11},{x:78,y:23},{x:90,y:14},{x:16,y:29},{x:58,y:31}],
+  foyer:   [{x:12,y:12},{x:26,y:19},{x:40,y:8},{x:54,y:23},{x:66,y:10},{x:80,y:18},{x:92,y:12},{x:18,y:27},{x:62,y:29}],
+  dining:  [{x:10,y:13},{x:25,y:21},{x:38,y:9},{x:52,y:24},{x:65,y:11},{x:79,y:20},{x:91,y:14},{x:17,y:28},{x:60,y:30}],
 };
 
 const CARD_EMOJIS = ['💌','🧸','🌷','🦋','🌸','🪴','🖼️','💡','📚','🍳','🫖','🧁','🪞','🪟','🗝️','🍷','🕯️','🍇','✨','🌟'];
@@ -2082,19 +1801,11 @@ function onDiscoveryCardClick(e) {
   // 标记已找到
   this.classList.add('found');
 
-  // 猫咪跑过来看，并根据已找到数量表演
+  // 猫咪跑过来看
   const cardX = parseFloat(this.style.left);
   const cardY = parseFloat(this.style.bottom);
   catWalkTo(cardX + 3, cardY + 5, () => {
-    if (found === 1) {
-      // 找到1张：猫咪跳舞庆祝
-      setTimeout(() => catDance(), 500);
-    } else if (found === 2) {
-      // 找到2张：猫咪表演吃榴莲
-      setTimeout(() => catEatDurian(), 500);
-    } else {
-      showCatBubble('找到啦！✨');
-    }
+    showCatBubble('找到啦！✨');
   });
 }
 
