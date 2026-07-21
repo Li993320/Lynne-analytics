@@ -32,7 +32,7 @@
     background-color: #1a1410;
     transition: opacity 0.4s ease;
   }
-  .room-bg.theme-girly   { background-image: url('images/room_girly.png'); }
+  .room-bg.theme-girly   { background-image: url('images/room_girly_new.jpg'); }
   .room-bg.theme-garden  { background-image: url('images/room_garden_new.jpg'); }
   .room-bg.theme-modern  { background-image: url('images/room_modern.jpg'); }
   .room-bg.theme-kitchen { background-image: url('images/room_kitchen.jpg'); }
@@ -621,21 +621,22 @@
   /* ===== 探秘卡片 ===== */
   .discovery-layer { position: absolute; inset: 0; z-index: 21; pointer-events: none; }
   .discovery-card {
-    position: absolute; width: 44px; height: 44px; pointer-events: auto; cursor: pointer;
-    transition: transform 0.3s; animation: cardGlow 2.5s ease-in-out infinite;
+    position: absolute; width: 40px; height: 40px; pointer-events: auto; cursor: pointer;
+    transition: transform 0.3s, opacity 0.3s; opacity: 0.18;
   }
-  .discovery-card:hover { transform: scale(1.2) rotate(5deg); }
-  .discovery-card.found { animation: none; opacity: 0.15; pointer-events: none; transform: scale(0.8); }
+  .discovery-card:hover { transform: scale(1.15); opacity: 0.55; }
+  .discovery-card.found { animation: none; opacity: 0.06; pointer-events: none; transform: scale(0.7); }
   .discovery-card .card-inner {
-    width: 100%; height: 100%; border-radius: 10px;
-    background: linear-gradient(135deg, #FFD700, #FF9500);
-    display: flex; align-items: center; justify-content: center; font-size: 22px;
-    box-shadow: 0 2px 10px rgba(255,170,0,0.5); border: 2px solid rgba(255,255,255,0.6);
+    width: 100%; height: 100%; border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.55), rgba(255,255,255,0.15));
+    display: flex; align-items: center; justify-content: center; font-size: 0;
+    box-shadow: 0 1px 6px rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+    backdrop-filter: blur(1px);
   }
-  .discovery-card.found .card-inner { background: linear-gradient(135deg, #ccc, #999); }
+  .discovery-card.found .card-inner { background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.25), rgba(255,255,255,0.05)); }
   @keyframes cardGlow {
-    0%,100% { filter: drop-shadow(0 0 4px rgba(255,215,0,0.5)); }
-    50% { filter: drop-shadow(0 0 14px rgba(255,215,0,0.9)); }
+    0%,100% { filter: drop-shadow(0 0 4px rgba(255,255,255,0.1)); }
+    50% { filter: drop-shadow(0 0 10px rgba(255,255,255,0.25)); }
   }
 
   /* 卡片翻开弹窗 */
@@ -1642,14 +1643,17 @@ function generateStars() {
 }
 
 // ===== 探秘卡片 =====
-const DISCOVERY_CARDS = {
-  girly:   [{x:12,y:14,emoji:'💌'},{x:55,y:10,emoji:'🧸'},{x:82,y:24,emoji:'🌷'}],
-  garden:  [{x:10,y:12,emoji:'🦋'},{x:50,y:8,emoji:'🌸'},{x:78,y:20,emoji:'🪴'}],
-  modern:  [{x:15,y:17,emoji:'🖼️'},{x:58,y:12,emoji:'💡'},{x:85,y:22,emoji:'📚'}],
-  kitchen: [{x:12,y:15,emoji:'🍳'},{x:52,y:10,emoji:'🫖'},{x:80,y:24,emoji:'🧁'}],
-  foyer:   [{x:14,y:13,emoji:'🪞'},{x:55,y:8,emoji:'🪟'},{x:82,y:20,emoji:'🗝️'}],
-  dining:  [{x:12,y:14,emoji:'🍷'},{x:50,y:10,emoji:'🕯️'},{x:82,y:22,emoji:'🍇'}],
+// 每个房间提供多个候选位置，每次随机挑选 3 个藏起来
+const CARD_POSITION_POOLS = {
+  girly:   [{x:8,y:12},{x:22,y:18},{x:35,y:8},{x:48,y:22},{x:62,y:10},{x:75,y:20},{x:88,y:14},{x:15,y:28},{x:55,y:30}],
+  garden:  [{x:10,y:12},{x:25,y:20},{x:38,y:8},{x:52,y:24},{x:65,y:10},{x:78,y:18},{x:90,y:12},{x:18,y:28},{x:72,y:28}],
+  modern:  [{x:12,y:15},{x:28,y:22},{x:42,y:10},{x:55,y:25},{x:68,y:12},{x:82,y:20},{x:92,y:15},{x:20,y:30},{x:60,y:32}],
+  kitchen: [{x:10,y:14},{x:24,y:21},{x:38,y:9},{x:50,y:26},{x:64,y:11},{x:78,y:23},{x:90,y:14},{x:16,y:29},{x:58,y:31}],
+  foyer:   [{x:12,y:12},{x:26,y:19},{x:40,y:8},{x:54,y:23},{x:66,y:10},{x:80,y:18},{x:92,y:12},{x:18,y:27},{x:62,y:29}],
+  dining:  [{x:10,y:13},{x:25,y:21},{x:38,y:9},{x:52,y:24},{x:65,y:11},{x:79,y:20},{x:91,y:14},{x:17,y:28},{x:60,y:30}],
 };
+
+const CARD_EMOJIS = ['💌','🧸','🌷','🦋','🌸','🪴','🖼️','💡','📚','🍳','🫖','🧁','🪞','🪟','🗝️','🍷','🕯️','🍇','✨','🌟'];
 
 const CARD_MESSAGES = [
   '你今天也辛苦啦，给自己一个拥抱吧~',
@@ -1702,21 +1706,76 @@ const CARD_MESSAGES = [
   '允许自己不完美，允许自己慢慢来',
   '你的温柔，有改变世界的力量',
   '今天也是被宇宙偷偷偏爱的一天',
+  '好运正在路上，请保持期待 ✨',
+  '即使慢一点，也是在前进呀',
+  '你今天的努力，是未来感谢自己的理由',
+  '世界很大，但你独一无二',
+  '请相信，美好的事情即将发生',
+  '疲惫的时候，就停下来歇一歇',
+  '你值得所有美好与善意',
+  '做自己喜欢的事，时间都会变慢',
+  '每一次尝试，都是在拓展自己的边界',
+  '生活不会辜负认真的人',
+  '把心放宽，路就会更宽',
+  '你比自己以为的更有力量',
+  '保持热爱，奔赴下一场山海',
+  '小小的进步，也是值得庆祝的胜利',
+  '别让昨天的烦恼，打扰今天的阳光',
+  '你笑起来的时候，整个世界都亮了',
+  '珍惜此刻，它就是最好的礼物',
+  '你的独特，是这个世界最珍贵的风景',
+  '勇敢一点，你比自己想象的更优秀',
+  '无论今天怎样，你都已经很棒了',
+  '给自己泡杯茶，享受片刻安宁',
+  '愿你一直被爱，一直可爱',
+  '所有的美好，都在如约而至',
+  '慢慢来，好戏都在烟火里',
+  '你的今天，决定了你明天的样子',
+  '不必追赶别人，你有自己的节奏',
+  '做一颗星星，有棱有角，还会发光',
+  '烦恼像乌云，总会被风吹散',
+  '愿你既有软肋，也有铠甲',
+  '哪怕只有一点点光，也要努力闪耀',
+  '今天的你，比昨天更勇敢了一点点',
+  '生活明朗，万物可爱',
+  '把期待降低，把依赖变少，你会过得很好',
+  '你的未来，藏在你现在的努力里',
+  '知足且上进，温柔而坚定',
+  '愿你成为自己的太阳，无需借谁的光',
+  '所有好运，都是你善良的积累',
+  '不开心的时候，就摸摸小猫吧 🐱',
+  '你走过的每一步，都算数',
 ];
 
 let discoveredCards = {};
+let currentCardPositions = {};
+let currentCardEmojis = {};
+
+function shufflePick(arr, n) {
+  const copy = arr.slice();
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy.slice(0, n);
+}
 
 function renderDiscoveryCards() {
   const layer = document.getElementById('discoveryLayer');
   const theme = state.theme;
-  if (!discoveredCards[theme]) discoveredCards[theme] = [false, false, false];
-  const cards = DISCOVERY_CARDS[theme] || [];
+  // 每次进入房间都重新随机藏卡片（新位置 + 重置发现状态）
+  const pool = CARD_POSITION_POOLS[theme] || [];
+  currentCardPositions[theme] = shufflePick(pool, 3);
+  discoveredCards[theme] = [false, false, false];
+  currentCardEmojis[theme] = shufflePick(CARD_EMOJIS, 3);
+
+  const cards = currentCardPositions[theme];
   layer.innerHTML = cards.map((c, i) => `
-    <div class="discovery-card ${discoveredCards[theme][i] ? 'found' : ''}" data-idx="${i}" style="left:${c.x}%;bottom:${c.y}%;">
-      <div class="card-inner">${discoveredCards[theme][i] ? '✨' : c.emoji}</div>
+    <div class="discovery-card" data-idx="${i}" style="left:${c.x}%;bottom:${c.y}%;">
+      <div class="card-inner"></div>
     </div>
   `).join('');
-  layer.querySelectorAll('.discovery-card:not(.found)').forEach(el => {
+  layer.querySelectorAll('.discovery-card').forEach(el => {
     el.addEventListener('click', onDiscoveryCardClick);
   });
 }
@@ -1729,19 +1788,18 @@ function onDiscoveryCardClick(e) {
   if (discoveredCards[theme][idx]) return;
 
   discoveredCards[theme][idx] = true;
-  const cardData = DISCOVERY_CARDS[theme][idx];
+  const cardEmoji = currentCardEmojis[theme][idx];
   const msg = CARD_MESSAGES[Math.floor(Math.random() * CARD_MESSAGES.length)];
   const found = discoveredCards[theme].filter(Boolean).length;
 
   // 弹窗
-  document.getElementById('cardEmoji').textContent = cardData.emoji;
+  document.getElementById('cardEmoji').textContent = cardEmoji;
   document.getElementById('cardText').textContent = msg;
   document.getElementById('cardCounter').textContent = `本房间已发现 ${found}/3 张卡片`;
   document.getElementById('cardReveal').classList.add('show');
 
   // 标记已找到
   this.classList.add('found');
-  this.querySelector('.card-inner').textContent = '✨';
 
   // 猫咪跑过来看
   const cardX = parseFloat(this.style.left);
@@ -1777,7 +1835,7 @@ function catWalkTo(tx, ty, cb) {
 function catExploreCard() {
   const theme = state.theme;
   if (!discoveredCards[theme]) discoveredCards[theme] = [false, false, false];
-  const cards = DISCOVERY_CARDS[theme] || [];
+  const cards = currentCardPositions[theme] || [];
   const undiscovered = [];
   cards.forEach((c, i) => {
     if (!discoveredCards[theme][i]) undiscovered.push({ ...c, idx: i });
