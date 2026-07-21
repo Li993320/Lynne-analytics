@@ -756,57 +756,6 @@
   .card-reveal .card-close:hover { transform: scale(1.05); }
   .card-reveal .card-counter { font-size: 12px; color: #c0a050; margin-top: 10px; }
 
-  /* ===== 开场动画 ===== */
-  .intro-overlay {
-    position: fixed; inset: 0; z-index: 300;
-    background: linear-gradient(135deg, #fdf6e3, #fce4ec, #e8f5e9);
-    display: flex; align-items: center; justify-content: center; flex-direction: column;
-    animation: introFadeIn 0.8s ease;
-  }
-  .intro-overlay.fade-out { animation: introFadeOut 1s ease forwards; }
-  @keyframes introFadeIn { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes introFadeOut { from { opacity: 1; } to { opacity: 0; } }
-  .intro-cat {
-    width: 120px; height: 120px;
-    animation: introCatStretch 2s ease-in-out;
-  }
-  .intro-cat img { width: 100%; height: 100%; }
-  @keyframes introCatStretch {
-    0%   { transform: scale(0.6) rotate(-10deg); opacity: 0; }
-    15%  { transform: scale(0.8) rotate(5deg); opacity: 0.5; }
-    30%  { transform: scale(1.1) rotate(-3deg); opacity: 1; }
-    50%  { transform: scale(1) translateY(-15px) rotate(2deg); }
-    70%  { transform: scale(1) translateY(0); }
-    85%  { transform: scale(1.05) translateY(-8px); }
-    100% { transform: scale(1); opacity: 1; }
-  }
-  .intro-text {
-    font-size: 22px; font-weight: 700; color: #5a3e1b;
-    margin-top: 20px; text-align: center;
-    opacity: 0; animation: introTextPop 0.6s ease 0.8s forwards;
-  }
-  .intro-sub {
-    font-size: 15px; color: #8b7355; margin-top: 8px;
-    opacity: 0; animation: introTextPop 0.5s ease 1.2s forwards;
-  }
-  .intro-welcome {
-    font-size: 18px; font-weight: 700; color: #c9a46a; margin-top: 12px;
-    opacity: 0; animation: introTextPop 0.5s ease 1.6s forwards;
-  }
-  @keyframes introTextPop {
-    from { opacity: 0; transform: translateY(10px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .intro-sparkle {
-    position: absolute; font-size: 20px; opacity: 0;
-    animation: introSparkle 1s ease forwards;
-  }
-  @keyframes introSparkle {
-    0%   { opacity: 0; transform: scale(0) translateY(0); }
-    50%  { opacity: 1; transform: scale(1.3) translateY(-30px); }
-    100% { opacity: 0; transform: scale(0.5) translateY(-60px); }
-  }
-
   /* ===== 小母猫花花 ===== */
   .female-cat {
     position: absolute; width: 70px; z-index: 25;
@@ -925,14 +874,6 @@
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </head>
 <body>
-
-<!-- 开场动画 -->
-<div class="intro-overlay" id="introOverlay">
-  <div class="intro-cat"><img src="images/cat_q_clean.png?v=2" alt="豆包" /></div>
-  <div class="intro-text" id="introText">🐱 豆包的世界</div>
-  <div class="intro-sub" id="introSub">一只英短蓝白矮脚猫的幸福生活</div>
-  <div class="intro-welcome" id="introWelcome">✨ 欢迎来到 Oasis Design ✨</div>
-</div>
 
 <!-- 全屏舞台 -->
 <div class="stage" id="stage">
@@ -2346,42 +2287,6 @@ function catExploreCard() {
   });
 }
 
-// ===== 开场动画 =====
-function playIntro() {
-  const overlay = document.getElementById('introOverlay');
-  if (!overlay) return; // safety check
-
-  const sparkles = ['🌸', '✨', '💫', '🎀', '🐾', '💕'];
-  for (let i = 0; i < 8; i++) {
-    setTimeout(() => {
-      if (!overlay.parentNode) return;
-      const sp = document.createElement('div');
-      sp.className = 'intro-sparkle';
-      sp.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
-      sp.style.left = (30 + Math.random() * 40) + '%';
-      sp.style.top = (20 + Math.random() * 40) + '%';
-      sp.style.animationDelay = '0s';
-      overlay.appendChild(sp);
-      setTimeout(() => { if (sp.parentNode) sp.remove(); }, 1200);
-    }, i * 200 + 400);
-  }
-
-  // Fade out intro after 2.8 seconds
-  setTimeout(() => {
-    if (!overlay.parentNode) return;
-    // Force reflow to ensure animation restarts
-    void overlay.offsetWidth;
-    overlay.classList.add('fade-out');
-    // Also set opacity directly as fallback
-    overlay.style.opacity = '0';
-    overlay.style.pointerEvents = 'none';
-    setTimeout(() => {
-      overlay.style.display = 'none';
-      if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
-    }, 1100);
-  }, 2800);
-}
-
 // ===== 豆包前世今生故事 =====
 const DOUBAO_STORY = [
   {
@@ -2538,7 +2443,6 @@ function onCatStoryClick(e) {
 }
 
 // ===== 启动 =====
-playIntro();
 initCat();
 init();
 </script>
