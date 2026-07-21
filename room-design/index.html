@@ -574,6 +574,92 @@
     border-style: solid;
     border-color: #fff transparent transparent;
   }
+
+  /* ===== 夜间模式 ===== */
+  .night-overlay {
+    position: absolute; inset: 0; z-index: 20; pointer-events: none;
+    background: linear-gradient(180deg, rgba(8,8,35,0.6) 0%, rgba(15,12,45,0.45) 50%, rgba(20,15,50,0.55) 100%);
+    opacity: 0; transition: opacity 1.5s ease; overflow: hidden;
+  }
+  .night-overlay.active { opacity: 1; }
+  .night-overlay .moon {
+    position: absolute; top: 7%; right: 8%; width: 55px; height: 55px;
+    border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff8e0, #f0dc8a);
+    box-shadow: 0 0 35px rgba(255,245,180,0.5), inset -8px -8px 0 rgba(200,180,100,0.2);
+  }
+  .night-overlay .star {
+    position: absolute; color: #fff; font-size: 12px;
+    text-shadow: 0 0 6px rgba(255,255,255,0.8);
+    animation: twinkle 2s ease-in-out infinite;
+  }
+  @keyframes twinkle { 0%,100%{opacity:0.2;} 50%{opacity:1;} }
+  .stage.night .cat-container { filter: drop-shadow(0 10px 16px rgba(0,0,0,0.5)) brightness(0.85); }
+  .stage.night .cat-container::before {
+    content:''; position:absolute; top:18%; left:50%; transform:translateX(-50%);
+    width:50%; height:6%; background:radial-gradient(ellipse,rgba(255,235,150,0.4),transparent);
+    border-radius:50%; z-index:0; pointer-events:none;
+  }
+
+  /* ===== 爱心眼 ===== */
+  .cat-heart-eyes {
+    position: absolute; top: 22%; left: 50%; width: 34%;
+    transform: translateX(-50%) scale(0); pointer-events: none; z-index: 3;
+    display: flex; justify-content: space-between; transition: transform 0.2s ease;
+  }
+  .cat-heart-yes.show, .cat-heart-eyes.show { transform: translateX(-50%) scale(1); }
+  .cat-heart-eyes svg { width: 38%; height: auto; filter: drop-shadow(0 0 4px rgba(255,107,157,0.6)); }
+  .floating-heart {
+    position: absolute; font-size: 18px; pointer-events: none; z-index: 30;
+    animation: floatUp 1.5s ease-out forwards;
+  }
+  @keyframes floatUp {
+    0% { opacity: 1; transform: translateY(0) scale(0.5); }
+    50% { opacity: 1; transform: translateY(-40px) scale(1.2); }
+    100% { opacity: 0; transform: translateY(-80px) scale(0.8); }
+  }
+
+  /* ===== 探秘卡片 ===== */
+  .discovery-layer { position: absolute; inset: 0; z-index: 21; pointer-events: none; }
+  .discovery-card {
+    position: absolute; width: 44px; height: 44px; pointer-events: auto; cursor: pointer;
+    transition: transform 0.3s; animation: cardGlow 2.5s ease-in-out infinite;
+  }
+  .discovery-card:hover { transform: scale(1.2) rotate(5deg); }
+  .discovery-card.found { animation: none; opacity: 0.15; pointer-events: none; transform: scale(0.8); }
+  .discovery-card .card-inner {
+    width: 100%; height: 100%; border-radius: 10px;
+    background: linear-gradient(135deg, #FFD700, #FF9500);
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
+    box-shadow: 0 2px 10px rgba(255,170,0,0.5); border: 2px solid rgba(255,255,255,0.6);
+  }
+  .discovery-card.found .card-inner { background: linear-gradient(135deg, #ccc, #999); }
+  @keyframes cardGlow {
+    0%,100% { filter: drop-shadow(0 0 4px rgba(255,215,0,0.5)); }
+    50% { filter: drop-shadow(0 0 14px rgba(255,215,0,0.9)); }
+  }
+
+  /* 卡片翻开弹窗 */
+  .card-reveal {
+    position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.45); opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+  .card-reveal.show { opacity: 1; pointer-events: auto; }
+  .card-reveal .card-content {
+    background: linear-gradient(135deg, #fffbe6, #fff5d6); border-radius: 24px;
+    padding: 36px 44px; max-width: 380px; text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3); border: 3px solid #FFD700;
+    transform: scale(0.3) rotateY(180deg); transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .card-reveal.show .card-content { transform: scale(1) rotateY(0deg); }
+  .card-reveal .card-emoji { font-size: 52px; margin-bottom: 8px; }
+  .card-reveal .card-title { font-size: 13px; color: #b8860b; font-weight: 700; margin-bottom: 12px; letter-spacing: 1px; }
+  .card-reveal .card-text { font-size: 17px; color: #5a3e1b; font-weight: 600; line-height: 1.7; }
+  .card-reveal .card-close {
+    margin-top: 22px; padding: 9px 28px; background: linear-gradient(135deg,#FFD700,#FF9500);
+    border: none; border-radius: 20px; font-weight: 700; cursor: pointer; color: #5a3e1b; font-size: 14px;
+  }
+  .card-reveal .card-close:hover { transform: scale(1.05); }
+  .card-reveal .card-counter { font-size: 12px; color: #c0a050; margin-top: 10px; }
 </style>
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </head>
@@ -584,10 +670,31 @@
   <div class="room-bg theme-girly" id="roomBg"></div>
   <div class="items-layer" id="itemsLayer"></div>
 
+  <!-- 夜间模式遮罩 -->
+  <div class="night-overlay" id="nightOverlay"></div>
+
+  <!-- 探秘卡片层 -->
+  <div class="discovery-layer" id="discoveryLayer"></div>
+
   <!-- 动态小猫 -->
-  <div class="cat-container idle" id="cat" title="点击摸摸我~">
+  <div class="cat-container idle" id="cat" title="点击摸摸我~ 连点3次有惊喜！">
     <div class="cat-bubble" id="catBubble">喵~</div>
     <img src="images/cat_q_clean.png?v=2" alt="小猫咪" draggable="false" />
+    <div class="cat-heart-eyes" id="catHeartEyes">
+      <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.5-7 10-7 10z" fill="#ff6b9d" stroke="#e84a7a" stroke-width="1.5"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.5-7 10-7 10z" fill="#ff6b9d" stroke="#e84a7a" stroke-width="1.5"/></svg>
+    </div>
+  </div>
+</div>
+
+<!-- 卡片翻开展示弹窗 -->
+<div class="card-reveal" id="cardReveal">
+  <div class="card-content">
+    <div class="card-emoji" id="cardEmoji">✨</div>
+    <div class="card-title">— 来自小猫的探秘礼物 —</div>
+    <div class="card-text" id="cardText"></div>
+    <button class="card-close" id="cardClose">收下心意 ❤</button>
+    <div class="card-counter" id="cardCounter"></div>
   </div>
 </div>
 
@@ -867,6 +974,7 @@ function renderThemes() {
 
 function applyTheme() {
   roomBg.className = 'room-bg theme-' + state.theme;
+  renderDiscoveryCards();
 }
 
 // 渲染风格 tab
@@ -1340,9 +1448,11 @@ function scheduleCatAction() {
   const delay = 3000 + Math.random() * 4000;
   catTimer = setTimeout(() => {
     const roll = Math.random();
-    if (roll < 0.5) {
+    if (roll < 0.35) {
       moveCatRandom();
-    } else if (roll < 0.75) {
+    } else if (roll < 0.5) {
+      catExploreCard();
+    } else if (roll < 0.72) {
       setCatState('sleeping');
       setTimeout(() => setCatState('idle'), 2000 + Math.random() * 2000);
     } else {
@@ -1441,8 +1551,21 @@ function onCatClick(e) {
   cat.classList.remove('clicked');
   void cat.offsetWidth;
   cat.classList.add('clicked');
-  showCatBubble(catMessages[Math.floor(Math.random() * catMessages.length)]);
   setTimeout(() => cat.classList.remove('clicked'), 500);
+
+  // 爱心眼 + 飞心
+  showHeartEyes();
+
+  // 连续点击3次 → 切换夜间模式
+  catClickCount++;
+  if (catClickResetTimer) clearTimeout(catClickResetTimer);
+  catClickResetTimer = setTimeout(() => { catClickCount = 0; }, 2500);
+  if (catClickCount >= 3) {
+    catClickCount = 0;
+    toggleNightMode();
+    return;
+  }
+  showCatBubble(catMessages[Math.floor(Math.random() * catMessages.length)]);
 }
 
 function showCatBubble(text) {
@@ -1460,6 +1583,217 @@ addItem = function(def) {
     showCatBubble('是新家具吗？');
   }
 };
+
+// ===== 爱心眼 =====
+function showHeartEyes() {
+  const eyes = document.getElementById('catHeartEyes');
+  eyes.classList.add('show');
+  setTimeout(() => eyes.classList.remove('show'), 1800);
+  // 飞心粒子
+  for (let i = 0; i < 4; i++) {
+    setTimeout(() => spawnFloatingHeart(), i * 150);
+  }
+}
+function spawnFloatingHeart() {
+  const rect = cat.getBoundingClientRect();
+  const heart = document.createElement('div');
+  heart.className = 'floating-heart';
+  heart.textContent = ['💕', '💖', '💗', '❤️'][Math.floor(Math.random() * 4)];
+  heart.style.left = (rect.left + rect.width * (0.3 + Math.random() * 0.4)) + 'px';
+  heart.style.top = (rect.top + rect.height * 0.3) + 'px';
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 1500);
+}
+
+// ===== 夜间模式 =====
+let catClickCount = 0;
+let catClickResetTimer = null;
+let nightMode = false;
+
+function toggleNightMode() {
+  nightMode = !nightMode;
+  const overlay = document.getElementById('nightOverlay');
+  const stage = document.getElementById('stage');
+  if (nightMode) {
+    overlay.classList.add('active');
+    stage.classList.add('night');
+    generateStars();
+    showCatBubble('🌙 夜幕降临~ 跟我探索夜晚吧');
+  } else {
+    overlay.classList.remove('active');
+    stage.classList.remove('night');
+    showCatBubble('☀️ 天亮啦~');
+  }
+}
+function generateStars() {
+  const overlay = document.getElementById('nightOverlay');
+  overlay.innerHTML = '<div class="moon"></div>';
+  const starChars = ['✦', '✧', '⋆', '·', '✶'];
+  for (let i = 0; i < 40; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.textContent = starChars[Math.floor(Math.random() * starChars.length)];
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 70 + '%';
+    s.style.fontSize = (8 + Math.random() * 10) + 'px';
+    s.style.animationDelay = Math.random() * 2 + 's';
+    overlay.appendChild(s);
+  }
+}
+
+// ===== 探秘卡片 =====
+const DISCOVERY_CARDS = {
+  girly:   [{x:12,y:14,emoji:'💌'},{x:55,y:10,emoji:'🧸'},{x:82,y:24,emoji:'🌷'}],
+  garden:  [{x:10,y:12,emoji:'🦋'},{x:50,y:8,emoji:'🌸'},{x:78,y:20,emoji:'🪴'}],
+  modern:  [{x:15,y:17,emoji:'🖼️'},{x:58,y:12,emoji:'💡'},{x:85,y:22,emoji:'📚'}],
+  kitchen: [{x:12,y:15,emoji:'🍳'},{x:52,y:10,emoji:'🫖'},{x:80,y:24,emoji:'🧁'}],
+  foyer:   [{x:14,y:13,emoji:'🪞'},{x:55,y:8,emoji:'🪟'},{x:82,y:20,emoji:'🗝️'}],
+  dining:  [{x:12,y:14,emoji:'🍷'},{x:50,y:10,emoji:'🕯️'},{x:82,y:22,emoji:'🍇'}],
+};
+
+const CARD_MESSAGES = [
+  '你今天也辛苦啦，给自己一个拥抱吧~',
+  '每一个用心的布置，都在诉说你的故事',
+  '生活的小确幸，就藏在这些细节里',
+  '你的品味，让这个空间有了温度',
+  '慢慢来，好的设计需要时间沉淀',
+  '你创造的美丽，正在被世界看见',
+  '今天也是充满可能性的一天！',
+  '记得喝水，记得休息，记得微笑',
+  '你的存在，就是这个房间最温暖的装饰',
+  '每一个小小的努力，都值得被肯定',
+  '不必完美，真实就足够动人',
+  '你正在做的事情，很有意义',
+  '深呼吸，一切都会好起来的',
+  '你的笑容比任何装饰都珍贵',
+  '今天的风，今天的光，今天的你，都刚好',
+  '把烦恼暂存，先享受这片刻宁静',
+  '你值得拥有美好的一切',
+  '坚持做自己喜欢的样子，真好看',
+  '这个角落因你而特别',
+  '偶尔停下来，欣赏自己创造的风景',
+  '你种下的每一颗种子，终会开花',
+  '不需要和别人比，你的风格就是最好的',
+  '今天的小成就，值得被庆祝',
+  '愿你被温柔以待，也温柔地对待自己',
+  '把每一天都当作新的画布',
+  '你的用心，时光会记得',
+  '在忙碌中，别忘了给自己留一盏灯',
+  '美好不在远方，就在你手边',
+  '你比想象中更有创造力',
+  '每一个选择，都在定义你是谁',
+  '今天也要元气满满哦！',
+  '你的小宇宙，正在闪闪发光',
+  '不必着急，慢慢长成自己喜欢的样子',
+  '生活中的仪式感，是对自己的温柔',
+  '记住，你已经做得很好了',
+  '给自己一点掌声，你值得',
+  '这一刻的宁静，是你给自己的礼物',
+  '你拥有让平凡变美好的超能力',
+  '愿你眼里有光，心中有爱',
+  '每一天都是重新开始的机会',
+  '你的坚持，终将变成光芒',
+  '在不确定中前行，本身就是勇气',
+  '今天也要好好爱自己呀',
+  '你的存在本身，就是一份礼物',
+  '把快乐当作日常，把美好当作习惯',
+  '有些风景，只有慢慢走才看得到',
+  '你认真生活的样子，真好看',
+  '允许自己不完美，允许自己慢慢来',
+  '你的温柔，有改变世界的力量',
+  '今天也是被宇宙偷偷偏爱的一天',
+];
+
+let discoveredCards = {};
+
+function renderDiscoveryCards() {
+  const layer = document.getElementById('discoveryLayer');
+  const theme = state.theme;
+  if (!discoveredCards[theme]) discoveredCards[theme] = [false, false, false];
+  const cards = DISCOVERY_CARDS[theme] || [];
+  layer.innerHTML = cards.map((c, i) => `
+    <div class="discovery-card ${discoveredCards[theme][i] ? 'found' : ''}" data-idx="${i}" style="left:${c.x}%;bottom:${c.y}%;">
+      <div class="card-inner">${discoveredCards[theme][i] ? '✨' : c.emoji}</div>
+    </div>
+  `).join('');
+  layer.querySelectorAll('.discovery-card:not(.found)').forEach(el => {
+    el.addEventListener('click', onDiscoveryCardClick);
+  });
+}
+
+function onDiscoveryCardClick(e) {
+  e.stopPropagation();
+  const idx = parseInt(this.dataset.idx);
+  const theme = state.theme;
+  if (!discoveredCards[theme]) discoveredCards[theme] = [false, false, false];
+  if (discoveredCards[theme][idx]) return;
+
+  discoveredCards[theme][idx] = true;
+  const cardData = DISCOVERY_CARDS[theme][idx];
+  const msg = CARD_MESSAGES[Math.floor(Math.random() * CARD_MESSAGES.length)];
+  const found = discoveredCards[theme].filter(Boolean).length;
+
+  // 弹窗
+  document.getElementById('cardEmoji').textContent = cardData.emoji;
+  document.getElementById('cardText').textContent = msg;
+  document.getElementById('cardCounter').textContent = `本房间已发现 ${found}/3 张卡片`;
+  document.getElementById('cardReveal').classList.add('show');
+
+  // 标记已找到
+  this.classList.add('found');
+  this.querySelector('.card-inner').textContent = '✨';
+
+  // 猫咪跑过来看
+  const cardX = parseFloat(this.style.left);
+  const cardY = parseFloat(this.style.bottom);
+  catWalkTo(cardX + 3, cardY + 5, () => {
+    showCatBubble('找到啦！✨');
+  });
+}
+
+document.getElementById('cardClose').addEventListener('click', () => {
+  document.getElementById('cardReveal').classList.remove('show');
+});
+document.getElementById('cardReveal').addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('show');
+});
+
+// 猫咪走向指定位置
+function catWalkTo(tx, ty, cb) {
+  if (catTimer) { clearTimeout(catTimer); catTimer = null; }
+  setCatState('walking');
+  catX = Math.max(2, Math.min(85, tx));
+  catY = Math.max(1, Math.min(85, ty));
+  cat.style.left = catX + '%';
+  cat.style.bottom = catY + '%';
+  setTimeout(() => {
+    setCatState('idle');
+    if (cb) cb();
+    scheduleCatAction();
+  }, 1300);
+}
+
+// 猫咪带主人探秘
+function catExploreCard() {
+  const theme = state.theme;
+  if (!discoveredCards[theme]) discoveredCards[theme] = [false, false, false];
+  const cards = DISCOVERY_CARDS[theme] || [];
+  const undiscovered = [];
+  cards.forEach((c, i) => {
+    if (!discoveredCards[theme][i]) undiscovered.push({ ...c, idx: i });
+  });
+
+  if (undiscovered.length === 0) {
+    showCatBubble('这个房间的卡片都找到啦~');
+    return;
+  }
+
+  // 走向最近未发现的卡片
+  const target = undiscovered[Math.floor(Math.random() * undiscovered.length)];
+  catWalkTo(target.x + 2, target.y + 4, () => {
+    showCatBubble('🔍 这附近好像有什么…');
+  });
+}
 
 // 启动
 initCat();
