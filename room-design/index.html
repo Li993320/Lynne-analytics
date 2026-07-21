@@ -512,11 +512,14 @@
     width: 13%;
     z-index: 25;
     pointer-events: auto;
-    cursor: pointer;
+    cursor: grab;
     transition: left 1.2s ease-in-out, bottom 1.2s ease-in-out, opacity 0.4s;
     transform-origin: center bottom;
     filter: drop-shadow(0 10px 16px rgba(20, 12, 6, 0.35));
+    user-select: none;
+    -webkit-user-drag: none;
   }
+  .cat-container.dragging { cursor: grabbing; transition: none !important; }
   .cat-container img {
     width: 100%;
     height: auto;
@@ -1322,14 +1325,14 @@ const catBubble = document.getElementById('catBubble');
 const catMessages = ['喵~', '咕噜咕噜…', '蹭你一下', '好舒服~', '陪我玩嘛', '要小鱼干'];
 
 let catState = 'idle';
-let catX = 15, catY = 8;
+let catX = 15, catY = 3;
 let catTimer = null;
 
 function initCat() {
   cat.style.left = catX + '%';
   cat.style.bottom = catY + '%';
-  cat.addEventListener('click', onCatClick);
-  cat.addEventListener('touchstart', onCatClick, { passive: true });
+  cat.addEventListener('mousedown', onCatPointerDown);
+  cat.addEventListener('touchstart', onCatPointerDown, { passive: false });
   scheduleCatAction();
 }
 
@@ -1360,13 +1363,77 @@ function setCatState(state) {
 
 function moveCatRandom() {
   const minX = 5, maxX = 75;
-  const minY = 5, maxY = 25;
   catX = minX + Math.random() * (maxX - minX);
-  catY = minY + Math.random() * (maxY - minY);
+  catY = 2 + Math.random() * 4;
   setCatState('walking');
   cat.style.left = catX + '%';
   cat.style.bottom = catY + '%';
   setTimeout(() => setCatState('idle'), 1200);
+}
+
+/* ===== 拖拽功能 ===== */
+let catDragging = false;
+let catDragMoved = false;
+let catDragOffX = 0, catDragOffY = 0;
+
+function onCatPointerDown(e) {
+  e.stopPropagation();
+  e.preventDefault();
+  catDragging = true;
+  catDragMoved = false;
+  cat.classList.add('dragging');
+  if (catTimer) { clearTimeout(catTimer); catTimer = null; }
+  setCatState('idle');
+
+  const stage = document.getElementById('stage');
+  const sRect = stage.getBoundingClientRect();
+  const cRect = cat.getBoundingClientRect();
+  const cx = e.clientX !== undefined ? e.clientX : e.touches[0].clientX;
+  const cy = e.clientY !== undefined ? e.clientY : e.touches[0].clientY;
+  catDragOffX = cx - (cRect.left + cRect.width / 2);
+  catDragOffY = cy - (cRect.top + cRect.height / 2);
+
+  document.addEventListener('mousemove', onCatPointerMove);
+  document.addEventListener('mouseup', onCatPointerUp);
+  document.addEventListener('touchmove', onCatPointerMove, { passive: false });
+  document.addEventListener('touchend', onCatPointerUp);
+}
+
+function onCatPointerMove(e) {
+  if (!catDragging) return;
+  e.preventDefault();
+  const cx = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0].clientX);
+  const cy = e.clientY !== undefined ? e.clientY : (e.touches && e.touches[0].clientY);
+  if (cx === undefined) return;
+
+  const stage = document.getElementById('stage');
+  const sRect = stage.getBoundingClientRect();
+  const px = ((cx - catDragOffX - sRect.left) / sRect.width) * 100;
+  const py = ((sRect.bottom - (cy - catDragOffY)) / sRect.height) * 100;
+
+  catX = Math.max(2, Math.min(85, px));
+  catY = Math.max(1, Math.min(85, py));
+  cat.style.left = catX + '%';
+  cat.style.bottom = catY + '%';
+  if (Math.abs(cx - (catDragOffX + sRect.left + (catX/100)*sRect.width)) > 3) catDragMoved = true;
+  catDragMoved = true;
+}
+
+function onCatPointerUp(e) {
+  if (!catDragging) return;
+  catDragging = false;
+  cat.classList.remove('dragging');
+  document.removeEventListener('mousemove', onCatPointerMove);
+  document.removeEventListener('mouseup', onCatPointerUp);
+  document.removeEventListener('touchmove', onCatPointerMove);
+  document.removeEventListener('touchend', onCatPointerUp);
+
+  if (!catDragMoved) {
+    onCatClick(e);
+  } else {
+    showCatBubble('你把我抱到这儿啦~');
+  }
+  scheduleCatAction();
 }
 
 function onCatClick(e) {
