@@ -546,6 +546,36 @@
     100% { transform: scale(1); }
   }
 
+  /* 猫咪跳舞 */
+  .cat-container.dancing {
+    animation: catDance 0.6s ease-in-out 4;
+    z-index: 30;
+  }
+  @keyframes catDance {
+    0%   { transform: translateY(0) rotate(0deg) scale(1); }
+    15%  { transform: translateY(-18px) rotate(-12deg) scale(1.08); }
+    30%  { transform: translateY(0) rotate(0deg) scale(1); }
+    45%  { transform: translateY(-14px) rotate(12deg) scale(1.06); }
+    60%  { transform: translateY(0) rotate(0deg) scale(1); }
+    75%  { transform: translateY(-20px) rotate(-8deg) scale(1.1); }
+    90%  { transform: translateY(0) rotate(0deg) scale(1); }
+    100% { transform: translateY(0) rotate(0deg) scale(1); }
+  }
+
+  /* 猫咪吃榴莲 */
+  .cat-container.eating-durian {
+    animation: catEatDurian 0.45s ease-in-out 6;
+  }
+  @keyframes catEatDurian {
+    0%   { transform: translateY(0) scale(1); }
+    20%  { transform: translateY(-4px) scale(1.05, 0.96); }
+    40%  { transform: translateY(0) scale(0.97, 1.04); }
+    50%  { transform: translateY(-3px) scale(1.03, 0.98) rotate(-3deg); }
+    70%  { transform: translateY(0) scale(0.98, 1.03) rotate(3deg); }
+    85%  { transform: translateY(-2px) scale(1.02, 0.99); }
+    100% { transform: translateY(0) scale(1); }
+  }
+
   .cat-bubble {
     position: absolute;
     top: -36px;
@@ -1474,10 +1504,12 @@ function scheduleCatAction() {
 
 function setCatState(state) {
   catState = state;
-  cat.classList.remove('idle', 'walking', 'sleeping', 'clicked');
+  cat.classList.remove('idle', 'walking', 'sleeping', 'clicked', 'dancing', 'eating-durian');
   if (state === 'idle') cat.classList.add('idle');
   else if (state === 'walking') cat.classList.add('walking');
   else if (state === 'sleeping') cat.classList.add('sleeping');
+  else if (state === 'dancing') cat.classList.add('dancing');
+  else if (state === 'eating-durian') cat.classList.add('eating-durian');
 }
 
 function moveCatRandom() {
@@ -1617,6 +1649,76 @@ function spawnFloatingHeart() {
   heart.style.top = (rect.top + rect.height * 0.3) + 'px';
   document.body.appendChild(heart);
   setTimeout(() => heart.remove(), 1500);
+}
+
+// ===== 猫咪表演 =====
+function catDance() {
+  if (catTimer) { clearTimeout(catTimer); catTimer = null; }
+  setCatState('dancing');
+  showCatBubble('💃 跳舞庆祝~');
+
+  // 生成音符粒子
+  for (let i = 0; i < 6; i++) {
+    setTimeout(() => spawnNoteParticle(), i * 300);
+  }
+
+  setTimeout(() => {
+    setCatState('idle');
+    showCatBubble('跳完了！开心~ 🎉');
+    scheduleCatAction();
+  }, 2800);
+}
+
+function spawnNoteParticle() {
+  const rect = cat.getBoundingClientRect();
+  const note = document.createElement('div');
+  note.className = 'floating-heart';
+  const notes = ['🎵', '🎶', '🎼', '♪', '♫', '✨'];
+  note.textContent = notes[Math.floor(Math.random() * notes.length)];
+  note.style.left = (rect.left + rect.width * (0.2 + Math.random() * 0.6)) + 'px';
+  note.style.top = (rect.top + rect.height * 0.2) + 'px';
+  note.style.fontSize = (16 + Math.random() * 8) + 'px';
+  document.body.appendChild(note);
+  setTimeout(() => note.remove(), 1500);
+}
+
+function catEatDurian() {
+  if (catTimer) { clearTimeout(catTimer); catTimer = null; }
+  setCatState('eating-durian');
+  showCatBubble('榴莲好吃！🤤');
+
+  // 生成榴莲气味粒子
+  for (let i = 0; i < 5; i++) {
+    setTimeout(() => spawnDurianParticle(), i * 350);
+  }
+
+  setTimeout(() => {
+    showCatBubble('好香呀~ 吃完了 😋');
+    setCatState('idle');
+  }, 1400);
+
+  setTimeout(() => {
+    // 吃完后表情变化
+    showCatBubble('嗯…回味一下 🤔');
+  }, 2200);
+
+  setTimeout(() => {
+    setCatState('idle');
+    scheduleCatAction();
+  }, 3000);
+}
+
+function spawnDurianParticle() {
+  const rect = cat.getBoundingClientRect();
+  const particle = document.createElement('div');
+  particle.className = 'floating-heart';
+  const durianEmojis = ['🫡', '💫', '💚', '🧡', '💨', '✨'];
+  particle.textContent = durianEmojis[Math.floor(Math.random() * durianEmojis.length)];
+  particle.style.left = (rect.left + rect.width * (0.3 + Math.random() * 0.4)) + 'px';
+  particle.style.top = (rect.top + rect.height * 0.4) + 'px';
+  particle.style.fontSize = (14 + Math.random() * 8) + 'px';
+  document.body.appendChild(particle);
+  setTimeout(() => particle.remove(), 1500);
 }
 
 // ===== 猫咪提示 & 带路功能 =====
@@ -1890,11 +1992,19 @@ function onDiscoveryCardClick(e) {
   // 标记已找到
   this.classList.add('found');
 
-  // 猫咪跑过来看
+  // 猫咪跑过来看，并根据已找到数量表演
   const cardX = parseFloat(this.style.left);
   const cardY = parseFloat(this.style.bottom);
   catWalkTo(cardX + 3, cardY + 5, () => {
-    showCatBubble('找到啦！✨');
+    if (found === 1) {
+      // 找到1张：猫咪跳舞庆祝
+      setTimeout(() => catDance(), 500);
+    } else if (found === 2) {
+      // 找到2张：猫咪表演吃榴莲
+      setTimeout(() => catEatDurian(), 500);
+    } else {
+      showCatBubble('找到啦！✨');
+    }
   });
 }
 
