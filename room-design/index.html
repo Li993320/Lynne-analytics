@@ -755,121 +755,6 @@
   }
   .card-reveal .card-close:hover { transform: scale(1.05); }
   .card-reveal .card-counter { font-size: 12px; color: #c0a050; margin-top: 10px; }
-
-  /* ===== 小母猫花花 ===== */
-  .female-cat {
-    position: absolute; width: 70px; z-index: 25;
-    opacity: 0; transition: opacity 0.5s ease, transform 0.4s ease;
-    pointer-events: none;
-  }
-  .female-cat.visible { opacity: 1; pointer-events: none; }
-  .female-cat-body {
-    width: 70px; height: 70px; position: relative;
-  }
-  .female-cat-emoji {
-    font-size: 48px; line-height: 1; display: block; text-align: center;
-  }
-  .female-cat-name {
-    font-size: 10px; color: #d4837a; font-weight: 700;
-    text-align: center; margin-top: 2px;
-  }
-  .female-cat-heart {
-    position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
-    font-size: 18px; opacity: 0;
-    animation: heartFloat 1.5s ease infinite 0.5s;
-  }
-  .female-cat.visible .female-cat-heart { opacity: 1; }
-  @keyframes heartFloat {
-    0%   { transform: translateX(-50%) translateY(0) scale(1); opacity: 1; }
-    50%  { transform: translateX(-50%) translateY(-15px) scale(1.2); opacity: 0.7; }
-    100% { transform: translateX(-50%) translateY(-25px) scale(0.8); opacity: 0; }
-  }
-
-  /* ===== 猫咪幸福动画（3卡解锁）===== */
-  .cat-container.happy-couple {
-    animation: catHappyBounce 0.5s ease 3;
-  }
-  @keyframes catHappyBounce {
-    0%   { transform: translateY(0) scale(1); }
-    30%  { transform: translateY(-10px) scale(1.08); }
-    60%  { transform: translateY(0) scale(1); }
-    100% { transform: translateY(0) scale(1); }
-  }
-
-  /* ===== 豆包前世今生故事书 ===== */
-  .storybook-overlay {
-    position: fixed; inset: 0; z-index: 250;
-    background: rgba(0,0,0,0.55); backdrop-filter: blur(8px);
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
-  }
-  .storybook-overlay.show { opacity: 1; pointer-events: auto; }
-  .storybook {
-    background: linear-gradient(135deg, #fff9e6, #fde8d0);
-    border-radius: 24px; padding: 30px 36px; max-width: 420px; width: 90%;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.35); border: 3px solid #c9a46a;
-    position: relative; overflow: hidden;
-  }
-  .storybook::before {
-    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
-    background: linear-gradient(90deg, #FFD700, #c9a46a, #FF9500, #c9a46a, #FFD700);
-  }
-  .storybook-title {
-    font-size: 20px; font-weight: 800; color: #5a3e1b;
-    text-align: center; margin-bottom: 6px;
-  }
-  .storybook-subtitle {
-    font-size: 12px; color: #8b7355; text-align: center; margin-bottom: 18px;
-  }
-  .storybook-scene {
-    text-align: center; min-height: 200px; position: relative;
-    transition: opacity 0.3s ease;
-  }
-  .storybook-visual {
-    font-size: 64px; line-height: 1.2; margin-bottom: 12px;
-    animation: storyVisualPop 0.5s ease forwards;
-  }
-  @keyframes storyVisualPop {
-    from { transform: scale(0.3); opacity: 0; }
-    to   { transform: scale(1); opacity: 1; }
-  }
-  .storybook-narration {
-    font-size: 15px; color: #5a3e1b; font-weight: 600;
-    line-height: 1.8; min-height: 50px;
-    animation: storyNarrationFade 0.5s ease 0.3s forwards;
-    opacity: 0;
-  }
-  @keyframes storyNarrationFade {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .storybook-chapter {
-    font-size: 11px; color: #c9a46a; font-weight: 700;
-    margin-top: 14px; text-align: center;
-  }
-  .storybook-nav {
-    display: flex; justify-content: center; gap: 12px; margin-top: 18px;
-  }
-  .storybook-btn {
-    padding: 8px 20px; border-radius: 16px; font-weight: 700; font-size: 13px;
-    cursor: pointer; border: none; transition: transform 0.2s;
-  }
-  .storybook-btn:hover { transform: scale(1.05); }
-  .storybook-btn.next {
-    background: linear-gradient(135deg, #c9a46a, #FFD700); color: #5a3e1b;
-  }
-  .storybook-btn.skip {
-    background: rgba(0,0,0,0.08); color: #8b7355;
-  }
-  .storybook-progress {
-    display: flex; justify-content: center; gap: 6px; margin-top: 14px;
-  }
-  .storybook-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: rgba(0,0,0,0.15); transition: all 0.3s;
-  }
-  .storybook-dot.active { background: #c9a46a; transform: scale(1.3); }
-  .storybook-dot.done { background: #FFD700; }
 </style>
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </head>
@@ -887,21 +772,12 @@
   <div class="discovery-layer" id="discoveryLayer"></div>
 
   <!-- 动态小猫 -->
-  <div class="cat-container idle" id="cat" title="点1下→爱心眼 | 点2下→卡片提示 | 点3下→带我去找卡片 | 3卡全开→幸福猫生">
+  <div class="cat-container idle" id="cat" title="点1下→爱心眼 | 点2下→卡片提示 | 点3下→带我去找卡片">
     <div class="cat-bubble" id="catBubble">喵~</div>
     <img src="images/cat_q_clean.png?v=2" alt="小猫咪" draggable="false" />
     <div class="cat-heart-eyes" id="catHeartEyes">
       <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.5-7 10-7 10z" fill="#ff6b9d" stroke="#e84a7a" stroke-width="1.5"/></svg>
       <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.5-7 10-7 10z" fill="#ff6b9d" stroke="#e84a7a" stroke-width="1.5"/></svg>
-    </div>
-  </div>
-
-  <!-- 小母猫花花 -->
-  <div class="female-cat" id="femaleCat">
-    <div class="female-cat-body">
-      <div class="female-cat-heart">💕</div>
-      <div class="female-cat-emoji">🐱</div>
-      <div class="female-cat-name">花花</div>
     </div>
   </div>
 </div>
@@ -914,24 +790,6 @@
     <div class="card-text" id="cardText"></div>
     <button class="card-close" id="cardClose">收下心意 ❤</button>
     <div class="card-counter" id="cardCounter"></div>
-  </div>
-</div>
-
-<!-- 豆包前世今生故事书 -->
-<div class="storybook-overlay" id="storybookOverlay">
-  <div class="storybook">
-    <div class="storybook-title">📖 豆包的前世今生</div>
-    <div class="storybook-subtitle">一只英短蓝白矮脚猫的生命旅程</div>
-    <div class="storybook-scene" id="storyScene">
-      <div class="storybook-visual" id="storyVisual"></div>
-      <div class="storybook-narration" id="storyNarration"></div>
-    </div>
-    <div class="storybook-chapter" id="storyChapter"></div>
-    <div class="storybook-progress" id="storyProgress"></div>
-    <div class="storybook-nav">
-      <button class="storybook-btn skip" id="storySkip">跳过</button>
-      <button class="storybook-btn next" id="storyNext">下一章 →</button>
-    </div>
   </div>
 </div>
 
@@ -2234,9 +2092,6 @@ function onDiscoveryCardClick(e) {
     } else if (found === 2) {
       // 找到2张：猫咪表演吃榴莲
       setTimeout(() => catEatDurian(), 500);
-    } else if (found === 3) {
-      // 找到3张：解锁猫咪专属动画——和小母猫的快乐猫生
-      setTimeout(() => catHappyLifeAnimation(), 600);
     } else {
       showCatBubble('找到啦！✨');
     }
@@ -2287,162 +2142,7 @@ function catExploreCard() {
   });
 }
 
-// ===== 豆包前世今生故事 =====
-const DOUBAO_STORY = [
-  {
-    chapter: '第一章 · 呱呱坠地',
-    visual: '🌱🐾',
-    narration: '豆包出生在一个温暖的猫舍里，是蓝白花色的小奶猫。
-短短的腿、圆圆的脸，一睁开眼就对这个世界充满好奇。'
-  },
-  {
-    chapter: '第二章 · 茁壮成长',
-    visual: '🐱💪',
-    narration: '豆包一天天长大，变成了漂亮的英短蓝白矮脚猫。
-蓝灰色的毛发闪着光泽，大眼睛像琥珀一样晶莹。'
-  },
-  {
-    chapter: '第三章 · 命中注定',
-    visual: '☀️💕',
-    narration: '在一个阳光暖暖的午后，豆包遇见了小母猫花花。
-花花有着奶油色的毛发和粉色的小鼻子，豆包一见倾心。'
-  },
-  {
-    chapter: '第四章 · 幸福猫生',
-    visual: '🏠💗',
-    narration: '豆包和花花在一起了！
-他们一起蹭蹭、呼噜、晒太阳、追逐蝴蝶，每一天都充满快乐。'
-  },
-  {
-    chapter: '第五章 · 遇见主人',
-    visual: '👨‍👩‍👧🐾',
-    narration: '豆包被温柔的主人带回了家，开始了新的幸福生活。
-主人给豆包买小鱼干、梳毛、陪玩，豆包觉得——这就是最幸福的日子了！'
-  }
-];
-
-let storyChapter = 0;
-const storyScene = document.getElementById('storyScene');
-const storyVisual = document.getElementById('storyVisual');
-const storyNarration = document.getElementById('storyNarration');
-const storyChapterEl = document.getElementById('storyChapter');
-const storyProgress = document.getElementById('storyProgress');
-
-function renderStoryChapter(idx) {
-  const ch = DOUBAO_STORY[idx];
-  storyVisual.textContent = ch.visual;
-  storyNarration.textContent = ch.narration;
-  storyChapterEl.textContent = ch.chapter;
-
-  // Update progress dots
-  storyProgress.innerHTML = DOUBAO_STORY.map((_, i) => {
-    let cls = 'storybook-dot';
-    if (i === idx) cls += ' active';
-    if (i < idx) cls += ' done';
-    return '<div class="' + cls + '"></div>';
-  }).join('');
-
-  // Reset animation
-  storyVisual.style.animation = 'none';
-  storyNarration.style.animation = 'none';
-  void storyVisual.offsetWidth;
-  storyVisual.style.animation = 'storyVisualPop 0.5s ease forwards';
-  storyNarration.style.animation = 'storyNarrationFade 0.5s ease 0.3s forwards';
-  storyNarration.style.opacity = '0';
-}
-
-function openStorybook() {
-  storyChapter = 0;
-  renderStoryChapter(0);
-  document.getElementById('storybookOverlay').classList.add('show');
-}
-
-function closeStorybook() {
-  document.getElementById('storybookOverlay').classList.remove('show');
-}
-
-document.getElementById('storyNext').addEventListener('click', () => {
-  storyChapter++;
-  if (storyChapter >= DOUBAO_STORY.length) {
-    closeStorybook();
-    showCatBubble('这就是我的故事~ 📖');
-  } else {
-    renderStoryChapter(storyChapter);
-  }
-});
-
-document.getElementById('storySkip').addEventListener('click', closeStorybook);
-
-// ===== 小母猫花花 =====
-const femaleCat = document.getElementById('femaleCat');
-let femaleCatVisible = false;
-
-function showFemaleCat() {
-  if (femaleCatVisible) return;
-  femaleCatVisible = true;
-  // Position female cat near Doubao
-  femaleCat.style.left = (catX + 5) + '%';
-  femaleCat.style.bottom = catY + '%';
-  femaleCat.classList.add('visible');
-}
-
-function hideFemaleCat() {
-  femaleCatVisible = false;
-  femaleCat.classList.remove('visible');
-}
-
-// ===== 猫咪幸福动画（3卡解锁）=====
-function catHappyLifeAnimation() {
-  if (catTimer) { clearTimeout(catTimer); catTimer = null; }
-
-  // Step 1: 花花出现
-  showFemaleCat();
-  setCatState('happy-couple');
-  showCatBubble('花花来啦！💕');
-
-  // Step 2: 蹭蹭互动
-  setTimeout(() => {
-    showCatBubble('蹭蹭~ 呼噜呼噜 🫶');
-    // Generate heart particles
-    for (let i = 0; i < 5; i++) {
-      setTimeout(() => {
-        const heart = document.createElement('div');
-        heart.className = 'floating-heart';
-        heart.textContent = ['💕', '💗', '🥰', '❤️', '💖'][Math.floor(Math.random() * 5)];
-        const rect = cat.getBoundingClientRect();
-        heart.style.left = (rect.left + rect.width / 2) + 'px';
-        heart.style.top = (rect.top) + 'px';
-        heart.style.fontSize = (18 + Math.random() * 10) + 'px';
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 1800);
-      }, i * 200);
-    }
-  }, 1500);
-
-  // Step 3: 快乐猫生
-  setTimeout(() => {
-    showCatBubble('我们在一起，就是最幸福的日子 🏠');
-  }, 2800);
-
-  // Step 4: 提示可以看故事书
-  setTimeout(() => {
-    setCatState('idle');
-    showCatBubble('想听我的故事吗？点我看 📖');
-    // Add a click handler to open storybook
-    cat.addEventListener('click', onCatStoryClick);
-    scheduleCatAction();
-  }, 4000);
-}
-
-function onCatStoryClick(e) {
-  // Only trigger storybook if female cat is visible (3 cards found)
-  if (femaleCatVisible) {
-    cat.removeEventListener('click', onCatStoryClick);
-    openStorybook();
-  }
-}
-
-// ===== 启动 =====
+// 启动
 initCat();
 init();
 </script>
