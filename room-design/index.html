@@ -505,6 +505,72 @@
   }
   .model-caption { text-align: center; padding: 8px 8px 2px; font-weight: 700; background: #fff; color: #1e293b; }
   .model-tip { text-align: center; font-size: 12px; color: #64748b; padding-bottom: 10px; background: #fff; }
+
+  /* ===== 动态小猫 ===== */
+  .cat-container {
+    position: absolute;
+    width: 13%;
+    z-index: 25;
+    pointer-events: auto;
+    cursor: pointer;
+    transition: left 1.2s ease-in-out, bottom 1.2s ease-in-out, opacity 0.4s;
+    transform-origin: center bottom;
+    filter: drop-shadow(0 10px 16px rgba(20, 12, 6, 0.35));
+  }
+  .cat-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+    pointer-events: none;
+  }
+  .cat-container.idle { animation: catBreathe 2.4s ease-in-out infinite; }
+  .cat-container.walking { animation: catWalk 0.5s ease-in-out infinite; }
+  .cat-container.clicked { animation: catBounce 0.5s ease-out; }
+  .cat-container.sleeping { opacity: 0.8; transform: rotate(-6deg) scale(0.98); }
+
+  @keyframes catBreathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03, 0.98); }
+  }
+  @keyframes catWalk {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-6px) rotate(2deg); }
+  }
+  @keyframes catBounce {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.15, 0.9); }
+    60% { transform: scale(0.95, 1.1); }
+    100% { transform: scale(1); }
+  }
+
+  .cat-bubble {
+    position: absolute;
+    top: -36px;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    background: #fff;
+    color: #2a1f17;
+    padding: 7px 13px;
+    border-radius: 14px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+    pointer-events: none;
+    z-index: 5;
+  }
+  .cat-bubble.show { transform: translateX(-50%) scale(1); }
+  .cat-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px 5px 0;
+    border-style: solid;
+    border-color: #fff transparent transparent;
+  }
 </style>
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </head>
@@ -514,6 +580,12 @@
 <div class="stage" id="stage">
   <div class="room-bg theme-girly" id="roomBg"></div>
   <div class="items-layer" id="itemsLayer"></div>
+
+  <!-- 动态小猫 -->
+  <div class="cat-container idle" id="cat" title="点击摸摸我~">
+    <div class="cat-bubble" id="catBubble">喵~</div>
+    <img src="images/cat_q_clean.png" alt="小猫咪" draggable="false" />
+  </div>
 </div>
 
 <!-- 顶部栏 -->
@@ -1244,7 +1316,86 @@ function loadState() {
   } catch (e) {}
 }
 
+// ===== 动态小猫 =====
+const cat = document.getElementById('cat');
+const catBubble = document.getElementById('catBubble');
+const catMessages = ['喵~', '咕噜咕噜…', '蹭你一下', '好舒服~', '陪我玩嘛', '要小鱼干'];
+
+let catState = 'idle';
+let catX = 15, catY = 8;
+let catTimer = null;
+
+function initCat() {
+  cat.style.left = catX + '%';
+  cat.style.bottom = catY + '%';
+  cat.addEventListener('click', onCatClick);
+  cat.addEventListener('touchstart', onCatClick, { passive: true });
+  scheduleCatAction();
+}
+
+function scheduleCatAction() {
+  const delay = 3000 + Math.random() * 4000;
+  catTimer = setTimeout(() => {
+    const roll = Math.random();
+    if (roll < 0.5) {
+      moveCatRandom();
+    } else if (roll < 0.75) {
+      setCatState('sleeping');
+      setTimeout(() => setCatState('idle'), 2000 + Math.random() * 2000);
+    } else {
+      setCatState('idle');
+      showCatBubble(catMessages[Math.floor(Math.random() * catMessages.length)]);
+    }
+    scheduleCatAction();
+  }, delay);
+}
+
+function setCatState(state) {
+  catState = state;
+  cat.classList.remove('idle', 'walking', 'sleeping', 'clicked');
+  if (state === 'idle') cat.classList.add('idle');
+  else if (state === 'walking') cat.classList.add('walking');
+  else if (state === 'sleeping') cat.classList.add('sleeping');
+}
+
+function moveCatRandom() {
+  const minX = 5, maxX = 75;
+  const minY = 5, maxY = 25;
+  catX = minX + Math.random() * (maxX - minX);
+  catY = minY + Math.random() * (maxY - minY);
+  setCatState('walking');
+  cat.style.left = catX + '%';
+  cat.style.bottom = catY + '%';
+  setTimeout(() => setCatState('idle'), 1200);
+}
+
+function onCatClick(e) {
+  e.stopPropagation();
+  cat.classList.remove('clicked');
+  void cat.offsetWidth;
+  cat.classList.add('clicked');
+  showCatBubble(catMessages[Math.floor(Math.random() * catMessages.length)]);
+  setTimeout(() => cat.classList.remove('clicked'), 500);
+}
+
+function showCatBubble(text) {
+  catBubble.textContent = text;
+  catBubble.classList.add('show');
+  setTimeout(() => catBubble.classList.remove('show'), 1800);
+}
+
+// Hook into furniture addition so cat reacts
+const originalAddItem = addItem;
+addItem = function(def) {
+  originalAddItem(def);
+  if (catState !== 'walking') {
+    setCatState('idle');
+    showCatBubble('是新家具吗？');
+  }
+};
+
 // 启动
+initCat();
 init();
 </script>
 </body>
