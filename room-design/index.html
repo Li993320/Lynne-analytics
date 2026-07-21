@@ -2349,10 +2349,12 @@ function catExploreCard() {
 // ===== 开场动画 =====
 function playIntro() {
   const overlay = document.getElementById('introOverlay');
+  if (!overlay) return; // safety check
+
   const sparkles = ['🌸', '✨', '💫', '🎀', '🐾', '💕'];
-  // Spawn sparkles around the cat
   for (let i = 0; i < 8; i++) {
     setTimeout(() => {
+      if (!overlay.parentNode) return;
       const sp = document.createElement('div');
       sp.className = 'intro-sparkle';
       sp.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
@@ -2360,17 +2362,23 @@ function playIntro() {
       sp.style.top = (20 + Math.random() * 40) + '%';
       sp.style.animationDelay = '0s';
       overlay.appendChild(sp);
-      setTimeout(() => sp.remove(), 1200);
+      setTimeout(() => { if (sp.parentNode) sp.remove(); }, 1200);
     }, i * 200 + 400);
   }
 
-  // Fade out intro after 3 seconds
+  // Fade out intro after 2.8 seconds
   setTimeout(() => {
+    if (!overlay.parentNode) return;
+    // Force reflow to ensure animation restarts
+    void overlay.offsetWidth;
     overlay.classList.add('fade-out');
+    // Also set opacity directly as fallback
+    overlay.style.opacity = '0';
+    overlay.style.pointerEvents = 'none';
     setTimeout(() => {
       overlay.style.display = 'none';
-      overlay.remove();
-    }, 1000);
+      if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+    }, 1100);
   }, 2800);
 }
 
