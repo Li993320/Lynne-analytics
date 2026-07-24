@@ -618,6 +618,81 @@
     100% { opacity: 0; transform: translateY(-80px) scale(0.8); }
   }
 
+
+  /* ===== 小猫变装系统（增量新增，不影响原有逻辑）===== */
+  .cat-outfit {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 4; overflow: visible;
+  }
+  .cat-outfit .oa-hat {
+    position: absolute; top: -6%; left: 50%; width: 62%;
+    transform: translateX(-50%);
+    animation: outfitInHat 0.4s ease-out;
+  }
+  .cat-outfit .oa-face {
+    position: absolute; top: 19%; left: 50%; width: 40%;
+    transform: translateX(-50%);
+    animation: outfitInFace 0.5s ease-out;
+  }
+  .cat-outfit .oa-neck {
+    position: absolute; top: 39%; left: 50%; width: 52%;
+    transform: translateX(-50%);
+    animation: outfitInUp 0.4s ease-out 0.1s both;
+  }
+  .cat-outfit .oa-body {
+    position: absolute; top: 47%; left: 50%; width: 68%;
+    transform: translateX(-50%);
+    animation: outfitInUp 0.4s ease-out 0.15s both;
+  }
+  .cat-outfit .oa-side {
+    position: absolute; top: 28%; right: -10%; width: 26%;
+    animation: outfitInSide 0.4s ease-out 0.2s both;
+  }
+  .cat-outfit svg { width: 100%; height: auto; display: block; }
+  @keyframes outfitInHat {
+    from { opacity: 0; transform: translateX(-50%) translateY(-12px) scale(0.7); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+  }
+  @keyframes outfitInFace {
+    from { opacity: 0; transform: translateX(-50%) scale(0.5); }
+    60% { opacity: 0.8; transform: translateX(-50%) scale(1.1); }
+    to { opacity: 1; transform: translateX(-50%) scale(1); }
+  }
+  @keyframes outfitInUp {
+    from { opacity: 0; transform: translateX(-50%) translateY(12px) scale(0.7); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+  }
+  @keyframes outfitInSide {
+    from { opacity: 0; transform: scale(0.3) rotate(-30deg); }
+    to { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+
+  .cat-outfit-btn {
+    position: absolute; top: -30px; right: -12px;
+    width: 30px; height: 30px; border-radius: 50%;
+    background: linear-gradient(135deg, #ff9a56, #ff6a88);
+    border: 2px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    font-size: 15px; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; z-index: 10; pointer-events: auto;
+    transition: transform 0.2s;
+    animation: outfitBtnPulse 2s ease-in-out infinite;
+  }
+  .cat-outfit-btn:hover { transform: scale(1.15); }
+  .cat-outfit-btn:active { transform: scale(0.92); }
+  @keyframes outfitBtnPulse {
+    0%,100% { box-shadow: 0 2px 8px rgba(255,106,136,0.3); }
+    50% { box-shadow: 0 2px 16px rgba(255,106,136,0.6); }
+  }
+  .outfit-sparkle {
+    position: absolute; pointer-events: none; z-index: 6;
+    animation: outfitSparkle 0.7s ease-out forwards;
+  }
+  @keyframes outfitSparkle {
+    0% { opacity: 1; transform: scale(0) rotate(0deg); }
+    40% { opacity: 1; transform: scale(1.4) rotate(180deg); }
+    100% { opacity: 0; transform: scale(0.3) rotate(360deg) translateY(-20px); }
+  }
+
   /* ===== 探秘卡片 ===== */
   .discovery-layer { position: absolute; inset: 0; z-index: 21; pointer-events: none; }
   .discovery-card {
@@ -728,6 +803,8 @@
       <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.5-7 10-7 10z" fill="#ff6b9d" stroke="#e84a7a" stroke-width="1.5"/></svg>
       <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.5-7 10-7 10z" fill="#ff6b9d" stroke="#e84a7a" stroke-width="1.5"/></svg>
     </div>
+    <div class="cat-outfit" id="catOutfit"></div>
+    <div class="cat-outfit-btn" id="catOutfitBtn" title="点击换装~">👗</div>
   </div>
 </div>
 
@@ -2009,6 +2086,266 @@ function catExploreCard() {
 
 // 启动
 initCat();
+
+// ===== 小猫变装系统（增量新增，不影响原有逻辑）=====
+(function() {
+  var outfitEl = document.getElementById('catOutfit');
+  var outfitBtn = document.getElementById('catOutfitBtn');
+  var OUTFITS = [
+    // 1. 鸡腿帽
+    {
+      name: '鸡腿帽',
+      bubble: '🍗 鸡腿帽子！好好吃的样子~',
+      html: '<div class="oa-hat"><svg viewBox="0 0 60 45">' +
+        '<ellipse cx="30" cy="38" rx="7" ry="4" fill="#f5ede0" stroke="#c9b8a0" stroke-width="0.8"/>' +
+        '<circle cx="23" cy="37" r="4" fill="#f5ede0" stroke="#c9b8a0" stroke-width="0.8"/>' +
+        '<circle cx="37" cy="37" r="4" fill="#f5ede0" stroke="#c9b8a0" stroke-width="0.8"/>' +
+        '<path d="M16,34 Q12,18 20,10 Q30,4 40,10 Q48,18 44,34 Z" fill="#e8b54a" stroke="#c4952e" stroke-width="1"/>' +
+        '<path d="M20,28 Q18,16 26,12 Q34,10 40,16" fill="none" stroke="#d4a020" stroke-width="0.8" opacity="0.4"/>' +
+        '<ellipse cx="26" cy="18" rx="6" ry="4" fill="#f5d678" opacity="0.5"/>' +
+        '<circle cx="24" cy="22" r="1" fill="#c08020" opacity="0.5"/>' +
+        '<circle cx="34" cy="20" r="1" fill="#c08020" opacity="0.5"/>' +
+        '<circle cx="30" cy="28" r="1.2" fill="#c08020" opacity="0.5"/>' +
+        '</svg></div>'
+    },
+    // 2. 小公主
+    {
+      name: '小公主',
+      bubble: '👑 人家是小公主啦~',
+      html: '<div class="oa-hat"><svg viewBox="0 0 60 25">' +
+        '<path d="M8,22 L14,5 L20,18 L26,3 L30,16 L34,3 L40,18 L46,5 L52,22 Z" fill="#ff69b4" stroke="#e84a9c" stroke-width="0.8"/>' +
+        '<circle cx="14" cy="6" r="2.5" fill="#fff" stroke="#e84a9c" stroke-width="0.5"/>' +
+        '<circle cx="26" cy="4" r="2.5" fill="#fff" stroke="#e84a9c" stroke-width="0.5"/>' +
+        '<circle cx="30" cy="16" r="3" fill="#ffd700" stroke="#e84a9c" stroke-width="0.5"/>' +
+        '<circle cx="34" cy="4" r="2.5" fill="#ffd700" stroke="#e84a9c" stroke-width="0.5"/>' +
+        '<circle cx="46" cy="6" r="2.5" fill="#fff" stroke="#e84a9c" stroke-width="0.5"/>' +
+        '</svg></div>' +
+        '<div class="oa-neck"><svg viewBox="0 0 40 15">' +
+        '<path d="M5,7 L16,2 L16,12 Z" fill="#ff69b4" stroke="#e84a9c" stroke-width="0.5"/>' +
+        '<path d="M35,7 L24,2 L24,12 Z" fill="#ff69b4" stroke="#e84a9c" stroke-width="0.5"/>' +
+        '<rect x="15" y="4" width="10" height="6" rx="1.5" fill="#ff1493" stroke="#e84a9c" stroke-width="0.5"/>' +
+        '</svg></div>'
+    },
+    // 3. 绅士猫
+    {
+      name: '绅士猫',
+      bubble: '🎩 绅士的优雅~ 请多指教',
+      html: '<div class="oa-hat"><svg viewBox="0 0 60 50">' +
+        '<ellipse cx="30" cy="45" rx="28" ry="4" fill="#1a1a2e"/>' +
+        '<rect x="13" y="12" width="34" height="33" rx="2" fill="#1a1a2e"/>' +
+        '<ellipse cx="30" cy="12" rx="17" ry="3" fill="#2a2a4e"/>' +
+        '<rect x="13" y="35" width="34" height="5" fill="#8b0040" rx="1"/>' +
+        '<rect x="16" y="15" width="3" height="25" fill="#2a2a4e" opacity="0.5" rx="1"/>' +
+        '</svg></div>' +
+        '<div class="oa-neck"><svg viewBox="0 0 40 15">' +
+        '<path d="M4,7 L16,2 L16,12 Z" fill="#c41e3a" stroke="#8b0020" stroke-width="0.5"/>' +
+        '<path d="M36,7 L24,2 L24,12 Z" fill="#c41e3a" stroke="#8b0020" stroke-width="0.5"/>' +
+        '<rect x="14" y="4" width="12" height="6" rx="1.5" fill="#a01830" stroke="#8b0020" stroke-width="0.5"/>' +
+        '</svg></div>' +
+        '<div class="oa-face"><svg viewBox="0 0 40 20">' +
+        '<circle cx="28" cy="10" r="9" fill="none" stroke="#d4a017" stroke-width="1.5"/>' +
+        '<circle cx="28" cy="10" r="8" fill="rgba(255,255,255,0.08)"/>' +
+        '<path d="M37,12 Q39,14 40,18" fill="none" stroke="#d4a017" stroke-width="0.8"/>' +
+        '</svg></div>'
+    },
+    // 4. 甜品师
+    {
+      name: '甜品师',
+      bubble: '🧁 头顶甜甜的cupcake~',
+      html: '<div class="oa-hat"><svg viewBox="0 0 60 50">' +
+        '<path d="M15,25 L20,45 L40,45 L45,25 Z" fill="#d4a017" stroke="#b8860b" stroke-width="0.8"/>' +
+        '<path d="M22,28 L23,45 M28,28 L28,45 M34,28 L33,45 M40,28 L39,45" fill="none" stroke="#b8860b" stroke-width="0.4"/>' +
+        '<path d="M14,25 Q12,15 20,12 Q25,8 30,12 Q35,8 40,12 Q48,15 46,25 Q40,22 30,22 Q20,22 14,25 Z" fill="#ffb6c4" stroke="#ff9aaa" stroke-width="0.8"/>' +
+        '<circle cx="30" cy="8" r="4" fill="#dc143c" stroke="#a02040" stroke-width="0.5"/>' +
+        '<path d="M30,4 Q32,1 35,0" fill="none" stroke="#228b22" stroke-width="1"/>' +
+        '<rect x="22" y="16" width="2" height="1" fill="#ff69b4" transform="rotate(30 23 16)"/>' +
+        '<rect x="35" y="14" width="2" height="1" fill="#4169e1" transform="rotate(-20 36 14)"/>' +
+        '<rect x="28" y="20" width="2" height="1" fill="#ffd700" transform="rotate(45 29 20)"/>' +
+        '<rect x="38" y="20" width="2" height="1" fill="#9370db" transform="rotate(-30 39 20)"/>' +
+        '</svg></div>'
+    },
+    // 5. 花仙子
+    {
+      name: '花仙子',
+      bubble: '🌸 花仙子的魔法棒~',
+      html: '<div class="oa-hat"><svg viewBox="0 0 60 25">' +
+        '<path d="M8,20 Q30,12 52,20" fill="none" stroke="#228b22" stroke-width="2"/>' +
+        '<g transform="translate(12,17)">' +
+        '<circle r="3" fill="#ff69b4" stroke="#e84a9c" stroke-width="0.5"/>' +
+        '<circle r="1.5" fill="#ffd700"/>' +
+        '</g>' +
+        '<g transform="translate(20,14)">' +
+        '<circle r="3" fill="#fff" stroke="#ffb6c4" stroke-width="0.5"/>' +
+        '<circle r="1.5" fill="#ffd700"/>' +
+        '</g>' +
+        '<g transform="translate(30,12)">' +
+        '<circle r="3.5" fill="#ff69b4" stroke="#e84a9c" stroke-width="0.5"/>' +
+        '<circle r="1.5" fill="#ffd700"/>' +
+        '</g>' +
+        '<g transform="translate(40,14)">' +
+        '<circle r="3" fill="#9370db" stroke="#7b4aaa" stroke-width="0.5"/>' +
+        '<circle r="1.5" fill="#ffd700"/>' +
+        '</g>' +
+        '<g transform="translate(48,17)">' +
+        '<circle r="3" fill="#fff" stroke="#ffb6c4" stroke-width="0.5"/>' +
+        '<circle r="1.5" fill="#ffd700"/>' +
+        '</g>' +
+        '<path d="M6,19 Q4,16 6,14 Q8,17 6,19" fill="#228b22"/>' +
+        '<path d="M54,19 Q56,16 54,14 Q52,17 54,19" fill="#228b22"/>' +
+        '</svg></div>' +
+        '<div class="oa-side"><svg viewBox="0 0 25 30">' +
+        '<line x1="12" y1="28" x2="12" y2="12" stroke="#c9a46a" stroke-width="1.5"/>' +
+        '<path d="M12,3 L14,9 L20,9 L15,13 L17,19 L12,15 L7,19 L9,13 L4,9 L10,9 Z" fill="#ffd700" stroke="#d4a017" stroke-width="0.5"/>' +
+        '</svg></div>'
+    },
+    // 6. 魔法师
+    {
+      name: '魔法师',
+      bubble: '🧙 魔法猫咪来也！变~',
+      html: '<div class="oa-hat"><svg viewBox="0 0 60 55">' +
+        '<path d="M30,3 L50,42 L10,42 Z" fill="#4a2c6e" stroke="#3a1f5e" stroke-width="0.8"/>' +
+        '<ellipse cx="30" cy="42" rx="25" ry="4" fill="#3a1f5e"/>' +
+        '<path d="M28,18 L30,22 L34,22 L31,25 L32,29 L28,27 L24,29 L25,25 L22,22 L26,22 Z" fill="#ffd700" transform="scale(0.8) translate(7,5)"/>' +
+        '<circle cx="36" cy="32" r="1.5" fill="#ffd700"/>' +
+        '<circle cx="22" cy="35" r="1.5" fill="#ffd700"/>' +
+        '<circle cx="30" cy="3" r="2" fill="#ffd700"/>' +
+        '</svg></div>' +
+        '<div class="oa-side"><svg viewBox="0 0 25 35">' +
+        '<line x1="12" y1="33" x2="12" y2="8" stroke="#8b4513" stroke-width="2"/>' +
+        '<circle cx="12" cy="5" r="4" fill="#4a2c6e" stroke="#3a1f5e" stroke-width="0.8"/>' +
+        '<path d="M12,2 L13,5 L16,5 L14,7 L15,10 L12,8 L9,10 L10,7 L8,5 L11,5 Z" fill="#ffd700"/>' +
+        '</svg></div>'
+    },
+    // 7. 牛仔猫
+    {
+      name: '牛仔猫',
+      bubble: '🤠 yeehaw! 牛仔猫咪来啦',
+      html: '<div class="oa-hat"><svg viewBox="0 0 60 35">' +
+        '<ellipse cx="30" cy="28" rx="28" ry="5" fill="#8b4513" stroke="#6b3410" stroke-width="0.5"/>' +
+        '<path d="M16,28 Q14,12 22,8 L38,8 Q46,12 44,28 Z" fill="#a0522d" stroke="#6b3410" stroke-width="0.5"/>' +
+        '<path d="M25,10 Q30,6 35,10" fill="none" stroke="#6b3410" stroke-width="0.8"/>' +
+        '<ellipse cx="30" cy="26" rx="14" ry="2.5" fill="#6b3410"/>' +
+        '<path d="M28,22 L29,25 L32,25 L29.5,27 L30,30 L28,28 L26,30 L26.5,27 L24,25 L27,25 Z" fill="#ffd700" transform="scale(0.7) translate(12,8)"/>' +
+        '</svg></div>' +
+        '<div class="oa-neck"><svg viewBox="0 0 40 12">' +
+        '<path d="M5,4 Q20,0 35,4 L38,8 Q20,4 2,8 Z" fill="#dc143c" stroke="#a02030" stroke-width="0.5"/>' +
+        '<path d="M18,6 L22,10 L20,6 Z" fill="#dc143c" stroke="#a02030" stroke-width="0.3"/>' +
+        '<circle cx="10" cy="5" r="0.6" fill="#fff" opacity="0.5"/>' +
+        '<circle cx="20" cy="3" r="0.6" fill="#fff" opacity="0.5"/>' +
+        '<circle cx="30" cy="5" r="0.6" fill="#fff" opacity="0.5"/>' +
+        '</svg></div>'
+    },
+    // 8. 超级猫
+    {
+      name: '超级猫',
+      bubble: '🦸 超级猫咪来拯救你！',
+      html: '<div class="oa-face"><svg viewBox="0 0 40 15">' +
+        '<path d="M3,7 Q20,2 37,7 Q37,12 20,11 Q3,12 3,7 Z" fill="#1e3a8a" stroke="#0f1f5e" stroke-width="0.5"/>' +
+        '<ellipse cx="14" cy="7.5" rx="4" ry="2.5" fill="#1a1a2e"/>' +
+        '<ellipse cx="26" cy="7.5" rx="4" ry="2.5" fill="#1a1a2e"/>' +
+        '<circle cx="14" cy="7" r="0.8" fill="#fff"/>' +
+        '<circle cx="26" cy="7" r="0.8" fill="#fff"/>' +
+        '</svg></div>' +
+        '<div class="oa-body"><svg viewBox="0 0 50 30">' +
+        '<path d="M5,5 Q25,0 45,5 L48,25 Q25,20 2,25 Z" fill="#dc143c" stroke="#a02030" stroke-width="0.5" opacity="0.85"/>' +
+        '<path d="M10,8 Q25,4 40,8" fill="none" stroke="#ff4060" stroke-width="0.8" opacity="0.4"/>' +
+        '</svg></div>'
+    },
+    // 9. 圣诞猫
+    {
+      name: '圣诞猫',
+      bubble: '🎄 ho ho ho~ 圣诞快乐！',
+      html: '<div class="oa-hat"><svg viewBox="0 0 60 45">' +
+        '<path d="M15,42 Q12,20 30,5 Q48,20 45,42 Z" fill="#dc143c" stroke="#a02030" stroke-width="0.8"/>' +
+        '<ellipse cx="30" cy="42" rx="16" ry="4" fill="#fff" stroke="#e0e0e0" stroke-width="0.5"/>' +
+        '<circle cx="34" cy="8" r="4" fill="#fff" stroke="#e0e0e0" stroke-width="0.5"/>' +
+        '<path d="M20,35 Q25,30 30,35" fill="none" stroke="#a02030" stroke-width="0.5" opacity="0.3"/>' +
+        '</svg></div>' +
+        '<div class="oa-neck"><svg viewBox="0 0 40 15">' +
+        '<path d="M3,4 Q20,0 37,4 L40,10 Q20,6 0,10 Z" fill="#2e8b57" stroke="#1e6b40" stroke-width="0.5"/>' +
+        '<path d="M18,7 L24,14 L20,7 Z" fill="#2e8b57" stroke="#1e6b40" stroke-width="0.3"/>' +
+        '<path d="M8,6 Q20,3 32,6" fill="none" stroke="#fff" stroke-width="1.5" opacity="0.6"/>' +
+        '</svg></div>'
+    },
+    // 10. 学者猫
+    {
+      name: '学者猫',
+      bubble: '🎓 知识就是力量~喵',
+      html: '<div class="oa-hat"><svg viewBox="0 0 60 30">' +
+        '<path d="M5,15 L30,5 L55,15 L30,25 Z" fill="#1a1a2e" stroke="#0f0f1e" stroke-width="0.5"/>' +
+        '<ellipse cx="30" cy="18" rx="12" ry="4" fill="#1a1a2e"/>' +
+        '<path d="M50,15 L52,25" fill="none" stroke="#ffd700" stroke-width="1"/>' +
+        '<circle cx="52" cy="26" r="2.5" fill="#ffd700" stroke="#d4a017" stroke-width="0.5"/>' +
+        '<path d="M8,15 L30,8" fill="none" stroke="#3a3a5e" stroke-width="0.8" opacity="0.4"/>' +
+        '</svg></div>' +
+        '<div class="oa-face"><svg viewBox="0 0 40 15">' +
+        '<circle cx="13" cy="7.5" r="6" fill="none" stroke="#c9a46a" stroke-width="1.5"/>' +
+        '<circle cx="27" cy="7.5" r="6" fill="none" stroke="#c9a46a" stroke-width="1.5"/>' +
+        '<line x1="19" y1="7.5" x2="21" y2="7.5" stroke="#c9a46a" stroke-width="1.5"/>' +
+        '<line x1="7" y1="7.5" x2="3" y2="6" stroke="#c9a46a" stroke-width="1"/>' +
+        '<line x1="33" y1="7.5" x2="37" y2="6" stroke="#c9a46a" stroke-width="1"/>' +
+        '<circle cx="11" cy="6" r="1.5" fill="rgba(255,255,255,0.3)"/>' +
+        '<circle cx="25" cy="6" r="1.5" fill="rgba(255,255,255,0.3)"/>' +
+        '</svg></div>'
+    }
+  ];
+
+  var currentIdx = -1;
+
+  function applyOutfit(idx) {
+    currentIdx = idx;
+    var o = OUTFITS[idx];
+    outfitEl.innerHTML = o.html;
+    showOutfitSparkle();
+    try { showCatBubble(o.bubble); } catch(e) {}
+  }
+
+  function randomOutfit() {
+    if (OUTFITS.length <= 1) { applyOutfit(0); return; }
+    var idx;
+    do { idx = Math.floor(Math.random() * OUTFITS.length); } while (idx === currentIdx);
+    applyOutfit(idx);
+  }
+
+  function showOutfitSparkle() {
+    try {
+      var stage = document.querySelector('.stage');
+      var sparkles = ['✨','⭐','💫','🌟'];
+      for (var i = 0; i < 8; i++) {
+        (function(j) {
+          setTimeout(function() {
+            var sp = document.createElement('div');
+            sp.className = 'outfit-sparkle';
+            sp.textContent = sparkles[j % 4];
+            sp.style.fontSize = (10 + Math.random() * 8) + 'px';
+            sp.style.left = (catX + Math.random() * 15 - 5) + '%';
+            sp.style.bottom = (catY + 15 + Math.random() * 20) + '%';
+            stage.appendChild(sp);
+            setTimeout(function() { if (sp.parentNode) sp.parentNode.removeChild(sp); }, 700);
+          }, j * 60);
+        })(i);
+      }
+    } catch(e) {}
+  }
+
+  if (outfitBtn) {
+    outfitBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      randomOutfit();
+    });
+    outfitBtn.addEventListener('touchstart', function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      randomOutfit();
+    }, { passive: false });
+  }
+
+  // initial random outfit after page loads
+  setTimeout(function() { randomOutfit(); }, 600);
+})();
+
+
 init();
 </script>
 </body>
