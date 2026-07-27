@@ -779,6 +779,13 @@
   .card-reveal .travel-svg { width: 100%; max-width: 320px; margin: 0 auto 10px; display: block; border-radius: 12px; overflow: hidden; }
   .card-reveal .travel-location { font-size: 15px; font-weight: 700; color: #b8860b; margin-bottom: 4px; }
   .card-reveal .travel-caption { font-size: 13px; color: #5a3e1b; line-height: 1.6; }
+<!-- ===== 猫咪发现动画系统 (增量新增) ===== -->
+.cat-disc-particle{position:absolute;pointer-events:none;z-index:30;animation:cdp 1s ease-out forwards;font-size:14px}
+@keyframes cdp{0%{opacity:0;transform:translateY(0)scale(0)}20%{opacity:1;transform:translateY(-10px)scale(1)}100%{opacity:0;transform:translateY(-40px)scale(.4)}}
+.cat-disc-glow{position:absolute;pointer-events:none;z-index:24;border-radius:50%;animation:cdg 2s ease-out forwards}
+@keyframes cdg{0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}30%{opacity:.7;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(2)}}
+.cat-disc-ring{position:absolute;pointer-events:none;z-index:23;border:3px solid;border-radius:50%;animation:cdr 1s ease-out forwards}
+@keyframes cdr{0%{opacity:.8;transform:translate(-50%,-50%) scale(.3)}100%{opacity:0;transform:translate(-50%,-50%) scale(2.5)}}
 </style>
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </head>
@@ -2345,6 +2352,251 @@ initCat();
   setTimeout(function() { randomOutfit(); }, 600);
 })();
 
+// ===== 猫咪发现动画系统 (增量新增，40个动作：普通16/搞笑12/治愈8/稀有4) =====
+(function(){
+  'use strict';
+  function K(t,o,f){var r={transform:t,offset:o};if(f)r.filter=f;return r}
+  function build(prep,main,hold,rec,f){
+    var k=[K('scale(1)',0,f)];
+    k.push(K(prep,.12,f));k.push(K(main,.45,f));
+    k.push(K(hold||main,.6,f));k.push(K(rec,.82,f));k.push(K('scale(1)',1,f));
+    return k;
+  }
+  // 粒子效果
+  function spawnParticles(emojis,count,spread){
+    var s=document.querySelector('.stage');if(!s)return;
+    for(var i=0;i<count;i++){(function(j){
+      setTimeout(function(){
+        var p=document.createElement('div');p.className='cat-disc-particle';
+        p.textContent=emojis[j%emojis.length];
+        p.style.left=(catX+(Math.random()-.5)*spread)+'%';
+        p.style.bottom=(catY+15+Math.random()*22)+'%';
+        s.appendChild(p);setTimeout(function(){if(p.parentNode)p.remove()},1100);
+      },j*60);
+    })(i)}
+  }
+  // 光芒效果
+  function spawnGlow(color){
+    var s=document.querySelector('.stage');if(!s||!cat)return;
+    var g=document.createElement('div');g.className='cat-disc-glow';
+    var r=cat.getBoundingClientRect(),sr=s.getBoundingClientRect();
+    g.style.width='80px';g.style.height='80px';g.style.background='radial-gradient(circle,'+color+',transparent)';
+    g.style.left=(r.left-sr.left+r.width/2)+'px';g.style.top=(r.top-sr.top+r.height/2)+'px';
+    s.appendChild(g);setTimeout(function(){if(g.parentNode)g.remove()},2100);
+  }
+  function spawnRing(color){
+    var s=document.querySelector('.stage');if(!s||!cat)return;
+    var g=document.createElement('div');g.className='cat-disc-ring';
+    var r=cat.getBoundingClientRect(),sr=s.getBoundingClientRect();
+    g.style.width='50px';g.style.height='50px';g.style.borderColor=color;
+    g.style.left=(r.left-sr.left+r.width/2)+'px';g.style.top=(r.top-sr.top+r.height/2)+'px';
+    s.appendChild(g);setTimeout(function(){if(g.parentNode)g.remove()},1100);
+  }
+  // E: effect trigger map
+  var E={sparkle:function(){spawnParticles(['✨','⭐','💫'],8,20)},
+    dizzy:function(){spawnParticles(['💫','😵','🌀'],6,15)},
+    star:function(){spawnParticles(['⭐','🌟','✨'],10,25)},
+    heart:function(){spawnParticles(['💕','💖','💗'],8,20)},
+    music:function(){spawnParticles(['🎵','🎶','♪'],6,18)},
+    zzz:function(){spawnParticles(['💤','💤','💤'],4,12)},
+    flower:function(){spawnParticles(['🌸','🌼','🌺'],6,18)},
+    fire:function(){spawnParticles(['🔥','💥','⚡'],8,22);spawnGlow('rgba(255,150,0,.4)')},
+    rainbow:function(){spawnParticles(['🌈','✨','💫','⭐'],12,30);spawnGlow('rgba(255,0,255,.3)')},
+    gold:function(){spawnParticles(['✨','👑','💛','⭐'],10,25);spawnGlow('rgba(255,215,0,.5)');spawnRing('#ffd700')},
+    cosmic:function(){spawnParticles(['🌌','⭐','💫','🌠'],10,25);spawnGlow('rgba(100,150,255,.4)')},
+    wind:function(){spawnParticles(['💨','💨','💨'],5,15)}
+  };
+  function playEffects(effs){if(!effs)return;effs.forEach(function(e){if(E[e])E[e]()})}
+
+  // ===== 动画定义 =====
+  var ANIMS=[];
+
+  // 普通 8种×2变体=16
+  var NM=[
+    // 1. 开心小跳
+    function(v){var h=[18,28][v],r=[2,-2][v];return{kf:build('scale(.92,1.08)','scale(1.08,.92) translateY(-'+h+'px) rotate('+r+'deg)','scale(1.05,.95) translateY(-'+(h*.5)+'px)','scale(.97,1.03)'),ef:['sparkle'],msg:['喵！发现啦~','嘿嘿~找到咯！'][v]}},
+    // 2. 伸懒腰
+    function(v){var s=[1.15,1.22][v];return{kf:build('scale(.98,1.02) translateY(2px)','scale('+s+','+(2-s)+') translateY(-8px)','scale('+(s-.03)+','+(2-s+.03)+')','scale(1.02,.99)'),ef:['sparkle'],msg:['伸个懒腰~','嗯~好舒服'][v]}},
+    // 3. 摇耳朵
+    function(v){var r=[6,-6][v];return{kf:build('rotate('+(-r*.3)+'deg)','rotate('+r+'deg) scale(1.02,1)','rotate('+(r*.7)+'deg)','rotate('+(-r*.2)+'deg)'),ef:['sparkle'],msg:['耳朵竖竖~','听到了什么？'][v]}},
+    // 4. 歪头杀
+    function(v){var r=[15,-15][v];return{kf:build('rotate('+(-r*.1)+'deg)','rotate('+r+'deg) scale(1.02,1)','rotate('+(r*.7)+'deg)','rotate('+(r*.2)+'deg)'),ef:['sparkle'],msg:['嗯？什么？','歪头看看~'][v]}},
+    // 5. 抬爪子
+    function(v){var x=[6,-6][v];return{kf:build('rotate('+(-x*.1)+'deg)','translateX('+x+'px) rotate('+x*.3+'deg) scale(1.03,.98)','translateX('+x*.6+'px)','translateX('+x*.1+'px) rotate(0deg)'),ef:['sparkle'],msg:['给你看爪爪~','握握手~'][v]}},
+    // 6. 转身
+    function(v){var d=[120,-120][v];return{kf:build('rotate(0deg) scale(.98,1.02)','rotate('+d+'deg) scale(.92,1.08)','rotate('+(d*.7)+'deg) scale(.95,1.05)','rotate(0deg) scale(1.01,1)'),ef:['sparkle'],msg:['转个身~','回头看看~'][v]}},
+    // 7. 轻跳
+    function(v){var h=[14,20][v];return{kf:build('scale(.95,1.05)','scale(1.05,.95) translateY(-'+h+'px)','scale(1.03,.97) translateY(-'+(h*.5)+'px)','scale(.98,1.02)'),ef:['sparkle'],msg:['轻轻跳~','蹦蹦~'][v]}},
+    // 8. 坐起来
+    function(v){var y=[10,14][v];return{kf:build('scale(1.04,.96) translateY(2px)','scale(.95,1.08) translateY(-'+y+'px)','scale(.97,1.05) translateY(-'+(y*.6)+'px)','scale(1.02,.99)'),ef:['sparkle'],msg:['坐起来啦~','坐好咯~'][v]}}
+  ];
+
+  // 搞笑 6种×2变体=12
+  var FM=[
+    // 1. 大旋转
+    function(v){var d=[540,-540][v];return{kf:build('scale(.95,1.05) rotate(0deg)','scale(.85,1.15) rotate('+d+'deg)','scale(.9,1.1) rotate('+(d*.8)+'deg)','scale(.98,1.02) rotate(0deg)'),ef:['dizzy'],msg:['转转转！嗖嗖！','好晕啊~'][v]}},
+    // 2. 脸着地
+    function(v){var r=[55,-55][v];return{kf:build('rotate(0deg) translateY(-3px)','rotate('+r+'deg) translateY(15px) scale(1.1,.85)','rotate('+(r*.8)+'deg) translateY(10px)','rotate('+r*.2+'deg) translateY(2px) scale(1.02,.99)'),ef:['dizzy'],msg:['啊！脸着地！','扑通！疼疼~'][v]}},
+    // 3. 肚子着地(猫饼)
+    function(v){var s=[1.4,1.5][v];return{kf:build('scale(1.02,.98) translateY(-5px)','scale('+s+','+(2-s)+') translateY(12px)','scale('+(s-.05)+','+(2-s+.05)+') translateY(8px)','scale(1.05,.97) translateY(2px)'),ef:['dizzy'],msg:['趴下！猫饼~','变成猫饼啦~'][v]}},
+    // 4. 滑倒
+    function(v){var x=[20,-20][v];return{kf:build('translateX(0px) rotate(0deg)','translateX('+x+'px) rotate('+(x*.5)+'deg) scale(1.05,.95)','translateX('+x*1.2+'px) rotate('+(x*.3)+'deg)','translateX('+x*.2+'px) rotate('+(-x*.1)+'deg) scale(1.02,.99)'),ef:['dizzy'],msg:['哇啊！滑倒了！','哧溜~'][v]}},
+    // 5. 嗖一声
+    function(v){var x=[25,-25][v];return{kf:build('translateX(0px) scale(1)','translateX('+x+'px) scale(1.18,.85)','translateX('+(-x*.5)+'px) scale(.95,1.05)','translateX(0px) scale(1.02,.99)'),ef:['wind'],msg:['嗖——！飞一样~','冲啊！'][v]}},
+    // 6. 街舞
+    function(v){var r=[25,-25][v];return{kf:[
+      K('scale(1) rotate(0deg)',0),K('scale(1.05,.95) rotate('+r+'deg)',.15),
+      K('scale(.95,1.05) rotate('+(-r)+'deg) translateY(-10px)',.35),
+      K('scale(1.1,.9) rotate('+r*.5+'deg)',.5),K('scale(.98,1.02) rotate('+(-r*.3)+'deg) translateY(-5px)',.65),
+      K('scale(1.02,.99) rotate('+r*.1+'deg)',.82),K('scale(1) rotate(0deg)',1)
+    ],ef:['music'],msg:['街舞time！动起来！','yo！breakdance~'][v]}}
+  ];
+
+  // 治愈 4种×2变体=8
+  var HM=[
+    // 1. 呼噜震
+    function(v){var r=[2,3][v];return{kf:[
+      K('scale(1)',0),K('rotate('+(-r)+'deg) scale(1.02,.99)',.15),
+      K('rotate('+r+'deg) scale(1.02,.99)',.3),K('rotate('+(-r)+'deg) scale(1.02,.99)',.45),
+      K('rotate('+r+'deg) scale(1.02,.99)',.6),K('rotate('+(-r*.5)+'deg) scale(1.01,1)',.75),
+      K('scale(1)',1)
+    ],ef:['heart'],msg:['咕噜咕噜~','呼噜噜~好开心'][v]}},
+    // 2. 爱心眼
+    function(v){var b=v?'#ff6b9d':'#ff8cb3';return{kf:build('scale(.98,1.02)','scale(1.06,.96) translateY(-4px)','scale(1.04,.98) translateY(-2px)','scale(1.01,1)'),ef:['heart'],msg:['好喜欢你~','被暖到了~'],opt:{heartEyes:true,color:b}}}},
+    // 3. 睡意卷缩
+    function(v){var r=[-10,-6][v];return{kf:build('rotate(0deg) scale(1)','rotate('+r+'deg) scale(.92,1.06)','rotate('+(r*.8)+'deg) scale(.94,1.04)','rotate('+(r*.3)+'deg) scale(.98,1.02)'),ef:['zzz'],msg:['好困困~','卷起来睡~'][v]}},
+    // 4. 阳光伸
+    function(v){var s=[1.2,1.28][v];return{kf:build('scale(.97,1.03) translateY(2px)','scale('+s+','+(2-s)+') translateY(-6px)','scale('+(s-.03)+','+(2-s+.03)+') translateY(-4px)','scale(1.01,1)'),ef:['flower'],msg:['好温暖~','阳光好舒服~'][v]}}
+  ];
+
+  // 稀有彩蛋 4种×1变体=4
+  var RM=[
+    // 1. 彩虹冲刺
+    function(v){return{kf:build('scale(.9,1.1) rotate(-5deg)','scale(1.12,.88) translateY(-20px) rotate(5deg)','scale(1.08,.92) translateY(-12px) rotate(2deg)','scale(1.02,.99) rotate(0deg)'),ef:['rainbow'],msg:'🌈 彩虹猫咪！',opt:{filter:'hue-rotate(180deg)',duration:3500}}}},
+    // 2. 黄金光雨
+    function(v){return{kf:build('scale(.95,1.05)','scale(1.08,.94) translateY(-8px)','scale(1.05,.96) translateY(-4px)','scale(1.02,.99)'),ef:['gold'],msg:'👑 金色传说！',opt:{duration:3800}}}},
+    // 3. 魔法变身
+    function(v){return{kf:build('scale(0.95,1.05)','scale(0.2,0.2) rotate(180deg)','scale(0.15,0.15) rotate(360deg)','scale(1.08,0.94)'),ef:['fire'],msg:'✨ 魔法猫咪变身！',opt:{filter:'brightness(1.5) hue-rotate(90deg)',duration:3500}}}},
+    // 4. 宇宙之舞
+    function(v){return{kf:build('scale(.98,1.02) rotate(0deg)','scale(0.9,1.1) rotate(360deg) translateY(-15px)','scale(0.92,1.08) rotate(270deg) translateY(-10px)','scale(1.02,.99) rotate(0deg)'),ef:['cosmic'],msg:'🌌 宇宙猫咪！',opt:{filter:'hue-rotate(270deg) brightness(1.2)',duration:4000}}}}
+  ];
+
+  // 构建动画列表
+  function addAnims(arr,cat,vars,opt){
+    var w=opt&&opt.w;arr.forEach(function(fn){
+      for(var i=0;i<vars;i++){
+        var r=fn(i);ANIMS.push(Object.assign({category:cat,duration:2500+vars*100-i*50},r,w?{weight:w}:{}));
+      }
+    });
+  }
+  addAnims(NM,'normal',2);     // 16
+  addAnims(FM,'funny',2);      // 12
+  addAnims(HM,'healing',2);    // 8
+  addAnims(RM,'rare',1);       // 4
+  // 为稀有设置权重0.1（10%），其余等权
+  ANIMS.forEach(function(a){if(a.category==='rare')a.weight=a.weight||0.25;else a.weight=a.weight||1});
+
+  // 同步当前奖励倍数
+  var rewardMult=1;
+
+  // 加权随机选择
+  function pickAnim(){
+    var totalW=0;ANIMS.forEach(function(a){totalW+=a.weight||1});
+    var r=Math.random()*totalW,cum=0;
+    for(var i=0;i<ANIMS.length;i++){cum+=ANIMS[i].weight||1;if(r<=cum)return ANIMS[i]}
+    return ANIMS[ANIMS.length-1];
+  }
+
+  // ===== 播放引擎 =====
+  var discoveryPlaying=false;
+  var activeAnim=null;
+
+  function playDiscoveryAnimation(onDone){
+    if(!cat)return;
+    var anim=pickAnim();
+    if(!anim)return;
+    discoveryPlaying=true;
+    if(activeAnim){try{activeAnim.cancel()}catch(e){}activeAnim=null}
+    // 移除CSS动画类，避免冲突
+    cat.classList.remove('idle','walking','sleeping','clicked');
+    cat.classList.add('cat-discovering');
+
+    // 稀有彩蛋：全局提示
+    if(anim.category==='rare'&&showCatBubble&&anim.msg){
+      showCatBubble(anim.msg);
+    }
+
+    // 播放效果
+    if(anim.ef){setTimeout(function(){playEffects(anim.ef)},anim.duration*.3)}
+
+    // 爱心眼特效
+    var hEye=document.getElementById('catHeartEyes');
+    if(anim.opt&&anim.opt.heartEyes&&hEye){
+      hEye.classList.add('show');
+      setTimeout(function(){hEye.classList.remove('show')},anim.duration*.8);
+    }
+
+    // 使用Web Animations API播放
+    var kf=anim.kf.map(function(k){
+      var o={transform:k.transform,offset:k.offset};
+      if(k.filter||(anim.opt&&anim.opt.filter))o.filter=k.filter||anim.opt.filter;
+      return o;
+    });
+    var dur=anim.opt&&anim.opt.duration||anim.duration;
+    try{
+      activeAnim=cat.animate(kf,{duration:dur,easing:'cubic-bezier(.34,1.56,.64,1)',fill:'forwards'});
+      activeAnim.onfinish=function(){
+        cat.classList.remove('cat-discovering');
+        cat.classList.add('idle');
+        discoveryPlaying=false;
+        activeAnim=null;
+        if(!(anim.category==='rare')){if(showCatBubble&&anim.msg)showCatBubble(anim.msg)}
+        if(onDone)onDone();
+      };
+    }catch(e){
+      setTimeout(function(){
+        cat.classList.remove('cat-discovering');
+        cat.classList.add('idle');
+        discoveryPlaying=false;
+        activeAnim=null;
+        if(showCatBubble&&anim.msg)showCatBubble(anim.msg)
+        if(onDone)onDone();
+      },dur);
+    }
+  }
+
+  // ===== 接入游戏 =====
+  var _origBubble=showCatBubble;
+  showCatBubble=function(text){
+    _origBubble(text);
+    if((text==='找到啦！✨'||text==='✈️ 好美的旅行合影！')&&!discoveryPlaying){
+      // 清除当前定时器，避免冲突
+      if(catTimer){clearTimeout(catTimer);catTimer=null}
+      playDiscoveryAnimation(function(){
+        scheduleCatAction();
+      });
+    }
+  };
+
+  var _origSchedule=scheduleCatAction;
+  scheduleCatAction=function(){
+    if(discoveryPlaying)return;
+    _origSchedule();
+  };
+
+  // ===== 连续发现不重复机制 =====
+  var recentAnims=[];
+  var _origPickAnim=pickAnim;
+  pickAnim=function(){
+    var anim;
+    do{anim=_origPickAnim()}while(recentAnims.indexOf(anim)>-1&&ANIMS.length>1);
+    recentAnims.push(anim);
+    if(recentAnims.length>5)recentAnims.shift();
+    return anim;
+  };
+
+  console.log('🐱 猫咪发现动画系统已就绪 | '+ANIMS.length+'个动作 | 普通'+NM.length*2+' 搞笑'+FM.length*2+' 治愈'+HM.length*2+' 稀有'+RM.length);
+})();
 
 init();
 </script>
