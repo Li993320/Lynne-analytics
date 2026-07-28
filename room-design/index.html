@@ -229,7 +229,61 @@
     z-index: 30;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.4);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   }
+  .side-panel.collapsed {
+    transform: translateX(calc(100% + 24px));
+  }
+
+  /* === 新增: 面板收起按钮 === */
+  .panel-collapse-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(201, 164, 106, 0.18);
+    border: none;
+    color: #8b7355;
+    font-size: 18px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    transition: background 0.2s, transform 0.2s;
+    line-height: 1;
+  }
+  .panel-collapse-btn:hover {
+    background: rgba(201, 164, 106, 0.35);
+    transform: scale(1.1);
+  }
+
+  /* === 新增: 面板展开浮动按钮 === */
+  .panel-show-btn {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 72px;
+    background: linear-gradient(135deg, #c9a46a, #a07a3a);
+    border: none;
+    border-radius: 12px 0 0 12px;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 35;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: -4px 4px 16px rgba(0,0,0,0.25);
+    transition: width 0.2s, opacity 0.3s;
+  }
+  .panel-show-btn:hover { width: 46px; }
+  .panel-show-btn.visible { display: flex; }
+
   .panel-section {
     padding: 14px 16px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
@@ -431,9 +485,16 @@
       transition: transform 0.3s ease;
     }
     .side-panel.open { transform: translateY(0); }
+    .side-panel.collapsed { transform: translateY(calc(100% - 56px)); }
     .panel-toggle { display: block; }
+    .panel-show-btn { display: none !important; }
+    .panel-collapse-btn { display: none !important; }
     .floating-toolbar { top: 8px; bottom: auto; }
     .floating-toolbar button { padding: 4px 8px; font-size: 11px; }
+  }
+
+  @media (min-width: 769px) {
+    .panel-collapse-btn { display: flex; }
   }
 
   /* 弹窗 */
@@ -531,6 +592,58 @@
   .cat-container.clicked { animation: catBounce 0.5s ease-out; }
   .cat-container.sleeping { opacity: 0.8; transform: rotate(-6deg) scale(0.98); }
 
+  /* === 新增: 小猫跳舞动画 === */
+  .cat-container.dancing { animation: catDance 0.6s ease-in-out 3; z-index: 28; }
+  @keyframes catDance {
+    0%   { transform: translateY(0) rotate(0deg) scale(1); }
+    15%  { transform: translateY(-22px) rotate(-12deg) scale(1.06); }
+    30%  { transform: translateY(-6px) rotate(10deg) scale(1.06); }
+    45%  { transform: translateY(-28px) rotate(-8deg) scale(1.1); }
+    60%  { transform: translateY(-10px) rotate(10deg) scale(1.06); }
+    75%  { transform: translateY(-18px) rotate(-6deg) scale(1.05); }
+    90%  { transform: translateY(-4px) rotate(4deg) scale(1.02); }
+    100% { transform: translateY(0) rotate(0deg) scale(1); }
+  }
+
+  /* === 新增: 小猫唱歌动画 === */
+  .cat-container.singing { animation: catSing 0.7s ease-in-out 4; z-index: 28; }
+  @keyframes catSing {
+    0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+    25%  { transform: translateY(-10px) rotate(-4deg) scale(1.03); }
+    50%  { transform: translateY(-14px) rotate(4deg) scale(1.05); }
+    75%  { transform: translateY(-7px) rotate(-2deg) scale(1.02); }
+  }
+
+  /* === 新增: 音乐音符粒子 === */
+  .floating-note {
+    position: absolute;
+    font-size: 20px;
+    pointer-events: none;
+    z-index: 30;
+    animation: noteFloat 2s ease-out forwards;
+  }
+  @keyframes noteFloat {
+    0%   { opacity: 1; transform: translateY(0) translateX(0) scale(0.5); }
+    30%  { opacity: 1; transform: translateY(-30px) translateX(10px) scale(1.2); }
+    60%  { opacity: 0.8; transform: translateY(-55px) translateX(20px) scale(1); }
+    100% { opacity: 0; transform: translateY(-90px) translateX(35px) scale(0.7); }
+  }
+
+  /* === 新增: 庆祝彩纸粒子 === */
+  .floating-confetti {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    pointer-events: none;
+    z-index: 30;
+    animation: confettiBurst 1.8s ease-out forwards;
+  }
+  @keyframes confettiBurst {
+    0%   { opacity: 1; transform: translateY(0) translateX(0) rotate(0deg) scale(1); }
+    50%  { opacity: 1; transform: translateY(-50px) translateX(var(--dx, 20px)) rotate(360deg) scale(0.9); }
+    100% { opacity: 0; transform: translateY(-100px) translateX(calc(var(--dx, 20px) * 1.5)) rotate(720deg) scale(0.5); }
+  }
+
   @keyframes catBreathe {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.03, 0.98); }
@@ -618,81 +731,6 @@
     100% { opacity: 0; transform: translateY(-80px) scale(0.8); }
   }
 
-
-  /* ===== 小猫变装系统（增量新增，不影响原有逻辑）===== */
-  .cat-outfit {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none; z-index: 4; overflow: visible;
-  }
-  .cat-outfit .oa-hat {
-    position: absolute; top: -6%; left: 50%; width: 62%;
-    transform: translateX(-50%);
-    animation: outfitInHat 0.4s ease-out;
-  }
-  .cat-outfit .oa-face {
-    position: absolute; top: 19%; left: 50%; width: 40%;
-    transform: translateX(-50%);
-    animation: outfitInFace 0.5s ease-out;
-  }
-  .cat-outfit .oa-neck {
-    position: absolute; top: 39%; left: 50%; width: 52%;
-    transform: translateX(-50%);
-    animation: outfitInUp 0.4s ease-out 0.1s both;
-  }
-  .cat-outfit .oa-body {
-    position: absolute; top: 47%; left: 50%; width: 68%;
-    transform: translateX(-50%);
-    animation: outfitInUp 0.4s ease-out 0.15s both;
-  }
-  .cat-outfit .oa-side {
-    position: absolute; top: 28%; right: -10%; width: 26%;
-    animation: outfitInSide 0.4s ease-out 0.2s both;
-  }
-  .cat-outfit svg { width: 100%; height: auto; display: block; }
-  @keyframes outfitInHat {
-    from { opacity: 0; transform: translateX(-50%) translateY(-12px) scale(0.7); }
-    to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
-  }
-  @keyframes outfitInFace {
-    from { opacity: 0; transform: translateX(-50%) scale(0.5); }
-    60% { opacity: 0.8; transform: translateX(-50%) scale(1.1); }
-    to { opacity: 1; transform: translateX(-50%) scale(1); }
-  }
-  @keyframes outfitInUp {
-    from { opacity: 0; transform: translateX(-50%) translateY(12px) scale(0.7); }
-    to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
-  }
-  @keyframes outfitInSide {
-    from { opacity: 0; transform: scale(0.3) rotate(-30deg); }
-    to { opacity: 1; transform: scale(1) rotate(0deg); }
-  }
-
-  .cat-outfit-btn {
-    position: absolute; top: -30px; right: -12px;
-    width: 30px; height: 30px; border-radius: 50%;
-    background: linear-gradient(135deg, #ff9a56, #ff6a88);
-    border: 2px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    font-size: 15px; display: flex; align-items: center; justify-content: center;
-    cursor: pointer; z-index: 10; pointer-events: auto;
-    transition: transform 0.2s;
-    animation: outfitBtnPulse 2s ease-in-out infinite;
-  }
-  .cat-outfit-btn:hover { transform: scale(1.15); }
-  .cat-outfit-btn:active { transform: scale(0.92); }
-  @keyframes outfitBtnPulse {
-    0%,100% { box-shadow: 0 2px 8px rgba(255,106,136,0.3); }
-    50% { box-shadow: 0 2px 16px rgba(255,106,136,0.6); }
-  }
-  .outfit-sparkle {
-    position: absolute; pointer-events: none; z-index: 6;
-    animation: outfitSparkle 0.7s ease-out forwards;
-  }
-  @keyframes outfitSparkle {
-    0% { opacity: 1; transform: scale(0) rotate(0deg); }
-    40% { opacity: 1; transform: scale(1.4) rotate(180deg); }
-    100% { opacity: 0; transform: scale(0.3) rotate(360deg) translateY(-20px); }
-  }
-
   /* ===== 探秘卡片 ===== */
   .discovery-layer { position: absolute; inset: 0; z-index: 21; pointer-events: none; }
   .discovery-card {
@@ -709,6 +747,17 @@
     backdrop-filter: blur(1px);
   }
   .discovery-card.found .card-inner { background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.25), rgba(255,255,255,0.05)); }
+
+  /* === 新增: 旅行卡片特殊样式 === */
+  .discovery-card.travel-card .card-inner {
+    background: radial-gradient(circle at 30% 30%, rgba(255,215,0,0.55), rgba(255,180,0,0.2));
+    border-color: rgba(255,215,0,0.4);
+    box-shadow: 0 1px 8px rgba(255,215,0,0.2);
+  }
+  .discovery-card.travel-card:hover .card-inner {
+    background: radial-gradient(circle at 30% 30%, rgba(255,215,0,0.7), rgba(255,180,0,0.3));
+  }
+
   @keyframes cardGlow {
     0%,100% { filter: drop-shadow(0 0 4px rgba(255,255,255,0.1)); }
     50% { filter: drop-shadow(0 0 10px rgba(255,255,255,0.25)); }
@@ -737,55 +786,26 @@
   .card-reveal .card-close:hover { transform: scale(1.05); }
   .card-reveal .card-counter { font-size: 12px; color: #c0a050; margin-top: 10px; }
 
-  /* ===== 桌面端面板收起/展开 ===== */
-  .panel-collapse-btn {
-    position: absolute; top: 10px; right: 10px; z-index: 5;
-    width: 28px; height: 28px; border-radius: 50%;
-    background: rgba(201,164,106,0.15); border: 1px solid rgba(201,164,106,0.3);
-    color: #8b7355; font-size: 18px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.2s; line-height: 1;
+  /* === 新增: 旅行合影弹窗样式 === */
+  .card-reveal.travel .card-content {
+    max-width: 440px; padding: 24px 28px 28px;
   }
-  .panel-collapse-btn:hover { background: rgba(201,164,106,0.3); transform: scale(1.1); }
-  .side-panel { transition: transform 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.3s; }
-  .side-panel.collapsed { transform: translateX(calc(100% + 20px)); opacity: 0; pointer-events: none; }
-  .panel-show-btn {
-    position: fixed; top: 80px; right: 16px; z-index: 30;
-    width: 44px; height: 44px; border-radius: 50%;
-    background: rgba(255,255,255,0.9); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(201,164,106,0.3); box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-    color: #c9a46a; font-size: 22px; cursor: pointer;
-    display: none; align-items: center; justify-content: center;
-    transition: all 0.2s;
+  .card-travel { display: none; }
+  .card-reveal.travel .card-travel { display: block; }
+  .card-reveal.travel .card-emoji,
+  .card-reveal.travel .card-text { display: none; }
+  .travel-svg {
+    border-radius: 14px; overflow: hidden; margin-bottom: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
   }
-  .panel-show-btn:hover { transform: scale(1.1); background: #fff; }
-  .panel-show-btn.visible { display: flex; }
-  @media (max-width: 768px) {
-    .panel-collapse-btn { display: none !important; }
-    .panel-show-btn { display: none !important; }
+  .travel-svg svg { display: block; width: 100%; height: auto; }
+  .travel-dest {
+    font-size: 18px; font-weight: 800; color: #5a3e1b; margin-bottom: 6px;
   }
-
-  /* ===== 旅行合影卡片 ===== */
-  .discovery-card.travel .card-inner {
-    background: radial-gradient(circle at 30% 30%, rgba(255,215,0,0.5), rgba(255,180,0,0.15));
-    border-color: rgba(255,215,0,0.4);
-    animation: cardGlow 2s ease-in-out infinite;
+  .travel-caption {
+    font-size: 14px; color: #8b6f3a; line-height: 1.6; font-weight: 500;
   }
-  .discovery-card.travel:hover { opacity: 0.7; }
-  .card-reveal .travel-content { display: none; }
-  .card-reveal.travel-mode .travel-content { display: block; }
-  .card-reveal.travel-mode .card-emoji { display: none; }
-  .card-reveal.travel-mode .card-content { max-width: 420px; }
-  .card-reveal .travel-svg { width: 100%; max-width: 320px; margin: 0 auto 10px; display: block; border-radius: 12px; overflow: hidden; }
-  .card-reveal .travel-location { font-size: 15px; font-weight: 700; color: #b8860b; margin-bottom: 4px; }
-  .card-reveal .travel-caption { font-size: 13px; color: #5a3e1b; line-height: 1.6; }
-<!-- ===== 猫咪发现动画系统 (增量新增) ===== -->
-.cat-disc-particle{position:absolute;pointer-events:none;z-index:30;animation:cdp 1s ease-out forwards;font-size:14px}
-@keyframes cdp{0%{opacity:0;transform:translateY(0)scale(0)}20%{opacity:1;transform:translateY(-10px)scale(1)}100%{opacity:0;transform:translateY(-40px)scale(.4)}}
-.cat-disc-glow{position:absolute;pointer-events:none;z-index:24;border-radius:50%;animation:cdg 2s ease-out forwards}
-@keyframes cdg{0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}30%{opacity:.7;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(2)}}
-.cat-disc-ring{position:absolute;pointer-events:none;z-index:23;border:3px solid;border-radius:50%;animation:cdr 1s ease-out forwards}
-@keyframes cdr{0%{opacity:.8;transform:translate(-50%,-50%) scale(.3)}100%{opacity:0;transform:translate(-50%,-50%) scale(2.5)}}
+  .card-reveal.travel .card-title { margin-bottom: 8px; }
 </style>
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </head>
@@ -810,8 +830,6 @@
       <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.5-7 10-7 10z" fill="#ff6b9d" stroke="#e84a7a" stroke-width="1.5"/></svg>
       <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.5-7 10-7 10z" fill="#ff6b9d" stroke="#e84a7a" stroke-width="1.5"/></svg>
     </div>
-    <div class="cat-outfit" id="catOutfit"></div>
-    <div class="cat-outfit-btn" id="catOutfitBtn" title="点击换装~">👗</div>
   </div>
 </div>
 
@@ -819,11 +837,11 @@
 <div class="card-reveal" id="cardReveal">
   <div class="card-content">
     <div class="card-emoji" id="cardEmoji">✨</div>
-    <div class="card-title">— 来自小猫的探秘礼物 —</div>
+    <div class="card-title" id="cardTitle">— 来自小猫的探秘礼物 —</div>
     <div class="card-text" id="cardText"></div>
-    <div class="travel-content" id="travelContent">
+    <div class="card-travel" id="cardTravel">
       <div class="travel-svg" id="travelSvg"></div>
-      <div class="travel-location" id="travelLocation"></div>
+      <div class="travel-dest" id="travelDest"></div>
       <div class="travel-caption" id="travelCaption"></div>
     </div>
     <button class="card-close" id="cardClose">收下心意 ❤</button>
@@ -864,7 +882,7 @@
   </div>
 </div>
 
-<!-- 桌面端面板展开按钮 -->
+<!-- 新增: 面板展开浮动按钮 -->
 <button class="panel-show-btn" id="panelShowBtn" title="展开面板">‹</button>
 
 <!-- 移动端面板切换按钮 -->
@@ -900,6 +918,7 @@
 /* ============================================================
    Oasis Design — 完整编辑器
    功能: 主题切换 / 拖拽 / 4 角缩放 / 滚轮缩放 / 层级调整 / 删除
+   新增: 面板收起 / 小猫跳舞唱歌 / 世界旅行合影卡片
    ============================================================ */
 
 // ===== 配置数据 =====
@@ -1052,11 +1071,302 @@ const STYLES = [
   }
 ];
 
+/* ============================================================
+   新增: 世界旅行目的地数据 + SVG 插画
+   ============================================================ */
+
+// 可复用的小猫 SVG
+function svgCat(x, y, s) {
+  return '<g transform="translate(' + x + ',' + y + ') scale(' + s + ')">' +
+    '<ellipse cx="0" cy="22" rx="16" ry="10" fill="#E8B87C"/>' +
+    '<circle cx="0" cy="8" r="12" fill="#E8B87C"/>' +
+    '<polygon points="-10,2 -13,-6 -5,0" fill="#E8B87C"/>' +
+    '<polygon points="10,2 13,-6 5,0" fill="#E8B87C"/>' +
+    '<polygon points="-10,2 -11,-3 -7,0" fill="#FFB6C1"/>' +
+    '<polygon points="10,2 11,-3 7,0" fill="#FFB6C1"/>' +
+    '<path d="M -5 6 Q -3 4 -1 6" stroke="#333" fill="none" stroke-width="1.5" stroke-linecap="round"/>' +
+    '<path d="M 1 6 Q 3 4 5 6" stroke="#333" fill="none" stroke-width="1.5" stroke-linecap="round"/>' +
+    '<circle cx="-7" cy="10" r="2.5" fill="#FFB6C1" opacity="0.5"/>' +
+    '<circle cx="7" cy="10" r="2.5" fill="#FFB6C1" opacity="0.5"/>' +
+    '<path d="M -2 11 L 2 11 L 0 13 Z" fill="#FF69B4"/>' +
+    '<path d="M 0 13 Q -3 16 -5 14" stroke="#333" fill="none" stroke-width="1" stroke-linecap="round"/>' +
+    '<path d="M 0 13 Q 3 16 5 14" stroke="#333" fill="none" stroke-width="1" stroke-linecap="round"/>' +
+    '<path d="M 14 22 Q 22 12 18 2" stroke="#E8B87C" stroke-width="4" fill="none" stroke-linecap="round"/>' +
+    '<line x1="-8" y1="10" x2="-13" y2="8" stroke="#8B7355" stroke-width="0.5"/>' +
+    '<line x1="8" y1="10" x2="13" y2="8" stroke="#8B7355" stroke-width="0.5"/>' +
+    '</g>';
+}
+
+// 1. 巴黎 - 埃菲尔铁塔
+function svgParis() {
+  return '<svg viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg">' +
+    '<defs><linearGradient id="parisSky" x1="0" y1="0" x2="0" y2="1">' +
+    '<stop offset="0%" stop-color="#FF9A8B"/><stop offset="50%" stop-color="#FFC8B0"/><stop offset="100%" stop-color="#FFE4D0"/>' +
+    '</linearGradient></defs>' +
+    '<rect width="340" height="220" fill="url(#parisSky)"/>' +
+    '<circle cx="270" cy="50" r="22" fill="#FFD700" opacity="0.4"/>' +
+    '<circle cx="270" cy="50" r="14" fill="#FFD700" opacity="0.65"/>' +
+    '<g fill="#3D3D3D">' +
+    '<polygon points="170,25 165,55 175,55"/>' +
+    '<polygon points="165,55 155,95 185,95 175,55"/>' +
+    '<rect x="148" y="95" width="44" height="5" rx="2"/>' +
+    '<polygon points="155,100 130,175 210,175 185,100"/>' +
+    '<rect x="125" y="175" width="90" height="6" rx="2"/>' +
+    '<polygon points="130,181 120,200 140,200 140,181"/>' +
+    '<polygon points="210,181 200,200 220,200 220,181"/>' +
+    '<polygon points="165,181 160,200 180,200 180,181"/>' +
+    '<line x1="155" y1="100" x2="185" y2="100" stroke="#555" stroke-width="1"/>' +
+    '<line x1="145" y1="130" x2="195" y2="130" stroke="#555" stroke-width="1"/>' +
+    '<line x1="135" y1="160" x2="205" y2="160" stroke="#555" stroke-width="1"/>' +
+    '<line x1="160" y1="55" x2="170" y2="55" stroke="#555" stroke-width="1"/>' +
+    '<line x1="150" y1="95" x2="180" y2="95" stroke="#555" stroke-width="1"/>' +
+    '</g>' +
+    '<rect x="0" y="200" width="340" height="20" fill="#C4A882" opacity="0.4"/>' +
+    '<text x="115" y="165" font-size="14">💕</text>' +
+    svgCat(80, 175, 1.0) +
+    '<text x="170" y="215" text-anchor="middle" font-size="10" fill="#666" font-family="sans-serif">🗼 Paris, France</text>' +
+    '</svg>';
+}
+
+// 2. 意大利 - 佛罗伦萨大教堂
+function svgItaly() {
+  return '<svg viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg">' +
+    '<defs><linearGradient id="italySky" x1="0" y1="0" x2="0" y2="1">' +
+    '<stop offset="0%" stop-color="#87CEEB"/><stop offset="100%" stop-color="#E0F0FF"/>' +
+    '</linearGradient></defs>' +
+    '<rect width="340" height="220" fill="url(#italySky)"/>' +
+    '<circle cx="55" cy="40" r="18" fill="#FFD700" opacity="0.3"/>' +
+    '<circle cx="55" cy="40" r="10" fill="#FFD700" opacity="0.5"/>' +
+    // Campanile (bell tower)
+    '<rect x="225" y="55" width="32" height="145" fill="#F5E6D3" stroke="#D4B896" stroke-width="1"/>' +
+    '<rect x="225" y="55" width="32" height="145" fill="none" stroke="#8B7355" stroke-width="0.5"/>' +
+    '<rect x="230" y="65" width="22" height="14" fill="#8B7355" opacity="0.3"/>' +
+    '<rect x="230" y="90" width="22" height="14" fill="#8B7355" opacity="0.3"/>' +
+    '<rect x="230" y="115" width="22" height="14" fill="#8B7355" opacity="0.3"/>' +
+    '<rect x="230" y="140" width="22" height="14" fill="#8B7355" opacity="0.3"/>' +
+    '<polygon points="225,55 241,42 257,55" fill="#D4B896"/>' +
+    // Duomo (cathedral)
+    '<rect x="100" y="120" width="110" height="80" fill="#F5E6D3" stroke="#D4B896" stroke-width="1"/>' +
+    // Main dome
+    '<ellipse cx="155" cy="95" rx="42" ry="40" fill="#C04040"/>' +
+    '<ellipse cx="155" cy="95" rx="42" ry="40" fill="none" stroke="#8B3030" stroke-width="1"/>' +
+    '<path d="M 113 95 Q 155 35 197 95" fill="#C04040" stroke="#8B3030" stroke-width="1"/>' +
+    '<rect x="152" y="38" width="6" height="12" fill="#8B3030"/>' +
+    '<circle cx="155" cy="36" r="5" fill="#FFD700"/>' +
+    '<line x1="155" y1="31" x2="155" y2="24" stroke="#FFD700" stroke-width="2"/>' +
+    // Lantern on dome
+    '<rect x="148" y="55" width="14" height="14" fill="#F5E6D3" stroke="#8B7355" stroke-width="0.5"/>' +
+    '<polygon points="148,55 155,48 162,55" fill="#D4B896"/>' +
+    // Facade decoration
+    '<rect x="105" y="135" width="100" height="3" fill="#8B7355" opacity="0.2"/>' +
+    '<rect x="105" y="160" width="100" height="3" fill="#8B7355" opacity="0.2"/>' +
+    '<rect x="115" y="170" width="12" height="30" fill="#556B2F" opacity="0.3"/>' +
+    '<rect x="145" y="170" width="12" height="30" fill="#556B2F" opacity="0.3"/>' +
+    '<rect x="175" y="170" width="12" height="30" fill="#556B2F" opacity="0.3"/>' +
+    // Ground
+    '<rect x="0" y="200" width="340" height="20" fill="#D4C4A8" opacity="0.4"/>' +
+    svgCat(65, 175, 0.9) +
+    '<text x="100" y="165" font-size="14">⛪</text>' +
+    '<text x="170" y="215" text-anchor="middle" font-size="10" fill="#666" font-family="sans-serif">⛪ Florence, Italy</text>' +
+    '</svg>';
+}
+
+// 3. 伦敦 - 大本钟
+function svgLondon() {
+  return '<svg viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg">' +
+    '<defs><linearGradient id="londonSky" x1="0" y1="0" x2="0" y2="1">' +
+    '<stop offset="0%" stop-color="#B0C4DE"/><stop offset="100%" stop-color="#D8E2EC"/>' +
+    '</linearGradient></defs>' +
+    '<rect width="340" height="220" fill="url(#londonSky)"/>' +
+    '<ellipse cx="80" cy="35" rx="35" ry="12" fill="#fff" opacity="0.4"/>' +
+    '<ellipse cx="250" cy="45" rx="40" ry="14" fill="#fff" opacity="0.3"/>' +
+    // Big Ben tower
+    '<rect x="145" y="30" width="50" height="170" fill="#B8860B" stroke="#8B6914" stroke-width="1"/>' +
+    '<rect x="145" y="30" width="50" height="170" fill="none" stroke="#8B6914" stroke-width="0.5" opacity="0.5"/>' +
+    // Tower details
+    '<rect x="150" y="40" width="40" height="4" fill="#8B6914" opacity="0.4"/>' +
+    '<rect x="150" y="60" width="40" height="4" fill="#8B6914" opacity="0.4"/>' +
+    '<rect x="150" y="80" width="40" height="4" fill="#8B6914" opacity="0.4"/>' +
+    '<rect x="150" y="100" width="40" height="4" fill="#8B6914" opacity="0.4"/>' +
+    // Clock face
+    '<circle cx="170" cy="70" r="18" fill="#FFF8DC" stroke="#8B6914" stroke-width="2"/>' +
+    '<line x1="170" y1="70" x2="170" y2="58" stroke="#333" stroke-width="2" stroke-linecap="round"/>' +
+    '<line x1="170" y1="70" x2="180" y2="70" stroke="#333" stroke-width="2" stroke-linecap="round"/>' +
+    '<circle cx="170" cy="70" r="2" fill="#333"/>' +
+    '<text x="170" y="58" text-anchor="middle" font-size="6" fill="#8B6914">XII</text>' +
+    '<text x="185" y="73" text-anchor="middle" font-size="6" fill="#8B6914">III</text>' +
+    // Tower top
+    '<rect x="140" y="22" width="60" height="10" fill="#8B6914"/>' +
+    '<polygon points="140,22 170,5 200,22" fill="#8B6914"/>' +
+    '<rect x="167" y="0" width="6" height="8" fill="#8B6914"/>' +
+    '<circle cx="170" cy="-2" r="3" fill="#FFD700"/>' +
+    // Spire
+    '<polygon points="160,22 170,8 180,22" fill="#A0522D"/>' +
+    // Ground
+    '<rect x="0" y="200" width="340" height="20" fill="#999" opacity="0.3"/>' +
+    // Cat with umbrella
+    '<g transform="translate(85, 175)">' +
+    '<g transform="translate(8, -15)">' +
+    '<line x1="0" y1="0" x2="0" y2="20" stroke="#8B4513" stroke-width="1.5"/>' +
+    '<path d="M -12 0 Q 0 -12 12 0 Z" fill="#4A90D9"/>' +
+    '<path d="M -12 0 Q 0 -12 12 0" fill="none" stroke="#2C5F8D" stroke-width="0.5"/>' +
+    '</g>' +
+    svgCat(0, 0, 0.95) +
+    '</g>' +
+    '<text x="120" y="165" font-size="12">🌧️</text>' +
+    '<text x="170" y="215" text-anchor="middle" font-size="10" fill="#666" font-family="sans-serif">🕰️ London, UK</text>' +
+    '</svg>';
+}
+
+// 4. 日本 - 富士山
+function svgJapan() {
+  return '<svg viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg">' +
+    '<defs><linearGradient id="japanSky" x1="0" y1="0" x2="0" y2="1">' +
+    '<stop offset="0%" stop-color="#FFB7C5"/><stop offset="60%" stop-color="#FFE0E8"/><stop offset="100%" stop-color="#FFF5F7"/>' +
+    '</linearGradient></defs>' +
+    '<rect width="340" height="220" fill="url(#japanSky)"/>' +
+    // Sun
+    '<circle cx="55" cy="45" r="20" fill="#FF6B6B" opacity="0.3"/>' +
+    '<circle cx="55" cy="45" r="12" fill="#FF6B6B" opacity="0.5"/>' +
+    // Mt. Fuji
+    '<polygon points="170,40 80,195 260,195" fill="#7B9BAA"/>' +
+    '<polygon points="170,40 80,195 260,195" fill="none" stroke="#5A7A8A" stroke-width="1"/>' +
+    // Snow cap
+    '<polygon points="170,40 145,85 150,80 160,90 170,75 180,90 190,80 195,85" fill="#fff" opacity="0.9"/>' +
+    '<polygon points="170,40 145,85 155,88 165,82 170,88 175,82 185,88 195,85" fill="#fff"/>' +
+    // Torii gate
+    '<g fill="#C0392B">' +
+    '<rect x="250" y="130" width="6" height="65"/>' +
+    '<rect x="282" y="130" width="6" height="65"/>' +
+    '<rect x="240" y="128" width="58" height="8" rx="2"/>' +
+    '<rect x="245" y="118" width="48" height="6" rx="2"/>' +
+    '<rect x="258" y="136" width="22" height="5"/>' +
+    '</g>' +
+    // Cherry blossoms
+    '<circle cx="30" cy="80" r="3" fill="#FFB7C5" opacity="0.8"/>' +
+    '<circle cx="50" cy="100" r="2.5" fill="#FFC0CB" opacity="0.7"/>' +
+    '<circle cx="100" cy="70" r="3" fill="#FFB7C5" opacity="0.8"/>' +
+    '<circle cx="120" cy="120" r="2" fill="#FFC0CB" opacity="0.6"/>' +
+    '<circle cx="280" cy="80" r="2.5" fill="#FFB7C5" opacity="0.7"/>' +
+    '<circle cx="310" cy="100" r="3" fill="#FFC0CB" opacity="0.8"/>' +
+    '<circle cx="220" cy="60" r="2" fill="#FFB7C5" opacity="0.6"/>' +
+    '<circle cx="300" cy="130" r="2.5" fill="#FFB7C5" opacity="0.7"/>' +
+    // Ground
+    '<rect x="0" y="195" width="340" height="25" fill="#8FBC8F" opacity="0.4"/>' +
+    svgCat(90, 175, 0.95) +
+    '<text x="125" y="165" font-size="14">🌸</text>' +
+    '<text x="170" y="215" text-anchor="middle" font-size="10" fill="#666" font-family="sans-serif">🗻 Japan</text>' +
+    '</svg>';
+}
+
+// 5. 埃及 - 金字塔
+function svgEgypt() {
+  return '<svg viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg">' +
+    '<defs><linearGradient id="egyptSky" x1="0" y1="0" x2="0" y2="1">' +
+    '<stop offset="0%" stop-color="#FF8C42"/><stop offset="40%" stop-color="#FFB347"/><stop offset="100%" stop-color="#FFD89B"/>' +
+    '</linearGradient></defs>' +
+    '<rect width="340" height="220" fill="url(#egyptSky)"/>' +
+    // Sun
+    '<circle cx="170" cy="65" r="30" fill="#FFD700" opacity="0.4"/>' +
+    '<circle cx="170" cy="65" r="20" fill="#FFD700" opacity="0.6"/>' +
+    '<circle cx="170" cy="65" r="12" fill="#FFEF8E"/>' +
+    // Great Pyramid
+    '<polygon points="170,40 80,190 260,190" fill="#D4A560"/>' +
+    '<polygon points="170,40 80,190 260,190" fill="none" stroke="#B8862E" stroke-width="1"/>' +
+    '<polygon points="170,40 170,190 260,190" fill="#C49550"/>' +
+    // Small pyramid
+    '<polygon points="260,100 215,190 305,190" fill="#D4A560"/>' +
+    '<polygon points="260,100 260,190 305,190" fill="#C49550"/>' +
+    // Sphinx (simplified)
+    '<g transform="translate(40, 170)">' +
+    '<ellipse cx="25" cy="15" rx="28" ry="10" fill="#C49550"/>' +
+    '<rect x="35" y="2" width="18" height="14" rx="3" fill="#D4A560"/>' +
+    '<polygon points="48,2 55,-3 52,5" fill="#D4A560"/>' +
+    '<circle cx="44" cy="7" r="1.5" fill="#333"/>' +
+    '</g>' +
+    // Sand
+    '<rect x="0" y="190" width="340" height="30" fill="#E8C880" opacity="0.5"/>' +
+    '<path d="M 0 195 Q 80 188 160 192 T 340 190 L 340 220 L 0 220 Z" fill="#D4A560" opacity="0.3"/>' +
+    // Cat in sphinx pose
+    '<g transform="translate(110, 175)">' +
+    '<ellipse cx="0" cy="18" rx="20" ry="8" fill="#E8B87C"/>' +
+    '<circle cx="-15" cy="12" r="9" fill="#E8B87C"/>' +
+    '<polygon points="-22,8 -25,2 -18,7" fill="#E8B87C"/>' +
+    '<polygon points="-12,8 -9,2 -15,7" fill="#E8B87C"/>' +
+    '<path d="M -18 11 Q -16 9 -14 11" stroke="#333" fill="none" stroke-width="1" stroke-linecap="round"/>' +
+    '<path d="M -12 11 Q -10 9 -8 11" stroke="#333" fill="none" stroke-width="1" stroke-linecap="round"/>' +
+    '<path d="M -15 14 L -13 14 L -14 15 Z" fill="#FF69B4"/>' +
+    '<path d="M 18 18 Q 28 10 25 2" stroke="#E8B87C" stroke-width="4" fill="none" stroke-linecap="round"/>' +
+    '</g>' +
+    '<text x="140" y="165" font-size="14">🐫</text>' +
+    '<text x="170" y="215" text-anchor="middle" font-size="10" fill="#666" font-family="sans-serif">🔺 Cairo, Egypt</text>' +
+    '</svg>';
+}
+
+// 6. 希腊 - 圣托里尼
+function svgGreece() {
+  return '<svg viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg">' +
+    '<defs><linearGradient id="greeceSky" x1="0" y1="0" x2="0" y2="1">' +
+    '<stop offset="0%" stop-color="#4A90D9"/><stop offset="60%" stop-color="#7BB5E8"/><stop offset="100%" send-color="#A8D0F0"/>' +
+    '</linearGradient></defs>' +
+    '<rect width="340" height="220" fill="url(#greeceSky)"/>' +
+    '<circle cx="55" cy="40" r="15" fill="#FFF" opacity="0.3"/>' +
+    // Sea
+    '<rect x="0" y="155" width="340" height="65" fill="#4A90D9" opacity="0.5"/>' +
+    '<path d="M 0 160 Q 40 156 80 160 T 160 160 T 240 160 T 340 160" fill="none" stroke="#fff" stroke-width="1" opacity="0.4"/>' +
+    '<path d="M 0 175 Q 50 171 100 175 T 200 175 T 300 175 T 340 175" fill="none" stroke="#fff" stroke-width="1" opacity="0.3"/>' +
+    // White buildings with blue domes
+    '<g>' +
+    // Building 1
+    '<rect x="60" y="100" width="50" height="55" fill="#fff" stroke="#ddd" stroke-width="0.5"/>' +
+    '<path d="M 60 100 Q 85 80 110 100" fill="#fff"/>' +
+    '<ellipse cx="85" cy="100" rx="25" ry="15" fill="#4A90D9"/>' +
+    '<rect x="75" y="115" width="8" height="12" fill="#4A90D9" opacity="0.5"/>' +
+    '<rect x="90" y="115" width="8" height="12" fill="#4A90D9" opacity="0.5"/>' +
+    // Building 2 (taller)
+    '<rect x="115" y="85" width="45" height="70" fill="#fff" stroke="#ddd" stroke-width="0.5"/>' +
+    '<path d="M 115 85 Q 137 65 160 85" fill="#fff"/>' +
+    '<ellipse cx="137" cy="85" rx="22" ry="13" fill="#4A90D9"/>' +
+    '<rect x="125" y="100" width="7" height="10" fill="#4A90D9" opacity="0.5"/>' +
+    '<rect x="138" y="100" width="7" height="10" fill="#4A90D9" opacity="0.5"/>' +
+    '<rect x="125" y="120" width="7" height="10" fill="#4A90D9" opacity="0.5"/>' +
+    '<rect x="138" y="120" width="7" height="10" fill="#4A90D9" opacity="0.5"/>' +
+    // Building 3
+    '<rect x="165" y="95" width="55" height="60" fill="#fff" stroke="#ddd" stroke-width="0.5"/>' +
+    '<path d="M 165 95 Q 192 75 220 95" fill="#fff"/>' +
+    '<ellipse cx="192" cy="95" rx="27" ry="16" fill="#4A90D9"/>' +
+    '<rect x="178" y="110" width="8" height="12" fill="#4A90D9" opacity="0.5"/>' +
+    '<rect x="195" y="110" width="8" height="12" fill="#4A90D9" opacity="0.5"/>' +
+    '<rect x="178" y="130" width="8" height="12" fill="#4A90D9" opacity="0.5"/>' +
+    '<rect x="195" y="130" width="8" height="12" fill="#4A90D9" opacity="0.5"/>' +
+    // Building 4 (small)
+    '<rect x="225" y="115" width="40" height="40" fill="#fff" stroke="#ddd" stroke-width="0.5"/>' +
+    '<path d="M 225 115 Q 245 100 265 115" fill="#fff"/>' +
+    '<ellipse cx="245" cy="115" rx="20" ry="12" fill="#4A90D9"/>' +
+    '<rect x="237" y="127" width="7" height="10" fill="#4A90D9" opacity="0.5"/>' +
+    '<rect x="248" y="127" width="7" height="10" fill="#4A90D9" opacity="0.5"/>' +
+    '</g>' +
+    // Cat on wall
+    svgCat(280, 145, 0.85) +
+    '<text x="305" y="140" font-size="14">🐱</text>' +
+    '<text x="170" y="215" text-anchor="middle" font-size="10" fill="#666" font-family="sans-serif">🏛️ Santorini, Greece</text>' +
+    '</svg>';
+}
+
+const TRAVEL_DESTINATIONS = [
+  { id: 'paris',   city: '巴黎',     country: '法国',     flag: '🇫🇷', landmark: '埃菲尔铁塔',   caption: '在铁塔下许了个愿，愿世界和平，愿小鱼干永远吃不完~',           svg: svgParis },
+  { id: 'italy',   city: '佛罗伦萨', country: '意大利',   flag: '🇮🇹', landmark: '圣母百花大教堂', caption: '在教堂前祈祷，赐我无穷的智慧…和吃不完的小鱼干~',           svg: svgItaly },
+  { id: 'london',  city: '伦敦',     country: '英国',     flag: '🇬🇧', landmark: '大本钟',       caption: '伦敦的雨和小猫更配哦~ 滴答滴答，大本钟响啦！',           svg: svgLondon },
+  { id: 'japan',   city: '东京',     country: '日本',     flag: '🇯🇵', landmark: '富士山',       caption: '樱花树下的邂逅，是春天最美的礼物~ 花瓣飘落在鼻尖上啦！',     svg: svgJapan },
+  { id: 'egypt',   city: '开罗',     country: '埃及',     flag: '🇪🇬', landmark: '金字塔',       caption: '在金字塔前学狮身人面像，表情管理满分~',                   svg: svgEgypt },
+  { id: 'greece',  city: '圣托里尼', country: '希腊',     flag: '🇬🇷', landmark: '蓝白小屋',     caption: '蓝白色的小屋，像走进了明信片~ 海风里有咸咸的味道呢！',       svg: svgGreece }
+];
+
 // ===== 状态 =====
 const state = {
   theme: 'girly',
   style: 'american',
-  items: [],   // {id, type, src, x, y, w, h, z, el}
+  items: [],
   selectedId: null,
   coin: 0,
   zCounter: 1,
@@ -1275,7 +1585,7 @@ function bindEvents() {
     panelToggle.textContent = sidePanel.classList.contains('open') ? '✕' : '🛋️';
   });
 
-  // 桌面端面板收起/展开
+  // === 新增: 桌面端面板收起/展开 ===
   $('#panelCollapseBtn').addEventListener('click', () => {
     sidePanel.classList.add('collapsed');
     $('#panelShowBtn').classList.add('visible');
@@ -1309,7 +1619,6 @@ function bindEvents() {
 function bindItemEvents(item) {
   const el = item.el;
 
-  // 选中（点击非控制点/工具栏时）
   el.addEventListener('mousedown', (e) => {
     if (e.target.closest('.handle') || e.target.closest('.floating-toolbar')) return;
     e.stopPropagation();
@@ -1317,7 +1626,6 @@ function bindItemEvents(item) {
     startDrag(e, item);
   });
 
-  // 触摸
   el.addEventListener('touchstart', (e) => {
     if (e.target.closest('.handle') || e.target.closest('.floating-toolbar')) return;
     e.stopPropagation();
@@ -1325,7 +1633,6 @@ function bindItemEvents(item) {
     startDrag(e.touches[0], item);
   }, { passive: true });
 
-  // 滚轮缩放
   el.addEventListener('wheel', (e) => {
     if (state.selectedId !== item.id) return;
     e.preventDefault();
@@ -1339,7 +1646,6 @@ function bindItemEvents(item) {
     saveState();
   }, { passive: false });
 
-  // 控制点 - 拖拽缩放
   el.querySelectorAll('.handle').forEach(h => {
     h.addEventListener('mousedown', (e) => {
       e.stopPropagation();
@@ -1354,7 +1660,6 @@ function bindItemEvents(item) {
     }, { passive: false });
   });
 
-  // 工具栏按钮
   el.querySelectorAll('.floating-toolbar button').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -1610,12 +1915,12 @@ function scheduleCatAction() {
   }, delay);
 }
 
-function setCatState(state) {
-  catState = state;
-  cat.classList.remove('idle', 'walking', 'sleeping', 'clicked');
-  if (state === 'idle') cat.classList.add('idle');
-  else if (state === 'walking') cat.classList.add('walking');
-  else if (state === 'sleeping') cat.classList.add('sleeping');
+function setCatState(newState) {
+  catState = newState;
+  cat.classList.remove('idle', 'walking', 'sleeping', 'clicked', 'dancing', 'singing');
+  if (newState === 'idle') cat.classList.add('idle');
+  else if (newState === 'walking') cat.classList.add('walking');
+  else if (newState === 'sleeping') cat.classList.add('sleeping');
 }
 
 function moveCatRandom() {
@@ -1642,8 +1947,7 @@ function onCatPointerDown(e) {
   if (catTimer) { clearTimeout(catTimer); catTimer = null; }
   setCatState('idle');
 
-  const stage = document.getElementById('stage');
-  const sRect = stage.getBoundingClientRect();
+  const stageEl = document.getElementById('stage');
   const cRect = cat.getBoundingClientRect();
   const cx = e.clientX !== undefined ? e.clientX : e.touches[0].clientX;
   const cy = e.clientY !== undefined ? e.clientY : e.touches[0].clientY;
@@ -1663,8 +1967,8 @@ function onCatPointerMove(e) {
   const cy = e.clientY !== undefined ? e.clientY : (e.touches && e.touches[0].clientY);
   if (cx === undefined) return;
 
-  const stage = document.getElementById('stage');
-  const sRect = stage.getBoundingClientRect();
+  const stageEl = document.getElementById('stage');
+  const sRect = stageEl.getBoundingClientRect();
   const px = ((cx - catDragOffX - sRect.left) / sRect.width) * 100;
   const py = ((sRect.bottom - (cy - catDragOffY)) / sRect.height) * 100;
 
@@ -1672,7 +1976,6 @@ function onCatPointerMove(e) {
   catY = Math.max(1, Math.min(85, py));
   cat.style.left = catX + '%';
   cat.style.bottom = catY + '%';
-  if (Math.abs(cx - (catDragOffX + sRect.left + (catX/100)*sRect.width)) > 3) catDragMoved = true;
   catDragMoved = true;
 }
 
@@ -1700,10 +2003,8 @@ function onCatClick(e) {
   cat.classList.add('clicked');
   setTimeout(() => cat.classList.remove('clicked'), 500);
 
-  // 爱心眼 + 飞心
   showHeartEyes();
 
-  // 连续点击3次 → 切换夜间模式
   catClickCount++;
   if (catClickResetTimer) clearTimeout(catClickResetTimer);
   catClickResetTimer = setTimeout(() => { catClickCount = 0; }, 2500);
@@ -1736,7 +2037,6 @@ function showHeartEyes() {
   const eyes = document.getElementById('catHeartEyes');
   eyes.classList.add('show');
   setTimeout(() => eyes.classList.remove('show'), 1800);
-  // 飞心粒子
   for (let i = 0; i < 4; i++) {
     setTimeout(() => spawnFloatingHeart(), i * 150);
   }
@@ -1760,15 +2060,15 @@ let nightMode = false;
 function toggleNightMode() {
   nightMode = !nightMode;
   const overlay = document.getElementById('nightOverlay');
-  const stage = document.getElementById('stage');
+  const stageEl = document.getElementById('stage');
   if (nightMode) {
     overlay.classList.add('active');
-    stage.classList.add('night');
+    stageEl.classList.add('night');
     generateStars();
     showCatBubble('🌙 夜幕降临~ 跟我探索夜晚吧');
   } else {
     overlay.classList.remove('active');
-    stage.classList.remove('night');
+    stageEl.classList.remove('night');
     showCatBubble('☀️ 天亮啦~');
   }
 }
@@ -1788,8 +2088,88 @@ function generateStars() {
   }
 }
 
+/* ============================================================
+   新增: 小猫跳舞 (找到第一张卡片时触发)
+   ============================================================ */
+function catDance() {
+  if (catTimer) { clearTimeout(catTimer); catTimer = null; }
+  setCatState('idle');
+  cat.classList.remove('dancing', 'singing');
+  void cat.offsetWidth;
+  cat.classList.add('dancing');
+
+  showCatBubble('哈哈哈~太开心啦！💃');
+
+  // 撒彩纸
+  spawnConfetti(8);
+
+  setTimeout(() => {
+    cat.classList.remove('dancing');
+    setCatState('idle');
+    scheduleCatAction();
+  }, 1900);
+}
+
+/* ============================================================
+   新增: 小猫唱歌 (找到第二张卡片时触发)
+   ============================================================ */
+function catSing() {
+  if (catTimer) { clearTimeout(catTimer); catTimer = null; }
+  setCatState('idle');
+  cat.classList.remove('dancing', 'singing');
+  void cat.offsetWidth;
+  cat.classList.add('singing');
+
+  showCatBubble('🎵 啦啦啦~♪ 🎶');
+
+  // 飞出音符
+  spawnMusicNotes(6);
+
+  setTimeout(() => {
+    cat.classList.remove('singing');
+    setCatState('idle');
+    scheduleCatAction();
+  }, 2900);
+}
+
+// 彩纸粒子
+function spawnConfetti(count) {
+  const rect = cat.getBoundingClientRect();
+  const colors = ['#FF6B6B', '#FFD93D', '#6BCB77', '#4D96FF', '#FF6B9D', '#C9A46A'];
+  for (let i = 0; i < count; i++) {
+    const c = document.createElement('div');
+    c.className = 'floating-confetti';
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.left = (rect.left + rect.width * (0.2 + Math.random() * 0.6)) + 'px';
+    c.style.top = (rect.top + rect.height * 0.3) + 'px';
+    c.style.setProperty('--dx', (Math.random() * 60 - 30) + 'px');
+    c.style.animationDelay = (i * 0.1) + 's';
+    if (Math.random() > 0.5) {
+      c.style.borderRadius = '50%';
+    }
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 2000);
+  }
+}
+
+// 音符粒子
+function spawnMusicNotes(count) {
+  const rect = cat.getBoundingClientRect();
+  const notes = ['🎵', '♪', '♫', '🎶', '♩'];
+  for (let i = 0; i < count; i++) {
+    const n = document.createElement('div');
+    n.className = 'floating-note';
+    n.textContent = notes[Math.floor(Math.random() * notes.length)];
+    n.style.left = (rect.left + rect.width * (0.2 + Math.random() * 0.6)) + 'px';
+    n.style.top = (rect.top + rect.height * 0.2) + 'px';
+    n.style.animationDelay = (i * 0.25) + 's';
+    document.body.appendChild(n);
+    setTimeout(() => n.remove(), 2500);
+  }
+}
+
 // ===== 探秘卡片 =====
-// 每个房间提供多个候选位置，每次随机挑选 3 个藏起来
+// 每个房间提供多个候选位置，每次随机挑选 6 张卡片 (3 普通 + 3 旅行)
 const CARD_POSITION_POOLS = {
   girly:   [{x:8,y:12},{x:22,y:18},{x:35,y:8},{x:48,y:22},{x:62,y:10},{x:75,y:20},{x:88,y:14},{x:15,y:28},{x:55,y:30}],
   garden:  [{x:10,y:12},{x:25,y:20},{x:38,y:8},{x:52,y:24},{x:65,y:10},{x:78,y:18},{x:90,y:12},{x:18,y:28},{x:72,y:28}],
@@ -1841,99 +2221,16 @@ const CARD_MESSAGES = [
   '这一刻的宁静，是你给自己的礼物',
   '你拥有让平凡变美好的超能力',
   '愿你眼里有光，心中有爱',
-  '每一天都是重新开始的机会',
-  '你的坚持，终将变成光芒',
-  '在不确定中前行，本身就是勇气',
-  '今天也要好好爱自己呀',
-  '你的存在本身，就是一份礼物',
-  '把快乐当作日常，把美好当作习惯',
-  '有些风景，只有慢慢走才看得到',
-  '你认真生活的样子，真好看',
-  '允许自己不完美，允许自己慢慢来',
-  '你的温柔，有改变世界的力量',
-  '今天也是被宇宙偷偷偏爱的一天',
-  '好运正在路上，请保持期待 ✨',
-  '即使慢一点，也是在前进呀',
-  '你今天的努力，是未来感谢自己的理由',
-  '世界很大，但你独一无二',
-  '请相信，美好的事情即将发生',
-  '疲惫的时候，就停下来歇一歇',
-  '你值得所有美好与善意',
-  '做自己喜欢的事，时间都会变慢',
-  '每一次尝试，都是在拓展自己的边界',
-  '生活不会辜负认真的人',
-  '把心放宽，路就会更宽',
-  '你比自己以为的更有力量',
-  '保持热爱，奔赴下一场山海',
-  '小小的进步，也是值得庆祝的胜利',
-  '别让昨天的烦恼，打扰今天的阳光',
-  '你笑起来的时候，整个世界都亮了',
-  '珍惜此刻，它就是最好的礼物',
-  '你的独特，是这个世界最珍贵的风景',
-  '勇敢一点，你比自己想象的更优秀',
-  '无论今天怎样，你都已经很棒了',
-  '给自己泡杯茶，享受片刻安宁',
-  '愿你一直被爱，一直可爱',
-  '所有的美好，都在如约而至',
-  '慢慢来，好戏都在烟火里',
-  '你的今天，决定了你明天的样子',
-  '不必追赶别人，你有自己的节奏',
-  '做一颗星星，有棱有角，还会发光',
-  '烦恼像乌云，总会被风吹散',
-  '愿你既有软肋，也有铠甲',
-  '哪怕只有一点点光，也要努力闪耀',
-  '今天的你，比昨天更勇敢了一点点',
-  '生活明朗，万物可爱',
-  '把期待降低，把依赖变少，你会过得很好',
-  '你的未来，藏在你现在的努力里',
-  '知足且上进，温柔而坚定',
-  '愿你成为自己的太阳，无需借谁的光',
-  '所有好运，都是你善良的积累',
   '不开心的时候，就摸摸小猫吧 🐱',
   '你走过的每一步，都算数',
 ];
 
-
-// ===== 旅行合影卡片数据 =====
-const TRAVEL_CARDS = [
-  {
-    location: '🇫🇷 巴黎 · 埃菲尔铁塔',
-    caption: '在铁塔下许了个愿，愿世界和平，愿小鱼干永远吃不完~',
-    svg: '<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg"><rect width="320" height="200" fill="#87CEEB"/><circle cx="270" cy="35" r="18" fill="#FFD700" opacity="0.8"/><rect y="160" width="320" height="40" fill="#8B7355"/><path d="M160 40 L140 160 L180 160 Z" fill="#5A4a3a" stroke="#3a2a1a" stroke-width="1"/><path d="M160 40 L155 160 L165 160 Z" fill="#6A5a4a"/><line x1="140" y1="100" x2="180" y2="100" stroke="#3a2a1a" stroke-width="2"/><line x1="145" y1="130" x2="175" y2="130" stroke="#3a2a1a" stroke-width="2"/><line x1="160" y1="40" x2="160" y2="160" stroke="#3a2a1a" stroke-width="1.5"/><rect x="140" y="155" width="40" height="8" fill="#4a3a2a"/><g transform="translate(100,130)"><ellipse cx="0" cy="0" rx="18" ry="12" fill="#F4A460"/><circle cx="-5" cy="-10" r="8" fill="#F4A460"/><polygon points="-10,-14 -8,-8 -6,-14" fill="#D2691E"/><polygon points="-2,-14 0,-8 2,-14" fill="#D2691E"/><circle cx="-7" cy="-11" r="1.5" fill="#2a1f17"/><circle cx="-3" cy="-11" r="1.5" fill="#2a1f17"/><path d="M-5 -7 Q-3 -5 -1 -7" stroke="#2a1f17" stroke-width="1" fill="none"/><path d="M-8 -9 Q-10 -12 -12 -10" stroke="#D2691E" stroke-width="1" fill="none"/><path d="M-2 -9 Q0 -12 2 -10" stroke="#D2691E" stroke-width="1" fill="none"/><rect x="-3" y="-2" width="6" height="3" fill="#FFF" rx="1"/></g><text x="160" y="190" text-anchor="middle" font-size="10" fill="#fff" font-family="sans-serif">📷 埃菲尔铁塔合影</text></svg>'
-  },
-  {
-    location: '🇮🇹 佛罗伦萨 · 圣母百花大教堂',
-    caption: '在教堂前祈祷，赐我无穷的智慧…和吃不完的小鱼干~',
-    svg: '<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg"><rect width="320" height="200" fill="#E8D5B7"/><circle cx="50" cy="35" r="15" fill="#FFD700" opacity="0.6"/><rect y="160" width="320" height="40" fill="#C8B280"/><rect x="80" y="80" width="160" height="80" fill="#F5DEB3" stroke="#8B7355" stroke-width="1"/><path d="M80 80 Q160 20 240 80" fill="#DAA520" stroke="#8B6914" stroke-width="1"/><path d="M80 80 Q160 35 240 80" fill="none" stroke="#8B6914" stroke-width="1.5"/><rect x="150" y="100" width="20" height="60" fill="#8B7355" rx="10"/><circle cx="160" cy="55" r="12" fill="#FFF8DC" stroke="#DAA520" stroke-width="1"/><polygon points="160,43 163,50 170,50 164,54 166,61 160,57 154,61 156,54 150,50 157,50" fill="#DAA520"/><circle cx="120" cy="95" r="8" fill="#FFF8DC" stroke="#DAA520" stroke-width="0.8"/><circle cx="200" cy="95" r="8" fill="#FFF8DC" stroke="#DAA520" stroke-width="0.8"/><rect x="100" y="120" width="12" height="40" fill="#8B7355" rx="6"/><rect x="208" y="120" width="12" height="40" fill="#8B7355" rx="6"/><g transform="translate(260,135)"><ellipse cx="0" cy="0" rx="16" ry="11" fill="#F4A460"/><circle cx="-4" cy="-9" r="7" fill="#F4A460"/><polygon points="-8,-12 -6,-7 -4,-12" fill="#D2691E"/><polygon points="-2,-12 0,-7 2,-12" fill="#D2691E"/><circle cx="-6" cy="-10" r="1.2" fill="#2a1f17"/><circle cx="-2" cy="-10" r="1.2" fill="#2a1f17"/><path d="M-4 -6 Q-2 -4 0 -6" stroke="#2a1f17" stroke-width="1" fill="none"/></g><text x="160" y="190" text-anchor="middle" font-size="10" fill="#5a3e1b" font-family="sans-serif">📷 圣母百花大教堂合影</text></svg>'
-  },
-  {
-    location: '🇬🇧 伦敦 · 大本钟',
-    caption: '伦敦的雨和小猫更配哦~ 滴答滴答，大本钟响啦！',
-    svg: '<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg"><rect width="320" height="200" fill="#B0C4DE"/><rect y="160" width="320" height="40" fill="#696969"/><rect x="130" y="40" width="60" height="120" fill="#A9A9A9" stroke="#696969" stroke-width="1"/><rect x="125" y="35" width="70" height="10" fill="#696969"/><circle cx="160" cy="25" r="8" fill="#B0C4DE" stroke="#696969" stroke-width="1.5"/><rect x="155" y="15" width="3" height="12" fill="#696969"/><rect x="162" y="15" width="3" height="12" fill="#696969"/><circle cx="160" cy="60" r="14" fill="#FFF" opacity="0.9" stroke="#696969" stroke-width="1"/><line x1="160" y1="46" x2="160" y2="74" stroke="#696969" stroke-width="1"/><line x1="146" y1="60" x2="174" y2="60" stroke="#696969" stroke-width="1"/><line x1="150" y1="50" x2="170" y2="70" stroke="#696969" stroke-width="0.8"/><line x1="170" y1="50" x2="150" y2="70" stroke="#696969" stroke-width="0.8"/><rect x="145" y="120" width="30" height="40" fill="#696969" rx="2"/><rect x="155" y="130" width="10" height="20" fill="#3a3a3a"/><g transform="translate(90,140)"><ellipse cx="0" cy="0" rx="16" ry="11" fill="#F4A460"/><circle cx="-4" cy="-9" r="7" fill="#F4A460"/><polygon points="-8,-12 -6,-7 -4,-12" fill="#D2691E"/><polygon points="-2,-12 0,-7 2,-12" fill="#D2691E"/><circle cx="-6" cy="-10" r="1.2" fill="#2a1f17"/><circle cx="-2" cy="-10" r="1.2" fill="#2a1f17"/><path d="M-4 -6 Q-2 -4 0 -6" stroke="#2a1f17" stroke-width="1" fill="none"/><path d="M-12 -4 Q-14 -2 -12 0" stroke="#4682B4" stroke-width="1" fill="none"/><path d="M-14 -2 Q-16 0 -14 2" stroke="#4682B4" stroke-width="1" fill="none"/></g><text x="160" y="55" font-size="8" fill="#4682B4" opacity="0.6">⛅</text><text x="160" y="190" text-anchor="middle" font-size="10" fill="#fff" font-family="sans-serif">📷 大本钟合影</text></svg>'
-  },
-  {
-    location: '🇯🇵 日本 · 富士山',
-    caption: '樱花树下的邂逅，是春天最美的礼物~',
-    svg: '<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg"><rect width="320" height="200" fill="#FFE4E1"/><circle cx="270" cy="30" r="20" fill="#FF69B4" opacity="0.3"/><path d="M120 160 L140 80 L160 60 L180 80 L200 160 Z" fill="#FFF" stroke="#C0C0C0" stroke-width="1"/><path d="M140 80 L160 60 L180 80" fill="#E8E8E8" stroke="#C0C0C0" stroke-width="0.8"/><path d="M125 160 L145 90 L160 75 L175 90 L195 160 Z" fill="#F5F5F5" opacity="0.5"/><rect y="160" width="320" height="40" fill="#556B2F"/><rect x="220" y="100" width="6" height="60" fill="#8B4513"/><rect x="240" y="110" width="6" height="50" fill="#8B4513"/><path d="M210 100 Q220 85 230 100 Q225 90 220 85 Q215 90 210 100" fill="#FFB6C1" opacity="0.8"/><path d="M230 100 Q240 80 250 100 Q245 88 240 83 Q235 88 230 100" fill="#FFB6C1" opacity="0.8"/><circle cx="215" cy="95" r="3" fill="#FFC0CB" opacity="0.7"/><circle cx="245" cy="93" r="3" fill="#FFC0CB" opacity="0.7"/><circle cx="225" cy="88" r="2.5" fill="#FFF" opacity="0.8"/><circle cx="235" cy="90" r="2.5" fill="#FFF" opacity="0.8"/><g transform="translate(80,145)"><ellipse cx="0" cy="0" rx="16" ry="11" fill="#F4A460"/><circle cx="-4" cy="-9" r="7" fill="#F4A460"/><polygon points="-8,-12 -6,-7 -4,-12" fill="#D2691E"/><polygon points="-2,-12 0,-7 2,-12" fill="#D2691E"/><circle cx="-6" cy="-10" r="1.2" fill="#2a1f17"/><circle cx="-2" cy="-10" r="1.2" fill="#2a1f17"/><path d="M-4 -6 Q-2 -4 0 -6" stroke="#2a1f17" stroke-width="1" fill="none"/><circle cx="5" cy="-8" r="2" fill="#FFB6C1" opacity="0.6"/></g><text x="160" y="190" text-anchor="middle" font-size="10" fill="#556B2F" font-family="sans-serif">📷 富士山樱花合影</text></svg>'
-  },
-  {
-    location: '🇪🇬 开罗 · 金字塔',
-    caption: '在金字塔前学狮身人面像，表情管理满分~',
-    svg: '<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg"><rect width="320" height="200" fill="#F4A460"/><circle cx="50" cy="35" r="18" fill="#FFD700" opacity="0.7"/><rect y="160" width="320" height="40" fill="#D2B48C"/><path d="M100 160 L110 80 L120 60 L130 80 L140 60 L150 80 L160 60 L170 80 L180 160 Z" fill="#DAA520" stroke="#8B6914" stroke-width="1"/><path d="M100 160 L120 80 L140 60 L160 80 L180 160 Z" fill="#C9941A" opacity="0.5"/><rect x="180" y="100" width="80" height="60" fill="#DAA520" stroke="#8B6914" stroke-width="1"/><circle cx="220" cy="100" r="15" fill="#C9941A" stroke="#8B6914" stroke-width="1"/><rect x="195" y="100" width="50" height="6" fill="#8B6914"/><rect x="200" y="115" width="3" height="15" fill="#8B6914"/><rect x="210" y="115" width="3" height="15" fill="#8B6914"/><rect x="220" y="115" width="3" height="15" fill="#8B6914"/><rect x="230" y="115" width="3" height="15" fill="#8B6914"/><rect x="240" y="115" width="3" height="15" fill="#8B6914"/><rect x="205" y="130" width="3" height="15" fill="#8B6914"/><rect x="215" y="130" width="3" height="15" fill="#8B6914"/><rect x="225" y="130" width="3" height="15" fill="#8B6914"/><rect x="235" y="130" width="3" height="15" fill="#8B6914"/><g transform="translate(70,145)"><ellipse cx="0" cy="0" rx="16" ry="11" fill="#F4A460"/><circle cx="-4" cy="-9" r="7" fill="#F4A460"/><polygon points="-8,-12 -6,-7 -4,-12" fill="#D2691E"/><polygon points="-2,-12 0,-7 2,-12" fill="#D2691E"/><circle cx="-6" cy="-10" r="1.2" fill="#2a1f17"/><circle cx="-2" cy="-10" r="1.2" fill="#2a1f17"/><path d="M-5 -6 Q-3 -5 -1 -6" stroke="#2a1f17" stroke-width="1" fill="none"/></g><text x="160" y="190" text-anchor="middle" font-size="10" fill="#5a3e1b" font-family="sans-serif">📷 金字塔狮身人面像合影</text></svg>'
-  },
-  {
-    location: '🇬🇷 圣托里尼 · 蓝白小屋',
-    caption: '蓝白色的小屋，像走进了明信片~',
-    svg: '<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg"><rect width="320" height="200" fill="#87CEEB"/><circle cx="270" cy="30" r="16" fill="#FFD700" opacity="0.7"/><rect y="140" width="320" height="60" fill="#4682B4" opacity="0.5"/><rect x="40" y="80" width="50" height="80" fill="#FFF" stroke="#4169E1" stroke-width="1"/><path d="M35 80 L65 55 L95 80 Z" fill="#4169E1"/><rect x="55" y="110" width="10" height="15" fill="#4169E1" rx="5"/><rect x="58" y="100" width="4" height="10" fill="#4169E1"/><rect x="110" y="60" width="55" height="100" fill="#FFF" stroke="#4169E1" stroke-width="1"/><path d="M105 60 L137 30 L170 60 Z" fill="#4169E1"/><rect x="128" y="95" width="12" height="18" fill="#4169E1" rx="6"/><rect x="132" y="80" width="5" height="15" fill="#4169E1"/><circle cx="140" cy="80" r="3" fill="#4169E1"/><rect x="185" y="90" width="45" height="70" fill="#FFF" stroke="#4169E1" stroke-width="1"/><path d="M180 90 L207 65 L235 90 Z" fill="#4169E1"/><rect x="200" y="115" width="10" height="15" fill="#4169E1" rx="5"/><rect x="240" y="70" width="50" height="90" fill="#FFF" stroke="#4169E1" stroke-width="1"/><path d="M235 70 L265 45 L295 70 Z" fill="#4169E1"/><rect x="258" y="105" width="10" height="15" fill="#4169E1" rx="5"/><rect x="261" y="90" width="5" height="15" fill="#4169E1"/><g transform="translate(290,145)"><ellipse cx="0" cy="0" rx="14" ry="10" fill="#F4A460"/><circle cx="-3" cy="-8" r="6" fill="#F4A460"/><polygon points="-7,-11 -5,-6 -3,-11" fill="#D2691E"/><polygon points="-1,-11 1,-6 3,-11" fill="#D2691E"/><circle cx="-5" cy="-9" r="1" fill="#2a1f17"/><circle cx="-1" cy="-9" r="1" fill="#2a1f17"/><path d="M-3 -5 Q-1 -3 1 -5" stroke="#2a1f17" stroke-width="0.8" fill="none"/></g><text x="160" y="190" text-anchor="middle" font-size="10" fill="#fff" font-family="sans-serif">📷 圣托里尼合影</text></svg>'
-  }
-];
-
 let discoveredCards = {};
-let currentTravelPositions = {};
-let discoveredTravelCards = {};
-let currentTravelCards = {};
 let currentCardPositions = {};
 let currentCardEmojis = {};
+let currentCardTypes = {};
+let currentCardTravel = {};
+let totalFoundInRoom = {};
 
 function shufflePick(arr, n) {
   const copy = arr.slice();
@@ -1948,33 +2245,42 @@ function renderDiscoveryCards() {
   const layer = document.getElementById('discoveryLayer');
   const theme = state.theme;
   const pool = CARD_POSITION_POOLS[theme] || [];
-  // 3 张普通卡片
-  const picked = shufflePick(pool, 3);
-  // 2 张旅行卡片（从剩余位置中选）
-  const usedKeys = picked.map(p => p.x + '_' + p.y);
-  const remaining = pool.filter(p => !usedKeys.includes(p.x + '_' + p.y));
-  const travelPicked = shufflePick(remaining, 2);
 
-  currentCardPositions[theme] = picked;
-  currentTravelPositions[theme] = travelPicked;
-  discoveredCards[theme] = [false, false, false];
-  discoveredTravelCards[theme] = [false, false];
-  currentCardEmojis[theme] = shufflePick(CARD_EMOJIS, 3);
-  currentTravelCards[theme] = shufflePick(TRAVEL_CARDS, 2);
+  // 3 张普通卡片 + 3 张旅行卡片 = 6 张
+  const positions = shufflePick(pool, 6);
+  const msgEmojis = shufflePick(CARD_EMOJIS, 3);
+  const travels = shufflePick(TRAVEL_DESTINATIONS, 3);
 
-  const cards = currentCardPositions[theme];
-  const travels = currentTravelPositions[theme];
-  let cardHTML = cards.map((c, i) => `
-    <div class="discovery-card" data-idx="${i}" data-type="normal" style="left:${c.x}%;bottom:${c.y}%;">
-      <div class="card-inner"></div>
-    </div>
-  `).join('');
-  cardHTML += travels.map((c, i) => `
-    <div class="discovery-card travel" data-idx="${i}" data-type="travel" style="left:${c.x}%;bottom:${c.y}%;">
-      <div class="card-inner"></div>
-    </div>
-  `).join('');
-  layer.innerHTML = cardHTML;
+  // 交叉排列类型，让旅行卡片和普通卡片混合
+  const types = ['message', 'travel', 'message', 'travel', 'message', 'travel'];
+  // 打乱类型顺序
+  const shuffledTypes = shufflePick(types, types.length);
+
+  currentCardPositions[theme] = positions;
+  currentCardTypes[theme] = shuffledTypes;
+  currentCardEmojis[theme] = msgEmojis;
+  currentCardTravel[theme] = travels;
+  discoveredCards[theme] = [false, false, false, false, false, false];
+  totalFoundInRoom[theme] = 0;
+
+  let msgIdx = 0, travelIdx = 0;
+  layer.innerHTML = positions.map((c, i) => {
+    const type = shuffledTypes[i];
+    const isTravel = type === 'travel';
+    const extraClass = isTravel ? 'travel-card' : '';
+    let dataAttrs = '';
+    if (isTravel) {
+      const dest = travels[travelIdx];
+      dataAttrs = 'data-dest="' + dest.id + '"';
+      travelIdx++;
+    } else {
+      msgIdx++;
+    }
+    return '<div class="discovery-card ' + extraClass + '" data-idx="' + i + '" data-type="' + type + '" ' + dataAttrs + ' style="left:' + c.x + '%;bottom:' + c.y + '%;">' +
+      '<div class="card-inner"></div>' +
+      '</div>';
+  }).join('');
+
   layer.querySelectorAll('.discovery-card').forEach(el => {
     el.addEventListener('click', onDiscoveryCardClick);
   });
@@ -1983,71 +2289,85 @@ function renderDiscoveryCards() {
 function onDiscoveryCardClick(e) {
   e.stopPropagation();
   const idx = parseInt(this.dataset.idx);
-  const type = this.dataset.type || 'normal';
   const theme = state.theme;
+  if (!discoveredCards[theme]) discoveredCards[theme] = [false, false, false, false, false, false];
+  if (discoveredCards[theme][idx]) return;
+
+  discoveredCards[theme][idx] = true;
+  if (!totalFoundInRoom[theme]) totalFoundInRoom[theme] = 0;
+  totalFoundInRoom[theme]++;
+  const foundCount = totalFoundInRoom[theme];
+  const totalCards = discoveredCards[theme].length;
+
+  const cardType = this.dataset.type || 'message';
+  const isTravel = cardType === 'travel';
+
+  // 弹窗展示
   const reveal = document.getElementById('cardReveal');
+  const cardEmoji = document.getElementById('cardEmoji');
+  const cardText = document.getElementById('cardText');
+  const cardTitle = document.getElementById('cardTitle');
+  const cardTravel = document.getElementById('cardTravel');
+  const travelSvg = document.getElementById('travelSvg');
+  const travelDest = document.getElementById('travelDest');
+  const travelCaption = document.getElementById('travelCaption');
+  const cardClose = document.getElementById('cardClose');
+  const cardCounter = document.getElementById('cardCounter');
 
-  if (type === 'travel') {
-    if (!discoveredTravelCards[theme]) discoveredTravelCards[theme] = [false, false];
-    if (discoveredTravelCards[theme][idx]) return;
-    discoveredTravelCards[theme][idx] = true;
-
-    const travel = currentTravelCards[theme][idx];
-    const foundN = (discoveredCards[theme] || []).filter(Boolean).length;
-    const foundT = discoveredTravelCards[theme].filter(Boolean).length;
-    const totalFound = foundN + foundT;
-    const totalCards = 5;
-
-    reveal.classList.add('travel-mode');
-    document.getElementById('cardEmoji').textContent = '🌍';
-    document.getElementById('cardText').textContent = '';
-    document.getElementById('travelSvg').innerHTML = travel.svg;
-    document.getElementById('travelLocation').textContent = travel.location;
-    document.getElementById('travelCaption').textContent = travel.caption;
-    document.getElementById('cardCounter').textContent = `本房间已发现 ${totalFound}/${totalCards} 张卡片`;
-    reveal.classList.add('show');
-
-    this.classList.add('found');
-
-    const cardX = parseFloat(this.style.left);
-    const cardY = parseFloat(this.style.bottom);
-    catWalkTo(cardX + 3, cardY + 5, () => {
-      showCatBubble('✈️ 好美的旅行合影！');
-    });
+  if (isTravel) {
+    const destId = this.dataset.dest;
+    const dest = TRAVEL_DESTINATIONS.find(d => d.id === destId);
+    if (dest) {
+      reveal.classList.add('travel');
+      cardEmoji.style.display = 'none';
+      cardText.style.display = 'none';
+      cardTravel.style.display = 'block';
+      cardTitle.textContent = '🐱 小猫的旅行合影';
+      travelSvg.innerHTML = dest.svg();
+      travelDest.textContent = dest.flag + ' ' + dest.city + ' · ' + dest.country;
+      travelCaption.textContent = dest.caption;
+      cardClose.textContent = '好棒！❤';
+    }
   } else {
-    if (!discoveredCards[theme]) discoveredCards[theme] = [false, false, false];
-    if (discoveredCards[theme][idx]) return;
-    discoveredCards[theme][idx] = true;
-
-    const cardEmoji = currentCardEmojis[theme][idx];
-    const msg = CARD_MESSAGES[Math.floor(Math.random() * CARD_MESSAGES.length)];
-    const foundN = discoveredCards[theme].filter(Boolean).length;
-    const foundT = (discoveredTravelCards[theme] || []).filter(Boolean).length;
-    const totalFound = foundN + foundT;
-    const totalCards = 5;
-
-    reveal.classList.remove('travel-mode');
-    document.getElementById('cardEmoji').textContent = cardEmoji;
-    document.getElementById('cardText').textContent = msg;
-    document.getElementById('cardCounter').textContent = `本房间已发现 ${totalFound}/${totalCards} 张卡片`;
-    reveal.classList.add('show');
-
-    this.classList.add('found');
-
-    const cardX = parseFloat(this.style.left);
-    const cardY = parseFloat(this.style.bottom);
-    catWalkTo(cardX + 3, cardY + 5, () => {
-      showCatBubble('找到啦！✨');
-    });
+    reveal.classList.remove('travel');
+    cardEmoji.style.display = '';
+    cardText.style.display = '';
+    cardTravel.style.display = 'none';
+    cardTitle.textContent = '— 来自小猫的探秘礼物 —';
+    const cardEmojiVal = currentCardEmojis[theme][Math.min(currentCardEmojis[theme].length - 1, Math.floor(Math.random() * currentCardEmojis[theme].length))];
+    cardEmoji.textContent = cardEmojiVal;
+    cardText.textContent = CARD_MESSAGES[Math.floor(Math.random() * CARD_MESSAGES.length)];
+    cardClose.textContent = '收下心意 ❤';
   }
+
+  cardCounter.textContent = '本房间已发现 ' + foundCount + '/' + totalCards + ' 张卡片';
+  reveal.classList.add('show');
+
+  // 标记已找到
+  this.classList.add('found');
+
+  // 猫咪跑过来看
+  const cardX = parseFloat(this.style.left);
+  const cardY = parseFloat(this.style.bottom);
+  catWalkTo(cardX + 3, cardY + 5, () => {
+    // 根据找到的卡片数量触发不同反应
+    if (foundCount === 1) {
+      // 第一张卡片: 跳舞开心笑
+      setTimeout(() => catDance(), 300);
+    } else if (foundCount === 2) {
+      // 第二张卡片: 唱歌
+      setTimeout(() => catSing(), 300);
+    } else {
+      showCatBubble('找到啦！✨');
+    }
+  });
 }
 
 document.getElementById('cardClose').addEventListener('click', () => {
   document.getElementById('cardReveal').classList.remove('show');
-  document.getElementById('cardReveal').classList.remove('travel-mode');
 });
 document.getElementById('cardReveal').addEventListener('click', function(e) {
-  if (e.target === this) { this.classList.remove('show'); this.classList.remove('travel-mode'); }
+  if (e.target === this) this.classList.remove('show');
 });
 
 // 猫咪走向指定位置
@@ -2061,23 +2381,22 @@ function catWalkTo(tx, ty, cb) {
   setTimeout(() => {
     setCatState('idle');
     if (cb) cb();
-    scheduleCatAction();
+    // 如果不是跳舞或唱歌状态，恢复自动行动
+    if (!cat.classList.contains('dancing') && !cat.classList.contains('singing')) {
+      scheduleCatAction();
+    }
   }, 1300);
 }
 
 // 猫咪带主人探秘
 function catExploreCard() {
   const theme = state.theme;
-  if (!discoveredCards[theme]) discoveredCards[theme] = [false, false, false];
-  if (!discoveredTravelCards[theme]) discoveredTravelCards[theme] = [false, false];
+  if (!discoveredCards[theme]) discoveredCards[theme] = [false, false, false, false, false, false];
   const cards = currentCardPositions[theme] || [];
-  const travels = currentTravelPositions[theme] || [];
+  const types = currentCardTypes[theme] || [];
   const undiscovered = [];
   cards.forEach((c, i) => {
-    if (!discoveredCards[theme][i]) undiscovered.push({ ...c, idx: i });
-  });
-  travels.forEach((c, i) => {
-    if (!discoveredTravelCards[theme][i]) undiscovered.push({ ...c, idx: i });
+    if (!discoveredCards[theme][i]) undiscovered.push({ ...c, idx: i, type: types[i] });
   });
 
   if (undiscovered.length === 0) {
@@ -2087,517 +2406,16 @@ function catExploreCard() {
 
   const target = undiscovered[Math.floor(Math.random() * undiscovered.length)];
   catWalkTo(target.x + 2, target.y + 4, () => {
-    showCatBubble('🔍 这附近好像有什么…');
+    if (target.type === 'travel') {
+      showCatBubble('🔍 这附近好像有旅行回忆…');
+    } else {
+      showCatBubble('🔍 这附近好像有什么…');
+    }
   });
 }
 
 // 启动
 initCat();
-
-// ===== 小猫变装系统（增量新增，不影响原有逻辑）=====
-(function() {
-  var outfitEl = document.getElementById('catOutfit');
-  var outfitBtn = document.getElementById('catOutfitBtn');
-  var OUTFITS = [
-    // 1. 鸡腿帽
-    {
-      name: '鸡腿帽',
-      bubble: '🍗 鸡腿帽子！好好吃的样子~',
-      html: '<div class="oa-hat"><svg viewBox="0 0 60 45">' +
-        '<ellipse cx="30" cy="38" rx="7" ry="4" fill="#f5ede0" stroke="#c9b8a0" stroke-width="0.8"/>' +
-        '<circle cx="23" cy="37" r="4" fill="#f5ede0" stroke="#c9b8a0" stroke-width="0.8"/>' +
-        '<circle cx="37" cy="37" r="4" fill="#f5ede0" stroke="#c9b8a0" stroke-width="0.8"/>' +
-        '<path d="M16,34 Q12,18 20,10 Q30,4 40,10 Q48,18 44,34 Z" fill="#e8b54a" stroke="#c4952e" stroke-width="1"/>' +
-        '<path d="M20,28 Q18,16 26,12 Q34,10 40,16" fill="none" stroke="#d4a020" stroke-width="0.8" opacity="0.4"/>' +
-        '<ellipse cx="26" cy="18" rx="6" ry="4" fill="#f5d678" opacity="0.5"/>' +
-        '<circle cx="24" cy="22" r="1" fill="#c08020" opacity="0.5"/>' +
-        '<circle cx="34" cy="20" r="1" fill="#c08020" opacity="0.5"/>' +
-        '<circle cx="30" cy="28" r="1.2" fill="#c08020" opacity="0.5"/>' +
-        '</svg></div>'
-    },
-    // 2. 小公主
-    {
-      name: '小公主',
-      bubble: '👑 人家是小公主啦~',
-      html: '<div class="oa-hat"><svg viewBox="0 0 60 25">' +
-        '<path d="M8,22 L14,5 L20,18 L26,3 L30,16 L34,3 L40,18 L46,5 L52,22 Z" fill="#ff69b4" stroke="#e84a9c" stroke-width="0.8"/>' +
-        '<circle cx="14" cy="6" r="2.5" fill="#fff" stroke="#e84a9c" stroke-width="0.5"/>' +
-        '<circle cx="26" cy="4" r="2.5" fill="#fff" stroke="#e84a9c" stroke-width="0.5"/>' +
-        '<circle cx="30" cy="16" r="3" fill="#ffd700" stroke="#e84a9c" stroke-width="0.5"/>' +
-        '<circle cx="34" cy="4" r="2.5" fill="#ffd700" stroke="#e84a9c" stroke-width="0.5"/>' +
-        '<circle cx="46" cy="6" r="2.5" fill="#fff" stroke="#e84a9c" stroke-width="0.5"/>' +
-        '</svg></div>' +
-        '<div class="oa-neck"><svg viewBox="0 0 40 15">' +
-        '<path d="M5,7 L16,2 L16,12 Z" fill="#ff69b4" stroke="#e84a9c" stroke-width="0.5"/>' +
-        '<path d="M35,7 L24,2 L24,12 Z" fill="#ff69b4" stroke="#e84a9c" stroke-width="0.5"/>' +
-        '<rect x="15" y="4" width="10" height="6" rx="1.5" fill="#ff1493" stroke="#e84a9c" stroke-width="0.5"/>' +
-        '</svg></div>'
-    },
-    // 3. 绅士猫
-    {
-      name: '绅士猫',
-      bubble: '🎩 绅士的优雅~ 请多指教',
-      html: '<div class="oa-hat"><svg viewBox="0 0 60 50">' +
-        '<ellipse cx="30" cy="45" rx="28" ry="4" fill="#1a1a2e"/>' +
-        '<rect x="13" y="12" width="34" height="33" rx="2" fill="#1a1a2e"/>' +
-        '<ellipse cx="30" cy="12" rx="17" ry="3" fill="#2a2a4e"/>' +
-        '<rect x="13" y="35" width="34" height="5" fill="#8b0040" rx="1"/>' +
-        '<rect x="16" y="15" width="3" height="25" fill="#2a2a4e" opacity="0.5" rx="1"/>' +
-        '</svg></div>' +
-        '<div class="oa-neck"><svg viewBox="0 0 40 15">' +
-        '<path d="M4,7 L16,2 L16,12 Z" fill="#c41e3a" stroke="#8b0020" stroke-width="0.5"/>' +
-        '<path d="M36,7 L24,2 L24,12 Z" fill="#c41e3a" stroke="#8b0020" stroke-width="0.5"/>' +
-        '<rect x="14" y="4" width="12" height="6" rx="1.5" fill="#a01830" stroke="#8b0020" stroke-width="0.5"/>' +
-        '</svg></div>' +
-        '<div class="oa-face"><svg viewBox="0 0 40 20">' +
-        '<circle cx="28" cy="10" r="9" fill="none" stroke="#d4a017" stroke-width="1.5"/>' +
-        '<circle cx="28" cy="10" r="8" fill="rgba(255,255,255,0.08)"/>' +
-        '<path d="M37,12 Q39,14 40,18" fill="none" stroke="#d4a017" stroke-width="0.8"/>' +
-        '</svg></div>'
-    },
-    // 4. 甜品师
-    {
-      name: '甜品师',
-      bubble: '🧁 头顶甜甜的cupcake~',
-      html: '<div class="oa-hat"><svg viewBox="0 0 60 50">' +
-        '<path d="M15,25 L20,45 L40,45 L45,25 Z" fill="#d4a017" stroke="#b8860b" stroke-width="0.8"/>' +
-        '<path d="M22,28 L23,45 M28,28 L28,45 M34,28 L33,45 M40,28 L39,45" fill="none" stroke="#b8860b" stroke-width="0.4"/>' +
-        '<path d="M14,25 Q12,15 20,12 Q25,8 30,12 Q35,8 40,12 Q48,15 46,25 Q40,22 30,22 Q20,22 14,25 Z" fill="#ffb6c4" stroke="#ff9aaa" stroke-width="0.8"/>' +
-        '<circle cx="30" cy="8" r="4" fill="#dc143c" stroke="#a02040" stroke-width="0.5"/>' +
-        '<path d="M30,4 Q32,1 35,0" fill="none" stroke="#228b22" stroke-width="1"/>' +
-        '<rect x="22" y="16" width="2" height="1" fill="#ff69b4" transform="rotate(30 23 16)"/>' +
-        '<rect x="35" y="14" width="2" height="1" fill="#4169e1" transform="rotate(-20 36 14)"/>' +
-        '<rect x="28" y="20" width="2" height="1" fill="#ffd700" transform="rotate(45 29 20)"/>' +
-        '<rect x="38" y="20" width="2" height="1" fill="#9370db" transform="rotate(-30 39 20)"/>' +
-        '</svg></div>'
-    },
-    // 5. 花仙子
-    {
-      name: '花仙子',
-      bubble: '🌸 花仙子的魔法棒~',
-      html: '<div class="oa-hat"><svg viewBox="0 0 60 25">' +
-        '<path d="M8,20 Q30,12 52,20" fill="none" stroke="#228b22" stroke-width="2"/>' +
-        '<g transform="translate(12,17)">' +
-        '<circle r="3" fill="#ff69b4" stroke="#e84a9c" stroke-width="0.5"/>' +
-        '<circle r="1.5" fill="#ffd700"/>' +
-        '</g>' +
-        '<g transform="translate(20,14)">' +
-        '<circle r="3" fill="#fff" stroke="#ffb6c4" stroke-width="0.5"/>' +
-        '<circle r="1.5" fill="#ffd700"/>' +
-        '</g>' +
-        '<g transform="translate(30,12)">' +
-        '<circle r="3.5" fill="#ff69b4" stroke="#e84a9c" stroke-width="0.5"/>' +
-        '<circle r="1.5" fill="#ffd700"/>' +
-        '</g>' +
-        '<g transform="translate(40,14)">' +
-        '<circle r="3" fill="#9370db" stroke="#7b4aaa" stroke-width="0.5"/>' +
-        '<circle r="1.5" fill="#ffd700"/>' +
-        '</g>' +
-        '<g transform="translate(48,17)">' +
-        '<circle r="3" fill="#fff" stroke="#ffb6c4" stroke-width="0.5"/>' +
-        '<circle r="1.5" fill="#ffd700"/>' +
-        '</g>' +
-        '<path d="M6,19 Q4,16 6,14 Q8,17 6,19" fill="#228b22"/>' +
-        '<path d="M54,19 Q56,16 54,14 Q52,17 54,19" fill="#228b22"/>' +
-        '</svg></div>' +
-        '<div class="oa-side"><svg viewBox="0 0 25 30">' +
-        '<line x1="12" y1="28" x2="12" y2="12" stroke="#c9a46a" stroke-width="1.5"/>' +
-        '<path d="M12,3 L14,9 L20,9 L15,13 L17,19 L12,15 L7,19 L9,13 L4,9 L10,9 Z" fill="#ffd700" stroke="#d4a017" stroke-width="0.5"/>' +
-        '</svg></div>'
-    },
-    // 6. 魔法师
-    {
-      name: '魔法师',
-      bubble: '🧙 魔法猫咪来也！变~',
-      html: '<div class="oa-hat"><svg viewBox="0 0 60 55">' +
-        '<path d="M30,3 L50,42 L10,42 Z" fill="#4a2c6e" stroke="#3a1f5e" stroke-width="0.8"/>' +
-        '<ellipse cx="30" cy="42" rx="25" ry="4" fill="#3a1f5e"/>' +
-        '<path d="M28,18 L30,22 L34,22 L31,25 L32,29 L28,27 L24,29 L25,25 L22,22 L26,22 Z" fill="#ffd700" transform="scale(0.8) translate(7,5)"/>' +
-        '<circle cx="36" cy="32" r="1.5" fill="#ffd700"/>' +
-        '<circle cx="22" cy="35" r="1.5" fill="#ffd700"/>' +
-        '<circle cx="30" cy="3" r="2" fill="#ffd700"/>' +
-        '</svg></div>' +
-        '<div class="oa-side"><svg viewBox="0 0 25 35">' +
-        '<line x1="12" y1="33" x2="12" y2="8" stroke="#8b4513" stroke-width="2"/>' +
-        '<circle cx="12" cy="5" r="4" fill="#4a2c6e" stroke="#3a1f5e" stroke-width="0.8"/>' +
-        '<path d="M12,2 L13,5 L16,5 L14,7 L15,10 L12,8 L9,10 L10,7 L8,5 L11,5 Z" fill="#ffd700"/>' +
-        '</svg></div>'
-    },
-    // 7. 牛仔猫
-    {
-      name: '牛仔猫',
-      bubble: '🤠 yeehaw! 牛仔猫咪来啦',
-      html: '<div class="oa-hat"><svg viewBox="0 0 60 35">' +
-        '<ellipse cx="30" cy="28" rx="28" ry="5" fill="#8b4513" stroke="#6b3410" stroke-width="0.5"/>' +
-        '<path d="M16,28 Q14,12 22,8 L38,8 Q46,12 44,28 Z" fill="#a0522d" stroke="#6b3410" stroke-width="0.5"/>' +
-        '<path d="M25,10 Q30,6 35,10" fill="none" stroke="#6b3410" stroke-width="0.8"/>' +
-        '<ellipse cx="30" cy="26" rx="14" ry="2.5" fill="#6b3410"/>' +
-        '<path d="M28,22 L29,25 L32,25 L29.5,27 L30,30 L28,28 L26,30 L26.5,27 L24,25 L27,25 Z" fill="#ffd700" transform="scale(0.7) translate(12,8)"/>' +
-        '</svg></div>' +
-        '<div class="oa-neck"><svg viewBox="0 0 40 12">' +
-        '<path d="M5,4 Q20,0 35,4 L38,8 Q20,4 2,8 Z" fill="#dc143c" stroke="#a02030" stroke-width="0.5"/>' +
-        '<path d="M18,6 L22,10 L20,6 Z" fill="#dc143c" stroke="#a02030" stroke-width="0.3"/>' +
-        '<circle cx="10" cy="5" r="0.6" fill="#fff" opacity="0.5"/>' +
-        '<circle cx="20" cy="3" r="0.6" fill="#fff" opacity="0.5"/>' +
-        '<circle cx="30" cy="5" r="0.6" fill="#fff" opacity="0.5"/>' +
-        '</svg></div>'
-    },
-    // 8. 超级猫
-    {
-      name: '超级猫',
-      bubble: '🦸 超级猫咪来拯救你！',
-      html: '<div class="oa-face"><svg viewBox="0 0 40 15">' +
-        '<path d="M3,7 Q20,2 37,7 Q37,12 20,11 Q3,12 3,7 Z" fill="#1e3a8a" stroke="#0f1f5e" stroke-width="0.5"/>' +
-        '<ellipse cx="14" cy="7.5" rx="4" ry="2.5" fill="#1a1a2e"/>' +
-        '<ellipse cx="26" cy="7.5" rx="4" ry="2.5" fill="#1a1a2e"/>' +
-        '<circle cx="14" cy="7" r="0.8" fill="#fff"/>' +
-        '<circle cx="26" cy="7" r="0.8" fill="#fff"/>' +
-        '</svg></div>' +
-        '<div class="oa-body"><svg viewBox="0 0 50 30">' +
-        '<path d="M5,5 Q25,0 45,5 L48,25 Q25,20 2,25 Z" fill="#dc143c" stroke="#a02030" stroke-width="0.5" opacity="0.85"/>' +
-        '<path d="M10,8 Q25,4 40,8" fill="none" stroke="#ff4060" stroke-width="0.8" opacity="0.4"/>' +
-        '</svg></div>'
-    },
-    // 9. 圣诞猫
-    {
-      name: '圣诞猫',
-      bubble: '🎄 ho ho ho~ 圣诞快乐！',
-      html: '<div class="oa-hat"><svg viewBox="0 0 60 45">' +
-        '<path d="M15,42 Q12,20 30,5 Q48,20 45,42 Z" fill="#dc143c" stroke="#a02030" stroke-width="0.8"/>' +
-        '<ellipse cx="30" cy="42" rx="16" ry="4" fill="#fff" stroke="#e0e0e0" stroke-width="0.5"/>' +
-        '<circle cx="34" cy="8" r="4" fill="#fff" stroke="#e0e0e0" stroke-width="0.5"/>' +
-        '<path d="M20,35 Q25,30 30,35" fill="none" stroke="#a02030" stroke-width="0.5" opacity="0.3"/>' +
-        '</svg></div>' +
-        '<div class="oa-neck"><svg viewBox="0 0 40 15">' +
-        '<path d="M3,4 Q20,0 37,4 L40,10 Q20,6 0,10 Z" fill="#2e8b57" stroke="#1e6b40" stroke-width="0.5"/>' +
-        '<path d="M18,7 L24,14 L20,7 Z" fill="#2e8b57" stroke="#1e6b40" stroke-width="0.3"/>' +
-        '<path d="M8,6 Q20,3 32,6" fill="none" stroke="#fff" stroke-width="1.5" opacity="0.6"/>' +
-        '</svg></div>'
-    },
-    // 10. 学者猫
-    {
-      name: '学者猫',
-      bubble: '🎓 知识就是力量~喵',
-      html: '<div class="oa-hat"><svg viewBox="0 0 60 30">' +
-        '<path d="M5,15 L30,5 L55,15 L30,25 Z" fill="#1a1a2e" stroke="#0f0f1e" stroke-width="0.5"/>' +
-        '<ellipse cx="30" cy="18" rx="12" ry="4" fill="#1a1a2e"/>' +
-        '<path d="M50,15 L52,25" fill="none" stroke="#ffd700" stroke-width="1"/>' +
-        '<circle cx="52" cy="26" r="2.5" fill="#ffd700" stroke="#d4a017" stroke-width="0.5"/>' +
-        '<path d="M8,15 L30,8" fill="none" stroke="#3a3a5e" stroke-width="0.8" opacity="0.4"/>' +
-        '</svg></div>' +
-        '<div class="oa-face"><svg viewBox="0 0 40 15">' +
-        '<circle cx="13" cy="7.5" r="6" fill="none" stroke="#c9a46a" stroke-width="1.5"/>' +
-        '<circle cx="27" cy="7.5" r="6" fill="none" stroke="#c9a46a" stroke-width="1.5"/>' +
-        '<line x1="19" y1="7.5" x2="21" y2="7.5" stroke="#c9a46a" stroke-width="1.5"/>' +
-        '<line x1="7" y1="7.5" x2="3" y2="6" stroke="#c9a46a" stroke-width="1"/>' +
-        '<line x1="33" y1="7.5" x2="37" y2="6" stroke="#c9a46a" stroke-width="1"/>' +
-        '<circle cx="11" cy="6" r="1.5" fill="rgba(255,255,255,0.3)"/>' +
-        '<circle cx="25" cy="6" r="1.5" fill="rgba(255,255,255,0.3)"/>' +
-        '</svg></div>'
-    }
-  ];
-
-  var currentIdx = -1;
-
-  function applyOutfit(idx) {
-    currentIdx = idx;
-    var o = OUTFITS[idx];
-    outfitEl.innerHTML = o.html;
-    showOutfitSparkle();
-    try { showCatBubble(o.bubble); } catch(e) {}
-  }
-
-  function randomOutfit() {
-    if (OUTFITS.length <= 1) { applyOutfit(0); return; }
-    var idx;
-    do { idx = Math.floor(Math.random() * OUTFITS.length); } while (idx === currentIdx);
-    applyOutfit(idx);
-  }
-
-  function showOutfitSparkle() {
-    try {
-      var stage = document.querySelector('.stage');
-      var sparkles = ['✨','⭐','💫','🌟'];
-      for (var i = 0; i < 8; i++) {
-        (function(j) {
-          setTimeout(function() {
-            var sp = document.createElement('div');
-            sp.className = 'outfit-sparkle';
-            sp.textContent = sparkles[j % 4];
-            sp.style.fontSize = (10 + Math.random() * 8) + 'px';
-            sp.style.left = (catX + Math.random() * 15 - 5) + '%';
-            sp.style.bottom = (catY + 15 + Math.random() * 20) + '%';
-            stage.appendChild(sp);
-            setTimeout(function() { if (sp.parentNode) sp.parentNode.removeChild(sp); }, 700);
-          }, j * 60);
-        })(i);
-      }
-    } catch(e) {}
-  }
-
-  if (outfitBtn) {
-    outfitBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      e.preventDefault();
-      randomOutfit();
-    });
-    outfitBtn.addEventListener('touchstart', function(e) {
-      e.stopPropagation();
-      e.preventDefault();
-      randomOutfit();
-    }, { passive: false });
-  }
-
-  // initial random outfit after page loads
-  setTimeout(function() { randomOutfit(); }, 600);
-})();
-
-// ===== 猫咪发现动画系统 (增量新增，40个动作：普通16/搞笑12/治愈8/稀有4) =====
-(function(){
-  'use strict';
-  function K(t,o,f){var r={transform:t,offset:o};if(f)r.filter=f;return r}
-  function build(prep,main,hold,rec,f){
-    var k=[K('scale(1)',0,f)];
-    k.push(K(prep,.12,f));k.push(K(main,.45,f));
-    k.push(K(hold||main,.6,f));k.push(K(rec,.82,f));k.push(K('scale(1)',1,f));
-    return k;
-  }
-  // 粒子效果
-  function spawnParticles(emojis,count,spread){
-    var s=document.querySelector('.stage');if(!s)return;
-    for(var i=0;i<count;i++){(function(j){
-      setTimeout(function(){
-        var p=document.createElement('div');p.className='cat-disc-particle';
-        p.textContent=emojis[j%emojis.length];
-        p.style.left=(catX+(Math.random()-.5)*spread)+'%';
-        p.style.bottom=(catY+15+Math.random()*22)+'%';
-        s.appendChild(p);setTimeout(function(){if(p.parentNode)p.remove()},1100);
-      },j*60);
-    })(i)}
-  }
-  // 光芒效果
-  function spawnGlow(color){
-    var s=document.querySelector('.stage');if(!s||!cat)return;
-    var g=document.createElement('div');g.className='cat-disc-glow';
-    var r=cat.getBoundingClientRect(),sr=s.getBoundingClientRect();
-    g.style.width='80px';g.style.height='80px';g.style.background='radial-gradient(circle,'+color+',transparent)';
-    g.style.left=(r.left-sr.left+r.width/2)+'px';g.style.top=(r.top-sr.top+r.height/2)+'px';
-    s.appendChild(g);setTimeout(function(){if(g.parentNode)g.remove()},2100);
-  }
-  function spawnRing(color){
-    var s=document.querySelector('.stage');if(!s||!cat)return;
-    var g=document.createElement('div');g.className='cat-disc-ring';
-    var r=cat.getBoundingClientRect(),sr=s.getBoundingClientRect();
-    g.style.width='50px';g.style.height='50px';g.style.borderColor=color;
-    g.style.left=(r.left-sr.left+r.width/2)+'px';g.style.top=(r.top-sr.top+r.height/2)+'px';
-    s.appendChild(g);setTimeout(function(){if(g.parentNode)g.remove()},1100);
-  }
-  // E: effect trigger map
-  var E={sparkle:function(){spawnParticles(['✨','⭐','💫'],8,20)},
-    dizzy:function(){spawnParticles(['💫','😵','🌀'],6,15)},
-    star:function(){spawnParticles(['⭐','🌟','✨'],10,25)},
-    heart:function(){spawnParticles(['💕','💖','💗'],8,20)},
-    music:function(){spawnParticles(['🎵','🎶','♪'],6,18)},
-    zzz:function(){spawnParticles(['💤','💤','💤'],4,12)},
-    flower:function(){spawnParticles(['🌸','🌼','🌺'],6,18)},
-    fire:function(){spawnParticles(['🔥','💥','⚡'],8,22);spawnGlow('rgba(255,150,0,.4)')},
-    rainbow:function(){spawnParticles(['🌈','✨','💫','⭐'],12,30);spawnGlow('rgba(255,0,255,.3)')},
-    gold:function(){spawnParticles(['✨','👑','💛','⭐'],10,25);spawnGlow('rgba(255,215,0,.5)');spawnRing('#ffd700')},
-    cosmic:function(){spawnParticles(['🌌','⭐','💫','🌠'],10,25);spawnGlow('rgba(100,150,255,.4)')},
-    wind:function(){spawnParticles(['💨','💨','💨'],5,15)}
-  };
-  function playEffects(effs){if(!effs)return;effs.forEach(function(e){if(E[e])E[e]()})}
-
-  // ===== 动画定义 =====
-  var ANIMS=[];
-
-  // 普通 8种×2变体=16
-  var NM=[
-    // 1. 开心小跳
-    function(v){var h=[18,28][v],r=[2,-2][v];return{kf:build('scale(.92,1.08)','scale(1.08,.92) translateY(-'+h+'px) rotate('+r+'deg)','scale(1.05,.95) translateY(-'+(h*.5)+'px)','scale(.97,1.03)'),ef:['sparkle'],msg:['喵！发现啦~','嘿嘿~找到咯！'][v]}},
-    // 2. 伸懒腰
-    function(v){var s=[1.15,1.22][v];return{kf:build('scale(.98,1.02) translateY(2px)','scale('+s+','+(2-s)+') translateY(-8px)','scale('+(s-.03)+','+(2-s+.03)+')','scale(1.02,.99)'),ef:['sparkle'],msg:['伸个懒腰~','嗯~好舒服'][v]}},
-    // 3. 摇耳朵
-    function(v){var r=[6,-6][v];return{kf:build('rotate('+(-r*.3)+'deg)','rotate('+r+'deg) scale(1.02,1)','rotate('+(r*.7)+'deg)','rotate('+(-r*.2)+'deg)'),ef:['sparkle'],msg:['耳朵竖竖~','听到了什么？'][v]}},
-    // 4. 歪头杀
-    function(v){var r=[15,-15][v];return{kf:build('rotate('+(-r*.1)+'deg)','rotate('+r+'deg) scale(1.02,1)','rotate('+(r*.7)+'deg)','rotate('+(r*.2)+'deg)'),ef:['sparkle'],msg:['嗯？什么？','歪头看看~'][v]}},
-    // 5. 抬爪子
-    function(v){var x=[6,-6][v];return{kf:build('rotate('+(-x*.1)+'deg)','translateX('+x+'px) rotate('+x*.3+'deg) scale(1.03,.98)','translateX('+x*.6+'px)','translateX('+x*.1+'px) rotate(0deg)'),ef:['sparkle'],msg:['给你看爪爪~','握握手~'][v]}},
-    // 6. 转身
-    function(v){var d=[120,-120][v];return{kf:build('rotate(0deg) scale(.98,1.02)','rotate('+d+'deg) scale(.92,1.08)','rotate('+(d*.7)+'deg) scale(.95,1.05)','rotate(0deg) scale(1.01,1)'),ef:['sparkle'],msg:['转个身~','回头看看~'][v]}},
-    // 7. 轻跳
-    function(v){var h=[14,20][v];return{kf:build('scale(.95,1.05)','scale(1.05,.95) translateY(-'+h+'px)','scale(1.03,.97) translateY(-'+(h*.5)+'px)','scale(.98,1.02)'),ef:['sparkle'],msg:['轻轻跳~','蹦蹦~'][v]}},
-    // 8. 坐起来
-    function(v){var y=[10,14][v];return{kf:build('scale(1.04,.96) translateY(2px)','scale(.95,1.08) translateY(-'+y+'px)','scale(.97,1.05) translateY(-'+(y*.6)+'px)','scale(1.02,.99)'),ef:['sparkle'],msg:['坐起来啦~','坐好咯~'][v]}}
-  ];
-
-  // 搞笑 6种×2变体=12
-  var FM=[
-    // 1. 大旋转
-    function(v){var d=[540,-540][v];return{kf:build('scale(.95,1.05) rotate(0deg)','scale(.85,1.15) rotate('+d+'deg)','scale(.9,1.1) rotate('+(d*.8)+'deg)','scale(.98,1.02) rotate(0deg)'),ef:['dizzy'],msg:['转转转！嗖嗖！','好晕啊~'][v]}},
-    // 2. 脸着地
-    function(v){var r=[55,-55][v];return{kf:build('rotate(0deg) translateY(-3px)','rotate('+r+'deg) translateY(15px) scale(1.1,.85)','rotate('+(r*.8)+'deg) translateY(10px)','rotate('+r*.2+'deg) translateY(2px) scale(1.02,.99)'),ef:['dizzy'],msg:['啊！脸着地！','扑通！疼疼~'][v]}},
-    // 3. 肚子着地(猫饼)
-    function(v){var s=[1.4,1.5][v];return{kf:build('scale(1.02,.98) translateY(-5px)','scale('+s+','+(2-s)+') translateY(12px)','scale('+(s-.05)+','+(2-s+.05)+') translateY(8px)','scale(1.05,.97) translateY(2px)'),ef:['dizzy'],msg:['趴下！猫饼~','变成猫饼啦~'][v]}},
-    // 4. 滑倒
-    function(v){var x=[20,-20][v];return{kf:build('translateX(0px) rotate(0deg)','translateX('+x+'px) rotate('+(x*.5)+'deg) scale(1.05,.95)','translateX('+x*1.2+'px) rotate('+(x*.3)+'deg)','translateX('+x*.2+'px) rotate('+(-x*.1)+'deg) scale(1.02,.99)'),ef:['dizzy'],msg:['哇啊！滑倒了！','哧溜~'][v]}},
-    // 5. 嗖一声
-    function(v){var x=[25,-25][v];return{kf:build('translateX(0px) scale(1)','translateX('+x+'px) scale(1.18,.85)','translateX('+(-x*.5)+'px) scale(.95,1.05)','translateX(0px) scale(1.02,.99)'),ef:['wind'],msg:['嗖——！飞一样~','冲啊！'][v]}},
-    // 6. 街舞
-    function(v){var r=[25,-25][v];return{kf:[
-      K('scale(1) rotate(0deg)',0),K('scale(1.05,.95) rotate('+r+'deg)',.15),
-      K('scale(.95,1.05) rotate('+(-r)+'deg) translateY(-10px)',.35),
-      K('scale(1.1,.9) rotate('+r*.5+'deg)',.5),K('scale(.98,1.02) rotate('+(-r*.3)+'deg) translateY(-5px)',.65),
-      K('scale(1.02,.99) rotate('+r*.1+'deg)',.82),K('scale(1) rotate(0deg)',1)
-    ],ef:['music'],msg:['街舞time！动起来！','yo！breakdance~'][v]}}
-  ];
-
-  // 治愈 4种×2变体=8
-  var HM=[
-    // 1. 呼噜震
-    function(v){var r=[2,3][v];return{kf:[
-      K('scale(1)',0),K('rotate('+(-r)+'deg) scale(1.02,.99)',.15),
-      K('rotate('+r+'deg) scale(1.02,.99)',.3),K('rotate('+(-r)+'deg) scale(1.02,.99)',.45),
-      K('rotate('+r+'deg) scale(1.02,.99)',.6),K('rotate('+(-r*.5)+'deg) scale(1.01,1)',.75),
-      K('scale(1)',1)
-    ],ef:['heart'],msg:['咕噜咕噜~','呼噜噜~好开心'][v]}},
-    // 2. 爱心眼
-    function(v){var b=v?'#ff6b9d':'#ff8cb3';return{kf:build('scale(.98,1.02)','scale(1.06,.96) translateY(-4px)','scale(1.04,.98) translateY(-2px)','scale(1.01,1)'),ef:['heart'],msg:['好喜欢你~','被暖到了~'],opt:{heartEyes:true,color:b}}}},
-    // 3. 睡意卷缩
-    function(v){var r=[-10,-6][v];return{kf:build('rotate(0deg) scale(1)','rotate('+r+'deg) scale(.92,1.06)','rotate('+(r*.8)+'deg) scale(.94,1.04)','rotate('+(r*.3)+'deg) scale(.98,1.02)'),ef:['zzz'],msg:['好困困~','卷起来睡~'][v]}},
-    // 4. 阳光伸
-    function(v){var s=[1.2,1.28][v];return{kf:build('scale(.97,1.03) translateY(2px)','scale('+s+','+(2-s)+') translateY(-6px)','scale('+(s-.03)+','+(2-s+.03)+') translateY(-4px)','scale(1.01,1)'),ef:['flower'],msg:['好温暖~','阳光好舒服~'][v]}}
-  ];
-
-  // 稀有彩蛋 4种×1变体=4
-  var RM=[
-    // 1. 彩虹冲刺
-    function(v){return{kf:build('scale(.9,1.1) rotate(-5deg)','scale(1.12,.88) translateY(-20px) rotate(5deg)','scale(1.08,.92) translateY(-12px) rotate(2deg)','scale(1.02,.99) rotate(0deg)'),ef:['rainbow'],msg:'🌈 彩虹猫咪！',opt:{filter:'hue-rotate(180deg)',duration:3500}}}},
-    // 2. 黄金光雨
-    function(v){return{kf:build('scale(.95,1.05)','scale(1.08,.94) translateY(-8px)','scale(1.05,.96) translateY(-4px)','scale(1.02,.99)'),ef:['gold'],msg:'👑 金色传说！',opt:{duration:3800}}}},
-    // 3. 魔法变身
-    function(v){return{kf:build('scale(0.95,1.05)','scale(0.2,0.2) rotate(180deg)','scale(0.15,0.15) rotate(360deg)','scale(1.08,0.94)'),ef:['fire'],msg:'✨ 魔法猫咪变身！',opt:{filter:'brightness(1.5) hue-rotate(90deg)',duration:3500}}}},
-    // 4. 宇宙之舞
-    function(v){return{kf:build('scale(.98,1.02) rotate(0deg)','scale(0.9,1.1) rotate(360deg) translateY(-15px)','scale(0.92,1.08) rotate(270deg) translateY(-10px)','scale(1.02,.99) rotate(0deg)'),ef:['cosmic'],msg:'🌌 宇宙猫咪！',opt:{filter:'hue-rotate(270deg) brightness(1.2)',duration:4000}}}}
-  ];
-
-  // 构建动画列表
-  function addAnims(arr,cat,vars,opt){
-    var w=opt&&opt.w;arr.forEach(function(fn){
-      for(var i=0;i<vars;i++){
-        var r=fn(i);ANIMS.push(Object.assign({category:cat,duration:2500+vars*100-i*50},r,w?{weight:w}:{}));
-      }
-    });
-  }
-  addAnims(NM,'normal',2);     // 16
-  addAnims(FM,'funny',2);      // 12
-  addAnims(HM,'healing',2);    // 8
-  addAnims(RM,'rare',1);       // 4
-  // 为稀有设置权重0.1（10%），其余等权
-  ANIMS.forEach(function(a){if(a.category==='rare')a.weight=a.weight||0.25;else a.weight=a.weight||1});
-
-  // 同步当前奖励倍数
-  var rewardMult=1;
-
-  // 加权随机选择
-  function pickAnim(){
-    var totalW=0;ANIMS.forEach(function(a){totalW+=a.weight||1});
-    var r=Math.random()*totalW,cum=0;
-    for(var i=0;i<ANIMS.length;i++){cum+=ANIMS[i].weight||1;if(r<=cum)return ANIMS[i]}
-    return ANIMS[ANIMS.length-1];
-  }
-
-  // ===== 播放引擎 =====
-  var discoveryPlaying=false;
-  var activeAnim=null;
-
-  function playDiscoveryAnimation(onDone){
-    if(!cat)return;
-    var anim=pickAnim();
-    if(!anim)return;
-    discoveryPlaying=true;
-    if(activeAnim){try{activeAnim.cancel()}catch(e){}activeAnim=null}
-    // 移除CSS动画类，避免冲突
-    cat.classList.remove('idle','walking','sleeping','clicked');
-    cat.classList.add('cat-discovering');
-
-    // 稀有彩蛋：全局提示
-    if(anim.category==='rare'&&showCatBubble&&anim.msg){
-      showCatBubble(anim.msg);
-    }
-
-    // 播放效果
-    if(anim.ef){setTimeout(function(){playEffects(anim.ef)},anim.duration*.3)}
-
-    // 爱心眼特效
-    var hEye=document.getElementById('catHeartEyes');
-    if(anim.opt&&anim.opt.heartEyes&&hEye){
-      hEye.classList.add('show');
-      setTimeout(function(){hEye.classList.remove('show')},anim.duration*.8);
-    }
-
-    // 使用Web Animations API播放
-    var kf=anim.kf.map(function(k){
-      var o={transform:k.transform,offset:k.offset};
-      if(k.filter||(anim.opt&&anim.opt.filter))o.filter=k.filter||anim.opt.filter;
-      return o;
-    });
-    var dur=anim.opt&&anim.opt.duration||anim.duration;
-    try{
-      activeAnim=cat.animate(kf,{duration:dur,easing:'cubic-bezier(.34,1.56,.64,1)',fill:'forwards'});
-      activeAnim.onfinish=function(){
-        cat.classList.remove('cat-discovering');
-        cat.classList.add('idle');
-        discoveryPlaying=false;
-        activeAnim=null;
-        if(!(anim.category==='rare')){if(showCatBubble&&anim.msg)showCatBubble(anim.msg)}
-        if(onDone)onDone();
-      };
-    }catch(e){
-      setTimeout(function(){
-        cat.classList.remove('cat-discovering');
-        cat.classList.add('idle');
-        discoveryPlaying=false;
-        activeAnim=null;
-        if(showCatBubble&&anim.msg)showCatBubble(anim.msg)
-        if(onDone)onDone();
-      },dur);
-    }
-  }
-
-  // ===== 接入游戏 =====
-  var _origBubble=showCatBubble;
-  showCatBubble=function(text){
-    _origBubble(text);
-    if((text==='找到啦！✨'||text==='✈️ 好美的旅行合影！')&&!discoveryPlaying){
-      // 清除当前定时器，避免冲突
-      if(catTimer){clearTimeout(catTimer);catTimer=null}
-      playDiscoveryAnimation(function(){
-        scheduleCatAction();
-      });
-    }
-  };
-
-  var _origSchedule=scheduleCatAction;
-  scheduleCatAction=function(){
-    if(discoveryPlaying)return;
-    _origSchedule();
-  };
-
-  // ===== 连续发现不重复机制 =====
-  var recentAnims=[];
-  var _origPickAnim=pickAnim;
-  pickAnim=function(){
-    var anim;
-    do{anim=_origPickAnim()}while(recentAnims.indexOf(anim)>-1&&ANIMS.length>1);
-    recentAnims.push(anim);
-    if(recentAnims.length>5)recentAnims.shift();
-    return anim;
-  };
-
-  console.log('🐱 猫咪发现动画系统已就绪 | '+ANIMS.length+'个动作 | 普通'+NM.length*2+' 搞笑'+FM.length*2+' 治愈'+HM.length*2+' 稀有'+RM.length);
-})();
-
 init();
 </script>
 </body>
