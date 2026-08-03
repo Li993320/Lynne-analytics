@@ -905,6 +905,135 @@
     mix-blend-mode: multiply;
   }
 
+  /* ─── 🌈 雨后彩虹 ─── */
+  .weather-outdoor.rainbow {
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(255, 255, 255, 0.30) 0%, transparent 55%),
+      linear-gradient(180deg,
+        rgba(180, 210, 240, 0.30) 0%, rgba(200, 220, 245, 0.22) 40%,
+        rgba(255, 240, 180, 0.18) 70%, rgba(255, 250, 230, 0.12) 100%);
+  }
+  .weather-indoor.rainbow {
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(255, 240, 200, 0.12) 0%, transparent 40%),
+      radial-gradient(ellipse at 60% 45%, rgba(230, 245, 255, 0.10) 0%, transparent 40%),
+      radial-gradient(ellipse at 80% 55%, rgba(255, 235, 210, 0.10) 0%, transparent 35%);
+    mix-blend-mode: overlay;
+  }
+  /* 室内七彩三棱镜折射光斑 */
+  .prism-spots { position: absolute; inset: 0; z-index: 19; pointer-events: none; opacity: 0; transition: opacity 1.5s ease; }
+  .prism-spots.active { opacity: 1; }
+  .prism-spot {
+    position: absolute; border-radius: 50%; filter: blur(3px);
+    animation: prismFloat 4s ease-in-out infinite;
+  }
+  @keyframes prismFloat {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.5; }
+    50%      { transform: translate(8px, -10px) rotate(15deg); opacity: 0.8; }
+  }
+
+  /* 彩虹弧线 */
+  .rainbow-arc {
+    position: absolute; top: 5%; left: 50%; transform: translateX(-50%);
+    width: 85%; max-width: 600px; height: 300px; z-index: 17; pointer-events: none;
+    opacity: 0; transition: opacity 1.5s ease 0.3s;
+  }
+  .rainbow-arc.active { opacity: 0.55; }
+  .rainbow-arc .arc-band {
+    position: absolute; left: 0; right: 0; height: 0;
+    border-radius: 50% 50% 0 0;
+    border-style: solid; border-width: 12px 12px 0 12px;
+    filter: blur(1.5px);
+  }
+  .rainbow-arc .arc-band:nth-child(1) { top: 0;   border-color: #ff6b6b transparent transparent transparent; height: 60px; }
+  .rainbow-arc .arc-band:nth-child(2) { top: 8px; border-color: #ffb347 transparent transparent transparent; height: 55px; }
+  .rainbow-arc .arc-band:nth-child(3) { top: 16px; border-color: #ffe066 transparent transparent transparent; height: 50px; }
+  .rainbow-arc .arc-band:nth-child(4) { top: 24px; border-color: #7bed9f transparent transparent transparent; height: 45px; }
+  .rainbow-arc .arc-band:nth-child(5) { top: 32px; border-color: #70a1ff transparent transparent transparent; height: 40px; }
+  .rainbow-arc .arc-band:nth-child(6) { top: 40px; border-color: #a29bfe transparent transparent transparent; height: 35px; }
+
+  /* NPC 对话框彩虹特效 */
+  .quest-dialog.rainbow-mode {
+    border: 2px solid rgba(255, 180, 100, 0.6) !important;
+    box-shadow: 0 0 20px rgba(255, 160, 80, 0.3), 0 0 40px rgba(130, 200, 255, 0.15);
+    animation: rainbowDialogGlow 3s ease-in-out infinite;
+  }
+  @keyframes rainbowDialogGlow {
+    0%, 100% { box-shadow: 0 0 20px rgba(255, 160, 80, 0.3), 0 0 40px rgba(130, 200, 255, 0.15); }
+    33%      { box-shadow: 0 0 25px rgba(130, 255, 160, 0.3), 0 0 45px rgba(255, 200, 100, 0.15); }
+    66%      { box-shadow: 0 0 25px rgba(160, 130, 255, 0.3), 0 0 45px rgba(255, 150, 200, 0.15); }
+  }
+
+  /* ─── 🌠 流星雨 ─── */
+  .weather-outdoor.meteor {
+    background: linear-gradient(180deg,
+      rgba(2, 2, 25, 0.60) 0%, rgba(5, 5, 40, 0.55) 35%,
+      rgba(8, 8, 50, 0.48) 65%, rgba(3, 3, 35, 0.40) 100%);
+  }
+  .weather-indoor.meteor {
+    background: linear-gradient(180deg,
+      rgba(20, 20, 65, 0.42) 0%, rgba(30, 25, 70, 0.32) 50%,
+      rgba(45, 35, 85, 0.22) 100%);
+    mix-blend-mode: multiply;
+  }
+  .stage.meteor .room-bg { filter: brightness(0.60) saturate(0.7); }
+  .stage.meteor .items-layer img { filter: brightness(0.65); }
+
+  /* 流星粒子容器 */
+  .meteor-layer {
+    position: absolute; inset: 0; z-index: 19; pointer-events: none;
+    overflow: hidden; opacity: 0; transition: opacity 1.2s ease;
+  }
+  .meteor-layer.active { opacity: 1; }
+  .meteor-shooting {
+    position: absolute; width: 3px; height: 3px;
+    background: #fff; border-radius: 50%;
+    animation: shootMeteor linear forwards;
+  }
+  .meteor-shooting::after {
+    content: ''; position: absolute; top: 50%; right: 100%;
+    width: 60px; height: 2px;
+    background: linear-gradient(90deg, transparent, currentColor);
+    transform: translateY(-50%);
+    border-radius: 1px; opacity: 0.8;
+  }
+  .meteor-shooting.gold   { color: #ffd700; box-shadow: 0 0 8px #ffd700, 0 0 20px rgba(255, 215, 0, 0.6); }
+  .meteor-shooting.silver { color: #c0c0e0; box-shadow: 0 0 8px #a0a0ff, 0 0 20px rgba(160, 180, 255, 0.5); }
+  @keyframes shootMeteor {
+    0%  { transform: translate(0, 0) rotate(-35deg); opacity: 0; }
+    5%  { opacity: 1; }
+    80% { opacity: 0.8; }
+    100%{ transform: translate(-350px, 400px) rotate(-35deg); opacity: 0; }
+  }
+
+  /* 流星划过室内闪烁反光 */
+  .meteor-flash {
+    position: absolute; inset: 0; z-index: 19; pointer-events: none;
+    opacity: 0; transition: opacity 0.15s ease;
+    background: radial-gradient(ellipse at 50% 50%, rgba(180, 200, 240, 0.12), transparent 60%);
+  }
+
+  /* 小猫许愿动作 */
+  .cat-container.wishing .cat-img {
+    animation: catWish 2s ease-in-out;
+  }
+  @keyframes catWish {
+    0%  { transform: scale(1); }
+    20% { transform: scale(1.08) translateY(-10px); }
+    30% { transform: scale(0.95) translateY(-8px); } /* 闭眼 */
+    60% { transform: scale(0.97) translateY(-6px); } /* 双手合十 */
+    80% { transform: scale(1.04) translateY(-4px); }
+    100%{ transform: scale(1) translateY(0); }
+  }
+  .cat-wish-sparkle {
+    position: absolute; pointer-events: none; z-index: 30;
+    font-size: 20px; animation: wishSparkle 1.5s ease-out forwards;
+  }
+  @keyframes wishSparkle {
+    0%  { transform: translateY(0) scale(0); opacity: 1; }
+    100%{ transform: translateY(-80px) scale(1.5); opacity: 0; }
+  }
+
   /* 室内灯光发光球（雨天/夜晚时更明显） */
   .lamp-glow {
     position: absolute; pointer-events: none; z-index: 18;
@@ -1326,6 +1455,25 @@
   <div class="lamp-glow warm" id="lampGlow1" style="left:18%; top:35%;"></div>
   <div class="lamp-glow warm" id="lampGlow2" style="right:15%; top:30%;"></div>
   <div class="lamp-glow bright" id="lampGlow3" style="left:45%; top:25%;"></div>
+
+  <!-- 🌈 彩虹弧线 -->
+  <div class="rainbow-arc" id="rainbowArc">
+    <div class="arc-band"></div><div class="arc-band"></div><div class="arc-band"></div>
+    <div class="arc-band"></div><div class="arc-band"></div><div class="arc-band"></div>
+  </div>
+
+  <!-- 🌈 三棱镜折射光斑 -->
+  <div class="prism-spots" id="prismSpots">
+    <div class="prism-spot" style="left:22%; top:48%; width:60px; height:60px; background:radial-gradient(circle, rgba(255,200,150,0.35), transparent); animation-delay:0s;"></div>
+    <div class="prism-spot" style="left:55%; top:55%; width:45px; height:45px; background:radial-gradient(circle, rgba(150,220,255,0.30), transparent); animation-delay:1.2s;"></div>
+    <div class="prism-spot" style="left:72%; top:42%; width:50px; height:50px; background:radial-gradient(circle, rgba(200,255,180,0.28), transparent); animation-delay:2.5s;"></div>
+    <div class="prism-spot" style="left:35%; top:60%; width:40px; height:40px; background:radial-gradient(circle, rgba(255,180,220,0.25), transparent); animation-delay:3.8s;"></div>
+  </div>
+
+  <!-- 🌠 流星粒子层 -->
+  <div class="meteor-layer" id="meteorLayer"></div>
+  <!-- 🌠 流星闪光 -->
+  <div class="meteor-flash" id="meteorFlash"></div>
 
   <!-- 探秘卡片层 -->
   <div class="discovery-layer" id="discoveryLayer"></div>
@@ -2939,6 +3087,9 @@ function showQuestDialog(npc) {
   questSubmit.style.display = 'inline-block';
   questLater.style.display = 'inline-block';
   questDialog.classList.remove('thank-you');
+  // 🌈 彩虹天气下对话框带特效
+  if (rainbowMode) questDialog.classList.add('rainbow-mode');
+  else questDialog.classList.remove('rainbow-mode');
   questDialog.classList.add('show');
   positionQuestDialog(npc.id);
 }
@@ -2953,11 +3104,13 @@ function showThankYouDialog(npc) {
   questLater.textContent = '❤ 真开心';
   questLater.style.display = 'inline-block';
   questDialog.classList.add('thank-you', 'show');
+  // 🌈 彩虹天气下对话框带特效
+  if (rainbowMode) questDialog.classList.add('rainbow-mode');
   positionQuestDialog(npc.id);
 }
 
 function hideQuestDialog() {
-  questDialog.classList.remove('show', 'thank-you');
+  questDialog.classList.remove('show', 'thank-you', 'rainbow-mode');
   currentQuestNpc = null;
 }
 
@@ -2967,12 +3120,28 @@ function submitQuest() {
   if (!npc) return;
   npcQuests[currentQuestNpc] = 'completed';
   showCatBubble(npc.name + '收到了' + npc.flower + '！✨');
+
+  // 🌈 彩虹天气下完成订单 → 额外奖励
+  if (rainbowMode) {
+    onRainbowOrderComplete(currentQuestNpc);
+  }
+
   updateHandbookCards();
   showThankYouDialog(npc);
 
   // 金币奖励
   coinCount += 30;
   document.getElementById('coinCount').textContent = coinCount;
+
+  // 🎉 连续完成订单 → 惊喜天气
+  completedQuestCount++;
+  if (completedQuestCount % SURPRISE_WEATHER_AFTER_QUESTS === 0) {
+    setTimeout(() => {
+      const surprise = (Math.random() > 0.5) ? 'rainbow' : 'meteor';
+      setWeather(surprise);
+      showCatBubble('连续完成' + SURPRISE_WEATHER_AFTER_QUESTS + '个订单，惊喜天气降临！✨');
+    }, 2500);
+  }
 }
 
 function positionQuestDialog(npcId) {
@@ -3172,6 +3341,16 @@ function clearWeatherEasterEggs() {
   hideCatStairsSleep();
   stopWaveAudio();
   hideMailbox();
+  // 🌈 清除彩虹
+  rainbowArc.classList.remove('active');
+  prismSpots.classList.remove('active');
+  // 🌠 清除流星雨
+  meteorLayer.classList.remove('active');
+  clearMeteorInterval();
+  flashMet(false);
+  questDialog.classList.remove('rainbow-mode');
+  rainbowMode = false;
+  stopWindChime();
 }
 
 // ===== 爱心眼 =====
@@ -3197,8 +3376,8 @@ function spawnFloatingHeart() {
 // ===== 天气与光影联动系统 =====
 let catClickCount = 0;
 let catClickResetTimer = null;
-let currentWeather = null; // null, 'sunny', 'rainy', 'dusk', 'night'
-const WEATHER_TYPES = ['sunny', 'rainy', 'dusk', 'night'];
+let currentWeather = null; // null, 'sunny', 'rainy', 'dusk', 'night', 'rainbow', 'meteor'
+const WEATHER_TYPES = ['sunny', 'rainy', 'dusk', 'night', 'rainbow', 'meteor'];
 
 /* 随机切换天气彩蛋 */
 function triggerWeatherEasterEgg() {
@@ -3221,9 +3400,9 @@ function setWeather(type) {
   const rainLayer = document.getElementById('rainLayer');
 
   // 先清除所有天气类和彩蛋
-  outdoor.classList.remove('active', 'sunny', 'rainy', 'dusk', 'night');
-  indoor.classList.remove('active', 'sunny', 'rainy', 'dusk', 'night');
-  stageEl.classList.remove('rainy', 'night');
+  outdoor.classList.remove('active', 'sunny', 'rainy', 'dusk', 'night', 'rainbow', 'meteor');
+  indoor.classList.remove('active', 'sunny', 'rainy', 'dusk', 'night', 'rainbow', 'meteor');
+  stageEl.classList.remove('rainy', 'night', 'meteor');
   nightOverlay.classList.remove('active');
   rainLayer.classList.remove('active');
   clearRainDrops();
@@ -3232,7 +3411,7 @@ function setWeather(type) {
 
   currentWeather = type;
 
-  const weatherNames = { sunny: '☀️ 晴空万里', rainy: '🌧️ 细雨绵绵', dusk: '🌅 黄昏晚霞', night: '🌙 夜色如水' };
+  const weatherNames = { sunny: '☀️ 晴空万里', rainy: '🌧️ 细雨绵绵', dusk: '🌅 黄昏晚霞', night: '🌙 夜色如水', rainbow: '🌈 雨后彩虹', meteor: '🌠 流星划过' };
 
   if (type === 'sunny') {
     outdoor.classList.add('sunny', 'active');
@@ -3272,6 +3451,35 @@ function setWeather(type) {
     spawnFloatingHeart();
     // 🌙 夜晚彩蛋：猫咪楼梯口打瞌睡 + 海浪白噪音
     setTimeout(() => { showCatStairsSleep(); startWaveAudio(); }, 2000);
+  } else if (type === 'rainbow') {
+    outdoor.classList.add('rainbow', 'active');
+    indoor.classList.add('rainbow', 'active');
+    // 🌈 彩虹弧线 + 三棱镜光斑
+    setTimeout(() => { rainbowArc.classList.add('active'); prismSpots.classList.add('active'); }, 800);
+    // 🌈 彩虹模式标记，NPC 对话框会有特效
+    rainbowMode = true;
+    toggleLampGlows(false);
+    showCatBubble(weatherNames.rainbow + '，好美啊~ ✨');
+    catStretch();
+    // 🌈 彩虹彩蛋：在阳台附近刷一个四叶草
+    setTimeout(() => { showLuckyClover(); }, 2000);
+  } else if (type === 'meteor') {
+    outdoor.classList.add('meteor', 'active');
+    indoor.classList.add('meteor', 'active');
+    stageEl.classList.add('meteor');
+    nightOverlay.classList.add('active');
+    generateStars();
+    // 🌠 流星层
+    meteorLayer.classList.add('active');
+    startMeteorInterval();
+    toggleLampGlows(true);
+    // 🌠 许愿彩蛋：小猫闭眼许愿
+    showCatBubble(weatherNames.meteor + '，快许愿吧~ 🌠');
+    catWish();
+    spawnFloatingHeart();
+    startWindChime();
+    // 🌠 夜间海浪白噪音 + 虫鸣
+    setTimeout(() => { startWaveAudio(); }, 2000);
   }
 }
 
@@ -3299,6 +3507,203 @@ function toggleNightMode() {
   if (currentWeather === 'night') setWeather(null);
   else setWeather('night');
 }
+
+/* ─── 🌈 彩虹模式 ─── */
+let rainbowMode = false;
+
+/* 🌈 彩虹下 NPC 订单完成奖励 */
+const rainbowOrderCounts = { 'npc-rabbit': 0, 'npc-beagle': 0, 'npc-teddy': 0 };
+
+function onRainbowOrderComplete(npcId) {
+  rainbowOrderCounts[npcId] = (rainbowOrderCounts[npcId] || 0) + 1;
+  const npc = NPC_DATA.find(n => n.id === npcId);
+  const rewards = [
+    { name: '彩虹种子', icon: '🌈🌱', desc: '种下去会开出七彩的花。' },
+    { name: '幸运四叶草', icon: '🍀', desc: '传说能带来一整天好运气。' }
+  ];
+  const reward = rewards[Math.floor(Math.random() * rewards.length)];
+  showCatBubble(npc.name + '送了你' + reward.name + '！' + reward.icon);
+  coinCount += 25;
+  document.getElementById('coinCount').textContent = coinCount;
+}
+
+/* 🌈 阳台刷四叶草 */
+const luckyClover = document.createElement('div');
+luckyClover.className = 'rare-flower';
+luckyClover.id = 'luckyCloverEl';
+luckyClover.innerHTML = '🍀';
+luckyClover.style.cssText = 'left:42%; bottom:54%; font-size:36px;';
+luckyClover.title = '幸运四叶草';
+luckyClover.addEventListener('click', (e) => {
+  e.stopPropagation();
+  luckyClover.classList.remove('show');
+  coinCount += 20;
+  document.getElementById('coinCount').textContent = coinCount;
+  showCatBubble('幸运四叶草 🍀 +20 金币！');
+});
+document.getElementById('stage').appendChild(luckyClover);
+
+function showLuckyClover() {
+  luckyClover.classList.add('show');
+}
+function hideLuckyClover() {
+  luckyClover.classList.remove('show');
+}
+
+/* ─── 🌠 流星雨 ─── */
+let meteorInterval = null;
+let wishCoinCount = 0;
+
+function startMeteorInterval() {
+  clearMeteorInterval();
+  spawnMeteor();
+  meteorInterval = setInterval(() => {
+    if (document.getElementById('meteorLayer').classList.contains('active')) {
+      spawnMeteor();
+    }
+  }, 3000 + Math.random() * 3000);
+}
+
+function clearMeteorInterval() {
+  if (meteorInterval) { clearInterval(meteorInterval); meteorInterval = null; }
+  document.getElementById('meteorLayer').innerHTML = '';
+}
+
+function spawnMeteor() {
+  const layer = document.getElementById('meteorLayer');
+  const m = document.createElement('div');
+  m.className = 'meteor-shooting ' + (Math.random() > 0.5 ? 'gold' : 'silver');
+  m.style.right = (Math.random() * 60) + '%';
+  m.style.top = (5 + Math.random() * 35) + '%';
+  m.style.animationDuration = (1.2 + Math.random() * 1.5) + 's';
+  m.style.width = (2 + Math.random() * 2) + 'px';
+  m.style.height = (2 + Math.random() * 2) + 'px';
+  layer.appendChild(m);
+
+  // 流星划过时室内闪烁
+  setTimeout(() => { flashMet(true); }, 100);
+  setTimeout(() => { flashMet(false); }, 400);
+
+  // 清除完成动画的流星
+  setTimeout(() => { if (m.parentNode) m.remove(); }, 3000);
+}
+
+function flashMet(on) {
+  document.getElementById('meteorFlash').style.opacity = on ? '1' : '0';
+}
+
+/* 🌠 点击流星许愿 */
+document.getElementById('meteorLayer').addEventListener('click', (e) => {
+  if (!e.target.classList.contains('meteor-shooting')) return;
+  e.stopPropagation();
+  doWish();
+});
+
+function doWish() {
+  if (cat.classList.contains('wishing')) return;
+  cat.classList.remove('idle', 'walking', 'sleeping', 'dancing', 'singing', 'stretching', 'wishing');
+  void cat.offsetWidth;
+  cat.classList.add('wishing');
+
+  // 从猫身上飞出星星粒子
+  const catRect = cat.getBoundingClientRect();
+  for (let i = 0; i < 5; i++) {
+    setTimeout(() => {
+      const sparkle = document.createElement('div');
+      sparkle.className = 'cat-wish-sparkle';
+      sparkle.textContent = ['✨', '⭐', '🌟', '💫'][Math.floor(Math.random() * 4)];
+      sparkle.style.left = (catRect.left + catRect.width * (0.3 + Math.random() * 0.4)) + 'px';
+      sparkle.style.top = (catRect.top + catRect.height * 0.2) + 'px';
+      document.body.appendChild(sparkle);
+      setTimeout(() => sparkle.remove(), 1600);
+    }, i * 200);
+  }
+
+  // 随机奖励
+  const rewards = [
+    { name: '许愿星币', icon: '🌟' },
+    { name: '稀有花卉配方', icon: '🌺📜' }
+  ];
+  wishCoinCount++;
+  if (wishCoinCount % 3 === 0) {
+    const r = rewards[1];
+    coinCount += 50;
+    showCatBubble('✨ 许愿成功！获得稀有花卉配方 🌺📜 +50金币');
+  } else {
+    const r = rewards[0];
+    coinCount += 15;
+    showCatBubble('🌟 许愿星币 +15金币！继续许愿吧~');
+  }
+  document.getElementById('coinCount').textContent = coinCount;
+
+  setTimeout(() => {
+    cat.classList.remove('wishing');
+    setCatState('idle');
+    scheduleCatAction();
+  }, 2000);
+}
+
+/* 🌠 小猫许愿动作 */
+function catWish() {
+  if (catTimer) { clearTimeout(catTimer); catTimer = null; }
+  cat.classList.remove('idle', 'walking', 'sleeping', 'dancing', 'singing', 'stretching', 'wishing');
+  void cat.offsetWidth;
+  cat.classList.add('wishing');
+  setTimeout(() => {
+    cat.classList.remove('wishing');
+    setCatState('idle');
+    scheduleCatAction();
+  }, 2000);
+}
+
+/* 🌠 风铃 + 海浪 + 虫鸣音效 */
+let windChimeAudio = null;
+let windChimePlaying = false;
+const windChimeBtn = document.createElement('button');
+windChimeBtn.className = 'wave-audio-indicator';
+windChimeBtn.id = 'windChimeBtn';
+windChimeBtn.title = '风铃 & 虫鸣 🎐';
+windChimeBtn.textContent = '🎐';
+windChimeBtn.addEventListener('click', () => {
+  if (!windChimeAudio) return;
+  if (windChimePlaying) {
+    windChimeAudio.pause();
+    windChimePlaying = false;
+    windChimeBtn.classList.add('muted');
+  } else {
+    windChimeAudio.play().then(() => {
+      windChimePlaying = true;
+      windChimeBtn.classList.remove('muted');
+    }).catch(() => {});
+  }
+});
+document.body.appendChild(windChimeBtn);
+
+function startWindChime() {
+  if (!windChimeAudio) {
+    windChimeAudio = new Audio();
+    // 使用 generate 的音效：柔和风铃+虫鸣
+    windChimeAudio.src = 'data:audio/wav;base64,'; // 静默占位
+    windChimeAudio.loop = true;
+    windChimeAudio.volume = 0.2;
+  }
+  windChimeBtn.classList.add('show');
+  windChimeAudio.play().then(() => {
+    windChimePlaying = true;
+    windChimeBtn.classList.remove('muted');
+  }).catch(() => {});
+}
+function stopWindChime() {
+  if (windChimeAudio && windChimePlaying) {
+    windChimeAudio.pause();
+    windChimePlaying = false;
+  }
+  windChimeBtn.classList.remove('show', 'muted');
+}
+
+/* ─── 连续完成 NPC 订单 → 惊喜天气 ─── */
+let completedQuestCount = 0;
+const SURPRISE_WEATHER_AFTER_QUESTS = 3; // 每完成3个订单触发惊喜
 
 function generateStars() {
   const overlay = document.getElementById('nightOverlay');
