@@ -788,6 +788,131 @@
     border-radius:50%; z-index:0; pointer-events:none;
   }
 
+  /* ===== 天气系统 ===== */
+  .weather-outdoor {
+    position: absolute; inset: 0; z-index: 17; pointer-events: none;
+    opacity: 0; transition: opacity 1.2s ease;
+  }
+  .weather-outdoor.active { opacity: 1; }
+
+  /* 晴天 - 拱门窗外暖黄光斑 */
+  .weather-outdoor.sunny {
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(255, 230, 140, 0.45) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 25%, rgba(255, 245, 180, 0.35) 0%, transparent 45%),
+      radial-gradient(ellipse at 50% 15%, rgba(255, 220, 100, 0.25) 0%, transparent 40%);
+  }
+
+  /* 雨天 - 拱门窗外浅蓝冷色调 */
+  .weather-outdoor.rainy {
+    background: linear-gradient(180deg,
+      rgba(100, 140, 180, 0.50) 0%, rgba(130, 160, 200, 0.38) 40%,
+      rgba(160, 180, 210, 0.30) 70%, rgba(140, 160, 190, 0.20) 100%);
+  }
+  /* 雨滴层 */
+  .rain-layer {
+    position: absolute; inset: 0; z-index: 17; pointer-events: none;
+    overflow: hidden; opacity: 0; transition: opacity 1s ease;
+  }
+  .rain-layer.active { opacity: 1; }
+  .rain-drop {
+    position: absolute; width: 2px; height: 18px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0));
+    border-radius: 1px; animation: rainFall linear infinite;
+  }
+  @keyframes rainFall {
+    0%   { transform: translateY(-20px); opacity: 0; }
+    10%  { opacity: 0.8; }
+    90%  { opacity: 0.5; }
+    100% { transform: translateY(110vh); opacity: 0; }
+  }
+
+  /* 黄昏 - 拱门窗外橘粉色 */
+  .weather-outdoor.dusk {
+    background: linear-gradient(180deg,
+      rgba(255, 130, 90, 0.45) 0%, rgba(255, 170, 120, 0.35) 35%,
+      rgba(200, 130, 160, 0.28) 65%, rgba(160, 120, 180, 0.20) 100%);
+  }
+
+  /* 夜晚 - 拱门窗外暗蓝色 */
+  .weather-outdoor.night {
+    background: linear-gradient(180deg,
+      rgba(8, 8, 40, 0.55) 0%, rgba(15, 15, 55, 0.48) 40%,
+      rgba(25, 20, 65, 0.42) 70%, rgba(20, 15, 50, 0.35) 100%);
+  }
+
+  /* 室内光影遮罩层 */
+  .weather-indoor {
+    position: absolute; inset: 0; z-index: 18; pointer-events: none;
+    opacity: 0; transition: opacity 1.2s ease;
+  }
+  .weather-indoor.active { opacity: 1; }
+
+  /* 晴天室内 - 暖黄光斑+金色日光 */
+  .weather-indoor.sunny {
+    background:
+      radial-gradient(ellipse at 25% 55%, rgba(255, 230, 150, 0.18) 0%, transparent 45%),
+      radial-gradient(ellipse at 55% 65%, rgba(255, 220, 130, 0.14) 0%, transparent 40%),
+      radial-gradient(ellipse at 80% 40%, rgba(255, 210, 120, 0.12) 0%, transparent 35%);
+    mix-blend-mode: overlay;
+  }
+
+  /* 雨天室内 - 浅蓝冷色调遮罩+降低亮度 */
+  .weather-indoor.rainy {
+    background: linear-gradient(180deg,
+      rgba(120, 155, 195, 0.25) 0%, rgba(150, 175, 210, 0.20) 50%,
+      rgba(130, 155, 190, 0.15) 100%);
+    mix-blend-mode: multiply;
+  }
+  .stage.rainy .room-bg { filter: brightness(0.82) saturate(0.85); }
+  .stage.rainy .items-layer img { filter: brightness(0.88); }
+
+  /* 黄昏室内 - 橘粉色滤镜 */
+  .weather-indoor.dusk {
+    background: linear-gradient(180deg,
+      rgba(255, 140, 100, 0.22) 0%, rgba(220, 130, 150, 0.16) 50%,
+      rgba(180, 120, 160, 0.10) 100%);
+    mix-blend-mode: overlay;
+  }
+
+  /* 夜晚室内 - 暗蓝色滤镜 */
+  .weather-indoor.night {
+    background: linear-gradient(180deg,
+      rgba(15, 15, 60, 0.40) 0%, rgba(30, 25, 70, 0.30) 50%,
+      rgba(40, 30, 80, 0.22) 100%);
+    mix-blend-mode: multiply;
+  }
+
+  /* 室内灯光发光球（雨天/夜晚时更明显） */
+  .lamp-glow {
+    position: absolute; pointer-events: none; z-index: 18;
+    border-radius: 50%; opacity: 0; transition: opacity 1.5s ease;
+  }
+  .lamp-glow.active { opacity: 1; }
+  .lamp-glow.warm {
+    background: radial-gradient(circle, rgba(255, 200, 100, 0.35) 0%, rgba(255, 170, 80, 0.15) 40%, transparent 70%);
+    width: 120px; height: 120px;
+  }
+  .lamp-glow.bright {
+    background: radial-gradient(circle, rgba(255, 220, 150, 0.55) 0%, rgba(255, 190, 120, 0.25) 45%, transparent 75%);
+    width: 100px; height: 100px;
+  }
+
+  /* ===== 伸懒腰动画 ===== */
+  .cat-container.stretching {
+    animation: catStretch 1.8s ease-in-out;
+    z-index: 28;
+  }
+  @keyframes catStretch {
+    0%   { transform: scale(1) rotate(0deg); }
+    15%  { transform: scale(1.1, 0.85) rotate(-2deg); }
+    30%  { transform: scale(0.95, 1.15) rotate(2deg) translateY(-8px); }
+    50%  { transform: scale(0.90, 1.25) rotate(-1deg) translateY(-12px); }
+    65%  { transform: scale(1.05, 0.95) rotate(1deg) translateY(-4px); }
+    80%  { transform: scale(1.08, 0.92) rotate(-1deg); }
+    100% { transform: scale(1) rotate(0deg); }
+  }
+
   /* ===== 爱心眼 ===== */
   .cat-heart-eyes {
     position: absolute; top: 22%; left: 50%; width: 34%;
@@ -894,11 +1019,25 @@
   <!-- 夜间模式遮罩 -->
   <div class="night-overlay" id="nightOverlay"></div>
 
+  <!-- 天气系统：户外景色（仅拱门窗外背景层） -->
+  <div class="weather-outdoor" id="weatherOutdoor"></div>
+
+  <!-- 天气系统：雨滴层 -->
+  <div class="rain-layer" id="rainLayer"></div>
+
+  <!-- 天气系统：室内光影遮罩 -->
+  <div class="weather-indoor" id="weatherIndoor"></div>
+
+  <!-- 室内灯光发光球（雨天/夜晚时提高亮度） -->
+  <div class="lamp-glow warm" id="lampGlow1" style="left:18%; top:35%;"></div>
+  <div class="lamp-glow warm" id="lampGlow2" style="right:15%; top:30%;"></div>
+  <div class="lamp-glow bright" id="lampGlow3" style="left:45%; top:25%;"></div>
+
   <!-- 探秘卡片层 -->
   <div class="discovery-layer" id="discoveryLayer"></div>
 
   <!-- 动态小猫 -->
-  <div class="cat-container idle" id="cat" title="点击摸摸我~ 连点2次召唤小伙伴！连点3次切换昼夜！">
+  <div class="cat-container idle" id="cat" title="点击摸摸我~ 连点2次召唤小动物NPC！连点5次切换天气彩蛋！">
     <div class="cat-bubble" id="catBubble">喵~</div>
     <img src="images/cat_q_clean.png?v=2" alt="小猫咪" draggable="false" />
     <div class="cat-heart-eyes" id="catHeartEyes">
@@ -2099,15 +2238,16 @@ function onCatClick(e) {
 
   catClickCount++;
   if (catClickResetTimer) clearTimeout(catClickResetTimer);
-  catClickResetTimer = setTimeout(() => { catClickCount = 0; }, 2500);
-  if (catClickCount >= 3) {
+  catClickResetTimer = setTimeout(() => { catClickCount = 0; }, 3500);
+
+  if (catClickCount >= 5) {
     catClickCount = 0;
-    toggleNightMode();
+    triggerWeatherEasterEgg();
     return;
   }
   if (catClickCount === 2) {
-    showAnimalNPC();
-    showCatBubble('哇！朋友们来啦~');
+    showOneRandomNpc();
+    showCatBubble('哇！有小动物来买花啦~ 🌸');
     return;
   }
   showCatBubble(catMessages[Math.floor(Math.random() * catMessages.length)]);
@@ -2129,65 +2269,50 @@ let npcVisible = new Set();
 let npcPositions = {};   // { id: {x, y} }
 let npcTimers = {};       // { npcId: timerId }
 
-function showAnimalNPC() {
-  if (npcActive) return;
-  npcActive = true;
-
-  const count = Math.floor(Math.random() * 3) + 1;
-  const shuffled = [...NPC_DATA].sort(() => Math.random() - 0.5);
-  const selected = shuffled.slice(0, count);
+/* ===== 随机召唤一只小动物NPC（一楼，上门买花） ===== */
+function showOneRandomNpc() {
+  const available = NPC_DATA.filter(npc => !npcVisible.has(npc.id));
+  const pool = available.length > 0 ? available : [...NPC_DATA];
+  const npc = pool[Math.floor(Math.random() * pool.length)];
+  const el = document.getElementById(npc.id);
+  if (!el) return;
+  const bubble = el.querySelector('.npc-bubble');
 
   const stageEl = document.getElementById('stage');
   const sRect = stageEl.getBoundingClientRect();
   const cRect = cat.getBoundingClientRect();
   const catCenterX = ((cRect.left + cRect.width / 2 - sRect.left) / sRect.width) * 100;
 
-  selected.forEach((npc, i) => {
-    const el = document.getElementById(npc.id);
-    if (!el) return;
-    const bubble = el.querySelector('.npc-bubble');
+  // 一楼位置：较低区域，模拟小动物走进房间
+  const npcX = Math.max(8, Math.min(82, catCenterX + (Math.random() - 0.5) * 25));
+  const npcY = Math.max(5, Math.min(22, ((sRect.bottom - cRect.bottom) / sRect.height) * 100 + 12 + Math.random() * 8));
 
-    // 如果已经显示，跳过位置重设，只弹气泡
-    if (npcVisible.has(npc.id)) {
-      showNpcBubble(npc.id);
-      return;
-    }
+  npcPositions[npc.id] = { x: npcX, y: npcY };
+  el.style.left = npcX + '%';
+  el.style.bottom = npcY + '%';
+  el.style.display = 'block';
+  el.classList.add('visible', 'idle');
+  npcVisible.add(npc.id);
 
-    const side = (Math.random() > 0.5 ? 1 : -1);
-    const offsetX = side * (8 + i * 8);
-    const npcX = Math.max(4, Math.min(90, catCenterX + offsetX));
-    const npcY = Math.max(2, Math.min(75, ((sRect.bottom - cRect.bottom) / sRect.height) * 100 + (i % 2 === 0 ? 14 : 18)));
+  // 初始化拖拽事件（仅一次）
+  if (!el.dataset.dragInit) {
+    el.dataset.dragInit = '1';
+    el.addEventListener('mousedown', onNpcPointerDown);
+    el.addEventListener('touchstart', onNpcPointerDown, { passive: false });
+  }
 
-    npcPositions[npc.id] = { x: npcX, y: npcY };
-    el.style.left = npcX + '%';
-    el.style.bottom = npcY + '%';
-    el.style.display = 'block';
-    el.classList.add('visible', 'idle');
-    npcVisible.add(npc.id);
+  // 启动自主 AI 行为
+  scheduleNpcAction(npc.id);
 
-    // 初始化拖拽事件（仅一次）
-    if (!el.dataset.dragInit) {
-      el.dataset.dragInit = '1';
-      el.addEventListener('mousedown', onNpcPointerDown);
-      el.addEventListener('touchstart', onNpcPointerDown, { passive: false });
-    }
-
-    // 启动自主 AI 行为
-    scheduleNpcAction(npc.id);
-
-    const idx = NPC_DATA.findIndex(n => n.id === npc.id);
-    const variants = NPC_BUBBLE_VARIANTS[idx] || ['你好~'];
-    const text = variants[Math.floor(Math.random() * variants.length)];
-    if (bubble) {
-      bubble.textContent = text;
-      bubble.classList.remove('show');
-      setTimeout(() => bubble.classList.add('show'), 500 + i * 250);
-      setTimeout(() => bubble.classList.remove('show'), 3500 + i * 250);
-    }
-  });
-
-  // NPC 不再自动消失，永久驻留
-  npcActive = false;
+  const idx = NPC_DATA.findIndex(n => n.id === npc.id);
+  const variants = NPC_BUBBLE_VARIANTS[idx] || ['你好~'];
+  const text = variants[Math.floor(Math.random() * variants.length)];
+  if (bubble) {
+    bubble.textContent = text;
+    bubble.classList.remove('show');
+    setTimeout(() => bubble.classList.add('show'), 500);
+    setTimeout(() => bubble.classList.remove('show'), 3200);
+  }
 }
 
 function showNpcBubble(npcId) {
@@ -2409,26 +2534,103 @@ function spawnFloatingHeart() {
   setTimeout(() => heart.remove(), 1500);
 }
 
-// ===== 夜间模式 =====
+// ===== 天气与光影联动系统 =====
 let catClickCount = 0;
 let catClickResetTimer = null;
-let nightMode = false;
+let currentWeather = null; // null, 'sunny', 'rainy', 'dusk', 'night'
+const WEATHER_TYPES = ['sunny', 'rainy', 'dusk', 'night'];
 
-function toggleNightMode() {
-  nightMode = !nightMode;
-  const overlay = document.getElementById('nightOverlay');
+/* 随机切换天气彩蛋 */
+function triggerWeatherEasterEgg() {
+  let next = WEATHER_TYPES[Math.floor(Math.random() * WEATHER_TYPES.length)];
+  // 避免连续相同天气
+  if (next === currentWeather) {
+    const others = WEATHER_TYPES.filter(w => w !== currentWeather);
+    next = others[Math.floor(Math.random() * others.length)];
+  }
+  setWeather(next);
+}
+
+/* 设置天气（含户外景色+室内光影） */
+function setWeather(type) {
+  if (currentWeather === type) return;
   const stageEl = document.getElementById('stage');
-  if (nightMode) {
-    overlay.classList.add('active');
+  const outdoor = document.getElementById('weatherOutdoor');
+  const indoor = document.getElementById('weatherIndoor');
+  const nightOverlay = document.getElementById('nightOverlay');
+  const rainLayer = document.getElementById('rainLayer');
+
+  // 先清除所有天气类
+  outdoor.classList.remove('active', 'sunny', 'rainy', 'dusk', 'night');
+  indoor.classList.remove('active', 'sunny', 'rainy', 'dusk', 'night');
+  stageEl.classList.remove('rainy', 'night');
+  nightOverlay.classList.remove('active');
+  rainLayer.classList.remove('active');
+  clearRainDrops();
+  toggleLampGlows(false);
+
+  currentWeather = type;
+
+  const weatherNames = { sunny: '☀️ 晴空万里', rainy: '🌧️ 细雨绵绵', dusk: '🌅 黄昏晚霞', night: '🌙 夜色如水' };
+
+  if (type === 'sunny') {
+    outdoor.classList.add('sunny', 'active');
+    indoor.classList.add('sunny', 'active');
+    showCatBubble(weatherNames.sunny + '，阳光真舒服~');
+    catStretch();
+  } else if (type === 'rainy') {
+    outdoor.classList.add('rainy', 'active');
+    indoor.classList.add('rainy', 'active');
+    stageEl.classList.add('rainy');
+    rainLayer.classList.add('active');
+    initRainDrops();
+    toggleLampGlows(true);
+    showCatBubble(weatherNames.rainy + '，听雨打窗的声音…');
+    catStretch();
+  } else if (type === 'dusk') {
+    outdoor.classList.add('dusk', 'active');
+    indoor.classList.add('dusk', 'active');
+    toggleLampGlows(true);
+    showCatBubble(weatherNames.dusk + '，好温柔的晚霞~');
+    catStretch();
+  } else if (type === 'night') {
+    outdoor.classList.add('night', 'active');
+    indoor.classList.add('night', 'active');
     stageEl.classList.add('night');
+    nightOverlay.classList.add('active');
     generateStars();
-    showCatBubble('🌙 夜幕降临~ 跟我探索夜晚吧');
-  } else {
-    overlay.classList.remove('active');
-    stageEl.classList.remove('night');
-    showCatBubble('☀️ 天亮啦~');
+    toggleLampGlows(true);
+    showCatBubble(weatherNames.night + '，跟我探索夜晚吧');
+    spawnFloatingHeart();
+    spawnFloatingHeart();
   }
 }
+
+/* 小猫伸懒腰特效 */
+function catStretch() {
+  if (catTimer) { clearTimeout(catTimer); catTimer = null; }
+  cat.classList.remove('idle', 'walking', 'sleeping', 'dancing', 'singing', 'stretching');
+  void cat.offsetWidth;
+  cat.classList.add('stretching');
+
+  // 飞出爱心
+  for (let i = 0; i < 3; i++) {
+    setTimeout(() => spawnFloatingHeart(), i * 200);
+  }
+
+  setTimeout(() => {
+    cat.classList.remove('stretching');
+    setCatState('idle');
+    scheduleCatAction();
+  }, 1800);
+}
+
+/* 夜间模式兼容：保留现有逻辑，复用为天气系统的一部分 */
+function toggleNightMode() {
+  if (currentWeather === 'night') setWeather(null);
+  else setWeather('night');
+}
+
 function generateStars() {
   const overlay = document.getElementById('nightOverlay');
   overlay.innerHTML = '<div class="moon"></div>';
@@ -2443,6 +2645,46 @@ function generateStars() {
     s.style.animationDelay = Math.random() * 2 + 's';
     overlay.appendChild(s);
   }
+}
+
+/* ===== 雨滴动画 ===== */
+let rainInterval = null;
+function initRainDrops() {
+  const layer = document.getElementById('rainLayer');
+  clearRainDrops();
+  for (let i = 0; i < 30; i++) {
+    spawnRainDrop(layer);
+  }
+  rainInterval = setInterval(() => {
+    if (currentWeather === 'rainy' && document.getElementById('rainLayer').classList.contains('active')) {
+      spawnRainDrop(layer);
+    }
+  }, 180);
+}
+
+function spawnRainDrop(layer) {
+  const drop = document.createElement('div');
+  drop.className = 'rain-drop';
+  drop.style.left = Math.random() * 100 + '%';
+  drop.style.top = '-5%';
+  drop.style.animationDuration = (0.6 + Math.random() * 0.8) + 's';
+  drop.style.animationDelay = Math.random() * 0.5 + 's';
+  layer.appendChild(drop);
+  setTimeout(() => drop.remove(), 2000);
+}
+
+function clearRainDrops() {
+  if (rainInterval) { clearInterval(rainInterval); rainInterval = null; }
+  const layer = document.getElementById('rainLayer');
+  if (layer) layer.innerHTML = '';
+}
+
+/* ===== 室内灯光亮度控制 ===== */
+function toggleLampGlows(on) {
+  [1, 2, 3].forEach(i => {
+    const el = document.getElementById('lampGlow' + i);
+    if (el) el.classList.toggle('active', on);
+  });
 }
 
 /* ============================================================
