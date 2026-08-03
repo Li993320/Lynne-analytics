@@ -639,7 +639,9 @@
     transform: scale(1) translateY(0);
   }
   .npc-container.idle.visible { animation: npcBreathe 2.6s ease-in-out infinite; }
-  .npc-container.clicked { animation: npcBounce 0.5s ease-out; }
+  .npc-container.walking  { animation: npcWalk 0.45s ease-in-out infinite; }
+  .npc-container.sleeping { opacity: 0.75; transform: rotate(-5deg) scale(0.96); }
+  .npc-container.clicked  { animation: npcBounce 0.5s ease-out; }
   .npc-container img {
     width: 100%;
     height: auto;
@@ -649,6 +651,10 @@
   @keyframes npcBreathe {
     0%, 100% { transform: scale(1); }
     50%      { transform: scale(1.04, 0.97); }
+  }
+  @keyframes npcWalk {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50%      { transform: translateY(-5px) rotate(3deg); }
   }
   @keyframes npcBounce {
     0%   { transform: scale(1); }
@@ -2121,7 +2127,7 @@ const NPC_BUBBLE_VARIANTS = [
 let npcActive = false;
 let npcVisible = new Set();
 let npcPositions = {};   // { id: {x, y} }
-let npcTimers = [];
+let npcTimers = {};       // { npcId: timerId }
 
 function showAnimalNPC() {
   if (npcActive) return;
@@ -2166,6 +2172,9 @@ function showAnimalNPC() {
       el.addEventListener('touchstart', onNpcPointerDown, { passive: false });
     }
 
+    // 启动自主 AI 行为
+    scheduleNpcAction(npc.id);
+
     const idx = NPC_DATA.findIndex(n => n.id === npc.id);
     const variants = NPC_BUBBLE_VARIANTS[idx] || ['你好~'];
     const text = variants[Math.floor(Math.random() * variants.length)];
@@ -2209,6 +2218,13 @@ function onNpcPointerDown(e) {
   npcDragTarget = e.currentTarget;
   npcDragTarget.classList.add('dragging');
   npcDragTarget.classList.remove('idle');
+
+  // 拖拽时暂停自主 AI
+  const npcId = npcDragTarget.id;
+  if (npcTimers[npcId]) {
+    clearTimeout(npcTimers[npcId]);
+    delete npcTimers[npcId];
+  }
 
   const stageEl = document.getElementById('stage');
   const cRect = npcDragTarget.getBoundingClientRect();
@@ -2264,7 +2280,97 @@ function onNpcPointerUp(e) {
     setTimeout(() => npcDragTarget.classList.remove('clicked'), 500);
     showNpcBubble(npcId);
   }
+  // 恢复自主 AI
+  scheduleNpcAction(npcDragTarget.id);
   npcDragTarget = null;
+}
+
+/* ===== NPC 自主行为（与小猫同款 AI） ===== */
+
+function setNpcState(npcId, newState) {
+  const el = document.getElementById(npcId);
+  if (!el || el.style.display === 'none') return;
+  el.classList.remove('idle', 'walking', 'sleeping', 'clicked');
+  if (newState === 'idle') el.classList.add('idle');
+  else if (newState === 'walking') el.classList.add('walking');
+  else if (newState === 'sleeping') el.classList.add('sleeping');
+}
+
+function moveNpcRandom(npcId) {
+  const el = document.getElementById(npcId);
+  if (!el || el.style.display === 'none' || npcDragging) return;
+  const minX = 5, maxX = 78;
+  const nx = minX + Math.random() * (maxX - minX);
+  const ny = 2 + Math.random() * 6;
+  setNpcState(npcId, 'walking');
+  el.style.left = nx + '%';
+  el.style.bottom = ny + '%';
+  if (npcPositions[npcId]) {
+    npcPositions[npcId] = { x: nx, y: ny };
+  }
+  setTimeout(() => setNpcState(npcId, 'idle'), 1000);
+}
+
+function scheduleNpcAction(npcId) {
+  const el = document.getElementById(npcId);
+  if (!el || el.style.display === 'none') return;
+  const delay = 4000 + Math.random() * 6000;
+  const timer = setTimeout(() => {
+    if (el.style.display === 'none') return;
+    const roll = Math.random();
+    if (roll < 0.45) {
+      // 随机走动
+      moveNpcRandom(npcId);
+    } else if (roll < 0.65) {
+      // 打盹
+      setNpcState(npcId, 'sleeping');
+      setTimeout(() => {
+        if (el.style.display !== 'none') setNpcState(npcId, 'idle');
+      }, 2500 + Math.random() * 3000);
+    } else if (roll < 0.80) {
+      // 走向小猫
+      moveNpcTowardCat(npcId);
+    } else {
+      // 发呆 + 气泡
+      setNpcState(npcId, 'idle');
+      showNpcBubble(npcId);
+    }
+    scheduleNpcAction(npcId);
+  }, delay);
+  npcTimers[npcId] = timer;
+}
+
+function moveNpcTowardCat(npcId) {
+  const el = document.getElementById(npcId);
+  if (!el || el.style.display === 'none' || npcDragging) return;
+  const nx = Math.max(4, Math.min(80, catX + (Math.random() > 0.5 ? 10 : -10)));
+  const ny = Math.max(2, Math.min(12, catY + 2 + Math.random() * 4));
+  setNpcState(npcId, 'walking');
+  el.style.left = nx + '%';
+  el.style.bottom = ny + '%';
+  if (npcPositions[npcId]) {
+    npcPositions[npcId] = { x: nx, y: ny };
+  }
+  setTimeout(() => setNpcState(npcId, 'idle'), 1000);
+}
+
+function npcDragStarted() {
+  // 拖拽时暂停 NPC 自主行为，松开后恢复
+  if (npcDragTarget) {
+    const npcId = npcDragTarget.id;
+    if (npcTimers[npcId]) {
+      clearTimeout(npcTimers[npcId]);
+      delete npcTimers[npcId];
+    }
+  }
+}
+
+function npcDragEnded() {
+  // 拖拽结束后恢复自主行为
+  if (npcDragTarget) {
+    const npcId = npcDragTarget.id;
+    scheduleNpcAction(npcId);
+  }
 }
 
 function showCatBubble(text) {
