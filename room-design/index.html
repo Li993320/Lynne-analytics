@@ -617,6 +617,63 @@
     75%  { transform: translateY(-7px) rotate(-2deg) scale(1.02); }
   }
 
+  /* ===== 治愈小动物NPC ===== */
+  .npc-container {
+    position: absolute;
+    width: 11%;
+    z-index: 26;
+    pointer-events: none;
+    transform-origin: center bottom;
+    opacity: 0;
+    transform: scale(0.3) translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    filter: drop-shadow(0 10px 16px rgba(20, 12, 6, 0.35));
+    user-select: none;
+  }
+  .npc-container.visible {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  .npc-container.leaving {
+    opacity: 0;
+    transform: scale(0.7) translateY(-10px);
+  }
+  .npc-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 18px;
+    pointer-events: none;
+  }
+  @keyframes npcBounce {
+    0%, 100% { transform: scale(1) translateY(0); }
+    50%      { transform: scale(1.06) translateY(-10px); }
+  }
+  .npc-container.bouncing.visible {
+    animation: npcBounce 1.4s ease-in-out infinite;
+  }
+  .npc-bubble {
+    position: absolute;
+    top: -36px;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    background: #fff;
+    border: 2px solid #c9a46a;
+    border-radius: 14px;
+    padding: 5px 11px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #4a3728;
+    white-space: nowrap;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 27;
+    pointer-events: none;
+  }
+  .npc-bubble.show {
+    transform: translateX(-50%) scale(1);
+  }
+
   /* === 新增: 音乐音符粒子 === */
   .floating-note {
     position: absolute;
@@ -826,13 +883,27 @@
   <div class="discovery-layer" id="discoveryLayer"></div>
 
   <!-- 动态小猫 -->
-  <div class="cat-container idle" id="cat" title="点击摸摸我~ 连点3次有惊喜！">
+  <div class="cat-container idle" id="cat" title="点击摸摸我~ 连点2次召唤小伙伴！连点3次切换昼夜！">
     <div class="cat-bubble" id="catBubble">喵~</div>
     <img src="images/cat_q_clean.png?v=2" alt="小猫咪" draggable="false" />
     <div class="cat-heart-eyes" id="catHeartEyes">
       <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.5-7 10-7 10z" fill="#ff6b9d" stroke="#e84a7a" stroke-width="1.5"/></svg>
       <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.5-7 10-7 10z" fill="#ff6b9d" stroke="#e84a7a" stroke-width="1.5"/></svg>
     </div>
+  </div>
+
+  <!-- 治愈小动物NPC -->
+  <div class="npc-container" id="npc-rabbit" style="display:none;">
+    <div class="npc-bubble">你好呀~ 🐰</div>
+    <img src="images/npc_rabbit.png" alt="小白兔" draggable="false" />
+  </div>
+  <div class="npc-container" id="npc-beagle" style="display:none;">
+    <div class="npc-bubble">汪汪！🐶</div>
+    <img src="images/npc_beagle.png" alt="比格犬" draggable="false" />
+  </div>
+  <div class="npc-container" id="npc-teddy" style="display:none;">
+    <div class="npc-bubble">好暖和~ 🐩</div>
+    <img src="images/npc_teddy.png" alt="泰迪犬" draggable="false" />
   </div>
 </div>
 
@@ -2019,7 +2090,87 @@ function onCatClick(e) {
     toggleNightMode();
     return;
   }
+  if (catClickCount === 2) {
+    showAnimalNPC();
+    showCatBubble('哇！朋友们来啦~');
+    return;
+  }
   showCatBubble(catMessages[Math.floor(Math.random() * catMessages.length)]);
+}
+
+// ===== 治愈小动物NPC =====
+const NPC_DATA = [
+  { id: 'npc-rabbit', bubble: '你好呀~ 🐰' },
+  { id: 'npc-beagle', bubble: '汪汪！🐶' },
+  { id: 'npc-teddy',  bubble: '好暖和~ 🐩' }
+];
+const NPC_BUBBLE_VARIANTS = [
+  ['你好呀~', '来玩呀~', '好开心~', '最喜欢小猫啦'],
+  ['汪汪！', '我也要抱抱~', '跑得好快~', '闻到小鱼干~'],
+  ['好暖和~', '蹭蹭你~', '我最可爱~', '今天好开心~']
+];
+let npcActive = false;
+let npcTimers = [];
+
+function showAnimalNPC() {
+  if (npcActive) return;
+  npcActive = true;
+
+  const count = Math.floor(Math.random() * 3) + 1;
+  const shuffled = [...NPC_DATA].sort(() => Math.random() - 0.5);
+  const selected = shuffled.slice(0, count);
+
+  const stageEl = document.getElementById('stage');
+  const sRect = stageEl.getBoundingClientRect();
+  const cRect = cat.getBoundingClientRect();
+  const catCenterX = ((cRect.left + cRect.width / 2 - sRect.left) / sRect.width) * 100;
+
+  selected.forEach((npc, i) => {
+    const el = document.getElementById(npc.id);
+    if (!el) return;
+    const bubble = el.querySelector('.npc-bubble');
+
+    const side = (Math.random() > 0.5 ? 1 : -1);
+    const offsetX = side * (8 + i * 8);
+    const npcX = Math.max(4, Math.min(90, catCenterX + offsetX));
+    const npcY = Math.max(2, Math.min(75, ((sRect.bottom - cRect.bottom) / sRect.height) * 100 + (i % 2 === 0 ? 14 : 18)));
+
+    el.style.left = npcX + '%';
+    el.style.bottom = npcY + '%';
+    el.style.display = 'block';
+    el.classList.remove('leaving');
+    el.classList.add('visible', 'bouncing');
+
+    const idx = NPC_DATA.findIndex(n => n.id === npc.id);
+    const variants = NPC_BUBBLE_VARIANTS[idx] || ['你好~'];
+    const text = variants[Math.floor(Math.random() * variants.length)];
+    if (bubble) {
+      bubble.textContent = text;
+      bubble.classList.remove('show');
+      setTimeout(() => bubble.classList.add('show'), 500 + i * 250);
+      const hideBubbleT = setTimeout(() => bubble.classList.remove('show'), 3200 + i * 250);
+      npcTimers.push(hideBubbleT);
+    }
+  });
+
+  const leaveT = setTimeout(() => {
+    selected.forEach((npc, i) => {
+      const el = document.getElementById(npc.id);
+      if (!el) return;
+      const bubble = el.querySelector('.npc-bubble');
+      if (bubble) bubble.classList.remove('show');
+      setTimeout(() => {
+        el.classList.remove('visible', 'bouncing');
+        el.classList.add('leaving');
+        setTimeout(() => {
+          el.classList.remove('leaving');
+          el.style.display = 'none';
+        }, 600 + i * 120);
+      }, i * 120);
+    });
+    npcActive = false;
+  }, 4500);
+  npcTimers.push(leaveT);
 }
 
 function showCatBubble(text) {
