@@ -627,8 +627,7 @@
     transform-origin: center bottom;
     opacity: 0;
     transform: scale(0.3) translateY(20px);
-    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
-                left 0.8s ease-in-out, bottom 0.8s ease-in-out;
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
     filter: drop-shadow(0 10px 16px rgba(20, 12, 6, 0.35));
     user-select: none;
     -webkit-user-drag: none;
@@ -653,8 +652,15 @@
     50%      { transform: scale(1.04, 0.97); }
   }
   @keyframes npcWalk {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50%      { transform: translateY(-5px) rotate(3deg); }
+    0%   { transform: translateY(0) rotate(0deg); }
+    12%  { transform: translateY(-8px) rotate(-2deg); }
+    25%  { transform: translateY(-2px) rotate(0deg); }
+    37%  { transform: translateY(-8px) rotate(2deg); }
+    50%  { transform: translateY(-2px) rotate(0deg); }
+    62%  { transform: translateY(-8px) rotate(-2deg); }
+    75%  { transform: translateY(-2px) rotate(0deg); }
+    87%  { transform: translateY(-8px) rotate(2deg); }
+    100% { transform: translateY(0) rotate(0deg); }
   }
   @keyframes npcBounce {
     0%   { transform: scale(1); }
@@ -2421,19 +2427,42 @@ function setNpcState(npcId, newState) {
   else if (newState === 'sleeping') el.classList.add('sleeping');
 }
 
+/* 步进式走路：分小步移动，配合 npcWalk 动画模拟真实走路 */
+function walkNpcStepByStep(npcId, targetX, targetY, done) {
+  const el = document.getElementById(npcId);
+  if (!el || el.style.display === 'none') { if (done) done(); return; }
+  const fromX = parseFloat(el.style.left) || npcPositions[npcId]?.x || 50;
+  const fromY = parseFloat(el.style.bottom) || npcPositions[npcId]?.y || 8;
+  const steps = Math.max(3, Math.round(Math.abs(targetX - fromX) / 6));
+  let s = 0;
+  function tick() {
+    s++;
+    if (s > steps) {
+      el.style.left = targetX + '%';
+      el.style.bottom = targetY + '%';
+      if (done) done();
+      return;
+    }
+    const t = s / steps;
+    const eased = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+    const x = fromX + (targetX - fromX) * eased;
+    const y = fromY + (targetY - fromY) * eased;
+    el.style.left = x + '%';
+    el.style.bottom = y + '%';
+    setTimeout(tick, 150);
+  }
+  setNpcState(npcId, 'walking');
+  tick();
+}
+
 function moveNpcRandom(npcId) {
   const el = document.getElementById(npcId);
   if (!el || el.style.display === 'none' || npcDragging) return;
   const minX = 5, maxX = 78;
   const nx = minX + Math.random() * (maxX - minX);
   const ny = 2 + Math.random() * 6;
-  setNpcState(npcId, 'walking');
-  el.style.left = nx + '%';
-  el.style.bottom = ny + '%';
-  if (npcPositions[npcId]) {
-    npcPositions[npcId] = { x: nx, y: ny };
-  }
-  setTimeout(() => setNpcState(npcId, 'idle'), 1000);
+  if (npcPositions[npcId]) npcPositions[npcId] = { x: nx, y: ny };
+  walkNpcStepByStep(npcId, nx, ny, () => { setNpcState(npcId, 'idle'); });
 }
 
 function scheduleNpcAction(npcId) {
@@ -2444,19 +2473,15 @@ function scheduleNpcAction(npcId) {
     if (el.style.display === 'none') return;
     const roll = Math.random();
     if (roll < 0.45) {
-      // 随机走动
       moveNpcRandom(npcId);
     } else if (roll < 0.65) {
-      // 打盹
       setNpcState(npcId, 'sleeping');
       setTimeout(() => {
         if (el.style.display !== 'none') setNpcState(npcId, 'idle');
       }, 2500 + Math.random() * 3000);
     } else if (roll < 0.80) {
-      // 走向小猫
       moveNpcTowardCat(npcId);
     } else {
-      // 发呆 + 气泡
       setNpcState(npcId, 'idle');
       showNpcBubble(npcId);
     }
@@ -2470,13 +2495,8 @@ function moveNpcTowardCat(npcId) {
   if (!el || el.style.display === 'none' || npcDragging) return;
   const nx = Math.max(4, Math.min(80, catX + (Math.random() > 0.5 ? 10 : -10)));
   const ny = Math.max(2, Math.min(12, catY + 2 + Math.random() * 4));
-  setNpcState(npcId, 'walking');
-  el.style.left = nx + '%';
-  el.style.bottom = ny + '%';
-  if (npcPositions[npcId]) {
-    npcPositions[npcId] = { x: nx, y: ny };
-  }
-  setTimeout(() => setNpcState(npcId, 'idle'), 1000);
+  if (npcPositions[npcId]) npcPositions[npcId] = { x: nx, y: ny };
+  walkNpcStepByStep(npcId, nx, ny, () => { setNpcState(npcId, 'idle'); });
 }
 
 function npcDragStarted() {
