@@ -964,6 +964,278 @@
     background: radial-gradient(circle at 30% 30%, rgba(255,215,0,0.7), rgba(255,180,0,0.3));
   }
 
+  /* ===== NPC 剧情对话框 ===== */
+  .quest-dialog {
+    position: fixed; z-index: 55; pointer-events: auto;
+    background: linear-gradient(170deg, #fdfaf5 0%, #f8eed9 100%);
+    border: 2.5px solid #c9a46a;
+    border-radius: 18px;
+    padding: 18px 20px 14px;
+    min-width: 260px; max-width: 320px;
+    box-shadow: 0 8px 32px rgba(80,50,20,0.3);
+    display: none;
+    font-family: "KaiTi", "STKaiti", "PingFang SC", serif;
+  }
+  .quest-dialog.show { display: block; animation: questPop 0.35s cubic-bezier(0.34,1.56,0.64,1); }
+  @keyframes questPop { 0%{opacity:0;transform:scale(0.8) translateY(10px);} 100%{opacity:1;transform:scale(1) translateY(0);} }
+  .quest-dialog::before {
+    content:''; position:absolute; bottom:-8px; left:50%; transform:translateX(-50%) rotate(45deg);
+    width:14px; height:14px; background:linear-gradient(135deg, #fdfaf5, #f8eed9);
+    border-right:2.5px solid #c9a46a; border-bottom:2.5px solid #c9a46a;
+  }
+  .quest-dialog .quest-npc-name {
+    font-size: 15px; font-weight: 700; color: #5a3e28; margin-bottom: 4px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .quest-dialog .quest-npc-role {
+    font-size: 11px; color: #c9a46a; font-weight: 600; margin-bottom: 10px;
+    padding: 2px 8px; background: rgba(201,164,106,0.12); border-radius: 10px;
+    display: inline-block;
+  }
+  .quest-dialog .quest-story {
+    font-size: 13px; color: #5a4a3a; line-height: 1.6; margin-bottom: 12px;
+    padding: 8px 12px; background: rgba(255,255,255,0.55); border-radius: 10px;
+    border-left: 3px solid #c9a46a;
+  }
+  .quest-dialog .quest-flower {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+    padding: 8px 12px; background: rgba(255,240,210,0.6); border-radius: 10px;
+    font-size: 12px; color: #7a5a3a; font-weight: 600;
+  }
+  .quest-dialog .quest-flower .flower-icon {
+    font-size: 26px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15));
+  }
+  .quest-dialog .quest-actions {
+    display: flex; gap: 8px; justify-content: flex-end;
+  }
+  .quest-dialog .quest-btn {
+    padding: 8px 16px; border-radius: 20px; border: none; cursor: pointer;
+    font-size: 12px; font-weight: 700; transition: all 0.2s;
+  }
+  .quest-dialog .quest-btn.submit {
+    background: linear-gradient(135deg, #c9a46a, #b8935a);
+    color: #fff; box-shadow: 0 3px 10px rgba(201,164,106,0.35);
+  }
+  .quest-dialog .quest-btn.submit:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(201,164,106,0.5); }
+  .quest-dialog .quest-btn.later {
+    background: rgba(0,0,0,0.05); color: #8b7355;
+  }
+  .quest-dialog .quest-btn.later:hover { background: rgba(0,0,0,0.1); }
+  .quest-dialog.thank-you .quest-story { border-left-color: #8bc87a; background: rgba(180,220,160,0.18); }
+  .quest-dialog.thank-you .quest-actions { justify-content: center; }
+  .quest-gift-icon {
+    font-size: 36px; text-align: center; display: block; margin: 6px 0;
+    animation: giftBounce 0.6s ease-in-out infinite alternate;
+  }
+  @keyframes giftBounce { 0%{transform:translateY(0);} 100%{transform:translateY(-6px);} }
+
+  /* ===== 《花语手记》 图鉴弹窗 ===== */
+  .handbook-overlay {
+    position: fixed; inset: 0; z-index: 70; background: rgba(20,15,10,0.7);
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    display: none; align-items: center; justify-content: center;
+  }
+  .handbook-overlay.show { display: flex; }
+  .handbook-panel {
+    background: linear-gradient(170deg, #fdfaf5 0%, #f5ecd7 40%, #efe0c8 100%);
+    border: 3px solid #c9a46a; border-radius: 22px;
+    padding: 24px; width: 90%; max-width: 480px; max-height: 80vh; overflow-y: auto;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.35);
+    position: relative; animation: handbookPop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes handbookPop { 0%{opacity:0;transform:scale(0.85);} 100%{opacity:1;transform:scale(1);} }
+  .handbook-panel .hb-title {
+    font-family: "KaiTi","STKaiti","PingFang SC",serif;
+    font-size: 22px; font-weight: 700; color: #5a3e28; text-align: center; margin-bottom: 6px;
+  }
+  .handbook-panel .hb-subtitle {
+    font-size: 12px; color: #8b7355; text-align: center; margin-bottom: 16px;
+    font-weight: 600; letter-spacing: 1px;
+  }
+  .handbook-panel .hb-close {
+    position: absolute; top: 12px; right: 16px;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(0,0,0,0.06); border: none; cursor: pointer;
+    font-size: 18px; color: #8b7355; transition: all 0.2s;
+  }
+  .handbook-panel .hb-close:hover { background: rgba(0,0,0,0.12); transform: scale(1.1); }
+  .hb-npc-card {
+    display: flex; align-items: center; gap: 14px; padding: 14px;
+    border-radius: 14px; margin-bottom: 10px;
+    background: rgba(255,255,255,0.5); border: 2px solid transparent;
+    transition: all 0.3s;
+  }
+  .hb-npc-card.unlocked {
+    background: rgba(255,250,240,0.7); border-color: #c9a46a;
+    box-shadow: 0 3px 12px rgba(201,164,106,0.15);
+  }
+  .hb-npc-card .hb-avatar {
+    width: 60px; height: 60px; border-radius: 50%;
+    background: rgba(0,0,0,0.06); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 30px;
+    position: relative; overflow: hidden;
+  }
+  .hb-npc-card.locked .hb-avatar {
+    filter: grayscale(1) brightness(0.6);
+  }
+  .hb-npc-card.unlocked .hb-avatar {
+    background: linear-gradient(135deg, #fff8e7, #fef0d5);
+    box-shadow: 0 2px 8px rgba(201,164,106,0.2);
+  }
+  .hb-npc-card .hb-avatar img {
+    width: 100%; height: 100%; object-fit: contain; border-radius: 50%;
+  }
+  .hb-npc-card .hb-info { flex: 1; min-width: 0; }
+  .hb-npc-card .hb-npc-name { font-size: 14px; font-weight: 700; color: #5a3e28; margin-bottom: 3px; }
+  .hb-npc-card .hb-npc-role { font-size: 11px; color: #8b7355; margin-bottom: 4px; }
+  .hb-npc-card .hb-npc-story { font-size: 11px; color: #7a6a5a; line-height: 1.4; }
+  .hb-npc-card .hb-gift {
+    display: flex; align-items: center; gap: 4px; margin-top: 4px;
+    font-size: 11px; color: #c9a46a; font-weight: 600;
+  }
+  .hb-npc-card .hb-gift .gift-icon { font-size: 18px; }
+  .hb-npc-card .hb-status {
+    font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 10px;
+  }
+  .hb-npc-card.locked .hb-status { background: #e8e0d5; color: #a09080; }
+  .hb-npc-card.unlocked .hb-status { background: rgba(180,220,160,0.3); color: #5a8a4a; }
+
+  /* ===== 信箱 ===== */
+  .mailbox-element {
+    position: absolute; z-index: 22; pointer-events: auto; cursor: pointer;
+    display: none; transition: all 0.3s;
+  }
+  .mailbox-element.show { display: block; }
+  .mailbox-element .mailbox-body {
+    width: 55px; height: 65px; background: linear-gradient(180deg, #d4a76a, #b8833a);
+    border-radius: 8px 8px 4px 4px; position: relative;
+    box-shadow: 0 4px 12px rgba(80,40,10,0.3);
+    animation: mailboxGlow 2s ease-in-out infinite;
+  }
+  .mailbox-element .mailbox-body::before {
+    content:''; position:absolute; top:6px; left:50%; transform:translateX(-50%);
+    width: 24px; height: 10px; background: #c4924a; border-radius: 3px 3px 0 0;
+    border: 2px solid #b8833a; border-bottom: none;
+  }
+  .mailbox-element .mailbox-body::after {
+    content:'✉'; position:absolute; top:5px; left:50%; transform:translateX(-50%);
+    font-size: 14px; color: #fff; z-index: 1; animation: mailboxLetter 1.5s ease-in-out infinite;
+  }
+  @keyframes mailboxLetter { 0%,100%{top:5px;} 50%{top:18px;} }
+  @keyframes mailboxGlow {
+    0%,100%{box-shadow: 0 4px 12px rgba(80,40,10,0.3);}
+    50%{box-shadow: 0 4px 20px rgba(255,180,80,0.5), 0 0 30px rgba(255,200,100,0.3);}
+  }
+  .mailbox-element:hover .mailbox-body { transform: scale(1.08); }
+
+  /* 信箱弹窗 */
+  .mailbox-modal {
+    position: fixed; inset: 0; z-index: 71; background: rgba(20,15,10,0.75);
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    display: none; align-items: center; justify-content: center;
+  }
+  .mailbox-modal.show { display: flex; }
+  .mailbox-modal .mailbox-letter {
+    background: linear-gradient(170deg, #fdfaf5, #f8eed9);
+    border: 2.5px solid #c9a46a; border-radius: 18px;
+    padding: 28px 24px; max-width: 380px; width: 88%;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.35);
+    font-family: "KaiTi","STKaiti","PingFang SC",serif; text-align: center;
+    position: relative; animation: handbookPop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .mailbox-modal .mailbox-letter .letter-from {
+    font-size: 12px; color: #8b7355; margin-bottom: 8px;
+  }
+  .mailbox-modal .mailbox-letter .letter-emoji { font-size: 48px; margin: 8px 0; }
+  .mailbox-modal .mailbox-letter .letter-title {
+    font-size: 16px; font-weight: 700; color: #5a3e28; margin-bottom: 8px;
+  }
+  .mailbox-modal .mailbox-letter .letter-body {
+    font-size: 13px; color: #6a5a4a; line-height: 1.7; margin-bottom: 14px;
+  }
+  .mailbox-modal .mailbox-letter .letter-close {
+    padding: 8px 24px; border-radius: 20px; border: none; cursor: pointer;
+    background: linear-gradient(135deg,#c9a46a,#b8935a); color:#fff;
+    font-size: 13px; font-weight: 700;
+  }
+
+  /* ===== 稀有花种 ===== */
+  .rare-flower {
+    position: absolute; z-index: 22; pointer-events: auto; cursor: pointer;
+    display: none; animation: rareFlowerBounce 2s ease-in-out infinite;
+  }
+  .rare-flower.show { display: block; }
+  @keyframes rareFlowerBounce {
+    0%,100%{transform: translateY(0) rotate(-3deg);}
+    50%{transform: translateY(-5px) rotate(3deg);}
+  }
+  .rare-flower .flower-glow {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,215,0,0.5) 0%, rgba(255,180,0,0.2) 50%, transparent 70%);
+    position: absolute; top: -6px; left: -6px; animation: glowPulse 1.5s ease-in-out infinite;
+  }
+  @keyframes glowPulse { 0%,100%{opacity:0.5;transform:scale(1);} 50%{opacity:1;transform:scale(1.2);} }
+
+  /* ===== 比格犬沙发看书 ===== */
+  .beagle-reading {
+    position: absolute; z-index: 19; pointer-events: auto; cursor: pointer;
+    display: none; transition: opacity 0.8s ease;
+  }
+  .beagle-reading.show { display: block; animation: beagleSitIn 0.8s ease-out; }
+  @keyframes beagleSitIn { 0%{opacity:0;transform:translateY(20px);} 100%{opacity:1;transform:translateY(0);} }
+  .beagle-reading .beagle-sit-sprite {
+    width: 70px; height: 65px; object-fit: contain;
+    animation: beagleRead 3s ease-in-out infinite;
+  }
+  @keyframes beagleRead { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-3px);} }
+  .beagle-reading .beagle-book-bubble {
+    position: absolute; top: -28px; left: 50%; transform: translateX(-50%);
+    background: rgba(255,255,255,0.9); border-radius: 10px; padding: 4px 10px;
+    font-size: 11px; color: #5a3e28; font-weight: 600; white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+
+  /* ===== 猫咪楼梯口打瞌睡 ===== */
+  .cat-stairs-sleep {
+    position: absolute; z-index: 23; pointer-events: none;
+    display: none; transition: opacity 0.6s ease;
+  }
+  .cat-stairs-sleep.show { display: block; }
+  .cat-stairs-sleep .sleep-cat-img {
+    width: 80px; height: 70px; object-fit: contain;
+    animation: catSleepBreathe 3s ease-in-out infinite;
+    filter: brightness(0.7) drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+  }
+  @keyframes catSleepBreathe {
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(0.97,1.03);}
+  }
+  .cat-stairs-sleep .zzz-marks {
+    position: absolute; top: -10px; right: -10px;
+    font-size: 14px; color: rgba(255,255,255,0.6); animation: zzzFloat 2s ease-in-out infinite;
+  }
+  @keyframes zzzFloat {
+    0%{opacity:0;transform:translateY(0) scale(0.5);}
+    30%{opacity:0.8;transform:translateY(-15px) scale(1);}
+    100%{opacity:0;transform:translateY(-35px) scale(1.3);}
+  }
+
+  /* ===== 海浪白噪音按钮 ===== */
+  .wave-audio-indicator {
+    position: fixed; bottom: 70px; right: 20px; z-index: 50;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(20,40,80,0.7); border: none; cursor: pointer;
+    color: #fff; font-size: 18px; display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    transition: all 0.3s; animation: wavePulse 2s ease-in-out infinite;
+  }
+  @keyframes wavePulse {
+    0%,100%{box-shadow:0 4px 12px rgba(0,0,0,0.3);}
+    50%{box-shadow:0 4px 20px rgba(100,180,255,0.5);}
+  }
+  .wave-audio-indicator.show { display: flex; align-items: center; justify-content: center; }
+  .wave-audio-indicator.muted { opacity: 0.5; animation: none; }
+
   @keyframes cardGlow {
     0%,100% { filter: drop-shadow(0 0 4px rgba(255,255,255,0.1)); }
     50% { filter: drop-shadow(0 0 10px rgba(255,255,255,0.25)); }
@@ -1065,7 +1337,69 @@
     <div class="npc-bubble">好暖和~ 🐩</div>
     <img src="images/npc_teddy.png" alt="泰迪犬" draggable="false" />
   </div>
+
+  <!-- 信箱（黄昏彩蛋） -->
+  <div class="mailbox-element" id="mailboxEl" style="left:86%; bottom:8%;" title="有信件！📬">
+    <div class="mailbox-body"></div>
+  </div>
+
+  <!-- 稀有花种（晴天才出） -->
+  <div class="rare-flower" id="rareFlower" style="left:38%; bottom:56%;" title="稀有花种">
+    <div class="flower-body" style="font-size:36px;position:relative;z-index:1;">🌼</div>
+    <div class="flower-glow"></div>
+  </div>
+
+  <!-- 比格犬沙发看书（雨天彩蛋） -->
+  <div class="beagle-reading" id="beagleReading" style="left:22%; bottom:22%;" title="比格犬在看书">
+    <div class="beagle-book-bubble">📖 海明威…</div>
+    <img class="beagle-sit-sprite" src="images/npc_beagle.png" alt="比格犬看书" draggable="false" />
+  </div>
+
+  <!-- 猫咪楼梯口打瞌睡（夜晚彩蛋） -->
+  <div class="cat-stairs-sleep" id="catStairsSleep" style="left:48%; bottom:42%;">
+    <div class="zzz-marks">💤 Zzz…</div>
+    <img class="sleep-cat-img" src="images/cat_q_clean.png?v=2" alt="猫咪打瞌睡" draggable="false" />
+  </div>
 </div>
+
+<!-- NPC 剧情对话框（浮动） -->
+<div class="quest-dialog" id="questDialog">
+  <div class="quest-npc-name" id="questNpcName"></div>
+  <div class="quest-npc-role" id="questNpcRole"></div>
+  <div class="quest-story" id="questStory"></div>
+  <div class="quest-flower" id="questFlower"></div>
+  <div class="quest-actions">
+    <button class="quest-btn later" id="questLater">稍后再说</button>
+    <button class="quest-btn submit" id="questSubmit">🌸 提交花束</button>
+  </div>
+</div>
+
+<!-- 《花语手记》图鉴弹窗 -->
+<div class="handbook-overlay" id="handbookOverlay">
+  <div class="handbook-panel" id="handbookPanel">
+    <button class="hb-close" id="handbookClose">×</button>
+    <div class="hb-title">📖 小镇花语手记</div>
+    <div class="hb-subtitle">—— 海边信箱与花语奇遇 ——</div>
+    <div id="handbookCards"></div>
+  </div>
+</div>
+
+<!-- 信箱信件弹窗 -->
+<div class="mailbox-modal" id="mailboxModal">
+  <div class="mailbox-letter">
+    <div class="letter-from" id="letterFrom"></div>
+    <div class="letter-emoji" id="letterEmoji"></div>
+    <div class="letter-title" id="letterTitle"></div>
+    <div class="letter-body" id="letterBody"></div>
+    <button class="letter-close" id="letterClose">收下这封信 💌</button>
+  </div>
+</div>
+
+<!-- 海浪白噪音音频 -->
+<audio id="waveAudio" loop preload="auto" style="display:none;">
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_c8c8a73467.mp3" type="audio/mpeg">
+</audio>
+<button class="wave-audio-indicator" id="waveAudioBtn" title="海浪白噪音 🌊">🌊</button>
 
 <!-- 卡片翻开展示弹窗 -->
 <div class="card-reveal" id="cardReveal">
@@ -1088,6 +1422,7 @@
   <div class="logo">🎀 Oasis Design</div>
   <div class="topbar-right">
     <div class="pill">💰 <span id="coinCount">0</span> 金币</div>
+    <div class="pill"><button id="handbookBtn" title="花语手记">📖 手记</button></div>
     <div class="pill"><button id="resetBtn" title="清空所有家具">🔄 重置</button></div>
   </div>
 </div>
@@ -2261,9 +2596,18 @@ function onCatClick(e) {
 
 // ===== 治愈小动物NPC（永久驻留，与小猫同款可交互） =====
 const NPC_DATA = [
-  { id: 'npc-rabbit', bubble: '你好呀~ 🐰', emoji: '🐰' },
-  { id: 'npc-beagle', bubble: '汪汪！🐶', emoji: '🐶' },
-  { id: 'npc-teddy',  bubble: '好暖和~ 🐩', emoji: '🐩' }
+  { id: 'npc-rabbit', bubble: '你好呀~ 🐰', emoji: '🐰', name: '小白兔', role: '暗恋中的少女',
+    quest: '想去海对岸见很重要的人，请给我一束温柔的花。', flower: '粉色郁金香', flowerIcon: '🌷',
+    reward: '合照明信片', rewardIcon: '💌', rewardDesc: '一张拍立得照片，记录了大海与夕阳的美好瞬间。',
+    story: '那天在海边遇见了他，心跳比海浪还响。如果带一束粉色郁金香去，一定能好好传达心意吧。' },
+  { id: 'npc-beagle', bubble: '汪汪！🐶', emoji: '🐶', name: '比格犬', role: '自由作家',
+    quest: '海风吹得我头疼，需要一束能带来灵感的花…', flower: '薄荷洋甘菊', flowerIcon: '🌿',
+    reward: '小说手稿', rewardIcon: '📜', rewardDesc: '一份泛黄的手写稿，标题写着《潮汐与花香》。',
+    story: '坐在海边三天没写出一个字。编辑催稿的信堆满了信箱。或许换个心情，让薄荷的清香唤醒灵感？' },
+  { id: 'npc-teddy',  bubble: '好暖和~ 🐩', emoji: '🐩', name: '泰迪犬', role: '温柔的甜点师',
+    quest: '今天是我生日，想买一束花奖励给辛苦的自己。', flower: '阳光向日葵', flowerIcon: '🌻',
+    reward: '复古唱片', rewardIcon: '💿', rewardDesc: '一张老式黑胶唱片，封面上手写着《Happy Birthday to Me》。',
+    story: '蛋糕烤了一整天，奶油沾满了围裙。送给自己的生日礼物，当然要选最灿烂的向日葵呀。' }
 ];
 const NPC_BUBBLE_VARIANTS = [
   ['你好呀~', '来玩呀~', '好开心~', '最喜欢小猫啦'],
@@ -2274,22 +2618,29 @@ let npcActive = false;
 let npcVisible = new Set();
 let npcPositions = {};   // { id: {x, y} }
 let npcTimers = {};       // { npcId: timerId }
+let npcQuests = {};        // { npcId: 'pending' | 'completed' }
+let currentQuestNpc = null; // 当前正在显示对话框的 NPC ID
 
 /* ===== 随机召唤一只小动物NPC（一楼，上门买花） ===== */
 function showOneRandomNpc() {
-  const available = NPC_DATA.filter(npc => !npcVisible.has(npc.id));
-  const pool = available.length > 0 ? available : [...NPC_DATA];
-  const npc = pool[Math.floor(Math.random() * pool.length)];
+  // 优先选尚未拜访过的 NPC
+  const unvisited = NPC_DATA.filter(npc => !npcVisible.has(npc.id));
+  const pool = unvisited.length > 0 ? unvisited : NPC_DATA.filter(npc => !npcQuests[npc.id] || npcQuests[npc.id] !== 'completed');
+  const finalPool = pool.length > 0 ? pool : [...NPC_DATA];
+  const npc = finalPool[Math.floor(Math.random() * finalPool.length)];
+  spawnNpc(npc);
+}
+
+function spawnNpc(npc) {
   const el = document.getElementById(npc.id);
   if (!el) return;
-  const bubble = el.querySelector('.npc-bubble');
 
   const stageEl = document.getElementById('stage');
   const sRect = stageEl.getBoundingClientRect();
   const cRect = cat.getBoundingClientRect();
   const catCenterX = ((cRect.left + cRect.width / 2 - sRect.left) / sRect.width) * 100;
 
-  // 一楼位置：较低区域，模拟小动物走进房间
+  // 一楼位置
   const npcX = Math.max(8, Math.min(82, catCenterX + (Math.random() - 0.5) * 25));
   const npcY = Math.max(5, Math.min(22, ((sRect.bottom - cRect.bottom) / sRect.height) * 100 + 12 + Math.random() * 8));
 
@@ -2300,25 +2651,19 @@ function showOneRandomNpc() {
   el.classList.add('visible', 'idle');
   npcVisible.add(npc.id);
 
-  // 初始化拖拽事件（仅一次）
+  // 初始化拖拽事件
   if (!el.dataset.dragInit) {
     el.dataset.dragInit = '1';
     el.addEventListener('mousedown', onNpcPointerDown);
     el.addEventListener('touchstart', onNpcPointerDown, { passive: false });
   }
 
-  // 启动自主 AI 行为
+  // 启动 AI
   scheduleNpcAction(npc.id);
 
-  const idx = NPC_DATA.findIndex(n => n.id === npc.id);
-  const variants = NPC_BUBBLE_VARIANTS[idx] || ['你好~'];
-  const text = variants[Math.floor(Math.random() * variants.length)];
-  if (bubble) {
-    bubble.textContent = text;
-    bubble.classList.remove('show');
-    setTimeout(() => bubble.classList.add('show'), 500);
-    setTimeout(() => bubble.classList.remove('show'), 3200);
-  }
+  // 显示剧情对话框
+  setTimeout(() => showQuestDialog(npc), 600);
+  showCatBubble('哇！' + npc.name + '来买花啦~ 🌸');
 }
 
 function showNpcBubble(npcId) {
@@ -2403,13 +2748,22 @@ function onNpcPointerUp(e) {
   document.removeEventListener('touchend', onNpcPointerUp);
 
   if (!npcDragMoved) {
-    // 点击：弹跳动画 + 气泡
+    // 点击：如果 NPC 有未完成的剧情任务 → 显示任务对话框
     const npcId = npcDragTarget.id;
+    const npcData = NPC_DATA.find(n => n.id === npcId);
+    const questStatus = npcQuests[npcId];
     npcDragTarget.classList.remove('clicked');
     void npcDragTarget.offsetWidth;
     npcDragTarget.classList.add('clicked');
     setTimeout(() => npcDragTarget.classList.remove('clicked'), 500);
-    showNpcBubble(npcId);
+
+    if (npcData && questStatus !== 'completed') {
+      showQuestDialog(npcData);
+    } else if (npcData && questStatus === 'completed') {
+      showNpcBubble(npcId);
+    } else {
+      showNpcBubble(npcId);
+    }
   }
   // 恢复自主 AI
   scheduleNpcAction(npcDragTarget.id);
@@ -2534,6 +2888,276 @@ addItem = function(def) {
   }
 };
 
+/* ============================================================
+   剧情系统：对话框 & 花束提交 & 图鉴
+   ============================================================ */
+
+const questDialog = document.getElementById('questDialog');
+const questNpcName = document.getElementById('questNpcName');
+const questNpcRole = document.getElementById('questNpcRole');
+const questStory = document.getElementById('questStory');
+const questFlower = document.getElementById('questFlower');
+const questSubmit = document.getElementById('questSubmit');
+const questLater = document.getElementById('questLater');
+
+questLater.addEventListener('click', () => { hideQuestDialog(); });
+questSubmit.addEventListener('click', () => { submitQuest(); });
+
+// 点击对话框外部关闭
+document.addEventListener('click', (e) => {
+  if (questDialog.classList.contains('show') && !questDialog.contains(e.target)) {
+    hideQuestDialog();
+  }
+});
+
+function showQuestDialog(npc) {
+  if (npcQuests[npc.id] === 'completed') {
+    showThankYouDialog(npc);
+    return;
+  }
+  currentQuestNpc = npc.id;
+  questNpcName.innerHTML = npc.emoji + ' ' + npc.name;
+  questNpcRole.textContent = '🎀 ' + npc.role;
+  questStory.textContent = '「' + npc.quest + '」';
+  questFlower.innerHTML = '<span class="flower-icon">' + npc.flowerIcon + '</span> 需提交：<b>' + npc.flower + '</b>';
+  questSubmit.style.display = 'inline-block';
+  questLater.style.display = 'inline-block';
+  questDialog.classList.remove('thank-you');
+  questDialog.classList.add('show');
+  positionQuestDialog(npc.id);
+}
+
+function showThankYouDialog(npc) {
+  currentQuestNpc = npc.id;
+  questNpcName.innerHTML = npc.emoji + ' ' + npc.name + ' ✨';
+  questNpcRole.textContent = '🎀 心愿已达成';
+  questStory.innerHTML = '<span class="quest-gift-icon">' + npc.rewardIcon + '</span>「谢谢你！这束花太美了～」<br><small style="color:#8b7355;">获得谢礼：<b>' + npc.reward + '</b></small>';
+  questFlower.innerHTML = '<small style="color:#8b7355;">' + npc.rewardDesc + '</small>';
+  questSubmit.style.display = 'none';
+  questLater.textContent = '❤ 真开心';
+  questLater.style.display = 'inline-block';
+  questDialog.classList.add('thank-you', 'show');
+  positionQuestDialog(npc.id);
+}
+
+function hideQuestDialog() {
+  questDialog.classList.remove('show', 'thank-you');
+  currentQuestNpc = null;
+}
+
+function submitQuest() {
+  if (!currentQuestNpc) return;
+  const npc = NPC_DATA.find(n => n.id === currentQuestNpc);
+  if (!npc) return;
+  npcQuests[currentQuestNpc] = 'completed';
+  showCatBubble(npc.name + '收到了' + npc.flower + '！✨');
+  updateHandbookCards();
+  showThankYouDialog(npc);
+
+  // 金币奖励
+  coinCount += 30;
+  document.getElementById('coinCount').textContent = coinCount;
+}
+
+function positionQuestDialog(npcId) {
+  const el = document.getElementById(npcId);
+  if (!el) return;
+  const rect = el.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const topY = rect.top - 10;
+  questDialog.style.left = Math.max(10, Math.min(window.innerWidth - 330, centerX - 140)) + 'px';
+  questDialog.style.top = Math.max(10, topY - 180) + 'px';
+}
+
+/* ===== 《花语手记》图鉴 ===== */
+const handbookOverlay = document.getElementById('handbookOverlay');
+
+function initHandbook() {
+  document.getElementById('handbookBtn').addEventListener('click', openHandbook);
+  document.getElementById('handbookClose').addEventListener('click', closeHandbook);
+  handbookOverlay.addEventListener('click', (e) => {
+    if (e.target === handbookOverlay) closeHandbook();
+  });
+  updateHandbookCards();
+}
+
+function openHandbook() {
+  updateHandbookCards();
+  handbookOverlay.classList.add('show');
+}
+
+function closeHandbook() {
+  handbookOverlay.classList.remove('show');
+}
+
+function updateHandbookCards() {
+  const container = document.getElementById('handbookCards');
+  let html = '';
+  NPC_DATA.forEach(npc => {
+    const completed = npcQuests[npc.id] === 'completed';
+    html += '<div class="hb-npc-card' + (completed ? ' unlocked' : ' locked') + '">';
+    html += '<div class="hb-avatar"><img src="images/' + npc.id + '.png" alt="' + npc.name + '" /></div>';
+    html += '<div class="hb-info">';
+    html += '<div class="hb-npc-name">' + npc.emoji + ' ' + npc.name + '</div>';
+    html += '<div class="hb-npc-role">' + npc.role + '</div>';
+    if (completed) {
+      html += '<div class="hb-npc-story">' + npc.story + '</div>';
+      html += '<div class="hb-gift"><span class="gift-icon">' + npc.rewardIcon + '</span>' + npc.reward + ' · ' + npc.rewardDesc + '</div>';
+    } else {
+      html += '<div class="hb-npc-story">🔒 尚未完成委托：' + npc.quest + '</div>';
+      html += '<div class="hb-npc-story" style="font-size:10px;color:#b0a090;">需要：' + npc.flowerIcon + ' ' + npc.flower + '</div>';
+    }
+    html += '</div>';
+    html += '<div class="hb-status">' + (completed ? '✓ 已结识' : '未解锁') + '</div>';
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+/* ===== 邮箱信件系统（黄昏彩蛋） ===== */
+const mailboxEl = document.getElementById('mailboxEl');
+const mailboxModal = document.getElementById('mailboxModal');
+
+const MAILBOX_LETTERS = [
+  { from:'远方的海鸥', emoji:'🕊️', title:'来自彼岸的回信',
+    body:'亲爱的花店主人：<br><br>谢谢你帮小白兔送来的粉色郁金香。那天海对岸的他收到了花，开心地哭了。海风把花香带到了很远的地方。<br><br>愿你每天都有花香相伴。<br><br>—— 一只飞过大海的海鸥' },
+  { from:'流浪的画家', emoji:'🎨', title:'水彩明信片',
+    body:'嘿！<br><br>路过你们小镇的时候被花店吸引。门口那一排向日葵太美了，忍不住画了下来。随信附上这幅小画，就当是感谢你让这个小镇变得更温暖。<br><br>下次路过时，我也会带一束花来。' },
+  { from:'海边灯塔守护者', emoji:'🏮', title:'灯塔的问候',
+    body:'每晚点亮灯塔的时候，都能看到你们花店的灯光。在这片海岸线上，你和小动物们的故事是最温柔的风景。<br><br>如果哪天你累了，就来灯塔坐坐。茶水永远温着。<br><br>—— 你的老朋友' },
+  { from:'海螺邮差', emoji:'🐚', title:'海浪捎来的消息',
+    body:'今天的海浪特别温柔，估计是因为昨天花店里传出了笑声。<br><br>大家都说：Oasis花店是这片海岸最治愈的地方。继续加油呀，花店主人！<br><br>P.S. 这片海域的小动物们都想来买花呢～' }
+];
+
+function showMailbox() {
+  mailboxEl.classList.add('show');
+}
+
+function hideMailbox() {
+  mailboxEl.classList.remove('show');
+}
+
+mailboxEl.addEventListener('click', (e) => {
+  e.stopPropagation();
+  const letter = MAILBOX_LETTERS[Math.floor(Math.random() * MAILBOX_LETTERS.length)];
+  document.getElementById('letterFrom').textContent = '✉ 来自：' + letter.from;
+  document.getElementById('letterEmoji').textContent = letter.emoji;
+  document.getElementById('letterTitle').textContent = letter.title;
+  document.getElementById('letterBody').innerHTML = letter.body;
+  mailboxModal.classList.add('show');
+});
+
+document.getElementById('letterClose').addEventListener('click', () => {
+  mailboxModal.classList.remove('show');
+  coinCount += 20;
+  document.getElementById('coinCount').textContent = coinCount;
+});
+mailboxModal.addEventListener('click', (e) => {
+  if (e.target === mailboxModal) mailboxModal.classList.remove('show');
+});
+
+/* ===== 稀有花种（晴天才出） ===== */
+const rareFlower = document.getElementById('rareFlower');
+rareFlower.addEventListener('click', (e) => {
+  e.stopPropagation();
+  rareFlower.classList.remove('show');
+  coinCount += 15;
+  document.getElementById('coinCount').textContent = coinCount;
+  showCatBubble('发现稀有花种！+15金币 🌟');
+});
+
+/* ===== 比格犬沙发看书（雨天彩蛋） ===== */
+const beagleReading = document.getElementById('beagleReading');
+let beagleReadingActive = false;
+
+function showBeagleReading() {
+  if (beagleReadingActive) return;
+  // 只有比格犬已拜访才显示
+  if (!npcVisible.has('npc-beagle')) return;
+  beagleReadingActive = true;
+  beagleReading.classList.add('show');
+  const npcEl = document.getElementById('npc-beagle');
+  if (npcEl && npcEl.style.display !== 'none') {
+    npcEl.style.display = 'none';
+    if (npcTimers['npc-beagle']) { clearTimeout(npcTimers['npc-beagle']); delete npcTimers['npc-beagle']; }
+  }
+}
+
+function hideBeagleReading() {
+  beagleReadingActive = false;
+  beagleReading.classList.remove('show');
+  const npcEl = document.getElementById('npc-beagle');
+  if (npcEl && npcVisible.has('npc-beagle')) {
+    npcEl.style.display = 'block';
+    scheduleNpcAction('npc-beagle');
+  }
+}
+
+beagleReading.addEventListener('click', () => {
+  showCatBubble('嘘…比格犬正在看海明威的《老人与海》📖');
+});
+
+/* ===== 猫咪楼梯口打瞌睡（夜晚彩蛋） ===== */
+const catStairsSleep = document.getElementById('catStairsSleep');
+
+function showCatStairsSleep() {
+  catStairsSleep.classList.add('show');
+  // 隐藏原来的小猫
+  cat.style.opacity = '0.3';
+  cat.style.pointerEvents = 'none';
+  if (catTimer) { clearTimeout(catTimer); catTimer = null; }
+}
+
+function hideCatStairsSleep() {
+  catStairsSleep.classList.remove('show');
+  cat.style.opacity = '1';
+  cat.style.pointerEvents = 'auto';
+  setCatState('idle');
+  scheduleCatAction();
+}
+
+/* ===== 海浪白噪音（夜晚彩蛋） ===== */
+const waveAudio = document.getElementById('waveAudio');
+const waveAudioBtn = document.getElementById('waveAudioBtn');
+let waveAudioPlaying = false;
+
+function startWaveAudio() {
+  waveAudioBtn.classList.add('show');
+  waveAudio.volume = 0.3;
+  waveAudio.play().then(() => {
+    waveAudioPlaying = true;
+    waveAudioBtn.classList.remove('muted');
+  }).catch(() => { /* 浏览器自动播放限制 */ });
+}
+
+function stopWaveAudio() {
+  waveAudio.pause();
+  waveAudioPlaying = false;
+  waveAudioBtn.classList.remove('show', 'muted');
+}
+
+waveAudioBtn.addEventListener('click', () => {
+  if (waveAudioPlaying) {
+    waveAudio.pause();
+    waveAudioPlaying = false;
+    waveAudioBtn.classList.add('muted');
+  } else {
+    waveAudio.play().then(() => {
+      waveAudioPlaying = true;
+      waveAudioBtn.classList.remove('muted');
+    }).catch(() => {});
+  }
+});
+
+/* ===== 清理天气彩蛋 ===== */
+function clearWeatherEasterEggs() {
+  rareFlower.classList.remove('show');
+  hideBeagleReading();
+  hideCatStairsSleep();
+  stopWaveAudio();
+  hideMailbox();
+}
+
 // ===== 爱心眼 =====
 function showHeartEyes() {
   const eyes = document.getElementById('catHeartEyes');
@@ -2580,7 +3204,7 @@ function setWeather(type) {
   const nightOverlay = document.getElementById('nightOverlay');
   const rainLayer = document.getElementById('rainLayer');
 
-  // 先清除所有天气类
+  // 先清除所有天气类和彩蛋
   outdoor.classList.remove('active', 'sunny', 'rainy', 'dusk', 'night');
   indoor.classList.remove('active', 'sunny', 'rainy', 'dusk', 'night');
   stageEl.classList.remove('rainy', 'night');
@@ -2588,6 +3212,7 @@ function setWeather(type) {
   rainLayer.classList.remove('active');
   clearRainDrops();
   toggleLampGlows(false);
+  clearWeatherEasterEggs();
 
   currentWeather = type;
 
@@ -2598,6 +3223,8 @@ function setWeather(type) {
     indoor.classList.add('sunny', 'active');
     showCatBubble(weatherNames.sunny + '，阳光真舒服~');
     catStretch();
+    // 🌼 晴天彩蛋：阳台刷稀有花种
+    setTimeout(() => { rareFlower.classList.add('show'); }, 1500);
   } else if (type === 'rainy') {
     outdoor.classList.add('rainy', 'active');
     indoor.classList.add('rainy', 'active');
@@ -2607,12 +3234,16 @@ function setWeather(type) {
     toggleLampGlows(true);
     showCatBubble(weatherNames.rainy + '，听雨打窗的声音…');
     catStretch();
+    // 🌧 雨天彩蛋：比格犬坐沙发看书避雨
+    setTimeout(() => { showBeagleReading(); }, 2000);
   } else if (type === 'dusk') {
     outdoor.classList.add('dusk', 'active');
     indoor.classList.add('dusk', 'active');
     toggleLampGlows(true);
     showCatBubble(weatherNames.dusk + '，好温柔的晚霞~');
     catStretch();
+    // 🌅 黄昏彩蛋：信箱亮起
+    setTimeout(() => { showMailbox(); }, 1500);
   } else if (type === 'night') {
     outdoor.classList.add('night', 'active');
     indoor.classList.add('night', 'active');
@@ -2623,6 +3254,8 @@ function setWeather(type) {
     showCatBubble(weatherNames.night + '，跟我探索夜晚吧');
     spawnFloatingHeart();
     spawnFloatingHeart();
+    // 🌙 夜晚彩蛋：猫咪楼梯口打瞌睡 + 海浪白噪音
+    setTimeout(() => { showCatStairsSleep(); startWaveAudio(); }, 2000);
   }
 }
 
@@ -3039,6 +3672,7 @@ function catExploreCard() {
 // 启动
 initCat();
 init();
+initHandbook();
 </script>
 </body>
 </html>
