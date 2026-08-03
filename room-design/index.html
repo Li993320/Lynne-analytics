@@ -617,40 +617,49 @@
     75%  { transform: translateY(-7px) rotate(-2deg) scale(1.02); }
   }
 
-  /* ===== 治愈小动物NPC ===== */
+  /* ===== 治愈小动物NPC（与小猫同款：可永久驻留、可点击、可拖拽） ===== */
   .npc-container {
     position: absolute;
-    width: 11%;
+    width: 12%;
     z-index: 26;
-    pointer-events: none;
+    pointer-events: auto;
+    cursor: grab;
     transform-origin: center bottom;
     opacity: 0;
     transform: scale(0.3) translateY(20px);
-    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+                left 0.8s ease-in-out, bottom 0.8s ease-in-out;
     filter: drop-shadow(0 10px 16px rgba(20, 12, 6, 0.35));
     user-select: none;
+    -webkit-user-drag: none;
   }
+  .npc-container.dragging { cursor: grabbing; transition: none !important; }
   .npc-container.visible {
     opacity: 1;
     transform: scale(1) translateY(0);
   }
-  .npc-container.leaving {
-    opacity: 0;
-    transform: scale(0.7) translateY(-10px);
-  }
+  .npc-container.idle.visible { animation: npcBreathe 2.6s ease-in-out infinite; }
+  .npc-container.clicked { animation: npcBounce 0.5s ease-out; }
   .npc-container img {
     width: 100%;
     height: auto;
     display: block;
-    border-radius: 18px;
     pointer-events: none;
   }
-  @keyframes npcBounce {
-    0%, 100% { transform: scale(1) translateY(0); }
-    50%      { transform: scale(1.06) translateY(-10px); }
+  @keyframes npcBreathe {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.04, 0.97); }
   }
-  .npc-container.bouncing.visible {
-    animation: npcBounce 1.4s ease-in-out infinite;
+  @keyframes npcBounce {
+    0%   { transform: scale(1); }
+    30%  { transform: scale(1.18, 0.88); }
+    60%  { transform: scale(0.93, 1.12); }
+    100% { transform: scale(1); }
+  }
+  @keyframes npcWiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25%      { transform: rotate(-4deg); }
+    75%      { transform: rotate(4deg); }
   }
   .npc-bubble {
     position: absolute;
@@ -892,16 +901,16 @@
     </div>
   </div>
 
-  <!-- 治愈小动物NPC -->
-  <div class="npc-container" id="npc-rabbit" style="display:none;">
+  <!-- 治愈小动物NPC（永久驻留，与小猫咪同款可点击/可拖拽） -->
+  <div class="npc-container idle" id="npc-rabbit" data-npc-id="npc-rabbit" style="display:none;">
     <div class="npc-bubble">你好呀~ 🐰</div>
     <img src="images/npc_rabbit.png" alt="小白兔" draggable="false" />
   </div>
-  <div class="npc-container" id="npc-beagle" style="display:none;">
+  <div class="npc-container idle" id="npc-beagle" data-npc-id="npc-beagle" style="display:none;">
     <div class="npc-bubble">汪汪！🐶</div>
     <img src="images/npc_beagle.png" alt="比格犬" draggable="false" />
   </div>
-  <div class="npc-container" id="npc-teddy" style="display:none;">
+  <div class="npc-container idle" id="npc-teddy" data-npc-id="npc-teddy" style="display:none;">
     <div class="npc-bubble">好暖和~ 🐩</div>
     <img src="images/npc_teddy.png" alt="泰迪犬" draggable="false" />
   </div>
@@ -2098,11 +2107,11 @@ function onCatClick(e) {
   showCatBubble(catMessages[Math.floor(Math.random() * catMessages.length)]);
 }
 
-// ===== 治愈小动物NPC =====
+// ===== 治愈小动物NPC（永久驻留，与小猫同款可交互） =====
 const NPC_DATA = [
-  { id: 'npc-rabbit', bubble: '你好呀~ 🐰' },
-  { id: 'npc-beagle', bubble: '汪汪！🐶' },
-  { id: 'npc-teddy',  bubble: '好暖和~ 🐩' }
+  { id: 'npc-rabbit', bubble: '你好呀~ 🐰', emoji: '🐰' },
+  { id: 'npc-beagle', bubble: '汪汪！🐶', emoji: '🐶' },
+  { id: 'npc-teddy',  bubble: '好暖和~ 🐩', emoji: '🐩' }
 ];
 const NPC_BUBBLE_VARIANTS = [
   ['你好呀~', '来玩呀~', '好开心~', '最喜欢小猫啦'],
@@ -2110,6 +2119,8 @@ const NPC_BUBBLE_VARIANTS = [
   ['好暖和~', '蹭蹭你~', '我最可爱~', '今天好开心~']
 ];
 let npcActive = false;
+let npcVisible = new Set();
+let npcPositions = {};   // { id: {x, y} }
 let npcTimers = [];
 
 function showAnimalNPC() {
@@ -2130,16 +2141,30 @@ function showAnimalNPC() {
     if (!el) return;
     const bubble = el.querySelector('.npc-bubble');
 
+    // 如果已经显示，跳过位置重设，只弹气泡
+    if (npcVisible.has(npc.id)) {
+      showNpcBubble(npc.id);
+      return;
+    }
+
     const side = (Math.random() > 0.5 ? 1 : -1);
     const offsetX = side * (8 + i * 8);
     const npcX = Math.max(4, Math.min(90, catCenterX + offsetX));
     const npcY = Math.max(2, Math.min(75, ((sRect.bottom - cRect.bottom) / sRect.height) * 100 + (i % 2 === 0 ? 14 : 18)));
 
+    npcPositions[npc.id] = { x: npcX, y: npcY };
     el.style.left = npcX + '%';
     el.style.bottom = npcY + '%';
     el.style.display = 'block';
-    el.classList.remove('leaving');
-    el.classList.add('visible', 'bouncing');
+    el.classList.add('visible', 'idle');
+    npcVisible.add(npc.id);
+
+    // 初始化拖拽事件（仅一次）
+    if (!el.dataset.dragInit) {
+      el.dataset.dragInit = '1';
+      el.addEventListener('mousedown', onNpcPointerDown);
+      el.addEventListener('touchstart', onNpcPointerDown, { passive: false });
+    }
 
     const idx = NPC_DATA.findIndex(n => n.id === npc.id);
     const variants = NPC_BUBBLE_VARIANTS[idx] || ['你好~'];
@@ -2148,29 +2173,98 @@ function showAnimalNPC() {
       bubble.textContent = text;
       bubble.classList.remove('show');
       setTimeout(() => bubble.classList.add('show'), 500 + i * 250);
-      const hideBubbleT = setTimeout(() => bubble.classList.remove('show'), 3200 + i * 250);
-      npcTimers.push(hideBubbleT);
+      setTimeout(() => bubble.classList.remove('show'), 3500 + i * 250);
     }
   });
 
-  const leaveT = setTimeout(() => {
-    selected.forEach((npc, i) => {
-      const el = document.getElementById(npc.id);
-      if (!el) return;
-      const bubble = el.querySelector('.npc-bubble');
-      if (bubble) bubble.classList.remove('show');
-      setTimeout(() => {
-        el.classList.remove('visible', 'bouncing');
-        el.classList.add('leaving');
-        setTimeout(() => {
-          el.classList.remove('leaving');
-          el.style.display = 'none';
-        }, 600 + i * 120);
-      }, i * 120);
-    });
-    npcActive = false;
-  }, 4500);
-  npcTimers.push(leaveT);
+  // NPC 不再自动消失，永久驻留
+  npcActive = false;
+}
+
+function showNpcBubble(npcId) {
+  const el = document.getElementById(npcId);
+  if (!el) return;
+  const bubble = el.querySelector('.npc-bubble');
+  if (!bubble) return;
+  const idx = NPC_DATA.findIndex(n => n.id === npcId);
+  const variants = NPC_BUBBLE_VARIANTS[idx] || ['你好~'];
+  bubble.textContent = variants[Math.floor(Math.random() * variants.length)];
+  bubble.classList.remove('show');
+  void bubble.offsetWidth;
+  bubble.classList.add('show');
+  setTimeout(() => bubble.classList.remove('show'), 2200);
+}
+
+/* ===== NPC 拖拽 & 点击 ===== */
+let npcDragging = false;
+let npcDragMoved = false;
+let npcDragTarget = null;
+let npcDragOffX = 0, npcDragOffY = 0;
+
+function onNpcPointerDown(e) {
+  e.stopPropagation();
+  e.preventDefault();
+  npcDragging = true;
+  npcDragMoved = false;
+  npcDragTarget = e.currentTarget;
+  npcDragTarget.classList.add('dragging');
+  npcDragTarget.classList.remove('idle');
+
+  const stageEl = document.getElementById('stage');
+  const cRect = npcDragTarget.getBoundingClientRect();
+  const cx = e.clientX !== undefined ? e.clientX : e.touches[0].clientX;
+  const cy = e.clientY !== undefined ? e.clientY : e.touches[0].clientY;
+  npcDragOffX = cx - (cRect.left + cRect.width / 2);
+  npcDragOffY = cy - (cRect.top + cRect.height / 2);
+
+  document.addEventListener('mousemove', onNpcPointerMove);
+  document.addEventListener('mouseup', onNpcPointerUp);
+  document.addEventListener('touchmove', onNpcPointerMove, { passive: false });
+  document.addEventListener('touchend', onNpcPointerUp);
+}
+
+function onNpcPointerMove(e) {
+  if (!npcDragging || !npcDragTarget) return;
+  e.preventDefault();
+  const cx = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0].clientX);
+  const cy = e.clientY !== undefined ? e.clientY : (e.touches && e.touches[0].clientY);
+  if (cx === undefined) return;
+
+  const stageEl = document.getElementById('stage');
+  const sRect = stageEl.getBoundingClientRect();
+  const px = ((cx - npcDragOffX - sRect.left) / sRect.width) * 100;
+  const py = ((sRect.bottom - (cy - npcDragOffY)) / sRect.height) * 100;
+
+  const npcId = npcDragTarget.id;
+  npcPositions[npcId] = {
+    x: Math.max(2, Math.min(85, px)),
+    y: Math.max(1, Math.min(85, py))
+  };
+  npcDragTarget.style.left = npcPositions[npcId].x + '%';
+  npcDragTarget.style.bottom = npcPositions[npcId].y + '%';
+  npcDragMoved = true;
+}
+
+function onNpcPointerUp(e) {
+  if (!npcDragging || !npcDragTarget) return;
+  npcDragging = false;
+  npcDragTarget.classList.remove('dragging');
+  npcDragTarget.classList.add('idle');
+  document.removeEventListener('mousemove', onNpcPointerMove);
+  document.removeEventListener('mouseup', onNpcPointerUp);
+  document.removeEventListener('touchmove', onNpcPointerMove);
+  document.removeEventListener('touchend', onNpcPointerUp);
+
+  if (!npcDragMoved) {
+    // 点击：弹跳动画 + 气泡
+    const npcId = npcDragTarget.id;
+    npcDragTarget.classList.remove('clicked');
+    void npcDragTarget.offsetWidth;
+    npcDragTarget.classList.add('clicked');
+    setTimeout(() => npcDragTarget.classList.remove('clicked'), 500);
+    showNpcBubble(npcId);
+  }
+  npcDragTarget = null;
 }
 
 function showCatBubble(text) {
